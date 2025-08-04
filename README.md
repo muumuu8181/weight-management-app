@@ -1,6 +1,11 @@
-# GitHubプロジェクト管理テンプレート
+# GitHubプロジェクト管理テンプレート with UI Testing
 
 このテンプレートは、毎日10〜20のプロジェクトを複数デバイスで作成・管理するためのガイドラインです。時系列での検索性、デバイス間の同期、整理されたリポジトリ管理を目指します。
+
+**🧪 NEW: 統合UIテストツール搭載**
+- 自動UIテスト機能を内蔵
+- ボタンクリック・フォーム動作を自動検証
+- HTML/JSON/CSV形式での詳細レポート生成
 
 ## 1. GitHub Organizationの設定
 
@@ -41,11 +46,23 @@
 ```
 プロジェクト名/
 ├── src/                  # ソースコード（例: Python, JSなど）
-├── tests/               # テストコード（任意）
+├── tools/                # 🧪 テストツール（統合済み）
+│   └── testing/
+│       ├── ui-test-runner.js     # UIテストメインツール
+│       ├── browser-api-enhancements.js  # ブラウザAPI拡張
+│       ├── configs/              # テスト設定ファイル
+│       └── docs/                 # テストツールドキュメント
+├── examples/             # サンプルファイル
+│   └── simple-button-app.html    # テスト用サンプルHTML
+├── scripts/              # 実行スクリプト
+│   ├── setup.sh          # 環境セットアップ
+│   └── test.sh           # テスト実行
+├── tests/               # 追加テストコード（任意）
 ├── README.md            # プロジェクト概要
 ├── LICENSE              # ライセンス（例: MIT）
+├── package.json         # Node.js依存関係（テストツール用）
 ├── .gitignore           # Gitで無視するファイル
-└── requirements.txt     # 依存関係（例: Pythonの場合）
+└── requirements.txt     # Python依存関係
 ```
 
 ### README.mdテンプレート:
@@ -60,8 +77,15 @@
 
 ## セットアップ
 1. リポジトリをクローン: `git clone https://github.com/daily-projects/2025-08-04-sample-project.git`
-2. 依存関係をインストール: `pip install -r requirements.txt`
-3. 実行: [例: `python src/main.py`]
+2. 環境セットアップ: `npm run setup`（Node.js + Python）
+3. 依存関係をインストール: `pip install -r requirements.txt`
+4. 実行: [例: `python src/main.py`]
+
+## 🧪 UIテスト実行
+- 基本テスト: `npm run test:ui`
+- ボタン自動検出: `npm run test:ui-auto`
+- Bootstrap対応: `npm run test:bootstrap`
+- ヘルプ表示: `npm run help`
 
 ## メモ
 - [作成した背景や特記事項]

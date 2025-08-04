@@ -1,0 +1,48 @@
+{
+  "name": "project-template-with-testing",
+  "version": "1.0.0",
+  "description": "Universal project template with integrated UI testing tools",
+  "main": "src/main.py",
+  "scripts": {
+    "setup": "npm install && bash scripts/setup.sh",
+    "test:ui": "node tools/testing/ui-test-runner.js -t examples/simple-button-app.html",
+    "test:ui-auto": "node tools/testing/ui-test-runner.js -t examples/simple-button-app.html --auto-detect",
+    "test:ui-verbose": "node tools/testing/ui-test-runner.js -t examples/simple-button-app.html --verbose --count 5",
+    "test:bootstrap": "node tools/testing/ui-test-runner.js --selector-pattern '.btn-' --max-buttons 10",
+    "test:custom": "node tools/testing/ui-test-runner.js",
+    "test:storage": "node tools/data-storage/tests/level1-tests.js",
+    "storage:demo": "node -e \"console.log('Open tools/data-storage/examples/basic-demo.html in a browser to see the demo')\"",
+    "help": "node tools/testing/ui-test-runner.js --help"
+  },
+  "keywords": [
+    "project-template",
+    "testing",
+    "automation",
+    "ui-testing",
+    "data-storage",
+    "jsdom",
+    "python",
+    "nodejs"
+  ],
+  "author": "Template Project",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "fs-extra": "^10.1.0",
+    "jsdom": "^20.0.3",
+    "node-localstorage": "^3.0.5",
+    "yargs": "^17.6.2"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "python": ">=3.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/muumuu8181/0000-00-00-project-template.git"
+  },
+  "homepage": "https://github.com/muumuu8181/0000-00-00-project-template",
+  "bugs": {
+    "url": "https://github.com/muumuu8181/0000-00-00-project-template/issues"
+  }
+}
