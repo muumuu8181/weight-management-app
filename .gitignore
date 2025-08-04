@@ -1,0 +1,22 @@
+# 基本
+*.pyc
+__pycache__/
+*.log
+.DS_Store
+node_modules/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.directory
+
+# プロジェクト固有
+dist/
+build/
+*.egg-info/
