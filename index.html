@@ -100,6 +100,7 @@
             <button class="universal-copy-btn" onclick="debugFirebaseConnection()" style="background: #ff6b6b; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔍 Firebase Debug</button>
             <button class="universal-copy-btn" onclick="checkLoginIssues()" style="background: #ffc107; color: #212529; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">⚠️ ログイン問題診断</button>
             <button class="universal-copy-btn" onclick="copyDebugInfo()" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📋 デバッグ情報をコピー</button>
+            <button class="universal-copy-btn" onclick="checkDatabaseStructure()" style="background: #6f42c1; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🏗️ DB構造確認</button>
         </div>
     </div>
 
@@ -440,6 +441,64 @@
             }
             
             log('⚠️ === ログイン問題診断 完了 ===');
+        };
+
+        // データベース構造確認
+        window.checkDatabaseStructure = async () => {
+            if (!currentUser) {
+                log('❌ ログインが必要です');
+                return;
+            }
+            
+            log('🏗️ === データベース構造確認 開始 ===');
+            
+            try {
+                // 現在のユーザーのweightsデータ構造を確認
+                const userRef = database.ref(`users/${currentUser.uid}/weights`);
+                const snapshot = await userRef.once('value');
+                const data = snapshot.val();
+                
+                if (data) {
+                    const entries = Object.keys(data);
+                    log(`📊 現在のユーザー(${currentUser.email})のデータ:`);
+                    log(`- 体重記録数: ${entries.length}件`);
+                    log(`- 最新記録ID: ${entries[entries.length - 1]}`);
+                    
+                    // サンプルデータ構造を表示
+                    const sampleEntry = data[entries[0]];
+                    log(`- データ構造: ${JSON.stringify(sampleEntry, null, 2)}`);
+                } else {
+                    log('📊 現在のユーザーにはデータがありません');
+                }
+                
+                // ルートレベルの構造確認（管理者権限が必要）
+                try {
+                    const rootRef = database.ref('users');
+                    const rootSnapshot = await rootRef.once('value');
+                    const allUsers = rootSnapshot.val();
+                    
+                    if (allUsers) {
+                        const userCount = Object.keys(allUsers).length;
+                        log(`👥 全体統計:`);
+                        log(`- 登録ユーザー数: ${userCount}人`);
+                        
+                        let totalWeights = 0;
+                        Object.values(allUsers).forEach(user => {
+                            if (user.weights) {
+                                totalWeights += Object.keys(user.weights).length;
+                            }
+                        });
+                        log(`- 全体の体重記録数: ${totalWeights}件`);
+                    }
+                } catch (error) {
+                    log(`⚠️ 全体統計の取得に制限があります: ${error.message}`);
+                }
+                
+            } catch (error) {
+                log(`❌ 構造確認エラー: ${error.message}`);
+            }
+            
+            log('🏗️ === データベース構造確認 完了 ===');
         };
 
         // デバッグ情報をコピー
