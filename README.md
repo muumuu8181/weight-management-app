@@ -82,16 +82,72 @@ Firebase + Google認証による個人用体重管理アプリです。**Core/Cu
 - 個人情報はFirebaseサーバー側で保護
 - アプリコードに個人データは含まれません
 
-## 📁 プロジェクト構造
+## 📁 プロジェクト構造 - Core/Custom分離版
 
-詳細は `STRUCTURE.md` を参照してください。
+### 🔧 フォルダ構成
 
 ```
-├── core/          # 🚫 触ってはいけない（Firebase・GitHub Actions等）
-├── custom/        # ✅ 自由にカスタマイズ可能（設定・スタイル）
-├── index.html     # メインアプリファイル
-└── README.md      # このファイル
+weight-management-app/
+├── core/                           # 🚫 触ってはいけない領域
+│   ├── .github/                   # GitHub Actions設定
+│   │   └── workflows/
+│   │       └── pages.yml          # GitHub Pages自動デプロイ
+│   ├── src/                       # Core Firebase設定
+│   │   └── firebase-config.js     # Firebase認証・DB設定
+│   └── universal-system/          # Universal Template システム
+├── custom/                         # ✅ 自由にカスタマイズ可能
+│   ├── app-config.js              # アプリ設定（色・ボタン・動作等）
+│   └── styles.css                 # カスタムCSS（デザイン全般）
+├── index.html                      # メインアプリファイル
+└── README.md                       # このファイル
 ```
+
+### 🚫 CORE フォルダ（触ってはいけない）
+
+- **🔥 Firebase設定** - 認証・データベース接続の核心部分（絶対変更禁止）
+- **⚙️ GitHub Actions** - 自動デプロイ設定（変更するとデプロイ失敗）
+- **🛠️ Universal System** - テンプレート基盤（Core変更は全体に影響）
+
+### ✅ CUSTOM フォルダ（自由にカスタマイズ可能）
+
+- **🎨 app-config.js** - アプリ名・ボタン設定・動作設定
+- **🎨 styles.css** - カラーテーマ・フォント・レイアウト・ダークモード
+
+## 🔄 他のアプリに変更する方法
+
+### ✅ 変更してOKなファイル
+- `custom/app-config.js` → アプリの動作・設定
+- `custom/styles.css` → 見た目・デザイン
+- `index.html` の表示部分のみ → UI構造
+
+### 🚫 変更NGなファイル
+- `core/` 内のすべて
+- `index.html` のFirebase設定部分
+
+### 🎯 カスタマイズ例
+
+#### 食事記録アプリに変更
+1. `custom/app-config.js` で：アプリ名・タイミングボタンを食事関連に変更
+2. `custom/styles.css` で：カラーテーマを食事系に変更
+3. `index.html` で：表示テキストを食事関連に変更（**Firebase設定は変更禁止**）
+
+#### 運動記録アプリに変更
+1. `custom/app-config.js` で：アプリ名・ボタンを運動関連に変更
+2. `custom/styles.css` で：スポーツ系カラーテーマに変更
+
+## ⚡ 開発ワークフロー
+
+1. **カスタマイズ** → `custom/` フォルダのみ編集
+2. **テスト** → ローカルでHTTPサーバー起動
+3. **デプロイ** → `git push` で自動デプロイ
+4. **確認** → https://muumuu8181.github.io/weight-management-app/
+
+## 🛡️ 保護メカニズム
+
+- **Core分離** - 誤った変更を物理的に防止
+- **明確な境界** - 触ってOK/NGが一目瞭然
+- **独立カスタマイズ** - 他への影響なし
+- **バックアップ保護** - Core部分は常に安全
 
 ## 🎯 開発情報
 
