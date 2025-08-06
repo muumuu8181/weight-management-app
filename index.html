@@ -4,12 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ</title>
+    <title>体重管理アプリ v0.2</title>
+    
+    <!-- カスタムスタイル -->
+    <link rel="stylesheet" href="custom/styles.css">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+    <!-- カスタム設定 -->
+    <script type="module" src="custom/app-config.js"></script>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -29,7 +35,10 @@
 </head>
 <body>
     <div class="container">
-        <h1 style="text-align: center; color: #333;">📊 体重管理アプリ</h1>
+        <div class="app-header">
+            <h1 class="app-title">📊 体重管理アプリ v0.2</h1>
+            <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
+        </div>
         
         <!-- 認証セクション -->
         <div class="auth-section" id="authSection">
@@ -96,7 +105,7 @@
     </div>
 
     <script>
-        // Firebase設定（動作確認済み）
+        // Core Firebase設定（変更禁止 - core/src/firebase-config.js参照）
         const firebaseConfig = {
             apiKey: "AIzaSyA5PXKChizYDCXF_GJ4KL6Ylq9K5hCPXWE",
             authDomain: "shares-b1b97.firebaseapp.com",
