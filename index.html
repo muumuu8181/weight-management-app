@@ -17,20 +17,20 @@
     <!-- カスタム設定 -->
     <script type="module" src="custom/app-config.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .auth-section { background: #e7f3ff; color: #0c5460; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center; }
-        .weight-input { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
-        .input-card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
+        body { font-family: Arial, sans-serif; padding: 10px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .auth-section { background: #e7f3ff; color: #0c5460; padding: 10px; border-radius: 5px; margin-bottom: 10px; text-align: center; }
+        .weight-input { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin: 10px 0; }
+        .input-card { border: 1px solid #ddd; padding: 10px; border-radius: 8px; }
         .input-field { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin: 5px 0; font-size: 16px; }
         .save-button { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; margin: 5px; font-size: 16px; }
         .save-button:hover { background: #218838; }
         .auth-button { background: #4285f4; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
         .auth-button:hover { background: #357ae8; }
         .logout-button { background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin: 5px; }
-        .data-area { background: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 5px; font-family: monospace; min-height: 200px; }
+        .data-area { background: #f8f9fa; border: 1px solid #dee2e6; padding: 8px; border-radius: 5px; font-family: monospace; min-height: 120px; }
         .hidden { display: none; }
-        .user-info { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+        .user-info { background: #d4edda; color: #155724; padding: 6px; border-radius: 5px; margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -39,14 +39,12 @@
             <h1 class="app-title">📊 体重管理アプリ v0.2</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
-        
         <!-- 認証セクション -->
         <div class="auth-section" id="authSection">
             <h3>🔐 ログイン</h3>
             <p>Googleアカウントでログインして体重データを保存・同期できます</p>
             <button class="auth-button" onclick="handleGoogleLogin()">Googleでログイン</button>
         </div>
-
         <!-- ユーザー情報表示 -->
         <div class="user-info hidden" id="userInfo">
             <span>👤 ログイン中: <span id="userName"></span></span>
@@ -64,17 +62,18 @@
                 </div>
                 
                 <!-- 時間帯選択ボタン -->
-                <div style="margin: 10px 0;">
+                <div style="margin: 5px 0;">
                     <h4 style="margin: 5px 0; font-size: 14px;">⏰ 測定タイミング:</h4>
                     <div style="display: flex; gap: 5px; flex-wrap: wrap;">
                         <button type="button" class="timing-btn" onclick="selectTiming('朝起床後')" style="background: #ffeaa7; color: #2d3436; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🌅 朝起床後</button>
+                        <button type="button" class="timing-btn" onclick="selectTiming('起床後')" style="background: #55a3ff; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🛏️ 起床後</button>
                         <button type="button" class="timing-btn" onclick="selectTiming('トイレ後')" style="background: #74b9ff; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🚽 トイレ後</button>
                         <button type="button" class="timing-btn" onclick="selectTiming('風呂前')" style="background: #fd79a8; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🛁 風呂前</button>
                         <button type="button" class="timing-btn" onclick="selectTiming('風呂後')" style="background: #00b894; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🛀 風呂後</button>
                         <button type="button" class="timing-btn" onclick="selectTiming('食事前')" style="background: #e84393; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🍽️ 食事前</button>
                         <button type="button" class="timing-btn" onclick="selectTiming('食事後')" style="background: #a29bfe; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🍽️ 食事後</button>
                     </div>
-                    <input type="text" class="input-field" id="selectedTiming" placeholder="選択されたタイミング" readonly style="margin-top: 5px; background: #f8f9fa;">
+                    <input type="text" class="input-field" id="selectedTiming" placeholder="選択されたタイミング" readonly style="margin-top: 3px; background: #f8f9fa;">
                 </div>
                 
                 <textarea class="input-field" id="memoInput" placeholder="メモ (オプション)" rows="2"></textarea>
@@ -97,7 +96,7 @@
         </div>
         
         <!-- デバッグボタンエリア -->
-        <div style="margin-top: 15px; text-align: center;">
+        <div style="margin-top: 8px; text-align: center;">
             <button class="universal-copy-btn" onclick="debugFirebaseConnection()" style="background: #ff6b6b; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔍 Firebase Debug</button>
             <button class="universal-copy-btn" onclick="checkLoginIssues()" style="background: #ffc107; color: #212529; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">⚠️ ログイン問題診断</button>
             <button class="universal-copy-btn" onclick="copyDebugInfo()" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📋 デバッグ情報をコピー</button>
@@ -250,6 +249,27 @@
             }
         };
 
+        // 体重データ削除
+        window.deleteWeightEntry = async (entryId) => {
+            if (!currentUser) {
+                log('❌ ログインが必要です');
+                return;
+            }
+            
+            if (!confirm('この記録を削除しますか？')) {
+                return;
+            }
+            
+            try {
+                log(`🗑️ データ削除中: ${entryId}`);
+                const entryRef = database.ref(`users/${currentUser.uid}/weights/${entryId}`);
+                await entryRef.remove();
+                log(`✅ 削除完了: ${entryId}`);
+            } catch (error) {
+                log(`❌ 削除エラー: ${error.message}`);
+            }
+        };
+
         // ユーザーの体重データを読み込み
         function loadUserWeightData(userId) {
             const userRef = database.ref(`users/${userId}/weights`);
@@ -268,8 +288,8 @@
                         displayText += `: ${entry.weight}kg`;
                         if (entry.timing) displayText += ` (${entry.timing})`;
                         if (entry.memo) displayText += ` - ${entry.memo}`;
-                        return displayText;
-                    }).join('<br>');
+                        return `<div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 0; border-bottom: 1px solid #eee;"><span>${displayText}</span><button onclick="deleteWeightEntry('${entry.id}')" style="background: #dc3545; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">🗑️</button></div>`;
+                    }).join('');
                     
                     log(`📈 体重履歴読み込み完了: ${entries.length}件`);
                 } else {
