@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.3</title>
+    <title>体重管理アプリ v0.22</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -87,7 +87,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.3</h1>
+            <h1 class="app-title">📊 体重管理アプリ v0.22</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -151,6 +151,7 @@
             <button class="universal-copy-btn" onclick="checkLoginIssues()" style="background: #ffc107; color: #212529; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">⚠️ ログイン問題診断</button>
             <button class="universal-copy-btn" onclick="copyDebugInfo()" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📋 デバッグ情報をコピー</button>
             <button class="universal-copy-btn" onclick="checkDatabaseStructure()" style="background: #6f42c1; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🏗️ DB構造確認</button>
+            <button class="universal-copy-btn" onclick="checkMobileSupport()" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📱 モバイル診断</button>
         </div>
     </div>
 
@@ -222,15 +223,56 @@
             }
         });
 
-        // Googleログイン
+        // リダイレクトログインの結果を処理（モバイル用）
+        auth.getRedirectResult().then((result) => {
+            if (result.user) {
+                log(`✅ リダイレクトログイン成功: ${result.user.displayName}`);
+            }
+        }).catch((error) => {
+            if (error.code !== 'auth/no-redirect-operation') {
+                log(`❌ リダイレクトログインエラー: ${error.message}`);
+                log(`- エラーコード: ${error.code}`);
+            }
+        });
+
+        // Googleログイン（モバイル対応版）
         window.handleGoogleLogin = async () => {
             try {
                 log('🔐 Googleログイン開始...');
                 const provider = new firebase.auth.GoogleAuthProvider();
-                const result = await auth.signInWithPopup(provider);
-                log(`✅ ログイン成功: ${result.user.displayName}`);
+                
+                // モバイルデバイス検出
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                
+                let result;
+                if (isMobile) {
+                    // モバイルではredirectを使用（ポップアップが閉じる問題を回避）
+                    log('📱 モバイルデバイス検出 - リダイレクト方式でログイン');
+                    await auth.signInWithRedirect(provider);
+                    // リダイレクト後の結果は onAuthStateChanged で処理される
+                    return;
+                } else {
+                    // デスクトップではポップアップを使用
+                    log('🖥️ デスクトップデバイス - ポップアップ方式でログイン');
+                    result = await auth.signInWithPopup(provider);
+                    log(`✅ ログイン成功: ${result.user.displayName}`);
+                }
             } catch (error) {
                 log(`❌ ログインエラー: ${error.message}`);
+                
+                // エラーの詳細情報をログに出力
+                if (error.code) {
+                    log(`- エラーコード: ${error.code}`);
+                }
+                if (error.credential) {
+                    log('- 認証情報は取得済み');
+                }
+                
+                // モバイルで失敗した場合のリトライ提案
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    log('💡 モバイルログイン問題の可能性があります');
+                    log('💡 解決策: ブラウザの設定でポップアップを許可、またはページを再読み込み');
+                }
             }
         };
 
@@ -449,6 +491,34 @@
             });
             
             log('🔍 === Firebase Debug 完了 ===');
+        };
+
+        // モバイル環境診断
+        window.checkMobileSupport = () => {
+            log('📱 === モバイル環境診断 開始 ===');
+            
+            const userAgent = navigator.userAgent;
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+            
+            log(`🌐 ユーザーエージェント: ${userAgent}`);
+            log(`📱 モバイルデバイス判定: ${isMobile ? 'モバイル' : 'デスクトップ'}`);
+            
+            // ブラウザ判定
+            const isChrome = /Chrome/i.test(userAgent);
+            const isSafari = /Safari/i.test(userAgent) && !/Chrome/i.test(userAgent);
+            const isFirefox = /Firefox/i.test(userAgent);
+            
+            log(`🌐 ブラウザ: ${isChrome ? 'Chrome' : isSafari ? 'Safari' : isFirefox ? 'Firefox' : '不明'}`);
+            
+            // ログイン方式の推奨
+            if (isMobile) {
+                log('💡 モバイルの推奨設定:');
+                log('- Googleログインはリダイレクト方式を使用');
+                log('- ポップアップブロッカーの影響なし');
+                log('- 認証後にページが再読み込みされます');
+            }
+            
+            log('📱 === モバイル環境診断 完了 ===');
         };
 
         // ログイン問題診断
