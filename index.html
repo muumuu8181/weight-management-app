@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.24</title>
+    <title>体重管理アプリ v0.25</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -87,7 +87,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.24</h1>
+            <h1 class="app-title">📊 体重管理アプリ v0.25</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -226,70 +226,32 @@
             }
         });
 
-        // リダイレクトログインの結果を処理（モバイル用）
-        auth.getRedirectResult().then((result) => {
-            if (result.user) {
-                log(`✅ リダイレクトログイン成功: ${result.user.displayName}`);
-                log('📱 モバイル認証完了 - ユーザー画面に切り替え中...');
-                // ユーザー画面への切り替えは onAuthStateChanged で自動実行される
-            } else {
-                // リダイレクト結果がない場合（通常の初回読み込み）
-                log('🔄 ページ読み込み完了 - 認証状態を確認中...');
-            }
-        }).catch((error) => {
-            if (error.code !== 'auth/no-redirect-operation') {
-                log(`❌ リダイレクトログインエラー: ${error.message}`);
-                log(`- エラーコード: ${error.code}`);
-                
-                // エラーの場合はログイン画面に戻る
-                showLoginInterface();
-            }
-        });
+        // 初期化完了ログ
+        log('🔄 Firebase認証システム初期化完了 - 認証状態を確認中...');
 
-        // Googleログイン（改良版 - フォールバック対応）
+        // Googleログイン（シンプル版 - ポップアップのみ）
         window.handleGoogleLogin = async () => {
             try {
                 log('🔐 Googleログイン開始...');
                 const provider = new firebase.auth.GoogleAuthProvider();
                 
-                // モバイルデバイス検出
+                // モバイルデバイス検出（表示用）
                 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                 
                 if (isMobile) {
-                    log('📱 モバイルデバイス検出');
-                    
-                    try {
-                        // まずリダイレクト方式を試行
-                        log('🔄 リダイレクト方式でログインを試行...');
-                        await auth.signInWithRedirect(provider);
-                        log('✅ リダイレクト開始成功');
-                        // 成功すればここでページが移動するため以下は実行されない
-                        return;
-                        
-                    } catch (redirectError) {
-                        log(`❌ リダイレクト失敗: ${redirectError.message}`);
-                        log(`- エラーコード: ${redirectError.code}`);
-                        
-                        // リダイレクトが失敗した場合、ポップアップにフォールバック
-                        log('🔄 フォールバック: ポップアップ方式に切り替え');
-                        
-                        try {
-                            const result = await auth.signInWithPopup(provider);
-                            log(`✅ ポップアップログイン成功: ${result.user.displayName}`);
-                        } catch (popupError) {
-                            log(`❌ ポップアップも失敗: ${popupError.message}`);
-                            log('💡 解決策: ブラウザを再起動してやり直してください');
-                            throw popupError;
-                        }
-                    }
+                    log('📱 モバイルデバイス検出 - ポップアップ方式でログイン');
+                    log('💡 ポップアップが開かない場合は、ブラウザの設定でポップアップを許可してください');
                 } else {
-                    // デスクトップではポップアップを使用
                     log('🖥️ デスクトップデバイス - ポップアップ方式でログイン');
-                    const result = await auth.signInWithPopup(provider);
-                    log(`✅ ログイン成功: ${result.user.displayName}`);
                 }
+                
+                // 全デバイスでポップアップ方式を使用（シンプル化）
+                log('🪟 ポップアップウィンドウでGoogleログインを開始...');
+                const result = await auth.signInWithPopup(provider);
+                log(`✅ ログイン成功: ${result.user.displayName}`);
+                
             } catch (error) {
-                log(`❌ ログイン最終エラー: ${error.message}`);
+                log(`❌ ログインエラー: ${error.message}`);
                 
                 // エラーの詳細情報をログに出力
                 if (error.code) {
@@ -304,10 +266,15 @@
                         case 'auth/popup-blocked':
                             log('💡 ポップアップがブロックされました');
                             log('💡 ブラウザの設定でポップアップを許可してください');
+                            log('💡 モバイルの場合: ブラウザのメニュー → サイト設定 → ポップアップとリダイレクト → 許可');
                             break;
                         case 'auth/popup-closed-by-user':
                             log('💡 ユーザーがポップアップを閉じました');
                             log('💡 もう一度ログインボタンを押してください');
+                            break;
+                        case 'auth/cancelled-popup-request':
+                            log('💡 前回のポップアップがキャンセルされました');
+                            log('💡 しばらく待ってから再試行してください');
                             break;
                         default:
                             log('💡 ブラウザを更新してもう一度お試しください');
@@ -315,6 +282,14 @@
                 }
                 if (error.credential) {
                     log('- 認証情報は取得済み');
+                }
+                
+                // モバイル向けの追加ガイダンス
+                if (isMobile) {
+                    log('📱 モバイル向け解決策:');
+                    log('1. ブラウザの設定でポップアップを許可');
+                    log('2. プライベートモードを解除');
+                    log('3. 別のブラウザ（Chrome/Safari）で試行');
                 }
             }
         };
@@ -622,17 +597,15 @@
                 showLoginInterface();
             }
             
-            // リダイレクト結果を再チェック
-            auth.getRedirectResult().then((result) => {
-                if (result.user) {
-                    log('🔄 未処理のリダイレクト結果を発見しました');
-                    log(`✅ ユーザー: ${result.user.displayName}`);
-                } else {
-                    log('📝 リダイレクト結果なし（正常）');
-                }
-            }).catch((error) => {
-                log(`❌ リダイレクト結果確認エラー: ${error.message}`);
-            });
+            // 認証トークンの有効性確認
+            if (user) {
+                user.getIdToken(true).then(() => {
+                    log('✅ 認証トークンは有効です');
+                }).catch((tokenError) => {
+                    log(`❌ 認証トークンエラー: ${tokenError.message}`);
+                    log('💡 再ログインが必要かもしれません');
+                });
+            }
             
             log('🔍 === 認証状態強制確認 完了 ===');
         };
