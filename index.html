@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.23</title>
+    <title>体重管理アプリ v0.24</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -87,7 +87,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.23</h1>
+            <h1 class="app-title">📊 体重管理アプリ v0.24</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -153,6 +153,7 @@
             <button class="universal-copy-btn" onclick="checkDatabaseStructure()" style="background: #6f42c1; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🏗️ DB構造確認</button>
             <button class="universal-copy-btn" onclick="checkMobileSupport()" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📱 モバイル診断</button>
             <button class="universal-copy-btn" onclick="forceAuthCheck()" style="background: #fd7e14; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔄 認証状態確認</button>
+            <button class="universal-copy-btn" onclick="checkFirebaseConfig()" style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔧 Firebase設定</button>
         </div>
     </div>
 
@@ -245,7 +246,7 @@
             }
         });
 
-        // Googleログイン（モバイル対応版）
+        // Googleログイン（改良版 - フォールバック対応）
         window.handleGoogleLogin = async () => {
             try {
                 log('🔐 Googleログイン開始...');
@@ -254,35 +255,66 @@
                 // モバイルデバイス検出
                 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                 
-                let result;
                 if (isMobile) {
-                    // モバイルではredirectを使用（ポップアップが閉じる問題を回避）
-                    log('📱 モバイルデバイス検出 - リダイレクト方式でログイン');
-                    log('🔄 Googleの認証ページに移動します...');
-                    await auth.signInWithRedirect(provider);
-                    // この後はページがリダイレクトされるため、以下は実行されない
-                    return;
+                    log('📱 モバイルデバイス検出');
+                    
+                    try {
+                        // まずリダイレクト方式を試行
+                        log('🔄 リダイレクト方式でログインを試行...');
+                        await auth.signInWithRedirect(provider);
+                        log('✅ リダイレクト開始成功');
+                        // 成功すればここでページが移動するため以下は実行されない
+                        return;
+                        
+                    } catch (redirectError) {
+                        log(`❌ リダイレクト失敗: ${redirectError.message}`);
+                        log(`- エラーコード: ${redirectError.code}`);
+                        
+                        // リダイレクトが失敗した場合、ポップアップにフォールバック
+                        log('🔄 フォールバック: ポップアップ方式に切り替え');
+                        
+                        try {
+                            const result = await auth.signInWithPopup(provider);
+                            log(`✅ ポップアップログイン成功: ${result.user.displayName}`);
+                        } catch (popupError) {
+                            log(`❌ ポップアップも失敗: ${popupError.message}`);
+                            log('💡 解決策: ブラウザを再起動してやり直してください');
+                            throw popupError;
+                        }
+                    }
                 } else {
                     // デスクトップではポップアップを使用
                     log('🖥️ デスクトップデバイス - ポップアップ方式でログイン');
-                    result = await auth.signInWithPopup(provider);
+                    const result = await auth.signInWithPopup(provider);
                     log(`✅ ログイン成功: ${result.user.displayName}`);
                 }
             } catch (error) {
-                log(`❌ ログインエラー: ${error.message}`);
+                log(`❌ ログイン最終エラー: ${error.message}`);
                 
                 // エラーの詳細情報をログに出力
                 if (error.code) {
                     log(`- エラーコード: ${error.code}`);
+                    
+                    // 特定のエラーコードに対する解決策を提示
+                    switch(error.code) {
+                        case 'auth/unauthorized-domain':
+                            log('💡 ドメイン許可設定の問題です');
+                            log('💡 Firebase Consoleで認証ドメインを確認してください');
+                            break;
+                        case 'auth/popup-blocked':
+                            log('💡 ポップアップがブロックされました');
+                            log('💡 ブラウザの設定でポップアップを許可してください');
+                            break;
+                        case 'auth/popup-closed-by-user':
+                            log('💡 ユーザーがポップアップを閉じました');
+                            log('💡 もう一度ログインボタンを押してください');
+                            break;
+                        default:
+                            log('💡 ブラウザを更新してもう一度お試しください');
+                    }
                 }
                 if (error.credential) {
                     log('- 認証情報は取得済み');
-                }
-                
-                // モバイルで失敗した場合のリトライ提案
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                    log('💡 モバイルログイン問題の可能性があります');
-                    log('💡 解決策: ブラウザの設定でポップアップを許可、またはページを再読み込み');
                 }
             }
         };
@@ -530,6 +562,48 @@
             }
             
             log('📱 === モバイル環境診断 完了 ===');
+        };
+
+        // Firebase設定診断
+        window.checkFirebaseConfig = () => {
+            log('🔧 === Firebase設定診断 開始 ===');
+            
+            // 現在のドメイン確認
+            const currentDomain = window.location.hostname;
+            const currentUrl = window.location.href;
+            log(`🌐 現在のドメイン: ${currentDomain}`);
+            log(`🔗 現在のURL: ${currentUrl}`);
+            
+            // Firebase設定情報
+            log(`🔥 Firebase設定:`);
+            log(`- Project ID: ${firebaseConfig.projectId}`);
+            log(`- Auth Domain: ${firebaseConfig.authDomain}`);
+            log(`- Database URL: ${firebaseConfig.databaseURL}`);
+            
+            // 認証ドメイン許可状況の推測
+            if (currentDomain === 'muumuu8181.github.io') {
+                log('✅ GitHub Pagesドメイン検出');
+                log('💡 Firebase Consoleでこのドメインが許可されているか確認が必要');
+            } else if (currentDomain === 'localhost' || currentDomain === '127.0.0.1') {
+                log('✅ ローカルホスト検出');
+                log('💡 通常は自動で許可されています');
+            } else {
+                log('⚠️ 不明なドメインです');
+                log('💡 Firebase Consoleの認証設定で許可が必要かもしれません');
+            }
+            
+            // モバイルブラウザでのリダイレクト制限確認
+            const userAgent = navigator.userAgent;
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+            
+            if (isMobile) {
+                log('📱 モバイルブラウザ固有の制限:');
+                log('- Safari: サードパーティCookieの制限あり');
+                log('- Chrome Mobile: ポップアップの自動ブロック');
+                log('- 解決策: リダイレクト方式またはポップアップ許可設定');
+            }
+            
+            log('🔧 === Firebase設定診断 完了 ===');
         };
 
         // 認証状態の強制確認
