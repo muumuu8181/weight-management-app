@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.21</title>
+    <title>体重管理アプリ v0.3</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -17,11 +17,62 @@
     <!-- カスタム設定 -->
     <script type="module" src="custom/app-config.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; padding: 10px; background: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        body { font-family: Arial, sans-serif; padding: 5px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        /* スマホ対応 */
+        @media (max-width: 768px) {
+            body { padding: 3px; }
+            .container { padding: 8px; margin: 0; border-radius: 0; }
+            .weight-input { grid-template-columns: 1fr; gap: 8px; }
+            .input-card { padding: 8px; }
+        }
         .auth-section { background: #e7f3ff; color: #0c5460; padding: 10px; border-radius: 5px; margin-bottom: 10px; text-align: center; }
-        .weight-input { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin: 10px 0; }
-        .input-card { border: 1px solid #ddd; padding: 10px; border-radius: 8px; }
+        .weight-input { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin: 8px 0; }
+        .input-card { border: 1px solid #ddd; padding: 8px; border-radius: 8px; }
+        
+        /* タイミングパネルのスタイル */
+        .timing-panel { 
+            background: #f8f9fa; 
+            border: 2px solid #e9ecef; 
+            border-radius: 8px; 
+            padding: 8px; 
+            margin: 5px 0; 
+        }
+        .timing-buttons { 
+            display: flex; 
+            gap: 4px; 
+            flex-wrap: wrap; 
+            justify-content: center;
+        }
+        .timing-btn { 
+            background: #6c757d; 
+            color: white; 
+            border: none; 
+            padding: 6px 8px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-size: 11px;
+            transition: all 0.2s;
+            min-width: 70px;
+            text-align: center;
+        }
+        .timing-btn:hover {
+            transform: scale(1.05);
+        }
+        .timing-btn.selected {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .timing-buttons { gap: 3px; }
+            .timing-btn { 
+                padding: 4px 6px; 
+                font-size: 10px;
+                min-width: 60px;
+            }
+        }
         .input-field { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin: 5px 0; font-size: 16px; }
         .save-button { background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; margin: 5px; font-size: 16px; }
         .save-button:hover { background: #218838; }
@@ -36,7 +87,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.21</h1>
+            <h1 class="app-title">📊 体重管理アプリ v0.3</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -54,26 +105,25 @@
         <!-- 体重入力セクション -->
         <div class="weight-input hidden" id="weightInput">
             <div class="input-card">
-                <h3>⚖️ 体重を記録</h3>
+                <h3 style="margin-top: 0; margin-bottom: 8px;">⚖️ 体重を記録</h3>
                 <input type="date" class="input-field" id="dateInput">
-                <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
                     <input type="number" class="input-field" id="weightValue" placeholder="体重 (kg)" step="0.1" min="0" max="300" value="72.0" style="flex: 1;" onkeydown="handleWeightKeypress(event)">
-                    <span style="font-size: 12px; color: #666;">↑↓キーで0.1kg調整</span>
+                    <span style="font-size: 11px; color: #666;">↑↓で調整</span>
                 </div>
                 
-                <!-- 時間帯選択ボタン -->
-                <div style="margin: 5px 0;">
-                    <h4 style="margin: 5px 0; font-size: 14px;">⏰ 測定タイミング:</h4>
-                    <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-                        <button type="button" class="timing-btn" onclick="selectTiming('朝起床後')" style="background: #ffeaa7; color: #2d3436; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🌅 朝起床後</button>
-                        <button type="button" class="timing-btn" onclick="selectTiming('起床後')" style="background: #55a3ff; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🛏️ 起床後</button>
-                        <button type="button" class="timing-btn" onclick="selectTiming('トイレ後')" style="background: #74b9ff; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🚽 トイレ後</button>
-                        <button type="button" class="timing-btn" onclick="selectTiming('風呂前')" style="background: #fd79a8; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🛁 風呂前</button>
-                        <button type="button" class="timing-btn" onclick="selectTiming('風呂後')" style="background: #00b894; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🛀 風呂後</button>
-                        <button type="button" class="timing-btn" onclick="selectTiming('食事前')" style="background: #e84393; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🍽️ 食事前</button>
-                        <button type="button" class="timing-btn" onclick="selectTiming('食事後')" style="background: #a29bfe; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 12px;">🍽️ 食事後</button>
+                <!-- タイミング選択パネル -->
+                <div class="timing-panel">
+                    <div class="timing-buttons">
+                        <button type="button" class="timing-btn" onclick="selectTiming('起床後')" data-timing="起床後" style="background: #55a3ff;">🛏️ 起床後</button>
+                        <button type="button" class="timing-btn" onclick="selectTiming('トイレ前')" data-timing="トイレ前" style="background: #81ecec;">🚽 トイレ前</button>
+                        <button type="button" class="timing-btn" onclick="selectTiming('トイレ後')" data-timing="トイレ後" style="background: #74b9ff;">🚽 トイレ後</button>
+                        <button type="button" class="timing-btn" onclick="selectTiming('風呂前')" data-timing="風呂前" style="background: #fd79a8;">🛁 風呂前</button>
+                        <button type="button" class="timing-btn" onclick="selectTiming('風呂後')" data-timing="風呂後" style="background: #00b894;">🛀 風呂後</button>
+                        <button type="button" class="timing-btn" onclick="selectTiming('食事前')" data-timing="食事前" style="background: #e84393;">🍽️ 食事前</button>
+                        <button type="button" class="timing-btn" onclick="selectTiming('食事後')" data-timing="食事後" style="background: #a29bfe;">🍽️ 食事後</button>
                     </div>
-                    <input type="text" class="input-field" id="selectedTiming" placeholder="選択されたタイミング" readonly style="margin-top: 3px; background: #f8f9fa;">
+                    <input type="text" class="input-field" id="selectedTiming" placeholder="選択されたタイミング" readonly style="margin-top: 4px; background: #ffffff; font-size: 12px; padding: 6px; text-align: center;">
                 </div>
                 
                 <textarea class="input-field" id="memoInput" placeholder="メモ (オプション)" rows="2"></textarea>
@@ -138,19 +188,23 @@
             }
         };
 
-        // タイミング選択機能
+        // タイミング選択機能（改良版）
         window.selectTiming = (timing) => {
             selectedTimingValue = timing;
             document.getElementById('selectedTiming').value = timing;
             
-            // 選択されたボタンのスタイルを更新
+            // すべてのボタンから選択状態を削除
             document.querySelectorAll('.timing-btn').forEach(btn => {
-                btn.style.opacity = '0.6';
-                btn.style.transform = 'scale(1)';
+                btn.classList.remove('selected');
+                btn.style.opacity = '0.7';
             });
             
-            event.target.style.opacity = '1';
-            event.target.style.transform = 'scale(1.05)';
+            // 選択されたボタンに選択状態を追加
+            const selectedBtn = document.querySelector(`[data-timing="${timing}"]`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('selected');
+                selectedBtn.style.opacity = '1';
+            }
             
             log(`⏰ 測定タイミング選択: ${timing}`);
         };
@@ -239,8 +293,8 @@
                 
                 // ボタンのスタイルをリセット
                 document.querySelectorAll('.timing-btn').forEach(btn => {
-                    btn.style.opacity = '0.6';
-                    btn.style.transform = 'scale(1)';
+                    btn.style.opacity = '0.7';
+                    btn.classList.remove('selected');
                 });
                 
                 // データを再読み込み
@@ -314,7 +368,8 @@
             
             // タイミングボタンの初期状態設定
             document.querySelectorAll('.timing-btn').forEach(btn => {
-                btn.style.opacity = '0.6';
+                btn.style.opacity = '0.7';
+                btn.classList.remove('selected');
             });
         }
 
