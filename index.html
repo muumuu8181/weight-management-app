@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.22</title>
+    <title>体重管理アプリ v0.23</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -87,7 +87,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.22</h1>
+            <h1 class="app-title">📊 体重管理アプリ v0.23</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -152,6 +152,7 @@
             <button class="universal-copy-btn" onclick="copyDebugInfo()" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📋 デバッグ情報をコピー</button>
             <button class="universal-copy-btn" onclick="checkDatabaseStructure()" style="background: #6f42c1; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🏗️ DB構造確認</button>
             <button class="universal-copy-btn" onclick="checkMobileSupport()" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📱 モバイル診断</button>
+            <button class="universal-copy-btn" onclick="forceAuthCheck()" style="background: #fd7e14; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔄 認証状態確認</button>
         </div>
     </div>
 
@@ -210,15 +211,16 @@
             log(`⏰ 測定タイミング選択: ${timing}`);
         };
 
-        // 認証状態の監視
+        // 認証状態の監視（改良版）
         auth.onAuthStateChanged((user) => {
             currentUser = user;
             if (user) {
-                log(`✅ ログイン成功: ${user.displayName}`);
+                log(`✅ 認証状態確認: ${user.displayName} でログイン中`);
+                log(`📧 メール: ${user.email}`);
                 showUserInterface(user);
                 loadUserWeightData(user.uid);
             } else {
-                log('❌ ログアウトしました');
+                log('🔒 認証状態: 未ログイン');
                 showLoginInterface();
             }
         });
@@ -227,11 +229,19 @@
         auth.getRedirectResult().then((result) => {
             if (result.user) {
                 log(`✅ リダイレクトログイン成功: ${result.user.displayName}`);
+                log('📱 モバイル認証完了 - ユーザー画面に切り替え中...');
+                // ユーザー画面への切り替えは onAuthStateChanged で自動実行される
+            } else {
+                // リダイレクト結果がない場合（通常の初回読み込み）
+                log('🔄 ページ読み込み完了 - 認証状態を確認中...');
             }
         }).catch((error) => {
             if (error.code !== 'auth/no-redirect-operation') {
                 log(`❌ リダイレクトログインエラー: ${error.message}`);
                 log(`- エラーコード: ${error.code}`);
+                
+                // エラーの場合はログイン画面に戻る
+                showLoginInterface();
             }
         });
 
@@ -248,8 +258,9 @@
                 if (isMobile) {
                     // モバイルではredirectを使用（ポップアップが閉じる問題を回避）
                     log('📱 モバイルデバイス検出 - リダイレクト方式でログイン');
+                    log('🔄 Googleの認証ページに移動します...');
                     await auth.signInWithRedirect(provider);
-                    // リダイレクト後の結果は onAuthStateChanged で処理される
+                    // この後はページがリダイレクトされるため、以下は実行されない
                     return;
                 } else {
                     // デスクトップではポップアップを使用
@@ -519,6 +530,37 @@
             }
             
             log('📱 === モバイル環境診断 完了 ===');
+        };
+
+        // 認証状態の強制確認
+        window.forceAuthCheck = () => {
+            log('🔍 === 認証状態強制確認 開始 ===');
+            
+            const user = auth.currentUser;
+            log(`🔐 Firebase認証状態: ${user ? `ログイン済み (${user.displayName})` : '未ログイン'}`);
+            
+            if (user) {
+                log('✅ ユーザー画面を表示します');
+                showUserInterface(user);
+                loadUserWeightData(user.uid);
+            } else {
+                log('❌ ログイン画面を表示します');
+                showLoginInterface();
+            }
+            
+            // リダイレクト結果を再チェック
+            auth.getRedirectResult().then((result) => {
+                if (result.user) {
+                    log('🔄 未処理のリダイレクト結果を発見しました');
+                    log(`✅ ユーザー: ${result.user.displayName}`);
+                } else {
+                    log('📝 リダイレクト結果なし（正常）');
+                }
+            }).catch((error) => {
+                log(`❌ リダイレクト結果確認エラー: ${error.message}`);
+            });
+            
+            log('🔍 === 認証状態強制確認 完了 ===');
         };
 
         // ログイン問題診断
