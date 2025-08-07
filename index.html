@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.31</title>
+    <title>体重管理アプリ v0.32</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -90,7 +90,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.31</h1>
+            <h1 class="app-title">📊 体重管理アプリ v0.32</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -126,6 +126,7 @@
                         <button type="button" class="timing-btn" onclick="selectTiming('食事前')" data-timing="食事前" style="background: #e84393;">🍽️ 食事前</button>
                         <button type="button" class="timing-btn" onclick="selectTiming('食事後')" data-timing="食事後" style="background: #a29bfe;">🍽️ 食事後</button>
                     </div>
+                    <input type="text" class="input-field" id="selectedTiming" placeholder="タイミング" readonly style="margin-top: 5px; font-size: 12px; padding: 6px; text-align: center; background: #f0f8ff;">
                 </div>
                 
                 <!-- 服装記録パネル -->
