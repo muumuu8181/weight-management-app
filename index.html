@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.32</title>
+    <title>体重管理アプリ v0.33</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -90,7 +90,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.32</h1>
+            <h1 class="app-title">📊 体重管理アプリ v0.33</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -130,13 +130,14 @@
                 </div>
                 
                 <!-- 服装記録パネル -->
-                <div class="clothing-panel" style="background: #f0f8ff; border: 2px solid #b3d9ff; border-radius: 8px; padding: 8px; margin: 5px 0;">
+                <div class="clothing-panel" style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 8px; margin: 5px 0;">
                     <h4 style="margin: 2px 0 5px 0; font-size: 13px; text-align: center;">👕 服装記録</h4>
                     
                     <!-- 上半身 -->
                     <div style="margin: 3px 0;">
                         <span style="font-size: 11px; color: #444; display: block; margin-bottom: 2px;">上:</span>
                         <div style="display: flex; gap: 3px; flex-wrap: wrap;">
+                            <button type="button" class="clothing-btn" onclick="selectClothingTop('なし')" data-clothing-top="なし" style="background: #e0e0e0; color: #424242; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">❌ なし</button>
                             <button type="button" class="clothing-btn" onclick="selectClothingTop('下着シャツ')" data-clothing-top="下着シャツ" style="background: #87ceeb; color: #2f4f4f; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">👕 下着シャツ</button>
                             <button type="button" class="clothing-btn" onclick="selectClothingTop('ワイシャツ')" data-clothing-top="ワイシャツ" style="background: #add8e6; color: #2f4f4f; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">👔 ワイシャツ</button>
                         </div>
@@ -147,6 +148,7 @@
                     <div style="margin: 3px 0;">
                         <span style="font-size: 11px; color: #444; display: block; margin-bottom: 2px;">下:</span>
                         <div style="display: flex; gap: 3px; flex-wrap: wrap;">
+                            <button type="button" class="clothing-btn" onclick="selectClothingBottom('なし')" data-clothing-bottom="なし" style="background: #e0e0e0; color: #424242; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">❌ なし</button>
                             <button type="button" class="clothing-btn" onclick="selectClothingBottom('トランクス')" data-clothing-bottom="トランクス" style="background: #dda0dd; color: #4b0082; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">🩲 トランクス</button>
                             <button type="button" class="clothing-btn" onclick="selectClothingBottom('ハーフパンツ')" data-clothing-bottom="ハーフパンツ" style="background: #f0e68c; color: #8b4513; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">🩳 ハーフパンツ</button>
                         </div>
@@ -173,6 +175,7 @@
                 <canvas id="weightChart"></canvas>
             </div>
             <div style="margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap;">
+                <button onclick="updateChartRange(1)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1日</button>
                 <button onclick="updateChartRange(7)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1週間</button>
                 <button onclick="updateChartRange(30)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1ヶ月</button>
                 <button onclick="updateChartRange(90)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">3ヶ月</button>
@@ -786,7 +789,8 @@
         // グラフの表示期間を変更
         window.updateChartRange = (days) => {
             updateChart(days);
-            const rangeName = days === 7 ? '1週間' : 
+            const rangeName = days === 1 ? '1日' :
+                            days === 7 ? '1週間' : 
                             days === 30 ? '1ヶ月' : 
                             days === 90 ? '3ヶ月' : 
                             days === 365 ? '1年' : '全期間';
