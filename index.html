@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.29</title>
+    <title>体重管理アプリ v0.31</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -13,6 +13,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- カスタム設定 -->
     <script type="module" src="custom/app-config.js"></script>
@@ -87,7 +90,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.29</h1>
+            <h1 class="app-title">📊 体重管理アプリ v0.31</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -162,6 +165,21 @@
             </div>
         </div>
 
+        <!-- グラフパネル -->
+        <div class="input-card hidden" id="chartPanel" style="margin-top: 10px;">
+            <h3>📊 体重推移グラフ</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="weightChart"></canvas>
+            </div>
+            <div style="margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap;">
+                <button onclick="updateChartRange(7)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1週間</button>
+                <button onclick="updateChartRange(30)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1ヶ月</button>
+                <button onclick="updateChartRange(90)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">3ヶ月</button>
+                <button onclick="updateChartRange(365)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1年</button>
+                <button onclick="updateChartRange(0)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">全期間</button>
+            </div>
+        </div>
+
         <h3>📋 アプリログ <button class="universal-copy-btn" onclick="copyLogs()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 ログをコピー</button></h3>
         <div class="data-area" id="logArea">
             体重管理アプリ起動完了...<br>
@@ -203,6 +221,9 @@
         let selectedTimingValue = '';
         let selectedTopValue = '';
         let selectedBottomValue = '';
+        let weightChart = null;
+        let allWeightData = [];
+        window.editingEntryId = null;
 
         // キーボードでの体重調整機能
         window.handleWeightKeypress = (event) => {
@@ -477,9 +498,9 @@
                     createdAt: now.toISOString()
                 };
 
-                if (editingEntryId) {
+                if (window.editingEntryId) {
                     // 編集モード: 既存データを更新
-                    const entryRef = database.ref(`users/${currentUser.uid}/weights/${editingEntryId}`);
+                    const entryRef = database.ref(`users/${currentUser.uid}/weights/${window.editingEntryId}`);
                     await entryRef.update({
                         date: date,
                         time: timeString,
@@ -501,7 +522,7 @@
                 
                 // 保存完了ログ（服装情報も含む）
                 let logMessage;
-                if (editingEntryId) {
+                if (window.editingEntryId) {
                     logMessage = `✏️ 更新完了: ${date} ${timeString} - ${weight}kg`;
                 } else {
                     logMessage = `✅ 保存完了: ${date} ${timeString} - ${weight}kg`;
@@ -523,7 +544,7 @@
                 selectedBottomValue = '';
                 
                 // 編集モードをリセット
-                editingEntryId = null;
+                window.editingEntryId = null;
                 document.querySelector('.save-button').textContent = '💾 保存';
                 document.querySelector('.save-button').style.background = '#28a745';
                 
@@ -580,7 +601,7 @@
                 }
                 
                 // 編集モードに切り替え
-                editingEntryId = entryId;
+                window.editingEntryId = entryId;
                 document.querySelector('.save-button').textContent = '✏️ 更新';
                 document.querySelector('.save-button').style.background = '#ffc107';
                 
@@ -627,6 +648,10 @@
                         .map(([key, value]) => ({ id: key, ...value }))
                         .sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
                     
+                    // グラフ用にデータを保存
+                    allWeightData = entries.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    updateChart();
+                    
                     historyDiv.innerHTML = entries.map(entry => {
                         let displayText = `${entry.date}`;
                         if (entry.time) displayText += ` ${entry.time}`;
@@ -647,8 +672,124 @@
                 } else {
                     historyDiv.innerHTML = 'まだ体重データがありません';
                     log('📈 体重履歴: データなし');
+                    allWeightData = [];
+                    updateChart();
                 }
             });
+        }
+
+        // グラフを更新
+        function updateChart(days = 30) {
+            const ctx = document.getElementById('weightChart');
+            if (!ctx) return;
+
+            const now = new Date();
+            const startDate = new Date(now);
+            if (days > 0) {
+                startDate.setDate(now.getDate() - days);
+            } else {
+                // 全期間の場合、最も古いデータから
+                if (allWeightData.length > 0) {
+                    startDate.setTime(new Date(allWeightData[0].date).getTime());
+                }
+            }
+
+            // 期間内のデータをフィルタリング
+            const filteredData = allWeightData.filter(entry => {
+                const entryDate = new Date(entry.date);
+                return entryDate >= startDate && entryDate <= now;
+            });
+
+            // 日付でグループ化（同じ日の複数記録がある場合は平均を取る）
+            const groupedData = {};
+            filteredData.forEach(entry => {
+                if (!groupedData[entry.date]) {
+                    groupedData[entry.date] = [];
+                }
+                groupedData[entry.date].push(entry.weight);
+            });
+
+            // グラフ用データを準備
+            const chartData = Object.keys(groupedData).sort().map(date => ({
+                x: date,
+                y: groupedData[date].reduce((a, b) => a + b, 0) / groupedData[date].length
+            }));
+
+            // グラフを描画
+            if (weightChart) {
+                weightChart.destroy();
+            }
+
+            const chartConfig = {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: '体重 (kg)',
+                        data: chartData,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `体重: ${context.parsed.y.toFixed(1)}kg`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                displayFormats: {
+                                    day: 'MM/dd'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: '日付'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '体重 (kg)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(1) + 'kg';
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            weightChart = new Chart(ctx, chartConfig);
+            log(`📊 グラフ更新: ${chartData.length}件のデータ表示`);
+        }
+
+        // グラフの表示期間を変更
+        window.updateChartRange = (days) => {
+            updateChart(days);
+            const rangeName = days === 7 ? '1週間' : 
+                            days === 30 ? '1ヶ月' : 
+                            days === 90 ? '3ヶ月' : 
+                            days === 365 ? '1年' : '全期間';
+            log(`📊 グラフ表示期間変更: ${rangeName}`);
         }
 
         // UI表示制御
@@ -656,6 +797,7 @@
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('userInfo').classList.remove('hidden');
             document.getElementById('weightInput').classList.remove('hidden');
+            document.getElementById('chartPanel').classList.remove('hidden');
             document.getElementById('userName').textContent = user.displayName;
             
             // 今日の日付と体重デフォルト値を設定（タイムゾーン考慮）
@@ -684,6 +826,7 @@
             document.getElementById('authSection').classList.remove('hidden');
             document.getElementById('userInfo').classList.add('hidden');
             document.getElementById('weightInput').classList.add('hidden');
+            document.getElementById('chartPanel').classList.add('hidden');
         }
 
         // ログ出力関数

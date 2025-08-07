@@ -1,4 +1,4 @@
-# 📊 体重管理アプリ v0.2 - Core/Custom分離版
+# 📊 体重管理アプリ v0.31 - Core/Custom分離版
 
 Firebase + Google認証による個人用体重管理アプリです。**Core/Custom分離構造**により、安全で効率的なカスタマイズが可能になりました。
 
