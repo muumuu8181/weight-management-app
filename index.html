@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.27</title>
+    <title>体重管理アプリ v0.28</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -17,8 +17,8 @@
     <!-- カスタム設定 -->
     <script type="module" src="custom/app-config.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; padding: 5px; background: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        body { font-family: Arial, sans-serif; padding: 2px; background: #f5f5f5; line-height: 1.2; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 6px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
         /* スマホ対応 */
         @media (max-width: 768px) {
@@ -27,7 +27,7 @@
             .weight-input { grid-template-columns: 1fr; gap: 8px; }
             .input-card { padding: 8px; }
         }
-        .auth-section { background: #e7f3ff; color: #0c5460; padding: 10px; border-radius: 5px; margin-bottom: 10px; text-align: center; }
+        .auth-section { background: #e7f3ff; color: #0c5460; padding: 6px; border-radius: 5px; margin-bottom: 6px; text-align: center; }
         .weight-input { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin: 8px 0; }
         .input-card { border: 1px solid #ddd; padding: 8px; border-radius: 8px; }
         
@@ -81,13 +81,13 @@
         .logout-button { background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin: 5px; }
         .data-area { background: #f8f9fa; border: 1px solid #dee2e6; padding: 8px; border-radius: 5px; font-family: monospace; min-height: 120px; }
         .hidden { display: none; }
-        .user-info { background: #d4edda; color: #155724; padding: 6px; border-radius: 5px; margin-bottom: 8px; }
+        .user-info { background: #d4edda; color: #155724; padding: 4px 6px; border-radius: 5px; margin-bottom: 6px; font-size: 13px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.27</h1>
+            <h1 class="app-title">📊 体重管理アプリ v0.28</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -579,9 +579,13 @@
             document.getElementById('weightInput').classList.remove('hidden');
             document.getElementById('userName').textContent = user.displayName;
             
-            // 今日の日付と体重デフォルト値を設定
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('dateInput').value = today;
+            // 今日の日付と体重デフォルト値を設定（タイムゾーン考慮）
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const todayString = `${year}-${month}-${day}`;
+            document.getElementById('dateInput').value = todayString;
             document.getElementById('weightValue').value = '72.0';
             
             // タイミングボタンの初期状態設定
