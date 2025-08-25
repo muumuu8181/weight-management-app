@@ -1,23 +1,23 @@
-# 📊 体重管理アプリ v0.34 - Core/Custom分離版
+# 📊 アプリテンプレート v0.1 - Core/Custom分離版
 
-Firebase + Google認証による個人用体重管理アプリです。**Core/Custom分離構造**により、安全で効率的なカスタマイズが可能になりました。
+Firebase + Google認証による汎用データ管理アプリテンプレートです。**Core/Custom分離構造**により、安全で効率的なカスタマイズが可能になりました。
 
 ## 🌟 主要機能
 
 ### 📊 基本機能
-- **体重記録**: 日付・時刻・体重・測定タイミング・メモを記録
+- **データ記録**: 日付・時刻・値・タイミング・メモを記録
 - **🔐 Google認証**: 安全なGoogle OAuth認証システム
 - **🔄 リアルタイム同期**: Firebase Realtime Databaseによるデバイス間同期
-- **⌨️ キーボード操作**: ↑↓キーで0.1kg単位の調整
-- **📈 履歴表示**: 時系列での体重履歴確認
+- **⌨️ キーボード操作**: ↑↓キーで0.1単位の調整
+- **📈 履歴表示**: 時系列でのデータ履歴確認
 
 ### 🎨 Core/Custom分離構造 (v0.2の新機能)
 - **🚫 Core フォルダ**: 触ってはいけない安全領域（Firebase設定・GitHub Actions等）
 - **✅ Custom フォルダ**: 自由にカスタマイズ可能（色・ボタン・動作設定）
-- **🔧 簡単変更**: 他のアプリ（食事記録・運動記録等）への転用が容易
+- **🔧 簡単変更**: 様々なデータ管理アプリへの転用が容易
 - **🛡️ 安全性**: 誤った変更による動作不良を防止
 
-### 🔘 測定タイミング（カスタマイズ可能）
+### 🔘 タイミングボタン（カスタマイズ可能）
 - 🌅 朝起床後
 - 🚽 トイレ後  
 - 🛁 風呂前
@@ -27,7 +27,7 @@ Firebase + Google認証による個人用体重管理アプリです。**Core/Cu
 ## 🚀 使用方法
 
 ### ライブデモ
-**https://muumuu8181.github.io/weight-management-app/**
+**https://muumuu8181.github.io/0000-00-00-project-template/**
 
 ### ローカル実行
 1. HTTPサーバーを起動：
@@ -43,7 +43,7 @@ Firebase + Google認証による個人用体重管理アプリです。**Core/Cu
 
 3. Googleアカウントでログイン
 
-4. 体重を入力して保存
+4. データを入力して保存
 
 ## 🔧 技術仕様
 
@@ -63,7 +63,7 @@ Firebase + Google認証による個人用体重管理アプリです。**Core/Cu
         "recordId": {
           "date": "2025-08-06",
           "time": "20:30",
-          "weight": 72.5,
+          "value": 72.5,
           "timing": "風呂後",
           "memo": "夕食後",
           "timestamp": 1722944530000,
@@ -87,7 +87,7 @@ Firebase + Google認証による個人用体重管理アプリです。**Core/Cu
 ### 🔧 フォルダ構成
 
 ```
-weight-management-app/
+app-template/
 ├── core/                           # 🚫 触ってはいけない領域
 │   ├── .github/                   # GitHub Actions設定
 │   │   └── workflows/
@@ -140,7 +140,7 @@ weight-management-app/
 1. **カスタマイズ** → `custom/` フォルダのみ編集
 2. **テスト** → ローカルでHTTPサーバー起動
 3. **デプロイ** → `git push` で自動デプロイ
-4. **確認** → https://muumuu8181.github.io/weight-management-app/
+4. **確認** → https://muumuu8181.github.io/app-template/
 
 ## 🛡️ 保護メカニズム
 
@@ -179,4 +179,4 @@ Issue・Pull Request歓迎です。改善提案やバグ報告をお待ちして
 
 ---
 
-**🚀 GitHub Pages**: https://muumuu8181.github.io/weight-management-app/
+**🚀 GitHub Pages**: https://muumuu8181.github.io/app-template/
