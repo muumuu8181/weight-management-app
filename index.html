@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.47';
+        const APP_VERSION = 'v0.48';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1318,20 +1318,44 @@
                 return entryDate >= startDate && entryDate <= now;
             });
 
-            // 日付でグループ化（同じ日の複数記録がある場合は平均を取る）
-            const groupedData = {};
-            filteredData.forEach(entry => {
-                if (!groupedData[entry.date]) {
-                    groupedData[entry.date] = [];
-                }
-                groupedData[entry.date].push(entry.value || entry.weight);
-            });
+            let chartData;
+            let timeUnit, displayFormat, axisLabel;
 
-            // グラフ用データを準備
-            const chartData = Object.keys(groupedData).sort().map(date => ({
-                x: date,
-                y: groupedData[date].reduce((a, b) => a + b, 0) / groupedData[date].length
-            }));
+            if (days === 1) {
+                // 1日表示：時間軸を使用
+                chartData = filteredData.map(entry => {
+                    const dateTime = entry.time ? 
+                        new Date(`${entry.date}T${entry.time}:00`) : 
+                        new Date(`${entry.date}T12:00:00`); // 時間なしの場合は12:00とする
+                    
+                    return {
+                        x: dateTime,
+                        y: parseFloat(entry.value || entry.weight)
+                    };
+                }).sort((a, b) => a.x - b.x);
+                
+                timeUnit = 'hour';
+                displayFormat = 'HH:mm';
+                axisLabel = '時間';
+            } else {
+                // 複数日表示：日付でグループ化（同じ日の複数記録は平均）
+                const groupedData = {};
+                filteredData.forEach(entry => {
+                    if (!groupedData[entry.date]) {
+                        groupedData[entry.date] = [];
+                    }
+                    groupedData[entry.date].push(entry.value || entry.weight);
+                });
+
+                chartData = Object.keys(groupedData).sort().map(date => ({
+                    x: date,
+                    y: groupedData[date].reduce((a, b) => a + b, 0) / groupedData[date].length
+                }));
+                
+                timeUnit = 'day';
+                displayFormat = 'MM/dd';
+                axisLabel = '日付';
+            }
 
             // グラフを描画
             if (weightChart) {
@@ -1371,14 +1395,15 @@
                         x: {
                             type: 'time',
                             time: {
-                                unit: 'day',
+                                unit: timeUnit,
                                 displayFormats: {
-                                    day: 'MM/dd'
+                                    hour: displayFormat,
+                                    day: displayFormat
                                 }
                             },
                             title: {
                                 display: true,
-                                text: '日付'
+                                text: axisLabel
                             }
                         },
                         y: {
