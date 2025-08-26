@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.40</title>
+    <title>体重管理アプリ</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -118,7 +118,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.40</h1>
+            <h1 class="app-title" id="appTitle">📊 体重管理アプリ</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -147,7 +147,10 @@
                 <div class="timing-panel">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                         <span style="font-size: 13px; color: #444; font-weight: bold;">⏰ タイミング</span>
-                        <button onclick="addCustomTiming()" style="background: #28a745; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
+                        <div style="display: flex; gap: 3px;">
+                            <button id="timingDeleteBtn" onclick="toggleTimingDeleteMode()" style="background: #dc3545; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 9px;">🗑️ 削除</button>
+                            <button onclick="addCustomTiming()" style="background: #28a745; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
+                        </div>
                     </div>
                     <div class="timing-buttons" id="timingButtons">
                         <button type="button" class="timing-btn" onclick="selectTiming('起床後')" data-timing="起床後" style="background: #55a3ff;">🛏️ 起床後</button>
@@ -174,7 +177,10 @@
                     <div style="margin: 3px 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
                             <span style="font-size: 11px; color: #444;">上:</span>
-                            <button onclick="addCustomClothingTop()" style="background: #28a745; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
+                            <div style="display: flex; gap: 2px;">
+                                <button id="topDeleteBtn" onclick="toggleTopDeleteMode()" style="background: #dc3545; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 8px;">🗑️ 削除</button>
+                                <button onclick="addCustomClothingTop()" style="background: #28a745; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
+                            </div>
                         </div>
                         <div id="topClothingButtons" style="display: flex; gap: 3px; flex-wrap: wrap; justify-content: center;">
                             <button type="button" class="clothing-btn" onclick="selectClothingTop('なし')" data-clothing-top="なし" style="background: #e0e0e0; color: #424242;">❌ なし</button>
@@ -193,7 +199,10 @@
                     <div style="margin: 3px 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
                             <span style="font-size: 11px; color: #444;">下:</span>
-                            <button onclick="addCustomClothingBottom()" style="background: #28a745; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
+                            <div style="display: flex; gap: 2px;">
+                                <button id="bottomDeleteBtn" onclick="toggleBottomDeleteMode()" style="background: #dc3545; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 8px;">🗑️ 削除</button>
+                                <button onclick="addCustomClothingBottom()" style="background: #28a745; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
+                            </div>
                         </div>
                         <div id="bottomClothingButtons" style="display: flex; gap: 3px; flex-wrap: wrap; justify-content: center;">
                             <button type="button" class="clothing-btn" onclick="selectClothingBottom('なし')" data-clothing-bottom="なし" style="background: #e0e0e0; color: #424242;">❌ なし</button>
@@ -282,6 +291,16 @@
         let allWeightData = [];
         window.editingEntryId = null;
 
+        // 削除モード状態管理
+        let deleteMode = {
+            timing: false,
+            top: false,
+            bottom: false
+        };
+
+        // アプリバージョン（一元管理）
+        const APP_VERSION = 'v0.41';
+        
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
 
@@ -331,6 +350,7 @@
                     button.setAttribute('data-timing', item.text);
                     button.onclick = () => selectTiming(item.text);
                     button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                    button.setAttribute('data-original-color', item.color);
                     button.textContent = `⏰ ${item.text}`;
                     container.appendChild(button);
                 });
@@ -348,6 +368,7 @@
                     button.setAttribute('data-clothing-top', item.text);
                     button.onclick = () => selectClothingTop(item.text);
                     button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                    button.setAttribute('data-original-color', item.color);
                     button.textContent = `👔 ${item.text}`;
                     container.appendChild(button);
                 });
@@ -365,11 +386,169 @@
                     button.setAttribute('data-clothing-bottom', item.text);
                     button.onclick = () => selectClothingBottom(item.text);
                     button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                    button.setAttribute('data-original-color', item.color);
                     button.textContent = `👖 ${item.text}`;
                     container.appendChild(button);
                 });
             }
         }
+
+        // 削除モード切り替え機能
+        window.toggleTimingDeleteMode = () => {
+            deleteMode.timing = !deleteMode.timing;
+            updateTimingUI();
+            log(`${deleteMode.timing ? '🗑️ タイミング削除モード ON' : '✅ タイミング削除モード OFF'}`);
+        };
+
+        window.toggleTopDeleteMode = () => {
+            deleteMode.top = !deleteMode.top;
+            updateTopUI();
+            log(`${deleteMode.top ? '🗑️ 上半身削除モード ON' : '✅ 上半身削除モード OFF'}`);
+        };
+
+        window.toggleBottomDeleteMode = () => {
+            deleteMode.bottom = !deleteMode.bottom;
+            updateBottomUI();
+            log(`${deleteMode.bottom ? '🗑️ 下半身削除モード ON' : '✅ 下半身削除モード OFF'}`);
+        };
+
+        // タイミングUI更新（削除モード対応）
+        function updateTimingUI() {
+            const buttons = document.querySelectorAll('.timing-btn');
+            const deleteBtn = document.querySelector('#timingDeleteBtn');
+            
+            if (deleteMode.timing) {
+                // 削除モード: 赤系に変更、バツボタン表示
+                buttons.forEach(btn => {
+                    if (isCustomTiming(btn.getAttribute('data-timing'))) {
+                        btn.style.background = '#dc3545';
+                        btn.style.transform = 'scale(0.9)';
+                        btn.innerHTML = `❌ ${btn.getAttribute('data-timing')}`;
+                        btn.onclick = () => deleteCustomTiming(btn.getAttribute('data-timing'));
+                    }
+                });
+                deleteBtn.textContent = '✅ 完了';
+                deleteBtn.style.background = '#28a745';
+            } else {
+                // 通常モード: 元の色・動作に戻す
+                buttons.forEach(btn => {
+                    if (isCustomTiming(btn.getAttribute('data-timing'))) {
+                        const originalColor = btn.getAttribute('data-original-color') || RANDOM_COLORS[Math.floor(Math.random() * RANDOM_COLORS.length)];
+                        btn.style.background = originalColor;
+                        btn.style.transform = 'scale(1)';
+                        btn.innerHTML = `⏰ ${btn.getAttribute('data-timing')}`;
+                        btn.onclick = () => selectTiming(btn.getAttribute('data-timing'));
+                    }
+                });
+                deleteBtn.textContent = '🗑️ 削除';
+                deleteBtn.style.background = '#dc3545';
+            }
+        }
+
+        // 上半身UI更新（削除モード対応）
+        function updateTopUI() {
+            const buttons = document.querySelectorAll('.clothing-btn[data-clothing-top]');
+            const deleteBtn = document.querySelector('#topDeleteBtn');
+            
+            if (deleteMode.top) {
+                buttons.forEach(btn => {
+                    if (isCustomClothing(btn.getAttribute('data-clothing-top'), 'top')) {
+                        btn.style.background = '#dc3545';
+                        btn.style.transform = 'scale(0.9)';
+                        btn.innerHTML = `❌ ${btn.getAttribute('data-clothing-top')}`;
+                        btn.onclick = () => deleteCustomTop(btn.getAttribute('data-clothing-top'));
+                    }
+                });
+                deleteBtn.textContent = '✅ 完了';
+                deleteBtn.style.background = '#28a745';
+            } else {
+                buttons.forEach(btn => {
+                    if (isCustomClothing(btn.getAttribute('data-clothing-top'), 'top')) {
+                        const originalColor = btn.getAttribute('data-original-color') || RANDOM_COLORS[Math.floor(Math.random() * RANDOM_COLORS.length)];
+                        btn.style.background = originalColor;
+                        btn.style.transform = 'scale(1)';
+                        btn.innerHTML = `👔 ${btn.getAttribute('data-clothing-top')}`;
+                        btn.onclick = () => selectClothingTop(btn.getAttribute('data-clothing-top'));
+                    }
+                });
+                deleteBtn.textContent = '🗑️ 削除';
+                deleteBtn.style.background = '#dc3545';
+            }
+        }
+
+        // 下半身UI更新（削除モード対応）
+        function updateBottomUI() {
+            const buttons = document.querySelectorAll('.clothing-btn[data-clothing-bottom]');
+            const deleteBtn = document.querySelector('#bottomDeleteBtn');
+            
+            if (deleteMode.bottom) {
+                buttons.forEach(btn => {
+                    if (isCustomClothing(btn.getAttribute('data-clothing-bottom'), 'bottom')) {
+                        btn.style.background = '#dc3545';
+                        btn.style.transform = 'scale(0.9)';
+                        btn.innerHTML = `❌ ${btn.getAttribute('data-clothing-bottom')}`;
+                        btn.onclick = () => deleteCustomBottom(btn.getAttribute('data-clothing-bottom'));
+                    }
+                });
+                deleteBtn.textContent = '✅ 完了';
+                deleteBtn.style.background = '#28a745';
+            } else {
+                buttons.forEach(btn => {
+                    if (isCustomClothing(btn.getAttribute('data-clothing-bottom'), 'bottom')) {
+                        const originalColor = btn.getAttribute('data-original-color') || RANDOM_COLORS[Math.floor(Math.random() * RANDOM_COLORS.length)];
+                        btn.style.background = originalColor;
+                        btn.style.transform = 'scale(1)';
+                        btn.innerHTML = `👖 ${btn.getAttribute('data-clothing-bottom')}`;
+                        btn.onclick = () => selectClothingBottom(btn.getAttribute('data-clothing-bottom'));
+                    }
+                });
+                deleteBtn.textContent = '🗑️ 削除';
+                deleteBtn.style.background = '#dc3545';
+            }
+        }
+
+        // カスタム項目判定関数
+        function isCustomTiming(timing) {
+            const defaultTimings = ['起床後', 'トイレ前', 'トイレ後', '風呂前', '風呂後', '食事前', '食事後'];
+            return !defaultTimings.includes(timing);
+        }
+
+        function isCustomClothing(item, type) {
+            const defaultTops = ['なし', '下着シャツ', 'ワイシャツ'];
+            const defaultBottoms = ['なし', 'トランクス', 'ハーフパンツ'];
+            
+            if (type === 'top') return !defaultTops.includes(item);
+            if (type === 'bottom') return !defaultBottoms.includes(item);
+            return false;
+        }
+
+        // カスタム項目削除機能
+        window.deleteCustomTiming = (timing) => {
+            const button = document.querySelector(`[data-timing="${timing}"]`);
+            if (button && isCustomTiming(timing)) {
+                button.remove();
+                saveCustomItems();
+                log(`🗑️ カスタムタイミング削除: ${timing}`);
+            }
+        };
+
+        window.deleteCustomTop = (item) => {
+            const button = document.querySelector(`[data-clothing-top="${item}"]`);
+            if (button && isCustomClothing(item, 'top')) {
+                button.remove();
+                saveCustomItems();
+                log(`🗑️ カスタム上半身削除: ${item}`);
+            }
+        };
+
+        window.deleteCustomBottom = (item) => {
+            const button = document.querySelector(`[data-clothing-bottom="${item}"]`);
+            if (button && isCustomClothing(item, 'bottom')) {
+                button.remove();
+                saveCustomItems();
+                log(`🗑️ カスタム下半身削除: ${item}`);
+            }
+        };
 
         // キーボードでの値調整機能
         window.handleWeightKeypress = (event) => {
@@ -469,6 +648,7 @@
                 button.setAttribute('data-clothing-top', newItem);
                 button.onclick = () => selectClothingTop(newItem);
                 button.style.cssText = `background: ${randomColor}; color: white; opacity: 0.7;`;
+                button.setAttribute('data-original-color', randomColor);
                 button.textContent = `👔 ${newItem}`;
                 
                 container.appendChild(button);
@@ -512,6 +692,7 @@
                 button.setAttribute('data-clothing-bottom', newItem);
                 button.onclick = () => selectClothingBottom(newItem);
                 button.style.cssText = `background: ${randomColor}; color: white; opacity: 0.7;`;
+                button.setAttribute('data-original-color', randomColor);
                 button.textContent = `👖 ${newItem}`;
                 
                 container.appendChild(button);
@@ -555,6 +736,7 @@
                 button.setAttribute('data-timing', newItem);
                 button.onclick = () => selectTiming(newItem);
                 button.style.cssText = `background: ${randomColor}; color: white; opacity: 0.7;`;
+                button.setAttribute('data-original-color', randomColor);
                 button.textContent = `⏰ ${newItem}`;
                 
                 container.appendChild(button);
@@ -1437,9 +1619,18 @@ ${document.getElementById('logArea').innerText}`;
             });
         };
 
-        // 初期化
-        log('🚀 体重管理アプリ起動完了');
-        log('🔐 認証システム準備完了');
+        // アプリ初期化
+        function initializeApp() {
+            // バージョン表示の動的設定
+            document.title = `体重管理アプリ ${APP_VERSION}`;
+            document.getElementById('appTitle').textContent = `📊 体重管理アプリ ${APP_VERSION}`;
+            
+            log(`🚀 体重管理アプリ起動完了 ${APP_VERSION}`);
+            log('🔐 認証システム準備完了');
+        }
+
+        // 初期化実行
+        initializeApp();
         
         // プロトコルチェック（自動診断）
         if (window.location.protocol === 'file:') {
