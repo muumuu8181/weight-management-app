@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.46';
+        const APP_VERSION = 'v0.47';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -639,7 +639,17 @@
                     btn.style.background = '#dc3545';
                     btn.style.transform = 'scale(0.9)';
                     btn.innerHTML = `❌ ${item}`;
-                    btn.onclick = () => deleteCustomItem(item, selectedTarget);
+                    
+                    // 既存のイベントリスナーを削除してから新しいものを追加
+                    btn.replaceWith(btn.cloneNode(true));
+                    const newBtn = document.querySelector(`[data-${selectedTarget === 'timing' ? 'timing' : selectedTarget === 'top' ? 'clothing-top' : 'clothing-bottom'}="${item}"]`);
+                    newBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        deleteCustomItem(item, selectedTarget);
+                        // 削除後にモードを通常に戻す
+                        setMode('normal');
+                    });
                 } else {
                     // デフォルト項目は無効化（削除不可の表示）
                     btn.style.opacity = '0.5';
