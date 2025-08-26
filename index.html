@@ -149,6 +149,18 @@
                 <button id="topTargetBtn" onclick="selectTarget('top')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">👕 上</button>
                 <button id="bottomTargetBtn" onclick="selectTarget('bottom')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">👖 下</button>
             </div>
+            
+            <!-- 追加モード用の統一入力エリア -->
+            <div id="unifiedAddInput" style="display: none; margin-top: 8px; padding: 8px; background: #e8f5e8; border-radius: 5px; border: 2px solid #28a745;">
+                <div style="margin-bottom: 5px;">
+                    <span style="font-size: 11px; color: #155724; font-weight: bold;">✨ 新規項目を追加</span>
+                </div>
+                <div style="display: flex; gap: 3px; align-items: center;">
+                    <input type="text" id="unifiedAddText" placeholder="項目名を入力" style="flex: 1; padding: 4px 8px; border: 1px solid #28a745; border-radius: 3px; font-size: 11px;">
+                    <button onclick="executeAdd()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✓ 追加</button>
+                    <button onclick="cancelAdd()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✗ キャンセル</button>
+                </div>
+            </div>
         </div>
 
         <!-- データ入力セクション -->
@@ -175,11 +187,6 @@
                         <button type="button" class="timing-btn" onclick="selectTiming('食事前')" data-timing="食事前" style="background: #e84393;">🍽️ 食事前</button>
                         <button type="button" class="timing-btn" onclick="selectTiming('食事後')" data-timing="食事後" style="background: #a29bfe;">🍽️ 食事後</button>
                     </div>
-                    <div id="timingCustomInput" style="display: none; margin-top: 3px;">
-                        <input type="text" id="timingCustomText" placeholder="カスタムタイミングを入力" style="flex: 1; font-size: 10px; padding: 3px 6px; border: 1px solid #ddd; border-radius: 5px; margin-right: 3px; width: 140px;">
-                        <button onclick="addTimingCustomItem()" style="background: #28a745; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 9px;">✓</button>
-                        <button onclick="cancelTimingCustom()" style="background: #dc3545; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 9px;">✗</button>
-                    </div>
                     <input type="text" class="input-field" id="selectedTiming" placeholder="タイミング" readonly style="margin-top: 5px; font-size: 12px; padding: 6px; text-align: center; background: #f0f8ff;">
                 </div>
                 
@@ -197,11 +204,6 @@
                             <button type="button" class="clothing-btn" onclick="selectClothingTop('下着シャツ')" data-clothing-top="下着シャツ" style="background: #87ceeb; color: #2f4f4f;">👕 下着シャツ</button>
                             <button type="button" class="clothing-btn" onclick="selectClothingTop('ワイシャツ')" data-clothing-top="ワイシャツ" style="background: #add8e6; color: #2f4f4f;">👔 ワイシャツ</button>
                         </div>
-                        <div id="topCustomInput" style="display: none; margin-top: 3px;">
-                            <input type="text" id="topCustomText" placeholder="上半身の服装を入力" style="flex: 1; font-size: 10px; padding: 3px 6px; border: 1px solid #ddd; border-radius: 5px; margin-right: 3px; width: 120px;">
-                            <button onclick="addTopCustomItem()" style="background: #28a745; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 9px;">✓</button>
-                            <button onclick="cancelTopCustom()" style="background: #dc3545; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 9px;">✗</button>
-                        </div>
                         <input type="text" class="input-field" id="selectedTop" placeholder="上" readonly style="margin-top: 2px; font-size: 10px; padding: 4px; text-align: center; background: #ffffff;">
                     </div>
                     
@@ -214,11 +216,6 @@
                             <button type="button" class="clothing-btn" onclick="selectClothingBottom('なし')" data-clothing-bottom="なし" style="background: #e0e0e0; color: #424242;">❌ なし</button>
                             <button type="button" class="clothing-btn" onclick="selectClothingBottom('トランクス')" data-clothing-bottom="トランクス" style="background: #dda0dd; color: #4b0082;">🩲 トランクス</button>
                             <button type="button" class="clothing-btn" onclick="selectClothingBottom('ハーフパンツ')" data-clothing-bottom="ハーフパンツ" style="background: #f0e68c; color: #8b4513;">🩳 ハーフパンツ</button>
-                        </div>
-                        <div id="bottomCustomInput" style="display: none; margin-top: 3px;">
-                            <input type="text" id="bottomCustomText" placeholder="下半身の服装を入力" style="flex: 1; font-size: 10px; padding: 3px 6px; border: 1px solid #ddd; border-radius: 5px; margin-right: 3px; width: 120px;">
-                            <button onclick="addBottomCustomItem()" style="background: #28a745; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 9px;">✓</button>
-                            <button onclick="cancelBottomCustom()" style="background: #dc3545; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 9px;">✗</button>
                         </div>
                         <input type="text" class="input-field" id="selectedBottom" placeholder="下" readonly style="margin-top: 2px; font-size: 10px; padding: 4px; text-align: center; background: #ffffff;">
                     </div>
@@ -302,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.43';
+        const APP_VERSION = 'v0.44';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -418,22 +415,86 @@
             if (!selectedTarget) return;
             
             if (currentMode === 'add') {
-                // 追加モード: 入力フィールド表示
-                if (selectedTarget === 'timing') {
-                    document.getElementById('timingCustomInput').style.display = 'block';
-                    document.getElementById('timingCustomText').focus();
-                } else if (selectedTarget === 'top') {
-                    document.getElementById('topCustomInput').style.display = 'block';
-                    document.getElementById('topCustomText').focus();
-                } else if (selectedTarget === 'bottom') {
-                    document.getElementById('bottomCustomInput').style.display = 'block';
-                    document.getElementById('bottomCustomText').focus();
-                }
+                // 追加モード: 統一入力フィールド表示
+                showUnifiedAddInput();
             } else if (currentMode === 'delete') {
                 // 削除モード: カスタム項目の表示変更
                 updateDeleteModeDisplay();
             }
         }
+
+        // 統一追加入力表示
+        function showUnifiedAddInput() {
+            const inputArea = document.getElementById('unifiedAddInput');
+            const textField = document.getElementById('unifiedAddText');
+            
+            inputArea.style.display = 'block';
+            textField.value = '';
+            textField.placeholder = `${selectedTarget === 'timing' ? 'タイミング' : selectedTarget === 'top' ? '上半身の服装' : '下半身の服装'}を入力`;
+            textField.focus();
+        }
+
+        // 統一追加実行
+        window.executeAdd = () => {
+            const newItem = document.getElementById('unifiedAddText').value.trim();
+            if (!newItem || !selectedTarget) return;
+
+            // ランダムカラー生成
+            const randomColor = RANDOM_COLORS[Math.floor(Math.random() * RANDOM_COLORS.length)];
+            
+            // 対象に応じてボタン作成
+            const containers = {
+                timing: document.getElementById('timingButtons'),
+                top: document.getElementById('topClothingButtons'),
+                bottom: document.getElementById('bottomClothingButtons')
+            };
+            
+            const button = document.createElement('button');
+            button.type = 'button';
+            
+            if (selectedTarget === 'timing') {
+                button.className = 'timing-btn';
+                button.setAttribute('data-timing', newItem);
+                button.onclick = () => selectTiming(newItem);
+                button.textContent = `⏰ ${newItem}`;
+            } else if (selectedTarget === 'top') {
+                button.className = 'clothing-btn';
+                button.setAttribute('data-clothing-top', newItem);
+                button.onclick = () => selectClothingTop(newItem);
+                button.textContent = `👔 ${newItem}`;
+            } else if (selectedTarget === 'bottom') {
+                button.className = 'clothing-btn';
+                button.setAttribute('data-clothing-bottom', newItem);
+                button.onclick = () => selectClothingBottom(newItem);
+                button.textContent = `👖 ${newItem}`;
+            }
+            
+            button.style.cssText = `background: ${randomColor}; color: white; opacity: 0.7;`;
+            button.setAttribute('data-original-color', randomColor);
+            
+            containers[selectedTarget].appendChild(button);
+            
+            // 追加後すぐに選択
+            if (selectedTarget === 'timing') selectTiming(newItem);
+            else if (selectedTarget === 'top') selectClothingTop(newItem);
+            else if (selectedTarget === 'bottom') selectClothingBottom(newItem);
+            
+            // 永続化保存
+            saveCustomItems();
+            
+            // ログ出力
+            const targetName = selectedTarget === 'timing' ? 'タイミング' : selectedTarget === 'top' ? '上半身' : '下半身';
+            log(`✅ ${targetName}項目追加: ${newItem}`);
+            
+            // 入力エリアを非表示
+            cancelAdd();
+        };
+
+        // 追加キャンセル
+        window.cancelAdd = () => {
+            document.getElementById('unifiedAddInput').style.display = 'none';
+            document.getElementById('unifiedAddText').value = '';
+        };
 
         // モードUI更新
         function updateModeUI() {
@@ -452,6 +513,11 @@
             if (buttons[currentMode]) {
                 const colors = { normal: '#007bff', add: '#28a745', delete: '#dc3545' };
                 buttons[currentMode].style.background = colors[currentMode];
+            }
+
+            // 追加モード以外では統一入力を非表示
+            if (currentMode !== 'add') {
+                document.getElementById('unifiedAddInput').style.display = 'none';
             }
         }
 
