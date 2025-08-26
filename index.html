@@ -133,6 +133,24 @@
             <button class="logout-button" onclick="handleLogout()">ログアウト</button>
         </div>
 
+        <!-- モード選択エリア -->
+        <div class="mode-control hidden" id="modeControl" style="background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 8px; margin: 8px 0; text-align: center;">
+            <div style="margin-bottom: 8px;">
+                <span style="font-size: 13px; color: #444; font-weight: bold;">🔧 操作モード</span>
+            </div>
+            <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
+                <button id="normalModeBtn" onclick="setMode('normal')" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">📝 通常</button>
+                <button id="addModeBtn" onclick="setMode('add')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">➕ 追加</button>
+                <button id="deleteModeBtn" onclick="setMode('delete')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">🗑️ 削除</button>
+            </div>
+            <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
+                <span style="font-size: 11px; color: #666;">対象:</span>
+                <button id="timingTargetBtn" onclick="selectTarget('timing')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">⏰ タイミング</button>
+                <button id="topTargetBtn" onclick="selectTarget('top')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">👕 上</button>
+                <button id="bottomTargetBtn" onclick="selectTarget('bottom')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">👖 下</button>
+            </div>
+        </div>
+
         <!-- データ入力セクション -->
         <div class="weight-input hidden" id="weightInput">
             <div class="input-card">
@@ -145,15 +163,8 @@
                 
                 <!-- タイミング選択パネル -->
                 <div class="timing-panel">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="font-size: 13px; color: #444; font-weight: bold;">⏰ タイミング</span>
-                            <button id="timingSelectBtn" onclick="selectTarget('timing')" style="background: #6c757d; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 8px;">選択</button>
-                        </div>
-                        <div style="display: flex; gap: 3px;">
-                            <button id="timingDeleteBtn" onclick="toggleTimingDeleteMode()" style="background: #dc3545; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 9px;">🗑️ 削除</button>
-                            <button onclick="addCustomTiming()" style="background: #28a745; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
-                        </div>
+                    <div style="text-align: center; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: #444; font-weight: bold;">⏰ タイミング</span>
                     </div>
                     <div class="timing-buttons" id="timingButtons">
                         <button type="button" class="timing-btn" onclick="selectTiming('起床後')" data-timing="起床後" style="background: #55a3ff;">🛏️ 起床後</button>
@@ -178,15 +189,8 @@
                     
                     <!-- 上半身 -->
                     <div style="margin: 3px 0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-                            <div style="display: flex; align-items: center; gap: 3px;">
-                                <span style="font-size: 11px; color: #444;">上:</span>
-                                <button id="topSelectBtn" onclick="selectTarget('top')" style="background: #6c757d; color: white; border: none; padding: 0px 3px; border-radius: 2px; cursor: pointer; font-size: 7px;">選択</button>
-                            </div>
-                            <div style="display: flex; gap: 2px;">
-                                <button id="topDeleteBtn" onclick="toggleTopDeleteMode()" style="background: #dc3545; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 8px;">🗑️ 削除</button>
-                                <button onclick="addCustomClothingTop()" style="background: #28a745; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
-                            </div>
+                        <div style="text-align: center; margin-bottom: 3px;">
+                            <span style="font-size: 11px; color: #444;">上:</span>
                         </div>
                         <div id="topClothingButtons" style="display: flex; gap: 3px; flex-wrap: wrap; justify-content: center;">
                             <button type="button" class="clothing-btn" onclick="selectClothingTop('なし')" data-clothing-top="なし" style="background: #e0e0e0; color: #424242;">❌ なし</button>
@@ -203,15 +207,8 @@
                     
                     <!-- 下半身 -->
                     <div style="margin: 3px 0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-                            <div style="display: flex; align-items: center; gap: 3px;">
-                                <span style="font-size: 11px; color: #444;">下:</span>
-                                <button id="bottomSelectBtn" onclick="selectTarget('bottom')" style="background: #6c757d; color: white; border: none; padding: 0px 3px; border-radius: 2px; cursor: pointer; font-size: 7px;">選択</button>
-                            </div>
-                            <div style="display: flex; gap: 2px;">
-                                <button id="bottomDeleteBtn" onclick="toggleBottomDeleteMode()" style="background: #dc3545; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 8px;">🗑️ 削除</button>
-                                <button onclick="addCustomClothingBottom()" style="background: #28a745; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
-                            </div>
+                        <div style="text-align: center; margin-bottom: 3px;">
+                            <span style="font-size: 11px; color: #444;">下:</span>
                         </div>
                         <div id="bottomClothingButtons" style="display: flex; gap: 3px; flex-wrap: wrap; justify-content: center;">
                             <button type="button" class="clothing-btn" onclick="selectClothingBottom('なし')" data-clothing-bottom="なし" style="background: #e0e0e0; color: #424242;">❌ なし</button>
@@ -300,24 +297,12 @@
         let allWeightData = [];
         window.editingEntryId = null;
 
-        // モード状態管理
-        let deleteMode = {
-            timing: false,
-            top: false,
-            bottom: false
-        };
-
-        let addMode = {
-            timing: false,
-            top: false,
-            bottom: false
-        };
-
-        // 選択状態管理
+        // 統一モード状態管理
+        let currentMode = 'normal'; // 'normal', 'add', 'delete'
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.42';
+        const APP_VERSION = 'v0.43';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -411,195 +396,129 @@
             }
         }
 
-        // 対象選択機能
-        window.selectTarget = (target) => {
-            // 前の選択をリセット
-            updateSelectButtonsUI();
-            
-            selectedTarget = target;
-            log(`🎯 対象選択: ${target === 'timing' ? 'タイミング' : target === 'top' ? '上半身' : '下半身'}`);
-            
-            // 選択されたボタンの表示を更新
-            updateSelectButtonsUI();
+        // 統一モード制御機能
+        window.setMode = (mode) => {
+            currentMode = mode;
+            updateModeUI();
+            log(`🔧 モード変更: ${mode === 'normal' ? '通常' : mode === 'add' ? '追加' : '削除'}モード`);
         };
 
-        // 選択ボタンUI更新
-        function updateSelectButtonsUI() {
+        // 対象選択機能（統一版）
+        window.selectTarget = (target) => {
+            selectedTarget = target;
+            updateTargetUI();
+            log(`🎯 対象選択: ${target === 'timing' ? 'タイミング' : target === 'top' ? '上半身' : '下半身'}`);
+            
+            // モードに応じて処理実行
+            handleModeAction();
+        };
+
+        // モードに応じた処理実行
+        function handleModeAction() {
+            if (!selectedTarget) return;
+            
+            if (currentMode === 'add') {
+                // 追加モード: 入力フィールド表示
+                if (selectedTarget === 'timing') {
+                    document.getElementById('timingCustomInput').style.display = 'block';
+                    document.getElementById('timingCustomText').focus();
+                } else if (selectedTarget === 'top') {
+                    document.getElementById('topCustomInput').style.display = 'block';
+                    document.getElementById('topCustomText').focus();
+                } else if (selectedTarget === 'bottom') {
+                    document.getElementById('bottomCustomInput').style.display = 'block';
+                    document.getElementById('bottomCustomText').focus();
+                }
+            } else if (currentMode === 'delete') {
+                // 削除モード: カスタム項目の表示変更
+                updateDeleteModeDisplay();
+            }
+        }
+
+        // モードUI更新
+        function updateModeUI() {
             const buttons = {
-                timing: document.getElementById('timingSelectBtn'),
-                top: document.getElementById('topSelectBtn'),
-                bottom: document.getElementById('bottomSelectBtn')
+                normal: document.getElementById('normalModeBtn'),
+                add: document.getElementById('addModeBtn'),
+                delete: document.getElementById('deleteModeBtn')
             };
 
             // すべてリセット
             Object.entries(buttons).forEach(([key, btn]) => {
                 btn.style.background = '#6c757d';
-                btn.textContent = '選択';
             });
 
-            // 選択された項目を強調
+            // 選択されたモードを強調
+            if (buttons[currentMode]) {
+                const colors = { normal: '#007bff', add: '#28a745', delete: '#dc3545' };
+                buttons[currentMode].style.background = colors[currentMode];
+            }
+        }
+
+        // 対象UI更新
+        function updateTargetUI() {
+            const buttons = {
+                timing: document.getElementById('timingTargetBtn'),
+                top: document.getElementById('topTargetBtn'),
+                bottom: document.getElementById('bottomTargetBtn')
+            };
+
+            // すべてリセット
+            Object.entries(buttons).forEach(([key, btn]) => {
+                btn.style.background = '#6c757d';
+            });
+
+            // 選択された対象を強調
             if (selectedTarget && buttons[selectedTarget]) {
                 buttons[selectedTarget].style.background = '#007bff';
-                buttons[selectedTarget].textContent = '✓選択中';
             }
         }
 
-        // 削除モード切り替え機能
-        window.toggleTimingDeleteMode = () => {
-            deleteMode.timing = !deleteMode.timing;
-            updateTimingUI();
-            log(`${deleteMode.timing ? '🗑️ タイミング削除モード ON' : '✅ タイミング削除モード OFF'}`);
-        };
+        // 削除モード表示更新
+        function updateDeleteModeDisplay() {
+            if (currentMode !== 'delete' || !selectedTarget) return;
 
-        window.toggleTopDeleteMode = () => {
-            deleteMode.top = !deleteMode.top;
-            updateTopUI();
-            log(`${deleteMode.top ? '🗑️ 上半身削除モード ON' : '✅ 上半身削除モード OFF'}`);
-        };
+            const selectors = {
+                timing: '.timing-btn',
+                top: '.clothing-btn[data-clothing-top]',
+                bottom: '.clothing-btn[data-clothing-bottom]'
+            };
 
-        window.toggleBottomDeleteMode = () => {
-            deleteMode.bottom = !deleteMode.bottom;
-            updateBottomUI();
-            log(`${deleteMode.bottom ? '🗑️ 下半身削除モード ON' : '✅ 下半身削除モード OFF'}`);
-        };
-
-        // タイミングUI更新（削除モード対応）
-        function updateTimingUI() {
-            const buttons = document.querySelectorAll('.timing-btn');
-            const deleteBtn = document.querySelector('#timingDeleteBtn');
+            const buttons = document.querySelectorAll(selectors[selectedTarget]);
             
-            if (deleteMode.timing) {
-                // 削除モード: 赤系に変更、バツボタン表示
-                buttons.forEach(btn => {
-                    if (isCustomTiming(btn.getAttribute('data-timing'))) {
-                        btn.style.background = '#dc3545';
-                        btn.style.transform = 'scale(0.9)';
-                        btn.innerHTML = `❌ ${btn.getAttribute('data-timing')}`;
-                        btn.onclick = () => deleteCustomTiming(btn.getAttribute('data-timing'));
-                    }
-                });
-                deleteBtn.textContent = '✅ 完了';
-                deleteBtn.style.background = '#28a745';
-            } else {
-                // 通常モード: 元の色・動作に戻す
-                buttons.forEach(btn => {
-                    if (isCustomTiming(btn.getAttribute('data-timing'))) {
-                        const originalColor = btn.getAttribute('data-original-color') || RANDOM_COLORS[Math.floor(Math.random() * RANDOM_COLORS.length)];
-                        btn.style.background = originalColor;
-                        btn.style.transform = 'scale(1)';
-                        btn.innerHTML = `⏰ ${btn.getAttribute('data-timing')}`;
-                        btn.onclick = () => selectTiming(btn.getAttribute('data-timing'));
-                    }
-                });
-                deleteBtn.textContent = '🗑️ 削除';
-                deleteBtn.style.background = '#dc3545';
-            }
+            buttons.forEach(btn => {
+                const item = btn.getAttribute(`data-${selectedTarget === 'timing' ? 'timing' : selectedTarget === 'top' ? 'clothing-top' : 'clothing-bottom'}`);
+                if (isCustomItem(item, selectedTarget)) {
+                    btn.style.background = '#dc3545';
+                    btn.style.transform = 'scale(0.9)';
+                    btn.innerHTML = `❌ ${item}`;
+                    btn.onclick = () => deleteCustomItem(item, selectedTarget);
+                }
+            });
         }
 
-        // 上半身UI更新（削除モード対応）
-        function updateTopUI() {
-            const buttons = document.querySelectorAll('.clothing-btn[data-clothing-top]');
-            const deleteBtn = document.querySelector('#topDeleteBtn');
-            
-            if (deleteMode.top) {
-                buttons.forEach(btn => {
-                    if (isCustomClothing(btn.getAttribute('data-clothing-top'), 'top')) {
-                        btn.style.background = '#dc3545';
-                        btn.style.transform = 'scale(0.9)';
-                        btn.innerHTML = `❌ ${btn.getAttribute('data-clothing-top')}`;
-                        btn.onclick = () => deleteCustomTop(btn.getAttribute('data-clothing-top'));
-                    }
-                });
-                deleteBtn.textContent = '✅ 完了';
-                deleteBtn.style.background = '#28a745';
-            } else {
-                buttons.forEach(btn => {
-                    if (isCustomClothing(btn.getAttribute('data-clothing-top'), 'top')) {
-                        const originalColor = btn.getAttribute('data-original-color') || RANDOM_COLORS[Math.floor(Math.random() * RANDOM_COLORS.length)];
-                        btn.style.background = originalColor;
-                        btn.style.transform = 'scale(1)';
-                        btn.innerHTML = `👔 ${btn.getAttribute('data-clothing-top')}`;
-                        btn.onclick = () => selectClothingTop(btn.getAttribute('data-clothing-top'));
-                    }
-                });
-                deleteBtn.textContent = '🗑️ 削除';
-                deleteBtn.style.background = '#dc3545';
-            }
+        // カスタム項目判定（統一版）
+        function isCustomItem(item, target) {
+            const defaults = {
+                timing: ['起床後', 'トイレ前', 'トイレ後', '風呂前', '風呂後', '食事前', '食事後'],
+                top: ['なし', '下着シャツ', 'ワイシャツ'],
+                bottom: ['なし', 'トランクス', 'ハーフパンツ']
+            };
+            return !defaults[target].includes(item);
         }
 
-        // 下半身UI更新（削除モード対応）
-        function updateBottomUI() {
-            const buttons = document.querySelectorAll('.clothing-btn[data-clothing-bottom]');
-            const deleteBtn = document.querySelector('#bottomDeleteBtn');
-            
-            if (deleteMode.bottom) {
-                buttons.forEach(btn => {
-                    if (isCustomClothing(btn.getAttribute('data-clothing-bottom'), 'bottom')) {
-                        btn.style.background = '#dc3545';
-                        btn.style.transform = 'scale(0.9)';
-                        btn.innerHTML = `❌ ${btn.getAttribute('data-clothing-bottom')}`;
-                        btn.onclick = () => deleteCustomBottom(btn.getAttribute('data-clothing-bottom'));
-                    }
-                });
-                deleteBtn.textContent = '✅ 完了';
-                deleteBtn.style.background = '#28a745';
-            } else {
-                buttons.forEach(btn => {
-                    if (isCustomClothing(btn.getAttribute('data-clothing-bottom'), 'bottom')) {
-                        const originalColor = btn.getAttribute('data-original-color') || RANDOM_COLORS[Math.floor(Math.random() * RANDOM_COLORS.length)];
-                        btn.style.background = originalColor;
-                        btn.style.transform = 'scale(1)';
-                        btn.innerHTML = `👖 ${btn.getAttribute('data-clothing-bottom')}`;
-                        btn.onclick = () => selectClothingBottom(btn.getAttribute('data-clothing-bottom'));
-                    }
-                });
-                deleteBtn.textContent = '🗑️ 削除';
-                deleteBtn.style.background = '#dc3545';
-            }
-        }
-
-        // カスタム項目判定関数
-        function isCustomTiming(timing) {
-            const defaultTimings = ['起床後', 'トイレ前', 'トイレ後', '風呂前', '風呂後', '食事前', '食事後'];
-            return !defaultTimings.includes(timing);
-        }
-
-        function isCustomClothing(item, type) {
-            const defaultTops = ['なし', '下着シャツ', 'ワイシャツ'];
-            const defaultBottoms = ['なし', 'トランクス', 'ハーフパンツ'];
-            
-            if (type === 'top') return !defaultTops.includes(item);
-            if (type === 'bottom') return !defaultBottoms.includes(item);
-            return false;
-        }
-
-        // カスタム項目削除機能
-        window.deleteCustomTiming = (timing) => {
-            const button = document.querySelector(`[data-timing="${timing}"]`);
-            if (button && isCustomTiming(timing)) {
+        // カスタム項目削除（統一版）
+        function deleteCustomItem(item, target) {
+            const selector = `[data-${target === 'timing' ? 'timing' : target === 'top' ? 'clothing-top' : 'clothing-bottom'}="${item}"]`;
+            const button = document.querySelector(selector);
+            if (button && isCustomItem(item, target)) {
                 button.remove();
                 saveCustomItems();
-                log(`🗑️ カスタムタイミング削除: ${timing}`);
+                log(`🗑️ カスタム項目削除: ${item} (${target === 'timing' ? 'タイミング' : target === 'top' ? '上半身' : '下半身'})`);
             }
-        };
+        }
 
-        window.deleteCustomTop = (item) => {
-            const button = document.querySelector(`[data-clothing-top="${item}"]`);
-            if (button && isCustomClothing(item, 'top')) {
-                button.remove();
-                saveCustomItems();
-                log(`🗑️ カスタム上半身削除: ${item}`);
-            }
-        };
-
-        window.deleteCustomBottom = (item) => {
-            const button = document.querySelector(`[data-clothing-bottom="${item}"]`);
-            if (button && isCustomClothing(item, 'bottom')) {
-                button.remove();
-                saveCustomItems();
-                log(`🗑️ カスタム下半身削除: ${item}`);
-            }
-        };
+        // 統一モードシステム完了 - 古い個別関数群は削除済み
 
         // キーボードでの値調整機能
         window.handleWeightKeypress = (event) => {
@@ -678,11 +597,7 @@
             log(`🩲 下半身選択: ${clothing}`);
         };
 
-        // カスタム上半身項目追加（改良版 - スマホ対応）
-        window.addCustomClothingTop = () => {
-            document.getElementById('topCustomInput').style.display = 'block';
-            document.getElementById('topCustomText').focus();
-        };
+        // 統一カスタム項目追加システム（addCustomClothingTop は統一モードに移行）
 
         window.addTopCustomItem = () => {
             const newItem = document.getElementById('topCustomText').value.trim();
@@ -1307,6 +1222,7 @@
         function showUserInterface(user) {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('userInfo').classList.remove('hidden');
+            document.getElementById('modeControl').classList.remove('hidden');
             document.getElementById('weightInput').classList.remove('hidden');
             document.getElementById('chartPanel').classList.remove('hidden');
             document.getElementById('userName').textContent = user.displayName;
@@ -1344,6 +1260,7 @@
         function showLoginInterface() {
             document.getElementById('authSection').classList.remove('hidden');
             document.getElementById('userInfo').classList.add('hidden');
+            document.getElementById('modeControl').classList.add('hidden');
             document.getElementById('weightInput').classList.add('hidden');
             document.getElementById('chartPanel').classList.add('hidden');
         }
