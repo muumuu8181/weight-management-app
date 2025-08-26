@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>アプリテンプレート v0.38</title>
+    <title>アプリテンプレート v0.38.1</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -91,7 +91,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 アプリテンプレート v0.38</h1>
+            <h1 class="app-title">📊 アプリテンプレート v0.38.1</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -442,11 +442,11 @@
                 
                 const loginPromise = auth.signInWithPopup(provider);
                 
-                // タイムアウト検知（5秒でポップアップが開かない場合）
+                // タイムアウト検知（15秒でポップアップが開かない場合）- iPhone Safari対応
                 const timeoutPromise = new Promise((_, reject) => {
                     setTimeout(() => {
                         reject(new Error('ポップアップタイムアウト - ブロックされた可能性があります'));
-                    }, 5000);
+                    }, 15000);
                 });
                 
                 try {
@@ -455,7 +455,7 @@
                 } catch (raceError) {
                     // タイムアウトの場合の特別処理
                     if (raceError.message.includes('タイムアウト')) {
-                        log('⏰ ポップアップが5秒以内に開きませんでした');
+                        log('⏰ ポップアップが15秒以内に開きませんでした');
                         log('🔄 ポップアップブロック検知 - 解決方法をご案内します');
                         throw new Error('POPUP_TIMEOUT');
                     } else {
