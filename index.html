@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理アプリ v0.39</title>
+    <title>体重管理アプリ v0.40</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -83,7 +83,7 @@
         /* 服装ボタンのスタイル統一 */
         .clothing-btn {
             border: none;
-            padding: 3px 6px;
+            padding: 6px 8px;
             border-radius: 10px;
             cursor: pointer;
             font-size: 10px;
@@ -99,6 +99,7 @@
 
         @media (max-width: 768px) {
             .clothing-btn {
+                padding: 4px 6px;
                 min-width: 75px;
                 font-size: 9px;
             }
@@ -117,7 +118,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 体重管理アプリ v0.39</h1>
+            <h1 class="app-title">📊 体重管理アプリ v0.40</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -284,6 +285,92 @@
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
 
+        // カスタム項目の永続化機能（localStorage活用）
+        const STORAGE_KEYS = {
+            customTimings: 'weightApp_customTimings',
+            customTops: 'weightApp_customTops',
+            customBottoms: 'weightApp_customBottoms'
+        };
+
+        // カスタム項目をlocalStorageに保存
+        function saveCustomItems() {
+            const customTimings = Array.from(document.querySelectorAll('.timing-btn:not([data-timing="起床後"]):not([data-timing="トイレ前"]):not([data-timing="トイレ後"]):not([data-timing="風呂前"]):not([data-timing="風呂後"]):not([data-timing="食事前"]):not([data-timing="食事後"])'))
+                .map(btn => ({
+                    text: btn.getAttribute('data-timing'),
+                    color: btn.style.background
+                }));
+            
+            const customTops = Array.from(document.querySelectorAll('.clothing-btn[data-clothing-top]:not([data-clothing-top="なし"]):not([data-clothing-top="下着シャツ"]):not([data-clothing-top="ワイシャツ"])'))
+                .map(btn => ({
+                    text: btn.getAttribute('data-clothing-top'),
+                    color: btn.style.background
+                }));
+            
+            const customBottoms = Array.from(document.querySelectorAll('.clothing-btn[data-clothing-bottom]:not([data-clothing-bottom="なし"]):not([data-clothing-bottom="トランクス"]):not([data-clothing-bottom="ハーフパンツ"])'))
+                .map(btn => ({
+                    text: btn.getAttribute('data-clothing-bottom'),
+                    color: btn.style.background
+                }));
+
+            localStorage.setItem(STORAGE_KEYS.customTimings, JSON.stringify(customTimings));
+            localStorage.setItem(STORAGE_KEYS.customTops, JSON.stringify(customTops));
+            localStorage.setItem(STORAGE_KEYS.customBottoms, JSON.stringify(customBottoms));
+        }
+
+        // カスタム項目をlocalStorageから復元
+        function loadCustomItems() {
+            // タイミング項目の復元
+            const savedTimings = localStorage.getItem(STORAGE_KEYS.customTimings);
+            if (savedTimings) {
+                const timings = JSON.parse(savedTimings);
+                const container = document.getElementById('timingButtons');
+                timings.forEach(item => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'timing-btn';
+                    button.setAttribute('data-timing', item.text);
+                    button.onclick = () => selectTiming(item.text);
+                    button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                    button.textContent = `⏰ ${item.text}`;
+                    container.appendChild(button);
+                });
+            }
+
+            // 上半身項目の復元
+            const savedTops = localStorage.getItem(STORAGE_KEYS.customTops);
+            if (savedTops) {
+                const tops = JSON.parse(savedTops);
+                const container = document.getElementById('topClothingButtons');
+                tops.forEach(item => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'clothing-btn';
+                    button.setAttribute('data-clothing-top', item.text);
+                    button.onclick = () => selectClothingTop(item.text);
+                    button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                    button.textContent = `👔 ${item.text}`;
+                    container.appendChild(button);
+                });
+            }
+
+            // 下半身項目の復元
+            const savedBottoms = localStorage.getItem(STORAGE_KEYS.customBottoms);
+            if (savedBottoms) {
+                const bottoms = JSON.parse(savedBottoms);
+                const container = document.getElementById('bottomClothingButtons');
+                bottoms.forEach(item => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'clothing-btn';
+                    button.setAttribute('data-clothing-bottom', item.text);
+                    button.onclick = () => selectClothingBottom(item.text);
+                    button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                    button.textContent = `👖 ${item.text}`;
+                    container.appendChild(button);
+                });
+            }
+        }
+
         // キーボードでの値調整機能
         window.handleWeightKeypress = (event) => {
             const weightInput = document.getElementById('weightValue');
@@ -390,6 +477,9 @@
                 // 追加後すぐに選択
                 selectClothingTop(newItem);
                 
+                // カスタム項目を永続化保存
+                saveCustomItems();
+                
                 // 入力フィールドをリセット・非表示
                 document.getElementById('topCustomText').value = '';
                 document.getElementById('topCustomInput').style.display = 'none';
@@ -430,6 +520,9 @@
                 // 追加後すぐに選択
                 selectClothingBottom(newItem);
                 
+                // カスタム項目を永続化保存
+                saveCustomItems();
+                
                 // 入力フィールドをリセット・非表示
                 document.getElementById('bottomCustomText').value = '';
                 document.getElementById('bottomCustomInput').style.display = 'none';
@@ -469,6 +562,9 @@
                 
                 // 追加後すぐに選択
                 selectTiming(newItem);
+                
+                // カスタム項目を永続化保存
+                saveCustomItems();
                 
                 // 入力フィールドをリセット・非表示
                 document.getElementById('timingCustomText').value = '';
@@ -981,6 +1077,9 @@
             document.getElementById('weightInput').classList.remove('hidden');
             document.getElementById('chartPanel').classList.remove('hidden');
             document.getElementById('userName').textContent = user.displayName;
+            
+            // カスタム項目を復元（ログイン時に実行）
+            loadCustomItems();
             
             // 今日の日付と体重デフォルト値を設定（タイムゾーン考慮）
             const today = new Date();
