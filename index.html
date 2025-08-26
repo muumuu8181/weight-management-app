@@ -146,7 +146,10 @@
                 <!-- タイミング選択パネル -->
                 <div class="timing-panel">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <span style="font-size: 13px; color: #444; font-weight: bold;">⏰ タイミング</span>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="font-size: 13px; color: #444; font-weight: bold;">⏰ タイミング</span>
+                            <button id="timingSelectBtn" onclick="selectTarget('timing')" style="background: #6c757d; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 8px;">選択</button>
+                        </div>
                         <div style="display: flex; gap: 3px;">
                             <button id="timingDeleteBtn" onclick="toggleTimingDeleteMode()" style="background: #dc3545; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 9px;">🗑️ 削除</button>
                             <button onclick="addCustomTiming()" style="background: #28a745; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
@@ -176,7 +179,10 @@
                     <!-- 上半身 -->
                     <div style="margin: 3px 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-                            <span style="font-size: 11px; color: #444;">上:</span>
+                            <div style="display: flex; align-items: center; gap: 3px;">
+                                <span style="font-size: 11px; color: #444;">上:</span>
+                                <button id="topSelectBtn" onclick="selectTarget('top')" style="background: #6c757d; color: white; border: none; padding: 0px 3px; border-radius: 2px; cursor: pointer; font-size: 7px;">選択</button>
+                            </div>
                             <div style="display: flex; gap: 2px;">
                                 <button id="topDeleteBtn" onclick="toggleTopDeleteMode()" style="background: #dc3545; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 8px;">🗑️ 削除</button>
                                 <button onclick="addCustomClothingTop()" style="background: #28a745; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
@@ -198,7 +204,10 @@
                     <!-- 下半身 -->
                     <div style="margin: 3px 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-                            <span style="font-size: 11px; color: #444;">下:</span>
+                            <div style="display: flex; align-items: center; gap: 3px;">
+                                <span style="font-size: 11px; color: #444;">下:</span>
+                                <button id="bottomSelectBtn" onclick="selectTarget('bottom')" style="background: #6c757d; color: white; border: none; padding: 0px 3px; border-radius: 2px; cursor: pointer; font-size: 7px;">選択</button>
+                            </div>
                             <div style="display: flex; gap: 2px;">
                                 <button id="bottomDeleteBtn" onclick="toggleBottomDeleteMode()" style="background: #dc3545; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 8px;">🗑️ 削除</button>
                                 <button onclick="addCustomClothingBottom()" style="background: #28a745; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
@@ -291,15 +300,24 @@
         let allWeightData = [];
         window.editingEntryId = null;
 
-        // 削除モード状態管理
+        // モード状態管理
         let deleteMode = {
             timing: false,
             top: false,
             bottom: false
         };
 
+        let addMode = {
+            timing: false,
+            top: false,
+            bottom: false
+        };
+
+        // 選択状態管理
+        let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
+
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.41';
+        const APP_VERSION = 'v0.42';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -390,6 +408,39 @@
                     button.textContent = `👖 ${item.text}`;
                     container.appendChild(button);
                 });
+            }
+        }
+
+        // 対象選択機能
+        window.selectTarget = (target) => {
+            // 前の選択をリセット
+            updateSelectButtonsUI();
+            
+            selectedTarget = target;
+            log(`🎯 対象選択: ${target === 'timing' ? 'タイミング' : target === 'top' ? '上半身' : '下半身'}`);
+            
+            // 選択されたボタンの表示を更新
+            updateSelectButtonsUI();
+        };
+
+        // 選択ボタンUI更新
+        function updateSelectButtonsUI() {
+            const buttons = {
+                timing: document.getElementById('timingSelectBtn'),
+                top: document.getElementById('topSelectBtn'),
+                bottom: document.getElementById('bottomSelectBtn')
+            };
+
+            // すべてリセット
+            Object.entries(buttons).forEach(([key, btn]) => {
+                btn.style.background = '#6c757d';
+                btn.textContent = '選択';
+            });
+
+            // 選択された項目を強調
+            if (selectedTarget && buttons[selectedTarget]) {
+                buttons[selectedTarget].style.background = '#007bff';
+                buttons[selectedTarget].textContent = '✓選択中';
             }
         }
 
