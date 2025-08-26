@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>アプリテンプレート v0.35</title>
+    <title>アプリテンプレート v0.36</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -14,8 +14,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
-    <!-- Chart.js -->
+    <!-- Chart.js with date adapter -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     
     <!-- カスタム設定 -->
     <script type="module" src="custom/app-config.js"></script>
@@ -90,7 +91,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 アプリテンプレート v0.35</h1>
+            <h1 class="app-title">📊 アプリテンプレート v0.36</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -465,7 +466,7 @@
                 log(logMessage);
                 
                 // 入力フィールドをクリア（体重は72.0に戻す）
-                document.getElementById('weightValue').value = '0.0';
+                document.getElementById('weightValue').value = '72.0';
                 document.getElementById('memoInput').value = '';
                 document.getElementById('selectedTop').value = '';
                 document.getElementById('selectedBottom').value = '';
@@ -726,7 +727,7 @@
             const day = String(today.getDate()).padStart(2, '0');
             const todayString = `${year}-${month}-${day}`;
             document.getElementById('dateInput').value = todayString;
-            document.getElementById('weightValue').value = '0.0';
+            document.getElementById('weightValue').value = '72.0';
             
             // タイミングボタンの初期状態設定
             document.querySelectorAll('.timing-btn').forEach(btn => {
