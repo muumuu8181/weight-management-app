@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.48';
+        const APP_VERSION = 'v0.49';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1318,8 +1318,9 @@
                 return entryDate >= startDate && entryDate <= now;
             });
 
-            let chartData;
+            let chartData, datasets = [];
             let timeUnit, displayFormat, axisLabel;
+            let dateRangeText = '';
 
             if (days === 1) {
                 // 1日表示：時間軸を使用
@@ -1334,28 +1335,101 @@
                     };
                 }).sort((a, b) => a.x - b.x);
                 
+                // 対象日付を表示用に設定
+                if (filteredData.length > 0) {
+                    const targetDate = new Date(filteredData[0].date);
+                    const dateStr = `${targetDate.getMonth() + 1}/${targetDate.getDate()}`;
+                    dateRangeText = `${dateStr}のデータ`;
+                }
+                
+                datasets.push({
+                    label: '体重',
+                    data: chartData,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                });
+                
                 timeUnit = 'hour';
                 displayFormat = 'HH:mm';
                 axisLabel = '時間';
             } else {
-                // 複数日表示：日付でグループ化（同じ日の複数記録は平均）
+                // 複数日表示：日付でグループ化（最大値・最小値・平均値を表示）
                 const groupedData = {};
                 filteredData.forEach(entry => {
                     if (!groupedData[entry.date]) {
                         groupedData[entry.date] = [];
                     }
-                    groupedData[entry.date].push(entry.value || entry.weight);
+                    groupedData[entry.date].push(parseFloat(entry.value || entry.weight));
                 });
 
-                chartData = Object.keys(groupedData).sort().map(date => ({
-                    x: date,
-                    y: groupedData[date].reduce((a, b) => a + b, 0) / groupedData[date].length
-                }));
+                const avgData = [], maxData = [], minData = [];
+                Object.keys(groupedData).sort().forEach(date => {
+                    const values = groupedData[date];
+                    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+                    const max = Math.max(...values);
+                    const min = Math.min(...values);
+                    
+                    avgData.push({ x: date, y: avg });
+                    // 複数測定の日のみ最大・最小を表示
+                    if (values.length > 1) {
+                        maxData.push({ x: date, y: max });
+                        minData.push({ x: date, y: min });
+                    }
+                });
+
+                // 平均値は常に表示
+                datasets.push({
+                    label: '平均値',
+                    data: avgData,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                });
+
+                // 最大値・最小値は複数測定がある場合のみ表示
+                if (maxData.length > 0) {
+                    datasets.push({
+                        label: '最大値',
+                        data: maxData,
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                        tension: 0.1,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        borderDash: [5, 5]
+                    });
+
+                    datasets.push({
+                        label: '最小値',
+                        data: minData,
+                        borderColor: 'rgb(54, 162, 235)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        tension: 0.1,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        borderDash: [5, 5]
+                    });
+                }
+                
+                // 期間表示テキストを設定
+                if (avgData.length > 0) {
+                    const startStr = new Date(avgData[0].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+                    const endStr = new Date(avgData[avgData.length - 1].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+                    dateRangeText = `${startStr}～${endStr}`;
+                }
                 
                 timeUnit = 'day';
                 displayFormat = 'MM/dd';
                 axisLabel = '日付';
             }
+
+            // 期間表示を更新
+            updateDateRangeDisplay(dateRangeText);
 
             // グラフを描画
             if (weightChart) {
@@ -1365,15 +1439,7 @@
             const chartConfig = {
                 type: 'line',
                 data: {
-                    datasets: [{
-                        label: '値',
-                        data: chartData,
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        tension: 0.1,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    }]
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
@@ -1386,7 +1452,7 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return `値: ${context.parsed.y.toFixed(1)}`;
+                                    return `${context.dataset.label}: ${context.parsed.y.toFixed(1)}kg`;
                                 }
                             }
                         }
@@ -1409,11 +1475,11 @@
                         y: {
                             title: {
                                 display: true,
-                                text: '値'
+                                text: '体重 (kg)'
                             },
                             ticks: {
                                 callback: function(value) {
-                                    return value.toFixed(1);
+                                    return value.toFixed(1) + 'kg';
                                 }
                             }
                         }
@@ -1422,7 +1488,22 @@
             };
 
             weightChart = new Chart(ctx, chartConfig);
-            log(`📊 グラフ更新: ${chartData.length}件のデータ表示`);
+            log(`📊 グラフ更新: ${filteredData.length}件のデータ表示 ${dateRangeText}`);
+        }
+
+        // 日付範囲表示を更新
+        function updateDateRangeDisplay(rangeText) {
+            let rangeDisplay = document.getElementById('chartDateRange');
+            if (!rangeDisplay) {
+                // 日付範囲表示エリアが存在しない場合は作成
+                const chartContainer = document.querySelector('#chartPanel .chart-container');
+                rangeDisplay = document.createElement('div');
+                rangeDisplay.id = 'chartDateRange';
+                rangeDisplay.style.cssText = 'position: absolute; top: 5px; right: 10px; background: rgba(255,255,255,0.9); padding: 4px 8px; border-radius: 4px; font-size: 12px; color: #666; border: 1px solid #ddd;';
+                chartContainer.style.position = 'relative';
+                chartContainer.appendChild(rangeDisplay);
+            }
+            rangeDisplay.textContent = rangeText;
         }
 
         // グラフの表示期間を変更
