@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.51';
+        const APP_VERSION = 'v0.52';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1414,8 +1414,7 @@
                             tension: 0.1,
                             pointRadius: 3,
                             pointHoverRadius: 5,
-                            borderDash: [5, 5],
-                            showLine: false  // 点のみ表示
+                            borderDash: [5, 5]
                         });
 
                         datasets.push({
@@ -1426,8 +1425,7 @@
                             tension: 0.1,
                             pointRadius: 3,
                             pointHoverRadius: 5,
-                            borderDash: [5, 5],
-                            showLine: false  // 点のみ表示
+                            borderDash: [5, 5]
                         });
                     }
                 }
