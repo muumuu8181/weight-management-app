@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.50';
+        const APP_VERSION = 'v0.51';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1323,7 +1323,7 @@
             let dateRangeText = '';
 
             if (days === 1) {
-                // 1日表示：時間軸を使用
+                // 1日表示：時間軸を使用（24時間表示）
                 chartData = filteredData.map(entry => {
                     const dateTime = entry.time ? 
                         new Date(`${entry.date}T${entry.time}:00`) : 
@@ -1373,11 +1373,10 @@
                     const min = Math.min(...values);
                     
                     avgData.push({ x: date, y: avg });
-                    // 複数測定の日のみ最大・最小を表示
-                    if (values.length > 1) {
-                        maxData.push({ x: date, y: max });
-                        minData.push({ x: date, y: min });
-                    }
+                    
+                    // 全ての日の最大・最小を表示（同じデータセットで一貫性保持）
+                    maxData.push({ x: date, y: max });
+                    minData.push({ x: date, y: min });
                 });
 
                 // 平均値は常に表示
@@ -1391,29 +1390,46 @@
                     pointHoverRadius: 6
                 });
 
-                // 最大値・最小値は複数測定がある場合のみ表示
-                if (maxData.length > 0) {
-                    datasets.push({
-                        label: '最大値',
-                        data: maxData,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
-                        tension: 0.1,
-                        pointRadius: 3,
-                        pointHoverRadius: 5,
-                        borderDash: [5, 5]
+                // 複数測定日がある場合のみ最大・最小値を表示
+                const hasMultipleMeasurements = Object.values(groupedData).some(values => values.length > 1);
+                
+                if (hasMultipleMeasurements) {
+                    // 最大値・最小値を表示（複数測定の日のみポイント表示）
+                    const maxDataFiltered = maxData.filter(item => {
+                        const date = item.x;
+                        return groupedData[date] && groupedData[date].length > 1;
+                    });
+                    
+                    const minDataFiltered = minData.filter(item => {
+                        const date = item.x;
+                        return groupedData[date] && groupedData[date].length > 1;
                     });
 
-                    datasets.push({
-                        label: '最小値',
-                        data: minData,
-                        borderColor: 'rgb(54, 162, 235)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
-                        tension: 0.1,
-                        pointRadius: 3,
-                        pointHoverRadius: 5,
-                        borderDash: [5, 5]
-                    });
+                    if (maxDataFiltered.length > 0) {
+                        datasets.push({
+                            label: '最大値',
+                            data: maxDataFiltered,
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            tension: 0.1,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            borderDash: [5, 5],
+                            showLine: false  // 点のみ表示
+                        });
+
+                        datasets.push({
+                            label: '最小値',
+                            data: minDataFiltered,
+                            borderColor: 'rgb(54, 162, 235)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            tension: 0.1,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            borderDash: [5, 5],
+                            showLine: false  // 点のみ表示
+                        });
+                    }
                 }
                 
                 // 期間表示テキストを設定
@@ -1470,7 +1486,12 @@
                             title: {
                                 display: true,
                                 text: axisLabel
-                            }
+                            },
+                            // 1日表示の場合は24時間表示
+                            ...(days === 1 && filteredData.length > 0 ? {
+                                min: new Date(`${filteredData[0].date}T00:00:00`),
+                                max: new Date(`${filteredData[0].date}T23:59:59`)
+                            } : {})
                         },
                         y: {
                             title: {
