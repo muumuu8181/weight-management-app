@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.45';
+        const APP_VERSION = 'v0.46';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -397,6 +397,14 @@
         window.setMode = (mode) => {
             currentMode = mode;
             updateModeUI();
+            
+            // モード変更時の表示更新
+            if (mode === 'delete' && selectedTarget) {
+                updateDeleteModeDisplay();
+            } else if (mode !== 'delete') {
+                restoreNormalDisplay();
+            }
+            
             log(`🔧 モード変更: ${mode === 'normal' ? '通常' : mode === 'add' ? '追加' : '削除'}モード`);
         };
 
@@ -408,6 +416,11 @@
             
             // モードに応じて処理実行
             handleModeAction();
+            
+            // 削除モード時はガイダンス更新
+            if (currentMode === 'delete') {
+                updateDeleteModeGuidance();
+            }
         };
 
         // モードに応じた処理実行
@@ -527,12 +540,16 @@
                 buttons[currentMode].style.background = colors[currentMode];
             }
 
-            // 追加モード以外では統一入力を非表示
-            if (currentMode !== 'add') {
-                document.getElementById('unifiedAddInput').style.display = 'none';
-            } else {
+            // モード別の表示制御
+            if (currentMode === 'add') {
                 // 追加モード時のガイダンス表示
                 updateAddModeGuidance();
+            } else if (currentMode === 'delete') {
+                // 削除モード時のガイダンス表示
+                updateDeleteModeGuidance();
+            } else {
+                // 通常モード時は統一入力を非表示
+                document.getElementById('unifiedAddInput').style.display = 'none';
             }
         }
 
@@ -550,6 +567,33 @@
                 `;
                 inputArea.style.background = '#fff3cd';
                 inputArea.style.borderColor = '#ffc107';
+            }
+        }
+
+        // 削除モードガイダンス更新
+        function updateDeleteModeGuidance() {
+            const inputArea = document.getElementById('unifiedAddInput');
+            
+            if (!selectedTarget) {
+                // 対象未選択時はガイダンス表示
+                inputArea.style.display = 'block';
+                inputArea.innerHTML = `
+                    <div style="margin-bottom: 5px;">
+                        <span style="font-size: 11px; color: #721c24; font-weight: bold;">👆 削除したい項目の対象を選択してください</span>
+                    </div>
+                `;
+                inputArea.style.background = '#f8d7da';
+                inputArea.style.borderColor = '#dc3545';
+            } else {
+                // 対象選択済み時は削除方法の案内
+                inputArea.style.display = 'block';
+                inputArea.innerHTML = `
+                    <div style="margin-bottom: 5px;">
+                        <span style="font-size: 11px; color: #721c24; font-weight: bold;">❌ 赤色のカスタム項目をクリックして削除</span>
+                    </div>
+                `;
+                inputArea.style.background = '#f8d7da';
+                inputArea.style.borderColor = '#dc3545';
             }
         }
 
@@ -574,7 +618,11 @@
 
         // 削除モード表示更新
         function updateDeleteModeDisplay() {
-            if (currentMode !== 'delete' || !selectedTarget) return;
+            if (currentMode !== 'delete' || !selectedTarget) {
+                // 削除モード以外では元の表示に戻す
+                restoreNormalDisplay();
+                return;
+            }
 
             const selectors = {
                 timing: '.timing-btn',
@@ -587,11 +635,48 @@
             buttons.forEach(btn => {
                 const item = btn.getAttribute(`data-${selectedTarget === 'timing' ? 'timing' : selectedTarget === 'top' ? 'clothing-top' : 'clothing-bottom'}`);
                 if (isCustomItem(item, selectedTarget)) {
+                    // カスタム項目を削除モード表示に
                     btn.style.background = '#dc3545';
                     btn.style.transform = 'scale(0.9)';
                     btn.innerHTML = `❌ ${item}`;
                     btn.onclick = () => deleteCustomItem(item, selectedTarget);
+                } else {
+                    // デフォルト項目は無効化（削除不可の表示）
+                    btn.style.opacity = '0.5';
+                    btn.style.transform = 'scale(0.95)';
                 }
+            });
+
+            log(`🗑️ 削除モード: ${selectedTarget === 'timing' ? 'タイミング' : selectedTarget === 'top' ? '上半身' : '下半身'}のカスタム項目をクリックして削除`);
+        }
+
+        // 通常表示に復旧
+        function restoreNormalDisplay() {
+            const allButtons = document.querySelectorAll('.timing-btn, .clothing-btn');
+            
+            allButtons.forEach(btn => {
+                const item = btn.getAttribute('data-timing') || btn.getAttribute('data-clothing-top') || btn.getAttribute('data-clothing-bottom');
+                const originalColor = btn.getAttribute('data-original-color');
+                
+                // 通常の表示に復旧
+                btn.style.opacity = '0.7';
+                btn.style.transform = 'scale(1)';
+                
+                if (originalColor) {
+                    // カスタム項目
+                    btn.style.background = originalColor;
+                    if (btn.classList.contains('timing-btn')) {
+                        btn.innerHTML = `⏰ ${item}`;
+                        btn.onclick = () => selectTiming(item);
+                    } else if (btn.hasAttribute('data-clothing-top')) {
+                        btn.innerHTML = `👔 ${item}`;
+                        btn.onclick = () => selectClothingTop(item);
+                    } else if (btn.hasAttribute('data-clothing-bottom')) {
+                        btn.innerHTML = `👖 ${item}`;
+                        btn.onclick = () => selectClothingBottom(item);
+                    }
+                }
+                // デフォルト項目は元から正しい表示なので何もしない
             });
         }
 
