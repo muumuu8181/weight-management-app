@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>アプリテンプレート v0.36</title>
+    <title>アプリテンプレート v0.37</title>
     
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
@@ -91,7 +91,7 @@
 <body>
     <div class="container">
         <div class="app-header">
-            <h1 class="app-title">📊 アプリテンプレート v0.36</h1>
+            <h1 class="app-title">📊 アプリテンプレート v0.37</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
         <!-- 認証セクション -->
@@ -128,6 +128,39 @@
                         <button type="button" class="timing-btn" onclick="selectTiming('食事後')" data-timing="食事後" style="background: #a29bfe;">🍽️ 食事後</button>
                     </div>
                     <input type="text" class="input-field" id="selectedTiming" placeholder="タイミング" readonly style="margin-top: 5px; font-size: 12px; padding: 6px; text-align: center; background: #f0f8ff;">
+                </div>
+                
+                <!-- 服装記録パネル (復活+改良版) -->
+                <div class="clothing-panel" style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 8px; margin: 5px 0;">
+                    <h4 style="margin: 2px 0 5px 0; font-size: 13px; text-align: center;">👕 服装記録</h4>
+                    
+                    <!-- 上半身 -->
+                    <div style="margin: 3px 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                            <span style="font-size: 11px; color: #444;">上:</span>
+                            <button onclick="addCustomClothingTop()" style="background: #28a745; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
+                        </div>
+                        <div id="topClothingButtons" style="display: flex; gap: 3px; flex-wrap: wrap;">
+                            <button type="button" class="clothing-btn" onclick="selectClothingTop('なし')" data-clothing-top="なし" style="background: #e0e0e0; color: #424242; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">❌ なし</button>
+                            <button type="button" class="clothing-btn" onclick="selectClothingTop('下着シャツ')" data-clothing-top="下着シャツ" style="background: #87ceeb; color: #2f4f4f; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">👕 下着シャツ</button>
+                            <button type="button" class="clothing-btn" onclick="selectClothingTop('ワイシャツ')" data-clothing-top="ワイシャツ" style="background: #add8e6; color: #2f4f4f; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">👔 ワイシャツ</button>
+                        </div>
+                        <input type="text" class="input-field" id="selectedTop" placeholder="上" readonly style="margin-top: 2px; font-size: 10px; padding: 4px; text-align: center; background: #ffffff;">
+                    </div>
+                    
+                    <!-- 下半身 -->
+                    <div style="margin: 3px 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                            <span style="font-size: 11px; color: #444;">下:</span>
+                            <button onclick="addCustomClothingBottom()" style="background: #28a745; color: white; border: none; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 9px;">+ 追加</button>
+                        </div>
+                        <div id="bottomClothingButtons" style="display: flex; gap: 3px; flex-wrap: wrap;">
+                            <button type="button" class="clothing-btn" onclick="selectClothingBottom('なし')" data-clothing-bottom="なし" style="background: #e0e0e0; color: #424242; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">❌ なし</button>
+                            <button type="button" class="clothing-btn" onclick="selectClothingBottom('トランクス')" data-clothing-bottom="トランクス" style="background: #dda0dd; color: #4b0082; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">🩲 トランクス</button>
+                            <button type="button" class="clothing-btn" onclick="selectClothingBottom('ハーフパンツ')" data-clothing-bottom="ハーフパンツ" style="background: #f0e68c; color: #8b4513; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px;">🩳 ハーフパンツ</button>
+                        </div>
+                        <input type="text" class="input-field" id="selectedBottom" placeholder="下" readonly style="margin-top: 2px; font-size: 10px; padding: 4px; text-align: center; background: #ffffff;">
+                    </div>
                 </div>
                 
                 <textarea class="input-field" id="memoInput" placeholder="メモ (オプション)" rows="2"></textarea>
@@ -197,6 +230,8 @@
 
         let currentUser = null;
         let selectedTimingValue = '';
+        let selectedTopValue = '';
+        let selectedBottomValue = '';
         let weightChart = null;
         let allWeightData = [];
         window.editingEntryId = null;
@@ -234,6 +269,102 @@
             }
             
             log(`⏰ 測定タイミング選択: ${timing}`);
+        };
+
+        // 上半身服装選択機能
+        window.selectClothingTop = (clothing) => {
+            selectedTopValue = clothing;
+            document.getElementById('selectedTop').value = clothing;
+            
+            // すべての上半身ボタンから選択状態を削除
+            document.querySelectorAll('.clothing-btn[data-clothing-top]').forEach(btn => {
+                btn.style.opacity = '0.7';
+                btn.style.transform = 'scale(1)';
+            });
+            
+            // 選択されたボタンに選択状態を追加
+            const selectedBtn = document.querySelector(`[data-clothing-top="${clothing}"]`);
+            if (selectedBtn) {
+                selectedBtn.style.opacity = '1';
+                selectedBtn.style.transform = 'scale(1.05)';
+            }
+            
+            log(`👕 上半身選択: ${clothing}`);
+        };
+
+        // 下半身服装選択機能
+        window.selectClothingBottom = (clothing) => {
+            selectedBottomValue = clothing;
+            document.getElementById('selectedBottom').value = clothing;
+            
+            // すべての下半身ボタンから選択状態を削除
+            document.querySelectorAll('.clothing-btn[data-clothing-bottom]').forEach(btn => {
+                btn.style.opacity = '0.7';
+                btn.style.transform = 'scale(1)';
+            });
+            
+            // 選択されたボタンに選択状態を追加
+            const selectedBtn = document.querySelector(`[data-clothing-bottom="${clothing}"]`);
+            if (selectedBtn) {
+                selectedBtn.style.opacity = '1';
+                selectedBtn.style.transform = 'scale(1.05)';
+            }
+            
+            log(`🩲 下半身選択: ${clothing}`);
+        };
+
+        // カスタム上半身項目追加
+        window.addCustomClothingTop = () => {
+            const newItem = prompt('新しい上半身の服装を入力してください:');
+            if (newItem && newItem.trim()) {
+                const itemName = newItem.trim();
+                const container = document.getElementById('topClothingButtons');
+                
+                // ランダムカラー生成
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'clothing-btn';
+                button.setAttribute('data-clothing-top', itemName);
+                button.onclick = () => selectClothingTop(itemName);
+                button.style.cssText = `background: ${randomColor}; color: white; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px; opacity: 0.7;`;
+                button.textContent = `👔 ${itemName}`;
+                
+                container.appendChild(button);
+                log(`✅ 新しい上半身項目追加: ${itemName}`);
+                
+                // 追加後すぐに選択
+                selectClothingTop(itemName);
+            }
+        };
+
+        // カスタム下半身項目追加
+        window.addCustomClothingBottom = () => {
+            const newItem = prompt('新しい下半身の服装を入力してください:');
+            if (newItem && newItem.trim()) {
+                const itemName = newItem.trim();
+                const container = document.getElementById('bottomClothingButtons');
+                
+                // ランダムカラー生成
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'clothing-btn';
+                button.setAttribute('data-clothing-bottom', itemName);
+                button.onclick = () => selectClothingBottom(itemName);
+                button.style.cssText = `background: ${randomColor}; color: white; border: none; padding: 3px 6px; border-radius: 10px; cursor: pointer; font-size: 10px; min-width: 50px; opacity: 0.7;`;
+                button.textContent = `👖 ${itemName}`;
+                
+                container.appendChild(button);
+                log(`✅ 新しい下半身項目追加: ${itemName}`);
+                
+                // 追加後すぐに選択
+                selectClothingBottom(itemName);
+            }
         };
 
 
@@ -423,6 +554,10 @@
                     time: timeString,
                     value: parseFloat(weight),
                     timing: selectedTimingValue || '',
+                    clothing: {
+                        top: selectedTopValue || '',
+                        bottom: selectedBottomValue || ''
+                    },
                     memo: memo || '',
                     userEmail: currentUser.email,
                     timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -523,6 +658,14 @@
                     selectTiming(entry.timing);
                 }
                 
+                // 服装を設定
+                if (entry.clothing && entry.clothing.top) {
+                    selectClothingTop(entry.clothing.top);
+                }
+                if (entry.clothing && entry.clothing.bottom) {
+                    selectClothingBottom(entry.clothing.bottom);
+                }
+                
                 
                 // 編集モードに切り替え
                 window.editingEntryId = entryId;
@@ -579,9 +722,14 @@
                     historyDiv.innerHTML = entries.map(entry => {
                         let displayText = `${entry.date}`;
                         if (entry.time) displayText += ` ${entry.time}`;
-                        displayText += `: ${entry.value || entry.weight}`;
+                        displayText += `: ${entry.value || entry.weight}kg`;
                         if (entry.timing) displayText += ` (${entry.timing})`;
                         
+                        // 服装情報を追加
+                        if (entry.clothing && (entry.clothing.top || entry.clothing.bottom)) {
+                            const clothingInfo = [entry.clothing.top, entry.clothing.bottom].filter(Boolean).join(', ');
+                            displayText += ` [${clothingInfo}]`;
+                        }
                         
                         if (entry.memo) displayText += ` - ${entry.memo}`;
                         return `<div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 0; border-bottom: 1px solid #eee;"><span>${displayText}</span><div style="display: flex; gap: 2px;"><button onclick="editWeightEntry('${entry.id}')" style="background: #007bff; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">✏️</button><button onclick="deleteWeightEntry('${entry.id}')" style="background: #dc3545; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">🗑️</button></div></div>`;
@@ -733,6 +881,12 @@
             document.querySelectorAll('.timing-btn').forEach(btn => {
                 btn.style.opacity = '0.7';
                 btn.classList.remove('selected');
+            });
+            
+            // 服装ボタンの初期状態設定
+            document.querySelectorAll('.clothing-btn').forEach(btn => {
+                btn.style.opacity = '0.7';
+                btn.style.transform = 'scale(1)';
             });
             
         }
