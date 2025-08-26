@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.44';
+        const APP_VERSION = 'v0.45';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -412,12 +412,10 @@
 
         // モードに応じた処理実行
         function handleModeAction() {
-            if (!selectedTarget) return;
-            
-            if (currentMode === 'add') {
+            if (currentMode === 'add' && selectedTarget) {
                 // 追加モード: 統一入力フィールド表示
                 showUnifiedAddInput();
-            } else if (currentMode === 'delete') {
+            } else if (currentMode === 'delete' && selectedTarget) {
                 // 削除モード: カスタム項目の表示変更
                 updateDeleteModeDisplay();
             }
@@ -426,9 +424,23 @@
         // 統一追加入力表示
         function showUnifiedAddInput() {
             const inputArea = document.getElementById('unifiedAddInput');
-            const textField = document.getElementById('unifiedAddText');
             
+            // 元の入力フォームに復元
+            inputArea.innerHTML = `
+                <div style="margin-bottom: 5px;">
+                    <span style="font-size: 11px; color: #155724; font-weight: bold;">✨ 新規項目を追加</span>
+                </div>
+                <div style="display: flex; gap: 3px; align-items: center;">
+                    <input type="text" id="unifiedAddText" placeholder="項目名を入力" style="flex: 1; padding: 4px 8px; border: 1px solid #28a745; border-radius: 3px; font-size: 11px;">
+                    <button onclick="executeAdd()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✓ 追加</button>
+                    <button onclick="cancelAdd()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✗ キャンセル</button>
+                </div>
+            `;
+            inputArea.style.background = '#e8f5e8';
+            inputArea.style.borderColor = '#28a745';
             inputArea.style.display = 'block';
+            
+            const textField = document.getElementById('unifiedAddText');
             textField.value = '';
             textField.placeholder = `${selectedTarget === 'timing' ? 'タイミング' : selectedTarget === 'top' ? '上半身の服装' : '下半身の服装'}を入力`;
             textField.focus();
@@ -518,6 +530,26 @@
             // 追加モード以外では統一入力を非表示
             if (currentMode !== 'add') {
                 document.getElementById('unifiedAddInput').style.display = 'none';
+            } else {
+                // 追加モード時のガイダンス表示
+                updateAddModeGuidance();
+            }
+        }
+
+        // 追加モードガイダンス更新
+        function updateAddModeGuidance() {
+            const inputArea = document.getElementById('unifiedAddInput');
+            
+            if (!selectedTarget) {
+                // 対象未選択時はガイダンス表示
+                inputArea.style.display = 'block';
+                inputArea.innerHTML = `
+                    <div style="margin-bottom: 5px;">
+                        <span style="font-size: 11px; color: #856404; font-weight: bold;">👆 追加したい項目の対象を選択してください</span>
+                    </div>
+                `;
+                inputArea.style.background = '#fff3cd';
+                inputArea.style.borderColor = '#ffc107';
             }
         }
 
