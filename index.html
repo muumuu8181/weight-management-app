@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.49';
+        const APP_VERSION = 'v0.50';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1493,17 +1493,42 @@
 
         // 日付範囲表示を更新
         function updateDateRangeDisplay(rangeText) {
+            const chartContainer = document.querySelector('#chartPanel div[style*="position: relative"]');
+            if (!chartContainer) {
+                // フォールバック: chartPanelを使用
+                const chartPanel = document.getElementById('chartPanel');
+                if (!chartPanel) {
+                    console.warn('Chart panel not found for date range display');
+                    return;
+                }
+                
+                let rangeDisplay = document.getElementById('chartDateRange');
+                if (!rangeDisplay) {
+                    rangeDisplay = document.createElement('div');
+                    rangeDisplay.id = 'chartDateRange';
+                    rangeDisplay.style.cssText = 'text-align: right; font-size: 12px; color: #666; margin-bottom: 5px; padding: 2px 0;';
+                    const h3 = chartPanel.querySelector('h3');
+                    if (h3) {
+                        h3.insertAdjacentElement('afterend', rangeDisplay);
+                    }
+                }
+                if (rangeDisplay && rangeText) {
+                    rangeDisplay.textContent = rangeText;
+                }
+                return;
+            }
+
             let rangeDisplay = document.getElementById('chartDateRange');
             if (!rangeDisplay) {
                 // 日付範囲表示エリアが存在しない場合は作成
-                const chartContainer = document.querySelector('#chartPanel .chart-container');
                 rangeDisplay = document.createElement('div');
                 rangeDisplay.id = 'chartDateRange';
-                rangeDisplay.style.cssText = 'position: absolute; top: 5px; right: 10px; background: rgba(255,255,255,0.9); padding: 4px 8px; border-radius: 4px; font-size: 12px; color: #666; border: 1px solid #ddd;';
-                chartContainer.style.position = 'relative';
+                rangeDisplay.style.cssText = 'position: absolute; top: 5px; right: 10px; background: rgba(255,255,255,0.9); padding: 4px 8px; border-radius: 4px; font-size: 12px; color: #666; border: 1px solid #ddd; z-index: 10;';
                 chartContainer.appendChild(rangeDisplay);
             }
-            rangeDisplay.textContent = rangeText;
+            if (rangeDisplay && rangeText) {
+                rangeDisplay.textContent = rangeText;
+            }
         }
 
         // グラフの表示期間を変更
