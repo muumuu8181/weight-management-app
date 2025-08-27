@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.52';
+        const APP_VERSION = 'v0.53';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1394,21 +1394,28 @@
                 const hasMultipleMeasurements = Object.values(groupedData).some(values => values.length > 1);
                 
                 if (hasMultipleMeasurements) {
-                    // 最大値・最小値を表示（複数測定の日のみポイント表示）
-                    const maxDataFiltered = maxData.filter(item => {
+                    // 最大値・最小値を表示（複数測定日のみ表示、同じ日付セット使用）
+                    const maxDataForDisplay = [];
+                    const minDataForDisplay = [];
+                    
+                    maxData.forEach(item => {
                         const date = item.x;
-                        return groupedData[date] && groupedData[date].length > 1;
+                        if (groupedData[date] && groupedData[date].length > 1) {
+                            maxDataForDisplay.push(item);
+                        }
                     });
                     
-                    const minDataFiltered = minData.filter(item => {
+                    minData.forEach(item => {
                         const date = item.x;
-                        return groupedData[date] && groupedData[date].length > 1;
+                        if (groupedData[date] && groupedData[date].length > 1) {
+                            minDataForDisplay.push(item);
+                        }
                     });
 
-                    if (maxDataFiltered.length > 0) {
+                    if (maxDataForDisplay.length > 0) {
                         datasets.push({
                             label: '最大値',
-                            data: maxDataFiltered,
+                            data: maxDataForDisplay,
                             borderColor: 'rgb(255, 99, 132)',
                             backgroundColor: 'rgba(255, 99, 132, 0.1)',
                             tension: 0.1,
@@ -1419,7 +1426,7 @@
 
                         datasets.push({
                             label: '最小値',
-                            data: minDataFiltered,
+                            data: minDataForDisplay,
                             borderColor: 'rgb(54, 162, 235)',
                             backgroundColor: 'rgba(54, 162, 235, 0.1)',
                             tension: 0.1,
