@@ -1,0 +1,35 @@
+/* タブ3: xxの三番専用CSS */
+
+#tab3Content {
+    min-height: 400px;
+}
+
+#tab3Content h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+#tab3Content h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#tab3Content p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    #tab3Content {
+        padding: 10px;
+    }
+    
+    #tab3Content h3 {
+        font-size: 20px;
+    }
+    
+    #tab3Content h4 {
+        font-size: 16px;
+    }
+}

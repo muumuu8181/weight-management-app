@@ -1,0 +1,65 @@
+/* タブ2: xxの二番専用CSS */
+
+#tab2Content {
+    min-height: 400px;
+}
+
+#tab2Content h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+#tab2Content h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#tab2Content p {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* サンプルボタンのホバーエフェクト */
+#tab2Content button {
+    transition: all 0.3s ease;
+}
+
+#tab2Content button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#tab2Content button:active {
+    transform: translateY(0);
+}
+
+/* 表示エリアアニメーション */
+#tab2Display {
+    transition: all 0.5s ease;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    #tab2Content {
+        padding: 10px;
+    }
+    
+    #tab2Content h3 {
+        font-size: 20px;
+    }
+    
+    #tab2Content h4 {
+        font-size: 16px;
+    }
+    
+    #tab2Content button {
+        padding: 6px 12px;
+        font-size: 14px;
+        margin: 2px;
+    }
+    
+    #tab2Display {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

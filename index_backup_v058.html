@@ -127,7 +127,7 @@
         <div id="tabNavigation" class="hidden" style="margin-bottom: 15px;">
             <div style="display: flex; border-bottom: 2px solid #ddd;">
                 <button id="tab1" class="tab-btn active" onclick="switchTab(1)" style="flex: 1; padding: 10px 15px; border: none; background: #007bff; color: white; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 2px;">体重</button>
-                <button id="tab2" class="tab-btn" onclick="switchTab(2)" style="flex: 1; padding: 10px 15px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 2px;">睡眠</button>
+                <button id="tab2" class="tab-btn" onclick="switchTab(2)" style="flex: 1; padding: 10px 15px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 2px;">xxの二番</button>
                 <button id="tab3" class="tab-btn" onclick="switchTab(3)" style="flex: 1; padding: 10px 15px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0;">xxの三番</button>
             </div>
         </div>
@@ -255,25 +255,13 @@
             <div style="position: relative; height: 300px;">
                 <canvas id="weightChart"></canvas>
             </div>
-            
-            <!-- 期間選択とナビゲーション -->
-            <div style="margin-top: 10px;">
-                <!-- 期間選択ボタン -->
-                <div style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px;">
-                    <button onclick="updateChartRange(1)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1日</button>
-                    <button onclick="updateChartRange(7)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1週間</button>
-                    <button onclick="updateChartRange(30)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1ヶ月</button>
-                    <button onclick="updateChartRange(90)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">3ヶ月</button>
-                    <button onclick="updateChartRange(365)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1年</button>
-                    <button onclick="updateChartRange(0)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">全期間</button>
-                </div>
-                
-                <!-- ナビゲーションボタン -->
-                <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-                    <button onclick="navigateChart('prev')" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold;">← 前</button>
-                    <span id="chartPeriodInfo" style="font-size: 12px; color: #666; min-width: 120px; text-align: center;">期間を選択してください</span>
-                    <button onclick="navigateChart('next')" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold;">次 →</button>
-                </div>
+            <div style="margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap;">
+                <button onclick="updateChartRange(1)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1日</button>
+                <button onclick="updateChartRange(7)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1週間</button>
+                <button onclick="updateChartRange(30)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1ヶ月</button>
+                <button onclick="updateChartRange(90)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">3ヶ月</button>
+                <button onclick="updateChartRange(365)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1年</button>
+                <button onclick="updateChartRange(0)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">全期間</button>
             </div>
         </div>
 
@@ -300,7 +288,7 @@
         <!-- タブコンテンツ2 -->
         <div id="tabContent2" class="tab-content hidden">
             <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🛏️ 睡眠管理</h3>
+                <h3>xxの二番</h3>
                 <p>こちらのコンテンツは後で実装予定です</p>
             </div>
         </div>
@@ -1345,15 +1333,14 @@
         }
 
         // グラフを更新
-        // 日付指定でチャートを更新
-        function updateChartWithDate(days, endDate) {
+        function updateChart(days = 30) {
             const ctx = document.getElementById('weightChart');
             if (!ctx) return;
 
-            const end = new Date(endDate);
-            const startDate = new Date(end);
+            const now = new Date();
+            const startDate = new Date(now);
             if (days > 0) {
-                startDate.setDate(end.getDate() - days);
+                startDate.setDate(now.getDate() - days);
             } else {
                 // 全期間の場合、最も古いデータから
                 if (allWeightData.length > 0) {
@@ -1364,17 +1351,8 @@
             // 期間内のデータをフィルタリング
             const filteredData = allWeightData.filter(entry => {
                 const entryDate = new Date(entry.date);
-                return entryDate >= startDate && entryDate <= end;
+                return entryDate >= startDate && entryDate <= now;
             });
-
-            // 既存のupdateChart関数のロジックを使用してチャートを描画
-            renderChartWithData(days, filteredData, startDate, end);
-        }
-
-        // チャート描画の共通ロジック
-        function renderChartWithData(days, filteredData, startDate, endDate) {
-            const ctx = document.getElementById('weightChart');
-            if (!ctx) return;
 
             let chartData, datasets = [];
             let timeUnit, displayFormat, axisLabel;
@@ -1430,7 +1408,14 @@
                     const max = Math.max(...values);
                     const min = Math.min(...values);
                     
+                    // デバッグログ追加
+                    if (values.length > 1) {
+                        console.log(`🔍 ${date}: 値=[${values.join(',')}], 平均=${avg.toFixed(2)}, 最大=${max}, 最小=${min}`);
+                    }
+                    
                     avgData.push({ x: date, y: avg });
+                    
+                    // 全ての日の最大・最小を表示（同じデータセットで一貫性保持）
                     maxData.push({ x: date, y: max });
                     minData.push({ x: date, y: min });
                 });
@@ -1439,6 +1424,7 @@
                 const hasMultipleMeasurements = Object.values(groupedData).some(values => values.length > 1);
                 
                 if (hasMultipleMeasurements) {
+                    // 同じ日付セットで平均・最大・最小を表示（複数測定日のみ）
                     const avgDataForDisplay = [];
                     const maxDataForDisplay = [];
                     const minDataForDisplay = [];
@@ -1464,6 +1450,7 @@
                         }
                     });
 
+                    // 平均値（複数測定日のみ）
                     datasets.push({
                         label: '平均値',
                         data: avgDataForDisplay,
@@ -1474,6 +1461,7 @@
                         pointHoverRadius: 6
                     });
 
+                    // 最大値・最小値（複数測定日のみ）
                     if (maxDataForDisplay.length > 0) {
                         datasets.push({
                             label: '最大値',
@@ -1498,6 +1486,7 @@
                         });
                     }
                 } else {
+                    // 複数測定日がない場合は全日の平均値のみ表示
                     datasets.push({
                         label: '体重',
                         data: avgData,
@@ -1589,38 +1578,6 @@
             log(`📊 グラフ更新: ${filteredData.length}件のデータ表示 ${dateRangeText}`);
         }
 
-        function updateChart(days = 30) {
-            // 現在の日付を基準に更新
-            currentChartDays = days;
-            currentChartDate = new Date();
-            
-            const ctx = document.getElementById('weightChart');
-            if (!ctx) return;
-
-            const now = new Date();
-            const startDate = new Date(now);
-            if (days > 0) {
-                startDate.setDate(now.getDate() - days);
-            } else {
-                // 全期間の場合、最も古いデータから
-                if (allWeightData.length > 0) {
-                    startDate.setTime(new Date(allWeightData[0].date).getTime());
-                }
-            }
-
-            // 期間内のデータをフィルタリング
-            const filteredData = allWeightData.filter(entry => {
-                const entryDate = new Date(entry.date);
-                return entryDate >= startDate && entryDate <= now;
-            });
-
-            // 共通の描画ロジックを使用
-            renderChartWithData(days, filteredData, startDate, now);
-            
-            // 期間情報を更新
-            updateChartPeriodInfo();
-        }
-
         // 日付範囲表示を更新
         function updateDateRangeDisplay(rangeText) {
             const chartContainer = document.querySelector('#chartPanel div[style*="position: relative"]');
@@ -1670,74 +1627,6 @@
                             days === 90 ? '3ヶ月' : 
                             days === 365 ? '1年' : '全期間';
             log(`📊 グラフ表示期間変更: ${rangeName}`);
-        }
-
-        // チャートナビゲーション用変数
-        let currentChartDays = 30; // デフォルト期間
-        let currentChartDate = new Date(); // 基準日
-
-        // チャートナビゲーション機能
-        window.navigateChart = (direction) => {
-            if (currentChartDays === 0) {
-                log('⚠️ 全期間表示中はナビゲーションできません');
-                return;
-            }
-
-            const today = new Date();
-            
-            if (direction === 'prev') {
-                // 前の期間へ
-                currentChartDate.setDate(currentChartDate.getDate() - currentChartDays);
-            } else if (direction === 'next') {
-                // 次の期間へ
-                currentChartDate.setDate(currentChartDate.getDate() + currentChartDays);
-                
-                // 未来に行き過ぎないよう制限
-                if (currentChartDate > today) {
-                    currentChartDate = new Date(today);
-                }
-            }
-            
-            // チャートを更新
-            updateChartWithDate(currentChartDays, currentChartDate);
-            
-            // 期間情報を更新
-            updateChartPeriodInfo();
-            
-            const direction_jp = direction === 'prev' ? '前' : '次';
-            log(`📊 チャート${direction_jp}へナビゲーション`);
-        };
-
-        // 期間情報表示を更新
-        function updateChartPeriodInfo() {
-            const periodInfo = document.getElementById('chartPeriodInfo');
-            if (!periodInfo) return;
-            
-            const endDate = new Date(currentChartDate);
-            const startDate = new Date(currentChartDate);
-            
-            if (currentChartDays === 1) {
-                // 1日表示
-                periodInfo.textContent = `${endDate.getMonth() + 1}/${endDate.getDate()} (1日)`;
-            } else if (currentChartDays === 7) {
-                // 1週間表示
-                startDate.setDate(endDate.getDate() - 6);
-                periodInfo.textContent = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (1週間)`;
-            } else if (currentChartDays === 30) {
-                // 1ヶ月表示
-                startDate.setDate(endDate.getDate() - 29);
-                periodInfo.textContent = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (1ヶ月)`;
-            } else if (currentChartDays === 90) {
-                // 3ヶ月表示
-                startDate.setDate(endDate.getDate() - 89);
-                periodInfo.textContent = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (3ヶ月)`;
-            } else if (currentChartDays === 365) {
-                // 1年表示
-                startDate.setDate(endDate.getDate() - 364);
-                periodInfo.textContent = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (1年)`;
-            } else {
-                periodInfo.textContent = '全期間';
-            }
         }
 
         // 現在のタブ

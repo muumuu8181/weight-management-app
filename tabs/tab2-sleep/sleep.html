@@ -1,0 +1,95 @@
+<!-- タブ2: 睡眠管理 -->
+<div id="tab2Content">
+    <!-- 睡眠記録入力エリア -->
+    <div class="input-card" id="sleepInput">
+        <h3>🛏️ 睡眠記録</h3>
+        
+        <!-- 日付選択 -->
+        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+            <label style="font-weight: bold;">📅 記録日:</label>
+            <input type="date" id="sleepDateInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+        </div>
+
+        <!-- 睡眠記録タイプ選択 -->
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 8px;">🛏️ 睡眠タイプ:</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="sleep-type-btn" data-type="夜間睡眠" onclick="selectSleepType('夜間睡眠')" style="background: #6f42c1; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🌙 夜間睡眠</button>
+                <button type="button" class="sleep-type-btn" data-type="昼寝" onclick="selectSleepType('昼寝')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">☀️ 昼寝</button>
+                <button type="button" class="sleep-type-btn" data-type="仮眠" onclick="selectSleepType('仮眠')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 仮眠</button>
+            </div>
+            <input type="hidden" id="selectedSleepType" value="">
+        </div>
+
+        <!-- 就寝・起床時間 -->
+        <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
+            <div>
+                <label style="font-weight: bold; display: block; margin-bottom: 3px;">🌙 就寝時間:</label>
+                <input type="time" id="bedTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </div>
+            <div>
+                <label style="font-weight: bold; display: block; margin-bottom: 3px;">☀️ 起床時間:</label>
+                <input type="time" id="wakeTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <span style="font-weight: bold;">⏱️ 睡眠時間:</span>
+                <span id="sleepDuration" style="font-size: 16px; color: #007bff; font-weight: bold;">--:--</span>
+            </div>
+        </div>
+
+        <!-- 睡眠の質評価 -->
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 8px;">⭐ 睡眠の質:</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="quality-btn" data-quality="1" onclick="selectQuality(1)" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 1 (最悪)</button>
+                <button type="button" class="quality-btn" data-quality="2" onclick="selectQuality(2)" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😪 2 (悪い)</button>
+                <button type="button" class="quality-btn" data-quality="3" onclick="selectQuality(3)" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😐 3 (普通)</button>
+                <button type="button" class="quality-btn" data-quality="4" onclick="selectQuality(4)" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😊 4 (良い)</button>
+                <button type="button" class="quality-btn" data-quality="5" onclick="selectQuality(5)" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 5 (最高)</button>
+            </div>
+            <input type="hidden" id="selectedQuality" value="">
+        </div>
+
+        <!-- メモ入力 -->
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">📝 メモ（任意）:</label>
+            <input type="text" id="sleepMemoInput" placeholder="夢の内容、体調など" style="width: 100%; max-width: 400px; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+        </div>
+
+        <!-- 保存ボタン -->
+        <div style="text-align: center;">
+            <button onclick="saveSleepData()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">💾 睡眠記録を保存</button>
+        </div>
+    </div>
+
+    <!-- 睡眠履歴表示 -->
+    <div class="input-card" id="sleepHistory">
+        <h3>📊 睡眠履歴 <button class="universal-copy-btn" onclick="copySleepHistory()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 履歴をコピー</button></h3>
+        <div class="data-area" id="sleepHistoryArea">
+            まだ睡眠記録がありません
+        </div>
+    </div>
+
+    <!-- 睡眠統計 -->
+    <div class="input-card" id="sleepStats">
+        <h3>📈 睡眠統計</h3>
+        <div id="sleepStatsArea" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div style="font-size: 24px; font-weight: bold; color: #007bff;">--</div>
+                <div style="font-size: 12px; color: #6c757d;">平均睡眠時間</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div style="font-size: 24px; font-weight: bold; color: #28a745;">--</div>
+                <div style="font-size: 12px; color: #6c757d;">平均睡眠の質</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div style="font-size: 24px; font-weight: bold; color: #ffc107;">--</div>
+                <div style="font-size: 12px; color: #6c757d;">今週の記録数</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">--</div>
+                <div style="font-size: 12px; color: #6c757d;">今月の記録数</div>
+            </div>
+        </div>
+    </div>
+</div>

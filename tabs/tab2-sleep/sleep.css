@@ -1,0 +1,187 @@
+/* タブ2: 睡眠管理専用CSS */
+
+#tab2Content .input-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#tab2Content .input-card h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+/* 睡眠タイプボタン */
+.sleep-type-btn {
+    transition: all 0.3s ease;
+    margin: 2px;
+}
+
+.sleep-type-btn:hover {
+    transform: scale(1.05) !important;
+}
+
+/* 睡眠の質ボタン */
+.quality-btn {
+    transition: all 0.3s ease;
+    margin: 2px;
+}
+
+.quality-btn:hover {
+    transform: scale(1.05) !important;
+}
+
+/* 時間入力フィールド */
+#sleepInput input[type="time"], 
+#sleepInput input[type="date"],
+#sleepInput input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#sleepInput input[type="text"] {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* 睡眠時間表示 */
+#sleepDuration {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* 統計エリア */
+#sleepStatsArea {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+#sleepStatsArea > div {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+#sleepStatsArea > div:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#sleepStatsArea > div > div:first-child {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#sleepStatsArea > div > div:last-child {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: normal;
+}
+
+/* 保存ボタンアニメーション */
+button[onclick="saveSleepData()"] {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+button[onclick="saveSleepData()"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+button[onclick="saveSleepData()"]:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+}
+
+/* データ表示エリア */
+.data-area {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    #tab2Content .input-card {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    #sleepInput > div:nth-child(3) {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    #sleepInput input[type="time"],
+    #sleepInput input[type="date"] {
+        width: 100%;
+        max-width: none;
+    }
+    
+    .sleep-type-btn,
+    .quality-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+        margin: 1px;
+    }
+    
+    #sleepStatsArea {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    #sleepStatsArea > div {
+        padding: 10px;
+    }
+    
+    #sleepStatsArea > div > div:first-child {
+        font-size: 20px;
+    }
+    
+    .data-area {
+        max-height: 150px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    #sleepStatsArea {
+        grid-template-columns: 1fr;
+    }
+    
+    .sleep-type-btn,
+    .quality-btn {
+        padding: 3px 6px;
+        font-size: 10px;
+        flex: 1;
+        margin: 1px;
+    }
+    
+    #sleepInput > div:nth-child(5) > div {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
