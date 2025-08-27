@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.54';
+        const APP_VERSION = 'v0.55';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1384,24 +1384,21 @@
                     minData.push({ x: date, y: min });
                 });
 
-                // 平均値は常に表示
-                datasets.push({
-                    label: '平均値',
-                    data: avgData,
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    tension: 0.1,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                });
-
-                // 複数測定日がある場合のみ最大・最小値を表示
+                // 複数測定日がある場合のみ全系列を表示
                 const hasMultipleMeasurements = Object.values(groupedData).some(values => values.length > 1);
                 
                 if (hasMultipleMeasurements) {
-                    // 最大値・最小値を表示（複数測定日のみ表示、同じ日付セット使用）
+                    // 同じ日付セットで平均・最大・最小を表示（複数測定日のみ）
+                    const avgDataForDisplay = [];
                     const maxDataForDisplay = [];
                     const minDataForDisplay = [];
+                    
+                    avgData.forEach(item => {
+                        const date = item.x;
+                        if (groupedData[date] && groupedData[date].length > 1) {
+                            avgDataForDisplay.push(item);
+                        }
+                    });
                     
                     maxData.forEach(item => {
                         const date = item.x;
@@ -1417,6 +1414,18 @@
                         }
                     });
 
+                    // 平均値（複数測定日のみ）
+                    datasets.push({
+                        label: '平均値',
+                        data: avgDataForDisplay,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    });
+
+                    // 最大値・最小値（複数測定日のみ）
                     if (maxDataForDisplay.length > 0) {
                         datasets.push({
                             label: '最大値',
@@ -1440,6 +1449,17 @@
                             borderDash: [5, 5]
                         });
                     }
+                } else {
+                    // 複数測定日がない場合は全日の平均値のみ表示
+                    datasets.push({
+                        label: '体重',
+                        data: avgData,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    });
                 }
                 
                 // 期間表示テキストを設定
