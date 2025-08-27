@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.55';
+        const APP_VERSION = 'v0.56';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1270,7 +1270,10 @@
                     allWeightData = entries.sort((a, b) => new Date(a.date) - new Date(b.date));
                     updateChart();
                     
-                    historyDiv.innerHTML = entries.map(entry => {
+                    // 直近7件のみ表示
+                    const recentEntries = entries.slice(-7);
+                    
+                    historyDiv.innerHTML = recentEntries.map(entry => {
                         let displayText = `${entry.date}`;
                         if (entry.time) displayText += ` ${entry.time}`;
                         displayText += `: ${entry.value || entry.weight}kg`;
