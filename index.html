@@ -121,6 +121,15 @@
             <h1 class="app-title" id="appTitle">📊 体重管理アプリ</h1>
             <p class="app-subtitle">Core/Customフォルダ分離版 - Firebase + Google認証</p>
         </div>
+
+        <!-- タブナビゲーション -->
+        <div id="tabNavigation" class="hidden" style="margin-bottom: 15px;">
+            <div style="display: flex; border-bottom: 2px solid #ddd;">
+                <button id="tab1" class="tab-btn active" onclick="switchTab(1)" style="flex: 1; padding: 10px 15px; border: none; background: #007bff; color: white; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 2px;">体重</button>
+                <button id="tab2" class="tab-btn" onclick="switchTab(2)" style="flex: 1; padding: 10px 15px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 2px;">xxの二番</button>
+                <button id="tab3" class="tab-btn" onclick="switchTab(3)" style="flex: 1; padding: 10px 15px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0;">xxの三番</button>
+            </div>
+        </div>
         <!-- 認証セクション -->
         <div class="auth-section" id="authSection">
             <h3>🔐 ログイン</h3>
@@ -133,6 +142,8 @@
             <button class="logout-button" onclick="handleLogout()">ログアウト</button>
         </div>
 
+        <!-- タブコンテンツ -->
+        <div id="tabContent1" class="tab-content">
         <!-- モード選択エリア -->
         <div class="mode-control hidden" id="modeControl" style="background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 8px; margin: 8px 0; text-align: center;">
             <div style="margin-bottom: 8px;">
@@ -267,6 +278,23 @@
             <button class="universal-copy-btn" onclick="checkFirebaseConfig()" style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔧 Firebase設定</button>
             <button class="universal-copy-btn" onclick="testPopup()" style="background: #20c997; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🧪 ポップアップテスト</button>
         </div>
+        </div> <!-- タブコンテンツ1終了 -->
+
+        <!-- タブコンテンツ2 -->
+        <div id="tabContent2" class="tab-content hidden">
+            <div style="text-align: center; padding: 50px; color: #666;">
+                <h3>xxの二番</h3>
+                <p>こちらのコンテンツは後で実装予定です</p>
+            </div>
+        </div>
+
+        <!-- タブコンテンツ3 -->
+        <div id="tabContent3" class="tab-content hidden">
+            <div style="text-align: center; padding: 50px; color: #666;">
+                <h3>xxの三番</h3>
+                <p>こちらのコンテンツは後で実装予定です</p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -299,7 +327,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.56';
+        const APP_VERSION = 'v0.57';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1596,14 +1624,46 @@
             log(`📊 グラフ表示期間変更: ${rangeName}`);
         }
 
+        // 現在のタブ
+        let currentTab = 1;
+
+        // タブ切り替え機能
+        window.switchTab = (tabNumber) => {
+            currentTab = tabNumber;
+            
+            // すべてのタブボタンを非アクティブに
+            for (let i = 1; i <= 3; i++) {
+                const tabBtn = document.getElementById(`tab${i}`);
+                const tabContent = document.getElementById(`tabContent${i}`);
+                
+                if (i === tabNumber) {
+                    // アクティブタブ
+                    tabBtn.style.background = '#007bff';
+                    tabBtn.style.color = 'white';
+                    tabContent.classList.remove('hidden');
+                } else {
+                    // 非アクティブタブ
+                    tabBtn.style.background = '#f8f9fa';
+                    tabBtn.style.color = '#495057';
+                    tabContent.classList.add('hidden');
+                }
+            }
+            
+            log(`📑 タブ切り替え: タブ${tabNumber}`);
+        };
+
         // UI表示制御
         function showUserInterface(user) {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('userInfo').classList.remove('hidden');
+            document.getElementById('tabNavigation').classList.remove('hidden');
             document.getElementById('modeControl').classList.remove('hidden');
             document.getElementById('weightInput').classList.remove('hidden');
             document.getElementById('chartPanel').classList.remove('hidden');
             document.getElementById('userName').textContent = user.displayName;
+            
+            // デフォルトでタブ1を表示
+            switchTab(1);
             
             // カスタム項目を復元（ログイン時に実行）
             loadCustomItems();
@@ -1638,6 +1698,7 @@
         function showLoginInterface() {
             document.getElementById('authSection').classList.remove('hidden');
             document.getElementById('userInfo').classList.add('hidden');
+            document.getElementById('tabNavigation').classList.add('hidden');
             document.getElementById('modeControl').classList.add('hidden');
             document.getElementById('weightInput').classList.add('hidden');
             document.getElementById('chartPanel').classList.add('hidden');
