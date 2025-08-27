@@ -299,7 +299,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.53';
+        const APP_VERSION = 'v0.54';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1371,6 +1371,11 @@
                     const avg = values.reduce((a, b) => a + b, 0) / values.length;
                     const max = Math.max(...values);
                     const min = Math.min(...values);
+                    
+                    // デバッグログ追加
+                    if (values.length > 1) {
+                        console.log(`🔍 ${date}: 値=[${values.join(',')}], 平均=${avg.toFixed(2)}, 最大=${max}, 最小=${min}`);
+                    }
                     
                     avgData.push({ x: date, y: avg });
                     
