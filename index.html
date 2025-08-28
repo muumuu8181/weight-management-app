@@ -125,10 +125,15 @@
 
         <!-- タブナビゲーション -->
         <div id="tabNavigation" class="hidden" style="margin-bottom: 15px;">
-            <div style="display: flex; border-bottom: 2px solid #ddd;">
-                <button id="tab1" class="tab-btn active" onclick="switchTab(1)" style="flex: 1; padding: 10px 15px; border: none; background: #007bff; color: white; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 2px;">体重</button>
-                <button id="tab2" class="tab-btn" onclick="switchTab(2)" style="flex: 1; padding: 10px 15px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 2px;">睡眠</button>
-                <button id="tab3" class="tab-btn" onclick="switchTab(3)" style="flex: 1; padding: 10px 15px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0;">xxの三番</button>
+            <div style="display: flex; border-bottom: 2px solid #ddd; flex-wrap: wrap;">
+                <button id="tab1" class="tab-btn active" onclick="switchTab(1)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #007bff; color: white; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">体重</button>
+                <button id="tab2" class="tab-btn" onclick="switchTab(2)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">睡眠</button>
+                <button id="tab3" class="tab-btn" onclick="switchTab(3)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx3</button>
+                <button id="tab4" class="tab-btn" onclick="switchTab(4)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx4</button>
+                <button id="tab5" class="tab-btn" onclick="switchTab(5)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx5</button>
+                <button id="tab6" class="tab-btn" onclick="switchTab(6)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx6</button>
+                <button id="tab7" class="tab-btn" onclick="switchTab(7)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx7</button>
+                <button id="tab8" class="tab-btn" onclick="switchTab(8)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-bottom: 1px; font-size: 12px;">xx8</button>
             </div>
         </div>
 
@@ -351,10 +356,23 @@
                         <input type="hidden" id="selectedQuality" value="">
                     </div>
 
+                    <!-- 睡眠タグ選択 -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">🏷️ 睡眠タグ（複数選択可）:</label>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button type="button" class="sleep-tag-btn" data-tag="二度寝" onclick="toggleSleepTag('二度寝')" style="background: #6f42c1; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 二度寝</button>
+                            <button type="button" class="sleep-tag-btn" data-tag="夢を見た" onclick="toggleSleepTag('夢を見た')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">💭 夢を見た</button>
+                            <button type="button" class="sleep-tag-btn" data-tag="熟睡" onclick="toggleSleepTag('熟睡')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 熟睡</button>
+                            <button type="button" class="sleep-tag-btn" data-tag="途中で起きた" onclick="toggleSleepTag('途中で起きた')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😪 途中で起きた</button>
+                            <button type="button" class="sleep-tag-btn" data-tag="寝つきが悪い" onclick="toggleSleepTag('寝つきが悪い')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😣 寝つきが悪い</button>
+                        </div>
+                        <input type="hidden" id="selectedSleepTags" value="">
+                    </div>
+
                     <!-- メモ入力 -->
                     <div style="margin-bottom: 15px;">
                         <label style="font-weight: bold; display: block; margin-bottom: 5px;">📝 メモ（任意）:</label>
-                        <input type="text" id="sleepMemoInput" placeholder="夢の内容、体調など" style="width: 100%; max-width: 400px; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                        <input type="text" id="sleepMemoInput" placeholder="体調、起きた時の感想など" style="width: 100%; max-width: 400px; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
                     </div>
 
                     <!-- 保存ボタン -->
@@ -399,7 +417,47 @@
         <!-- タブコンテンツ3 -->
         <div id="tabContent3" class="tab-content hidden">
             <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>xxの三番</h3>
+                <h3>🔧 xx3</h3>
+                <p>こちらのコンテンツは後で実装予定です</p>
+            </div>
+        </div>
+
+        <!-- タブコンテンツ4 -->
+        <div id="tabContent4" class="tab-content hidden">
+            <div style="text-align: center; padding: 50px; color: #666;">
+                <h3>🔧 xx4</h3>
+                <p>こちらのコンテンツは後で実装予定です</p>
+            </div>
+        </div>
+
+        <!-- タブコンテンツ5 -->
+        <div id="tabContent5" class="tab-content hidden">
+            <div style="text-align: center; padding: 50px; color: #666;">
+                <h3>🔧 xx5</h3>
+                <p>こちらのコンテンツは後で実装予定です</p>
+            </div>
+        </div>
+
+        <!-- タブコンテンツ6 -->
+        <div id="tabContent6" class="tab-content hidden">
+            <div style="text-align: center; padding: 50px; color: #666;">
+                <h3>🔧 xx6</h3>
+                <p>こちらのコンテンツは後で実装予定です</p>
+            </div>
+        </div>
+
+        <!-- タブコンテンツ7 -->
+        <div id="tabContent7" class="tab-content hidden">
+            <div style="text-align: center; padding: 50px; color: #666;">
+                <h3>🔧 xx7</h3>
+                <p>こちらのコンテンツは後で実装予定です</p>
+            </div>
+        </div>
+
+        <!-- タブコンテンツ8 -->
+        <div id="tabContent8" class="tab-content hidden">
+            <div style="text-align: center; padding: 50px; color: #666;">
+                <h3>🔧 xx8</h3>
                 <p>こちらのコンテンツは後で実装予定です</p>
             </div>
         </div>
@@ -435,7 +493,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.60';
+        const APP_VERSION = 'v0.61';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1839,7 +1897,7 @@
             currentTab = tabNumber;
             
             // すべてのタブボタンを非アクティブに
-            for (let i = 1; i <= 3; i++) {
+            for (let i = 1; i <= 8; i++) {
                 const tabBtn = document.getElementById(`tab${i}`);
                 const tabContent = document.getElementById(`tabContent${i}`);
                 
@@ -1857,7 +1915,7 @@
             }
             
             // タブ固有の初期化処理
-            if (tabNumber === 2 && user) {
+            if (tabNumber === 2 && window.user) {
                 // 睡眠管理タブの初期化
                 initializeSleepManager();
                 loadSleepData();
@@ -2267,6 +2325,7 @@ ${document.getElementById('logArea').innerText}`;
         let allSleepData = [];
         let selectedSleepType = '';
         let selectedSleepQuality = '';
+        let selectedSleepTags = [];
 
         // 睡眠管理初期化
         function initializeSleepManager() {
@@ -2353,6 +2412,31 @@ ${document.getElementById('logArea').innerText}`;
             log(`⭐ 睡眠の質選択: ${quality}点`);
         }
 
+        // 睡眠タグ切り替え
+        function toggleSleepTag(tag) {
+            const index = selectedSleepTags.indexOf(tag);
+            const button = document.querySelector(`[data-tag="${tag}"]`);
+            
+            if (index === -1) {
+                // タグ追加
+                selectedSleepTags.push(tag);
+                button.style.opacity = '1';
+                button.style.fontWeight = 'bold';
+                button.style.transform = 'scale(1.05)';
+            } else {
+                // タグ削除
+                selectedSleepTags.splice(index, 1);
+                button.style.opacity = '0.7';
+                button.style.fontWeight = 'normal';
+                button.style.transform = 'scale(1)';
+            }
+            
+            // hidden fieldに保存
+            document.getElementById('selectedSleepTags').value = selectedSleepTags.join(',');
+            
+            log(`🏷️ 睡眠タグ更新: [${selectedSleepTags.join(', ')}]`);
+        }
+
         // 睡眠データ保存
         async function saveSleepData() {
             if (!user) {
@@ -2390,6 +2474,7 @@ ${document.getElementById('logArea').innerText}`;
                 wakeTime: wakeTime,
                 sleepType: selectedSleepType,
                 quality: selectedSleepQuality,
+                tags: selectedSleepTags.slice(), // 配列のコピー
                 memo: sleepMemo,
                 duration: sleepDurationHours,
                 timestamp: new Date().toISOString()
@@ -2406,13 +2491,16 @@ ${document.getElementById('logArea').innerText}`;
                 document.getElementById('sleepMemoInput').value = '';
                 selectedSleepType = '';
                 selectedSleepQuality = '';
+                selectedSleepTags = [];
                 document.getElementById('selectedSleepType').value = '';
                 document.getElementById('selectedQuality').value = '';
+                document.getElementById('selectedSleepTags').value = '';
                 
                 // ボタンスタイルリセット
-                document.querySelectorAll('.sleep-type-btn, .quality-btn').forEach(btn => {
+                document.querySelectorAll('.sleep-type-btn, .quality-btn, .sleep-tag-btn').forEach(btn => {
                     btn.style.opacity = '0.7';
                     btn.style.fontWeight = 'normal';
+                    btn.style.transform = 'scale(1)';
                 });
                 
                 // データ再読み込み
@@ -2468,6 +2556,7 @@ ${document.getElementById('logArea').innerText}`;
                     🌙 ${data.bedTime} → ☀️ ${data.wakeTime} 
                     <span style="color: #007bff; font-weight: bold;">(${data.duration.toFixed(1)}h)</span><br>
                     ⭐ ${data.quality}/5点
+                    ${data.tags && data.tags.length > 0 ? `<br>🏷️ ${data.tags.join(', ')}` : ''}
                     ${data.memo ? `<br>📝 ${data.memo}` : ''}
                 </div>
             `).join('');
