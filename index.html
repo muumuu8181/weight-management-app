@@ -1717,8 +1717,8 @@
                             } : {})
                         },
                         y: {
-                            min: 71,
-                            max: 75,
+                            min: 71.5,
+                            max: 74.0,
                             title: {
                                 display: true,
                                 text: '体重 (kg)'
@@ -1932,10 +1932,12 @@
             }
             
             // タブ固有の初期化処理
-            if (tabNumber === 2 && window.user) {
-                // 睡眠管理タブの初期化
+            if (tabNumber === 2) {
+                // 睡眠管理タブの初期化（ログインに関係なく実行）
                 initializeSleepManager();
-                loadSleepData();
+                if (window.user) {
+                    loadSleepData();
+                }
             }
             
             log(`📑 タブ切り替え: タブ${tabNumber}`);
