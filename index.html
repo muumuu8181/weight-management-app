@@ -128,8 +128,8 @@
             <div style="display: flex; border-bottom: 2px solid #ddd; flex-wrap: wrap;">
                 <button id="tab1" class="tab-btn active" onclick="switchTab(1)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #007bff; color: white; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">体重</button>
                 <button id="tab2" class="tab-btn" onclick="switchTab(2)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">睡眠</button>
-                <button id="tab3" class="tab-btn" onclick="switchTab(3)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx3</button>
-                <button id="tab4" class="tab-btn" onclick="switchTab(4)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx4</button>
+                <button id="tab3" class="tab-btn" onclick="switchTab(3)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">部屋片づけ</button>
+                <button id="tab4" class="tab-btn" onclick="switchTab(4)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">ストレッチ</button>
                 <button id="tab5" class="tab-btn" onclick="switchTab(5)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx5</button>
                 <button id="tab6" class="tab-btn" onclick="switchTab(6)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx6</button>
                 <button id="tab7" class="tab-btn" onclick="switchTab(7)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx7</button>
@@ -340,19 +340,13 @@
 
                     <!-- 就寝・起床時間 -->
                     <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
-                        <div id="bedTimeSection">
+                        <div>
                             <label style="font-weight: bold; display: block; margin-bottom: 3px;">🌙 就寝時間:</label>
-                            <div style="display: flex; gap: 5px; align-items: center;">
-                                <input type="time" id="bedTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
-                                <button onclick="saveBedTime()" style="background: #6f42c1; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px;">保存</button>
-                            </div>
+                            <input type="time" id="bedTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
                         </div>
-                        <div id="wakeTimeSection">
+                        <div>
                             <label style="font-weight: bold; display: block; margin-bottom: 3px;">☀️ 起床時間:</label>
-                            <div style="display: flex; gap: 5px; align-items: center;">
-                                <input type="time" id="wakeTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
-                                <button onclick="saveWakeTime()" style="background: #ffc107; color: #212529; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px;">保存</button>
-                            </div>
+                            <input type="time" id="wakeTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
                         </div>
                         <div style="display: flex; align-items: center; gap: 5px;">
                             <span style="font-weight: bold;">⏱️ 睡眠時間:</span>
@@ -384,6 +378,10 @@
                             <button type="button" class="sleep-tag-btn" data-tag="寝つきが悪い" onclick="toggleSleepTag('寝つきが悪い')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😣 寝つきが悪い</button>
                         </div>
                         <input type="hidden" id="selectedSleepTags" value="">
+                        <div style="margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; min-height: 20px;">
+                            <span style="font-size: 12px; color: #666;">選択中:</span>
+                            <span id="selectedTagsDisplay" style="font-size: 12px; color: #007bff; font-weight: bold;">なし</span>
+                        </div>
                     </div>
 
                     <!-- メモ入力 -->
@@ -510,7 +508,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.62';
+        const APP_VERSION = 'v0.63';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1931,6 +1929,23 @@
                 }
             }
             
+            // タイトル更新
+            const tabTitles = {
+                1: '📊 体重管理アプリ',
+                2: '🛏️ 睡眠管理',
+                3: '🏠 部屋片づけ',
+                4: '🤸 ストレッチ',
+                5: '🔧 xx5',
+                6: '🔧 xx6', 
+                7: '🔧 xx7',
+                8: '🔧 xx8'
+            };
+            
+            const titleElement = document.getElementById('appTitle');
+            if (titleElement && tabTitles[tabNumber]) {
+                titleElement.textContent = `${tabTitles[tabNumber]} ${APP_VERSION}`;
+            }
+            
             // タブ固有の初期化処理
             if (tabNumber === 2 && window.user) {
                 // 睡眠管理タブの初期化
@@ -2452,6 +2467,12 @@ ${document.getElementById('logArea').innerText}`;
             // hidden fieldに保存
             document.getElementById('selectedSleepTags').value = selectedSleepTags.join(',');
             
+            // 表示テキスト更新
+            const displayElement = document.getElementById('selectedTagsDisplay');
+            if (displayElement) {
+                displayElement.textContent = selectedSleepTags.length > 0 ? selectedSleepTags.join(', ') : 'なし';
+            }
+            
             log(`🏷️ 睡眠タグ更新: [${selectedSleepTags.join(', ')}]`);
         }
 
@@ -2474,80 +2495,7 @@ ${document.getElementById('logArea').innerText}`;
             log(`📝 記録タイプ選択: ${type}`);
         }
 
-        // 就寝時間のみ保存
-        async function saveBedTime() {
-            if (!window.user) {
-                log('❌ ログインが必要です');
-                return;
-            }
-
-            const sleepDate = document.getElementById('sleepDateInput').value;
-            const bedTime = document.getElementById('bedTimeInput').value;
-
-            if (!sleepDate || !bedTime) {
-                log('❌ 記録日と就寝時間を入力してください');
-                return;
-            }
-
-            const bedTimeData = {
-                date: sleepDate,
-                bedTime: bedTime,
-                sleepType: selectedSleepType || '夜間睡眠',
-                tags: selectedSleepTags.slice(),
-                recordType: 'bedtime',
-                timestamp: new Date().toISOString()
-            };
-
-            try {
-                const bedRef = database.ref(`users/${window.user.uid}/sleepData/${sleepDate}_bed_${Date.now()}`);
-                await bedRef.set(bedTimeData);
-                
-                log(`🌙 就寝記録保存完了: ${sleepDate} ${bedTime}`);
-                await loadSleepData();
-                
-            } catch (error) {
-                log(`❌ 保存エラー: ${error.message}`);
-            }
-        }
-
-        // 起床時間のみ保存
-        async function saveWakeTime() {
-            if (!window.user) {
-                log('❌ ログインが必要です');
-                return;
-            }
-
-            const sleepDate = document.getElementById('sleepDateInput').value;
-            const wakeTime = document.getElementById('wakeTimeInput').value;
-
-            if (!sleepDate || !wakeTime) {
-                log('❌ 記録日と起床時間を入力してください');
-                return;
-            }
-
-            const wakeTimeData = {
-                date: sleepDate,
-                wakeTime: wakeTime,
-                quality: selectedSleepQuality,
-                tags: selectedSleepTags.slice(),
-                memo: document.getElementById('sleepMemoInput').value,
-                recordType: 'waketime',
-                timestamp: new Date().toISOString()
-            };
-
-            try {
-                const wakeRef = database.ref(`users/${window.user.uid}/sleepData/${sleepDate}_wake_${Date.now()}`);
-                await wakeRef.set(wakeTimeData);
-                
-                log(`☀️ 起床記録保存完了: ${sleepDate} ${wakeTime}`);
-                await loadSleepData();
-                
-            } catch (error) {
-                log(`❌ 保存エラー: ${error.message}`);
-            }
-        }
-
-        // 睡眠データ保存（完全記録用）
+        // 睡眠データ保存
         async function saveSleepData() {
             if (!window.user) {
                 log('❌ ログインが必要です');
@@ -2560,16 +2508,25 @@ ${document.getElementById('logArea').innerText}`;
             const wakeTime = document.getElementById('wakeTimeInput').value;
             const sleepMemo = document.getElementById('sleepMemoInput').value;
 
-            // 完全記録の場合の必須項目チェック（就寝・起床・タイプ・質）
+            // 記録タイプ別の必須項目チェック
+            if (!sleepDate) {
+                log('❌ 記録日を入力してください');
+                return;
+            }
+
             if (selectedRecordType === 'complete') {
-                if (!sleepDate || !bedTime || !wakeTime || !selectedSleepType || !selectedSleepQuality) {
-                    log('❌ 完全記録には日付、就寝・起床時間、睡眠タイプ、睡眠の質が必要です');
+                if (!bedTime || !wakeTime || !selectedSleepType || !selectedSleepQuality) {
+                    log('❌ 完全記録には就寝・起床時間、睡眠タイプ、睡眠の質が必要です');
                     return;
                 }
-            } else {
-                // 個別記録の場合は日付のみ必須
-                if (!sleepDate) {
-                    log('❌ 記録日を入力してください');
+            } else if (selectedRecordType === 'bedtime') {
+                if (!bedTime) {
+                    log('❌ 就寝記録には就寝時間が必要です');
+                    return;
+                }
+            } else if (selectedRecordType === 'waketime') {
+                if (!wakeTime) {
+                    log('❌ 起床記録には起床時間が必要です');
                     return;
                 }
             }
