@@ -327,30 +327,12 @@
                         <input type="hidden" id="selectedSleepType" value="">
                     </div>
 
-                    <!-- 記録タイプ選択 -->
-                    <div style="margin-bottom: 15px;">
-                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">📝 記録タイプ:</label>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button type="button" class="record-type-btn" data-type="bedtime" onclick="selectRecordType('bedtime')" style="background: #6f42c1; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🌙 就寝記録</button>
-                            <button type="button" class="record-type-btn" data-type="waketime" onclick="selectRecordType('waketime')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">☀️ 起床記録</button>
-                            <button type="button" class="record-type-btn" data-type="complete" onclick="selectRecordType('complete')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 1; font-weight: bold;">🛏️ 完全記録</button>
-                        </div>
-                        <input type="hidden" id="selectedRecordType" value="complete">
-                    </div>
 
-                    <!-- 就寝・起床時間 -->
+                    <!-- 記録時間 -->
                     <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
                         <div>
-                            <label style="font-weight: bold; display: block; margin-bottom: 3px;">🌙 就寝時間:</label>
-                            <input type="time" id="bedTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
-                        </div>
-                        <div>
-                            <label style="font-weight: bold; display: block; margin-bottom: 3px;">☀️ 起床時間:</label>
-                            <input type="time" id="wakeTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="font-weight: bold;">⏱️ 睡眠時間:</span>
-                            <span id="sleepDuration" style="font-size: 16px; color: #007bff; font-weight: bold;">--:--</span>
+                            <label style="font-weight: bold; display: block; margin-bottom: 3px;">⏰ 記録時間:</label>
+                            <input type="time" id="sleepTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
                         </div>
                     </div>
 
@@ -508,7 +490,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.63';
+        const APP_VERSION = 'v0.64';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1735,11 +1717,14 @@
                             } : {})
                         },
                         y: {
+                            min: 71,
+                            max: 75,
                             title: {
                                 display: true,
                                 text: '体重 (kg)'
                             },
                             ticks: {
+                                stepSize: 0.5,
                                 callback: function(value) {
                                     return value.toFixed(1) + 'kg';
                                 }
@@ -2358,7 +2343,6 @@ ${document.getElementById('logArea').innerText}`;
         let selectedSleepType = '';
         let selectedSleepQuality = '';
         let selectedSleepTags = [];
-        let selectedRecordType = 'complete';
 
         // 睡眠管理初期化
         function initializeSleepManager() {
@@ -2372,40 +2356,21 @@ ${document.getElementById('logArea').innerText}`;
             if (document.getElementById('sleepDateInput')) {
                 document.getElementById('sleepDateInput').value = todayString;
                 
-                // 時間入力の監視
-                document.getElementById('bedTimeInput').addEventListener('change', calculateSleepDuration);
-                document.getElementById('wakeTimeInput').addEventListener('change', calculateSleepDuration);
+                // 現在時刻を設定
+                const now = new Date();
+                const currentHour = String(now.getHours()).padStart(2, '0');
+                const currentMinute = String(now.getMinutes()).padStart(2, '0');
+                const currentTimeString = `${currentHour}:${currentMinute}`;
+                
+                const sleepTimeInput = document.getElementById('sleepTimeInput');
+                if (sleepTimeInput) {
+                    sleepTimeInput.value = currentTimeString;
+                }
             }
             
             log('🛏️ 睡眠管理システム初期化完了');
         }
 
-        // 睡眠時間計算
-        function calculateSleepDuration() {
-            const bedTime = document.getElementById('bedTimeInput').value;
-            const wakeTime = document.getElementById('wakeTimeInput').value;
-            const durationSpan = document.getElementById('sleepDuration');
-            
-            if (bedTime && wakeTime) {
-                const bedDate = new Date(`2000-01-01T${bedTime}:00`);
-                let wakeDate = new Date(`2000-01-01T${wakeTime}:00`);
-                
-                // 起床時間が就寝時間より早い場合は翌日とみなす
-                if (wakeDate <= bedDate) {
-                    wakeDate.setDate(wakeDate.getDate() + 1);
-                }
-                
-                const diffMs = wakeDate - bedDate;
-                const hours = Math.floor(diffMs / (1000 * 60 * 60));
-                const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                
-                durationSpan.textContent = `${hours}:${String(minutes).padStart(2, '0')}`;
-                durationSpan.style.color = hours >= 7 ? '#28a745' : hours >= 6 ? '#ffc107' : '#dc3545';
-            } else {
-                durationSpan.textContent = '--:--';
-                durationSpan.style.color = '#007bff';
-            }
-        }
 
         // 睡眠タイプ選択
         function selectSleepType(type) {
@@ -2476,24 +2441,6 @@ ${document.getElementById('logArea').innerText}`;
             log(`🏷️ 睡眠タグ更新: [${selectedSleepTags.join(', ')}]`);
         }
 
-        // 記録タイプ選択
-        function selectRecordType(type) {
-            selectedRecordType = type;
-            document.getElementById('selectedRecordType').value = type;
-            
-            // ボタンのスタイル更新
-            document.querySelectorAll('.record-type-btn').forEach(btn => {
-                if (btn.dataset.type === type) {
-                    btn.style.opacity = '1';
-                    btn.style.fontWeight = 'bold';
-                } else {
-                    btn.style.opacity = '0.7';
-                    btn.style.fontWeight = 'normal';
-                }
-            });
-            
-            log(`📝 記録タイプ選択: ${type}`);
-        }
 
         // 睡眠データ保存
         async function saveSleepData() {
@@ -2504,67 +2451,38 @@ ${document.getElementById('logArea').innerText}`;
 
             // 入力値取得
             const sleepDate = document.getElementById('sleepDateInput').value;
-            const bedTime = document.getElementById('bedTimeInput').value;
-            const wakeTime = document.getElementById('wakeTimeInput').value;
+            const sleepTime = document.getElementById('sleepTimeInput').value;
             const sleepMemo = document.getElementById('sleepMemoInput').value;
 
-            // 記録タイプ別の必須項目チェック
+            // 必須項目チェック
             if (!sleepDate) {
                 log('❌ 記録日を入力してください');
                 return;
             }
 
-            if (selectedRecordType === 'complete') {
-                if (!bedTime || !wakeTime || !selectedSleepType || !selectedSleepQuality) {
-                    log('❌ 完全記録には就寝・起床時間、睡眠タイプ、睡眠の質が必要です');
-                    return;
-                }
-            } else if (selectedRecordType === 'bedtime') {
-                if (!bedTime) {
-                    log('❌ 就寝記録には就寝時間が必要です');
-                    return;
-                }
-            } else if (selectedRecordType === 'waketime') {
-                if (!wakeTime) {
-                    log('❌ 起床記録には起床時間が必要です');
-                    return;
-                }
-            }
-
-            // 睡眠時間計算（完全記録の場合のみ）
-            let sleepDurationHours = 0;
-            if (selectedRecordType === 'complete' && bedTime && wakeTime) {
-                const bedDate = new Date(`2000-01-01T${bedTime}:00`);
-                let wakeDate = new Date(`2000-01-01T${wakeTime}:00`);
-                
-                if (wakeDate <= bedDate) {
-                    wakeDate.setDate(wakeDate.getDate() + 1);
-                }
-                
-                const diffMs = wakeDate - bedDate;
-                sleepDurationHours = diffMs / (1000 * 60 * 60);
+            if (!sleepTime) {
+                log('❌ 記録時間を入力してください');
+                return;
             }
 
             // データ構造
             const sleepData = {
                 date: sleepDate,
-                bedTime: bedTime || null,
-                wakeTime: wakeTime || null,
+                time: sleepTime,
                 sleepType: selectedSleepType || null,
                 quality: selectedSleepQuality || null,
                 tags: selectedSleepTags.slice(), // 配列のコピー
                 memo: sleepMemo || null,
-                duration: sleepDurationHours,
-                recordType: selectedRecordType,
+                recordType: 'simple',
                 timestamp: new Date().toISOString()
             };
 
             try {
                 // Firebase保存
-                const sleepRef = database.ref(`users/${user.uid}/sleepData/${sleepDate}_${Date.now()}`);
+                const sleepRef = database.ref(`users/${window.user.uid}/sleepData/${sleepDate}_${Date.now()}`);
                 await sleepRef.set(sleepData);
                 
-                log(`💾 睡眠記録保存完了: ${sleepDate} ${sleepDurationHours.toFixed(1)}時間`);
+                log(`💾 睡眠記録保存完了: ${sleepDate} ${sleepTime}`);
                 
                 // 入力フィールドリセット
                 document.getElementById('sleepMemoInput').value = '';
@@ -2631,24 +2549,10 @@ ${document.getElementById('logArea').innerText}`;
             historyArea.innerHTML = recentData.map(data => {
                 let content = `<strong>${data.date}</strong> `;
                 
-                // 記録タイプ別表示
-                if (data.recordType === 'bedtime') {
-                    content += `<span style="color: #6f42c1;">🌙 就寝記録</span><br>`;
-                    content += `🌙 ${data.bedTime}`;
-                    if (data.sleepType) content += ` <span style="color: #666;">(${data.sleepType})</span>`;
-                } else if (data.recordType === 'waketime') {
-                    content += `<span style="color: #ffc107;">☀️ 起床記録</span><br>`;
-                    content += `☀️ ${data.wakeTime}`;
-                    if (data.quality) content += `<br>⭐ ${data.quality}/5点`;
-                } else {
-                    // 完全記録
-                    content += `<span style="color: #666;">${data.sleepType || '完全記録'}</span><br>`;
-                    content += `🌙 ${data.bedTime || '--'} → ☀️ ${data.wakeTime || '--'}`;
-                    if (data.duration && data.duration > 0) {
-                        content += ` <span style="color: #007bff; font-weight: bold;">(${data.duration.toFixed(1)}h)</span>`;
-                    }
-                    if (data.quality) content += `<br>⭐ ${data.quality}/5点`;
-                }
+                // 記録表示
+                content += `<span style="color: #666;">${data.sleepType || '記録'}</span><br>`;
+                content += `⏰ ${data.time || data.bedTime || data.wakeTime || '--'}`;
+                if (data.quality) content += `<br>⭐ ${data.quality}/5点`;
                 
                 if (data.tags && data.tags.length > 0) {
                     content += `<br>🏷️ ${data.tags.join(', ')}`;
