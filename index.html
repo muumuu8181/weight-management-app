@@ -299,9 +299,100 @@
 
         <!-- タブコンテンツ2 -->
         <div id="tabContent2" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🛏️ 睡眠管理</h3>
-                <p>こちらのコンテンツは後で実装予定です</p>
+            <!-- タブ2: 睡眠管理 -->
+            <div id="tab2Content">
+                <!-- 睡眠記録入力エリア -->
+                <div class="input-card" id="sleepInput">
+                    <h3>🛏️ 睡眠記録</h3>
+                    
+                    <!-- 日付選択 -->
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+                        <label style="font-weight: bold;">📅 記録日:</label>
+                        <input type="date" id="sleepDateInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                    </div>
+
+                    <!-- 睡眠記録タイプ選択 -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">🛏️ 睡眠タイプ:</label>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button type="button" class="sleep-type-btn" data-type="夜間睡眠" onclick="selectSleepType('夜間睡眠')" style="background: #6f42c1; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🌙 夜間睡眠</button>
+                            <button type="button" class="sleep-type-btn" data-type="昼寝" onclick="selectSleepType('昼寝')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">☀️ 昼寝</button>
+                            <button type="button" class="sleep-type-btn" data-type="仮眠" onclick="selectSleepType('仮眠')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 仮眠</button>
+                        </div>
+                        <input type="hidden" id="selectedSleepType" value="">
+                    </div>
+
+                    <!-- 就寝・起床時間 -->
+                    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
+                        <div>
+                            <label style="font-weight: bold; display: block; margin-bottom: 3px;">🌙 就寝時間:</label>
+                            <input type="time" id="bedTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                        </div>
+                        <div>
+                            <label style="font-weight: bold; display: block; margin-bottom: 3px;">☀️ 起床時間:</label>
+                            <input type="time" id="wakeTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="font-weight: bold;">⏱️ 睡眠時間:</span>
+                            <span id="sleepDuration" style="font-size: 16px; color: #007bff; font-weight: bold;">--:--</span>
+                        </div>
+                    </div>
+
+                    <!-- 睡眠の質評価 -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">⭐ 睡眠の質:</label>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button type="button" class="quality-btn" data-quality="1" onclick="selectQuality(1)" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 1 (最悪)</button>
+                            <button type="button" class="quality-btn" data-quality="2" onclick="selectQuality(2)" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😪 2 (悪い)</button>
+                            <button type="button" class="quality-btn" data-quality="3" onclick="selectQuality(3)" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😐 3 (普通)</button>
+                            <button type="button" class="quality-btn" data-quality="4" onclick="selectQuality(4)" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😊 4 (良い)</button>
+                            <button type="button" class="quality-btn" data-quality="5" onclick="selectQuality(5)" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 5 (最高)</button>
+                        </div>
+                        <input type="hidden" id="selectedQuality" value="">
+                    </div>
+
+                    <!-- メモ入力 -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">📝 メモ（任意）:</label>
+                        <input type="text" id="sleepMemoInput" placeholder="夢の内容、体調など" style="width: 100%; max-width: 400px; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                    </div>
+
+                    <!-- 保存ボタン -->
+                    <div style="text-align: center;">
+                        <button onclick="saveSleepData()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">💾 睡眠記録を保存</button>
+                    </div>
+                </div>
+
+                <!-- 睡眠履歴表示 -->
+                <div class="input-card" id="sleepHistory">
+                    <h3>📊 睡眠履歴 <button class="universal-copy-btn" onclick="copySleepHistory()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 履歴をコピー</button></h3>
+                    <div class="data-area" id="sleepHistoryArea">
+                        まだ睡眠記録がありません
+                    </div>
+                </div>
+
+                <!-- 睡眠統計 -->
+                <div class="input-card" id="sleepStats">
+                    <h3>📈 睡眠統計</h3>
+                    <div id="sleepStatsArea" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #007bff;">--</div>
+                            <div style="font-size: 12px; color: #6c757d;">平均睡眠時間</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #28a745;">--</div>
+                            <div style="font-size: 12px; color: #6c757d;">平均睡眠の質</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #ffc107;">--</div>
+                            <div style="font-size: 12px; color: #6c757d;">今週の記録数</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">--</div>
+                            <div style="font-size: 12px; color: #6c757d;">今月の記録数</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -344,7 +435,7 @@
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.58';
+        const APP_VERSION = 'v0.60';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1765,6 +1856,13 @@
                 }
             }
             
+            // タブ固有の初期化処理
+            if (tabNumber === 2 && user) {
+                // 睡眠管理タブの初期化
+                initializeSleepManager();
+                loadSleepData();
+            }
+            
             log(`📑 タブ切り替え: タブ${tabNumber}`);
         };
 
@@ -2161,6 +2259,292 @@ ${document.getElementById('logArea').innerText}`;
         if (window.location.protocol === 'file:') {
             log('⚠️ file://プロトコル検出 - Googleログインには HTTPサーバーが必要です');
             log('💡 解決方法: python -m http.server 8000 または chrome://flags設定');
+        }
+
+        // ========== 睡眠管理機能 ==========
+
+        // 睡眠管理用変数
+        let allSleepData = [];
+        let selectedSleepType = '';
+        let selectedSleepQuality = '';
+
+        // 睡眠管理初期化
+        function initializeSleepManager() {
+            // 今日の日付を設定
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const todayString = `${year}-${month}-${day}`;
+            
+            if (document.getElementById('sleepDateInput')) {
+                document.getElementById('sleepDateInput').value = todayString;
+                
+                // 時間入力の監視
+                document.getElementById('bedTimeInput').addEventListener('change', calculateSleepDuration);
+                document.getElementById('wakeTimeInput').addEventListener('change', calculateSleepDuration);
+            }
+            
+            log('🛏️ 睡眠管理システム初期化完了');
+        }
+
+        // 睡眠時間計算
+        function calculateSleepDuration() {
+            const bedTime = document.getElementById('bedTimeInput').value;
+            const wakeTime = document.getElementById('wakeTimeInput').value;
+            const durationSpan = document.getElementById('sleepDuration');
+            
+            if (bedTime && wakeTime) {
+                const bedDate = new Date(`2000-01-01T${bedTime}:00`);
+                let wakeDate = new Date(`2000-01-01T${wakeTime}:00`);
+                
+                // 起床時間が就寝時間より早い場合は翌日とみなす
+                if (wakeDate <= bedDate) {
+                    wakeDate.setDate(wakeDate.getDate() + 1);
+                }
+                
+                const diffMs = wakeDate - bedDate;
+                const hours = Math.floor(diffMs / (1000 * 60 * 60));
+                const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                
+                durationSpan.textContent = `${hours}:${String(minutes).padStart(2, '0')}`;
+                durationSpan.style.color = hours >= 7 ? '#28a745' : hours >= 6 ? '#ffc107' : '#dc3545';
+            } else {
+                durationSpan.textContent = '--:--';
+                durationSpan.style.color = '#007bff';
+            }
+        }
+
+        // 睡眠タイプ選択
+        function selectSleepType(type) {
+            selectedSleepType = type;
+            document.getElementById('selectedSleepType').value = type;
+            
+            // ボタンのスタイル更新
+            document.querySelectorAll('.sleep-type-btn').forEach(btn => {
+                if (btn.dataset.type === type) {
+                    btn.style.opacity = '1';
+                    btn.style.fontWeight = 'bold';
+                } else {
+                    btn.style.opacity = '0.7';
+                    btn.style.fontWeight = 'normal';
+                }
+            });
+            
+            log(`🛏️ 睡眠タイプ選択: ${type}`);
+        }
+
+        // 睡眠の質選択
+        function selectQuality(quality) {
+            selectedSleepQuality = quality;
+            document.getElementById('selectedQuality').value = quality;
+            
+            // ボタンのスタイル更新
+            document.querySelectorAll('.quality-btn').forEach(btn => {
+                if (parseInt(btn.dataset.quality) === quality) {
+                    btn.style.opacity = '1';
+                    btn.style.fontWeight = 'bold';
+                } else {
+                    btn.style.opacity = '0.7';
+                    btn.style.fontWeight = 'normal';
+                }
+            });
+            
+            log(`⭐ 睡眠の質選択: ${quality}点`);
+        }
+
+        // 睡眠データ保存
+        async function saveSleepData() {
+            if (!user) {
+                log('❌ ログインが必要です');
+                return;
+            }
+
+            // 入力値取得
+            const sleepDate = document.getElementById('sleepDateInput').value;
+            const bedTime = document.getElementById('bedTimeInput').value;
+            const wakeTime = document.getElementById('wakeTimeInput').value;
+            const sleepMemo = document.getElementById('sleepMemoInput').value;
+
+            // 必須項目チェック
+            if (!sleepDate || !bedTime || !wakeTime || !selectedSleepType || !selectedSleepQuality) {
+                log('❌ 必須項目を全て入力してください');
+                return;
+            }
+
+            // 睡眠時間計算
+            const bedDate = new Date(`2000-01-01T${bedTime}:00`);
+            let wakeDate = new Date(`2000-01-01T${wakeTime}:00`);
+            
+            if (wakeDate <= bedDate) {
+                wakeDate.setDate(wakeDate.getDate() + 1);
+            }
+            
+            const diffMs = wakeDate - bedDate;
+            const sleepDurationHours = diffMs / (1000 * 60 * 60);
+
+            // データ構造
+            const sleepData = {
+                date: sleepDate,
+                bedTime: bedTime,
+                wakeTime: wakeTime,
+                sleepType: selectedSleepType,
+                quality: selectedSleepQuality,
+                memo: sleepMemo,
+                duration: sleepDurationHours,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                // Firebase保存
+                const sleepRef = database.ref(`users/${user.uid}/sleepData/${sleepDate}_${Date.now()}`);
+                await sleepRef.set(sleepData);
+                
+                log(`💾 睡眠記録保存完了: ${sleepDate} ${sleepDurationHours.toFixed(1)}時間`);
+                
+                // 入力フィールドリセット
+                document.getElementById('sleepMemoInput').value = '';
+                selectedSleepType = '';
+                selectedSleepQuality = '';
+                document.getElementById('selectedSleepType').value = '';
+                document.getElementById('selectedQuality').value = '';
+                
+                // ボタンスタイルリセット
+                document.querySelectorAll('.sleep-type-btn, .quality-btn').forEach(btn => {
+                    btn.style.opacity = '0.7';
+                    btn.style.fontWeight = 'normal';
+                });
+                
+                // データ再読み込み
+                await loadSleepData();
+                
+            } catch (error) {
+                log(`❌ 保存エラー: ${error.message}`);
+            }
+        }
+
+        // 睡眠データ読み込み
+        async function loadSleepData() {
+            if (!user) return;
+
+            try {
+                const sleepRef = database.ref(`users/${user.uid}/sleepData`);
+                const snapshot = await sleepRef.once('value');
+                
+                allSleepData = [];
+                if (snapshot.val()) {
+                    Object.entries(snapshot.val()).forEach(([key, data]) => {
+                        allSleepData.push({id: key, ...data});
+                    });
+                }
+                
+                // 日付順でソート
+                allSleepData.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                updateSleepHistory();
+                updateSleepStats();
+                
+            } catch (error) {
+                log(`❌ 睡眠データ読み込みエラー: ${error.message}`);
+            }
+        }
+
+        // 睡眠履歴表示更新
+        function updateSleepHistory() {
+            const historyArea = document.getElementById('sleepHistoryArea');
+            
+            if (allSleepData.length === 0) {
+                historyArea.innerHTML = 'まだ睡眠記録がありません';
+                return;
+            }
+
+            // 直近7件表示
+            const recentData = allSleepData.slice(0, 7);
+            
+            historyArea.innerHTML = recentData.map(data => `
+                <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                    <strong>${data.date}</strong> 
+                    <span style="color: #666;">${data.sleepType}</span><br>
+                    🌙 ${data.bedTime} → ☀️ ${data.wakeTime} 
+                    <span style="color: #007bff; font-weight: bold;">(${data.duration.toFixed(1)}h)</span><br>
+                    ⭐ ${data.quality}/5点
+                    ${data.memo ? `<br>📝 ${data.memo}` : ''}
+                </div>
+            `).join('');
+        }
+
+        // 睡眠統計更新
+        function updateSleepStats() {
+            if (allSleepData.length === 0) {
+                document.getElementById('sleepStatsArea').innerHTML = `
+                    <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <div style="font-size: 24px; font-weight: bold; color: #007bff;">--</div>
+                        <div style="font-size: 12px; color: #6c757d;">平均睡眠時間</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <div style="font-size: 24px; font-weight: bold; color: #28a745;">--</div>
+                        <div style="font-size: 12px; color: #6c757d;">平均睡眠の質</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <div style="font-size: 24px; font-weight: bold; color: #ffc107;">--</div>
+                        <div style="font-size: 12px; color: #6c757d;">今週の記録数</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">--</div>
+                        <div style="font-size: 12px; color: #6c757d;">今月の記録数</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 統計計算
+            const avgDuration = allSleepData.reduce((sum, data) => sum + data.duration, 0) / allSleepData.length;
+            const avgQuality = allSleepData.reduce((sum, data) => sum + parseInt(data.quality), 0) / allSleepData.length;
+            
+            // 今週・今月の記録数
+            const now = new Date();
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const monthAgo = new Date(now.getFullYear(), now.getMonth(), 1);
+            
+            const weekCount = allSleepData.filter(data => new Date(data.date) >= weekAgo).length;
+            const monthCount = allSleepData.filter(data => new Date(data.date) >= monthAgo).length;
+
+            document.getElementById('sleepStatsArea').innerHTML = `
+                <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                    <div style="font-size: 24px; font-weight: bold; color: #007bff;">${avgDuration.toFixed(1)}h</div>
+                    <div style="font-size: 12px; color: #6c757d;">平均睡眠時間</div>
+                </div>
+                <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                    <div style="font-size: 24px; font-weight: bold; color: #28a745;">${avgQuality.toFixed(1)}</div>
+                    <div style="font-size: 12px; color: #6c757d;">平均睡眠の質</div>
+                </div>
+                <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                    <div style="font-size: 24px; font-weight: bold; color: #ffc107;">${weekCount}</div>
+                    <div style="font-size: 12px; color: #6c757d;">今週の記録数</div>
+                </div>
+                <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                    <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">${monthCount}</div>
+                    <div style="font-size: 12px; color: #6c757d;">今月の記録数</div>
+                </div>
+            `;
+        }
+
+        // 睡眠履歴コピー
+        function copySleepHistory() {
+            if (allSleepData.length === 0) {
+                log('📋 コピーする睡眠データがありません');
+                return;
+            }
+
+            const copyText = allSleepData.slice(0, 7).map(data => 
+                `${data.date} ${data.sleepType} ${data.bedTime}-${data.wakeTime} (${data.duration.toFixed(1)}h) ⭐${data.quality}/5${data.memo ? ` ${data.memo}` : ''}`
+            ).join('\n');
+
+            navigator.clipboard.writeText(copyText).then(() => {
+                log('📋 睡眠履歴をクリップボードにコピーしました');
+            }).catch(() => {
+                log('❌ コピーに失敗しました');
+            });
         }
     </script>
 </body>
