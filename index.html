@@ -511,7 +511,7 @@
                             style="width: 100%; max-width: 600px; height: 100px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; font-family: inherit; font-size: 14px; line-height: 1.4;"></textarea>
                     </div>
 
-                    <!-- カテゴリ選択（任意） -->
+                    <!-- カテゴリ・重要度・対応時間の選択 -->
                     <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
                         <label style="font-weight: bold;">🏷️ カテゴリ（任意）:</label>
                         <select id="memoCategory" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
@@ -522,6 +522,28 @@
                             <option value="メモ">📝 メモ</option>
                             <option value="重要">⚠️ 重要</option>
                             <option value="その他">📋 その他</option>
+                        </select>
+                    </div>
+
+                    <!-- 重要度選択 -->
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
+                        <label style="font-weight: bold;">🎯 重要度:</label>
+                        <select id="memoPriority" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                            <option value="">選択なし</option>
+                            <option value="S">🔥 S - 最重要（緊急対応）</option>
+                            <option value="A">⚡ A - 重要（優先対応）</option>
+                            <option value="B">📋 B - 中程度（通常対応）</option>
+                            <option value="C">📝 C - 低め（時間があるとき）</option>
+                        </select>
+                    </div>
+
+                    <!-- 対応時間選択 -->
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
+                        <label style="font-weight: bold;">⏰ 対応時間:</label>
+                        <select id="memoTimeframe" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                            <option value="">選択なし</option>
+                            <option value="短期">⚡ 短期（すぐに終わる）</option>
+                            <option value="中長期">📅 中長期（時間をかける）</option>
                         </select>
                     </div>
 
@@ -601,7 +623,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.73';
+        const APP_VERSION = 'v0.74';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2891,10 +2913,52 @@ ${document.getElementById('logArea').innerText}`;
         // =====================
         let memoData = [];
 
+        // 重要度の色を取得
+        function getPriorityColor(priority) {
+            switch(priority) {
+                case 'S': return '#dc3545'; // 赤
+                case 'A': return '#fd7e14'; // オレンジ
+                case 'B': return '#ffc107'; // 黄色
+                case 'C': return '#6c757d'; // グレー
+                default: return '#6c757d';
+            }
+        }
+
+        // 重要度のアイコンを取得
+        function getPriorityIcon(priority) {
+            switch(priority) {
+                case 'S': return '🔥';
+                case 'A': return '⚡';
+                case 'B': return '📋';
+                case 'C': return '📝';
+                default: return '';
+            }
+        }
+
+        // 対応時間の色を取得
+        function getTimeframeColor(timeframe) {
+            switch(timeframe) {
+                case '短期': return '#28a745'; // 緑
+                case '中長期': return '#17a2b8'; // 青
+                default: return '#6c757d';
+            }
+        }
+
+        // 対応時間のアイコンを取得
+        function getTimeframeIcon(timeframe) {
+            switch(timeframe) {
+                case '短期': return '⚡';
+                case '中長期': return '📅';
+                default: return '';
+            }
+        }
+
         // メモを追加
         window.addMemo = () => {
             const memoText = document.getElementById('newMemoText').value.trim();
             const category = document.getElementById('memoCategory').value;
+            const priority = document.getElementById('memoPriority').value;
+            const timeframe = document.getElementById('memoTimeframe').value;
             
             if (!memoText) {
                 alert('メモ内容を入力してください');
@@ -2906,6 +2970,8 @@ ${document.getElementById('logArea').innerText}`;
                 id: Date.now(),
                 text: memoText,
                 category: category,
+                priority: priority,
+                timeframe: timeframe,
                 timestamp: now.toISOString(),
                 date: now.toLocaleDateString('ja-JP'),
                 time: now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
@@ -2928,6 +2994,8 @@ ${document.getElementById('logArea').innerText}`;
             // フォームをクリア
             document.getElementById('newMemoText').value = '';
             document.getElementById('memoCategory').value = '';
+            document.getElementById('memoPriority').value = '';
+            document.getElementById('memoTimeframe').value = '';
             
             log(`📝 メモを追加しました${category ? ` [${category}]` : ''}: ${memoText.substring(0, 30)}${memoText.length > 30 ? '...' : ''}`);
         };
@@ -2959,11 +3027,19 @@ ${document.getElementById('logArea').innerText}`;
                 const categoryBadge = memo.category ? 
                     `<span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-right: 5px;">${memo.category}</span>` : '';
                 
+                // 重要度のバッジ
+                const priorityBadge = memo.priority ? 
+                    `<span style="background: ${getPriorityColor(memo.priority)}; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-right: 5px; font-weight: bold;">${getPriorityIcon(memo.priority)} ${memo.priority}</span>` : '';
+                
+                // 対応時間のバッジ
+                const timeframeBadge = memo.timeframe ? 
+                    `<span style="background: ${getTimeframeColor(memo.timeframe)}; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-right: 5px;">${getTimeframeIcon(memo.timeframe)} ${memo.timeframe}</span>` : '';
+                
                 return `
                     <div class="memo-item">
                         <div class="memo-header">
                             <div style="flex: 1;">
-                                ${categoryBadge}
+                                ${priorityBadge}${timeframeBadge}${categoryBadge}
                                 <small class="memo-date">${memo.date} ${memo.time}</small>
                             </div>
                             <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn">🗑️</button>
