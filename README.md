@@ -1,4 +1,92 @@
-# 📊 アプリテンプレート v0.1 - Core/Custom分離版
+# 📊 体重管理アプリ - AI開発者向けドキュメントハブ
+
+## ⚡ **超重要：まずこれだけ読んで！**
+
+### 🔥 **[QUICK_START.md](QUICK_START.md)** - 5秒で理解する必須ルール
+**修正作業をすぐ始めたい人は、これだけ読めばOK！**
+
+---
+
+## 🚨 **新人AI開発者へ - 詳細を知りたい場合は以下を順番に**
+
+このプロジェクトには13個のドキュメントがありますが、**以下の順番で読むことで迷わず開発作業を開始できます**。
+
+---
+
+## 🥇 **Level 1: 必須（初期設定）** - 最初に絶対読むもの
+
+### 📖 **1. [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)** ⭐ まず最初にこれを読む
+プロジェクト全体像・フォルダ構造・触ってはいけない場所・現在の問題を把握
+
+### 📖 **2. [MANDATORY_REQUIREMENTS.md](MANDATORY_REQUIREMENTS.md)** ⭐ 絶対遵守事項
+Firebase必須・Google認証必須・Core部分変更禁止など、違反すると差し戻しになる重要事項
+
+### 📖 **3. [handover/STANDARDIZED_HANDOVER_GUIDE.md](handover/STANDARDIZED_HANDOVER_GUIDE.md)**
+標準化された引継ぎ方針とプロジェクト運営ルール
+
+---
+
+## 🥈 **Level 2: 重要（恒常作業）** - 開発時に毎回確認するもの
+
+### ✅ **4. [AI_CHECKLIST.md](AI_CHECKLIST.md)** ⭐ 開発時の必須手順書
+機能追加・修正時の6ステップ作業手順（作業前→実装→テスト→バージョンアップ→デプロイ→完了報告）
+
+### 🔧 **5. [DEVELOPER_WORKFLOW.md](DEVELOPER_WORKFLOW.md)**
+バージョンアップとGitHub Pages自動デプロイの基本手順
+
+### 🚀 **6. [GITHUB_PAGES_MANUAL.md](GITHUB_PAGES_MANUAL.md)**
+デプロイ手順詳細・トラブルシューティング・確認方法
+
+### 🔴 **7. 現在の未解決問題（緊急対応必要）**
+- **[issues/previous-period-button-handover-20250829.md](issues/previous-period-button-handover-20250829.md)** - 前期間記録ボタン機能不全（v0.72で未解決）
+- **[issues/previous-period-button-issue-20250829.md](issues/previous-period-button-issue-20250829.md)** - 前期間ボタン問題の詳細
+- **[issues/sleep-tab-recording-issue-20250829.md](issues/sleep-tab-recording-issue-20250829.md)** - 睡眠タブ記録不具合（v0.69で未解決）
+
+---
+
+## 🥉 **Level 3: 推奨（参考情報）** - 必要時に読むもの
+
+### 📚 **参考・学習用ドキュメント**
+- **[INCIDENT_REPORT.md](INCIDENT_REPORT.md)** - GitHub Pages更新失敗の教訓
+- **[MOBILE_LOGIN_TROUBLESHOOTING_HISTORY.md](MOBILE_LOGIN_TROUBLESHOOTING_HISTORY.md)** - モバイル認証問題解決履歴
+- **[GITHUB_PAGES_DEPLOYMENT_REFLECTION.md](GITHUB_PAGES_DEPLOYMENT_REFLECTION.md)** - デプロイ関連の振り返り
+- **[tools/testing/docs/README.md](tools/testing/docs/README.md)** - テストツール関連
+- **[tools/data-storage/INTEGRATION_GUIDE.md](tools/data-storage/INTEGRATION_GUIDE.md)** - データストレージ機能
+
+---
+
+## 📚 **Level 4: アーカイブ（保管）** - 古いバージョンや重複文書
+
+### 📦 **古いバージョン（参考のみ）**
+- **[PROJECT_HANDOVER_v0.66.md](PROJECT_HANDOVER_v0.66.md)** - 旧版引継ぎ文書
+- **[KNOWLEDGE_VERIFICATION_v0.66.md](KNOWLEDGE_VERIFICATION_v0.66.md)** - 旧版検証リスト
+- **[answers/CHECKLIST_ANSWERS_v0.66.md](answers/CHECKLIST_ANSWERS_v0.66.md)** - 旧版回答
+
+### 📦 **統合済み文書（読まなくてOK）**
+- ~~KNOWLEDGE_VERIFICATION_CHECKLIST.md~~ → MANDATORY_REQUIREMENTS.mdに統合済み
+- ~~KNOWLEDGE_VERIFICATION_ANSWERS.md~~ → handoverフォルダに統合済み
+- ~~NEW_DEVELOPER_HANDOFF.md~~ → PROJECT_OVERVIEW.mdに統合済み
+
+---
+
+## 🎯 **開発作業開始の推奨手順**
+
+### **Step 1**: Level 1の3文書を順番に読む（必須・約15分）
+1. PROJECT_OVERVIEW.md → 全体把握
+2. MANDATORY_REQUIREMENTS.md → 絶対遵守事項
+3. handover/STANDARDIZED_HANDOVER_GUIDE.md → 運営方針
+
+### **Step 2**: 現在の問題を把握（必須・約10分）  
+1. issues/フォルダの未解決問題3件を確認
+2. 優先度の高い問題から着手検討
+
+### **Step 3**: 開発作業時にLevel 2を参照（恒常作業）
+1. AI_CHECKLIST.md → 6ステップ手順に従って作業
+2. 必要に応じて他の Level 2文書を参照
+
+---
+
+## 📊 プロジェクト基本情報
 
 Firebase + Google認証による汎用データ管理アプリテンプレートです。**Core/Custom分離構造**により、安全で効率的なカスタマイズが可能になりました。
 
