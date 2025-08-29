@@ -271,6 +271,7 @@
                     <button onclick="updateChartRange(90)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">3ヶ月</button>
                     <button onclick="updateChartRange(365)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1年</button>
                     <button onclick="updateChartRange(0)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">全期間</button>
+                    <button id="previousPeriodBtn" onclick="togglePreviousPeriod()" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">前期間の記録</button>
                 </div>
                 
                 <!-- ナビゲーションボタン -->
@@ -489,8 +490,11 @@
         let currentMode = 'normal'; // 'normal', 'add', 'delete'
         let selectedTarget = null; // 'timing', 'top', 'bottom' のいずれか
 
+        // 前期間比較機能の状態管理
+        let showPreviousPeriod = false; // 前期間表示のON/OFF
+
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.66';
+        const APP_VERSION = 'v0.67';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1555,6 +1559,34 @@
                     pointRadius: 4,
                     pointHoverRadius: 6
                 });
+
+                // 前期間データを追加（1日表示用）
+                if (showPreviousPeriod) {
+                    const previousData = getPreviousPeriodData(days, endDate);
+                    if (previousData.length > 0) {
+                        const previousChartData = previousData.map(entry => {
+                            const dateTime = entry.time ? 
+                                new Date(`${entry.date}T${entry.time}:00`) : 
+                                new Date(`${entry.date}T12:00:00`);
+                            
+                            return {
+                                x: dateTime,
+                                y: parseFloat(entry.value || entry.weight)
+                            };
+                        }).sort((a, b) => a.x - b.x);
+
+                        datasets.push({
+                            label: '前日の記録',
+                            data: previousChartData,
+                            borderColor: 'rgba(128, 128, 128, 0.6)',
+                            backgroundColor: 'rgba(128, 128, 128, 0.1)',
+                            tension: 0.1,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            borderDash: [5, 5]
+                        });
+                    }
+                }
                 
                 timeUnit = 'hour';
                 displayFormat = 'HH:mm';
@@ -1653,6 +1685,39 @@
                         pointRadius: 4,
                         pointHoverRadius: 6
                     });
+                }
+
+                // 前期間データを追加（複数日表示用）
+                if (showPreviousPeriod) {
+                    const previousData = getPreviousPeriodData(days, endDate);
+                    if (previousData.length > 0) {
+                        const previousGroupedData = {};
+                        previousData.forEach(entry => {
+                            if (!previousGroupedData[entry.date]) {
+                                previousGroupedData[entry.date] = [];
+                            }
+                            previousGroupedData[entry.date].push(parseFloat(entry.value || entry.weight));
+                        });
+
+                        const previousAvgData = [];
+                        Object.keys(previousGroupedData).sort().forEach(date => {
+                            const values = previousGroupedData[date];
+                            const avg = values.reduce((a, b) => a + b, 0) / values.length;
+                            previousAvgData.push({ x: date, y: avg });
+                        });
+
+                        const periodName = days === 7 ? '前週' : days === 30 ? '前月' : days === 90 ? '前3ヶ月' : days === 365 ? '前年' : '前期間';
+                        datasets.push({
+                            label: `${periodName}の記録`,
+                            data: previousAvgData,
+                            borderColor: 'rgba(128, 128, 128, 0.6)',
+                            backgroundColor: 'rgba(128, 128, 128, 0.1)',
+                            tension: 0.1,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            borderDash: [5, 5]
+                        });
+                    }
                 }
                 
                 // 期間表示テキストを設定
@@ -1887,6 +1952,41 @@
             } else {
                 periodInfo.textContent = '全期間';
             }
+        }
+
+        // 前期間比較機能
+        function togglePreviousPeriod() {
+            showPreviousPeriod = !showPreviousPeriod;
+            const btn = document.getElementById('previousPeriodBtn');
+            
+            if (showPreviousPeriod) {
+                btn.style.background = '#dc3545';
+                btn.textContent = '前期間OFF';
+            } else {
+                btn.style.background = '#28a745';
+                btn.textContent = '前期間の記録';
+            }
+            
+            // チャートを再描画
+            updateChartWithDate(currentChartDays, currentChartDate);
+            log(`📊 前期間比較: ${showPreviousPeriod ? 'ON' : 'OFF'}`);
+        }
+
+        // 前期間データを取得
+        function getPreviousPeriodData(days, currentEndDate) {
+            if (days <= 0) return []; // 全期間表示の場合は前期間なし
+            
+            const previousEndDate = new Date(currentEndDate);
+            previousEndDate.setDate(currentEndDate.getDate() - days);
+            
+            const previousStartDate = new Date(previousEndDate);
+            previousStartDate.setDate(previousEndDate.getDate() - days + 1);
+            
+            // 前期間のデータをフィルタリング
+            return allWeightData.filter(entry => {
+                const entryDate = new Date(entry.date);
+                return entryDate >= previousStartDate && entryDate <= previousEndDate;
+            });
         }
 
         // 現在のタブ
