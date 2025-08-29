@@ -494,7 +494,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.70';
+        const APP_VERSION = 'v0.71';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2003,7 +2003,16 @@
             // 前期間のデータをフィルタリング
             const filteredData = allWeightData.filter(entry => {
                 const entryDate = new Date(entry.date);
-                return entryDate >= previousStartDate && entryDate <= previousEndDate;
+                const entryDateStr = entry.date; // YYYY-MM-DD形式の文字列
+                const previousStartStr = previousStartDate.toISOString().split('T')[0];
+                const previousEndStr = previousEndDate.toISOString().split('T')[0];
+                
+                // デバッグ用
+                if (days === 1) {
+                    log(`🔍 データ確認: ${entryDateStr} vs ${previousStartStr}-${previousEndStr}`);
+                }
+                
+                return entryDateStr >= previousStartStr && entryDateStr <= previousEndStr;
             });
             
             log(`🔍 前期間データ件数: ${filteredData.length}件`);
