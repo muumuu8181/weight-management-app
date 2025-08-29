@@ -3004,7 +3004,7 @@ ${document.getElementById('logArea').innerText}`;
         function saveMemoToFirebase(memo) {
             if (!currentUser || !firebase.database) return;
             
-            firebase.database().ref(`memos/${currentUser.uid}/${memo.id}`).set(memo)
+            firebase.database().ref(`users/${currentUser.uid}/memos/${memo.id}`).set(memo)
             .then(() => {
                 console.log('メモをFirebaseに保存しました');
             })
@@ -3064,7 +3064,7 @@ ${document.getElementById('logArea').innerText}`;
             
             // Firebaseから削除
             if (currentUser) {
-                firebase.database().ref(`memos/${currentUser.uid}/${memoId}`).remove();
+                firebase.database().ref(`users/${currentUser.uid}/memos/${memoId}`).remove();
             } else {
                 // ローカルストレージを更新
                 localStorage.setItem('memos', JSON.stringify(memoData));
@@ -3085,7 +3085,7 @@ ${document.getElementById('logArea').innerText}`;
             
             // Firebaseから削除
             if (currentUser) {
-                firebase.database().ref(`memos/${currentUser.uid}`).remove();
+                firebase.database().ref(`users/${currentUser.uid}/memos`).remove();
             } else {
                 // ローカルストレージを更新
                 localStorage.setItem('memos', JSON.stringify(memoData));
@@ -3142,7 +3142,7 @@ ${document.getElementById('logArea').innerText}`;
         function loadMemoData() {
             if (currentUser) {
                 // Firebaseから読み込み
-                firebase.database().ref(`memos/${currentUser.uid}`).on('value', (snapshot) => {
+                firebase.database().ref(`users/${currentUser.uid}/memos`).on('value', (snapshot) => {
                     const data = snapshot.val();
                     if (data) {
                         memoData = Object.values(data).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
