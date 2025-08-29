@@ -24,11 +24,16 @@
 - **表示場所**: アプリ内タイトル、ログ出力
 - **管理場所**: `APP_VERSION`定数（493行目付近）
 
-### リリースフロー
+### リリースフロー（必須手順）
 1. ローカルで開発・テスト
-2. バージョン番号を0.01増加
-3. Git commit & push
-4. GitHub Pagesが自動デプロイ（数分後反映）
+2. バージョン番号を0.01増加（APP_VERSION定数を更新）
+3. **必須**: Git commit & push で GitHub Pages へ自動デプロイ
+   - `git add .`
+   - `git commit -m "commit message with Claude Code signature"`
+   - `git push origin main`
+4. GitHub Pages自動デプロイ（数分後に本番反映）
+
+**重要**: 機能実装後は必ずGitHub Pagesまで公開すること。ローカルテストのみで終了してはいけない。
 
 ## アーキテクチャ詳細
 
