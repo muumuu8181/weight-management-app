@@ -2224,7 +2224,7 @@
             // カスタム項目を復元（ログイン時に実行）
             loadCustomItems();
             
-            // メモデータを読み込み
+            // メモデータを読み込み（ログイン時）
             loadMemoData();
             
             // 今日の日付と体重デフォルト値を設定（タイムゾーン考慮）
@@ -3173,6 +3173,11 @@ ${document.getElementById('logArea').innerText}`;
                         addMemo();
                     }
                 });
+            }
+            
+            // 未ログイン時のメモデータ初期化
+            if (!currentUser) {
+                loadMemoData();
             }
         });
 
