@@ -494,7 +494,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.69';
+        const APP_VERSION = 'v0.70';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1976,15 +1976,23 @@
         function getPreviousPeriodData(days, currentEndDate) {
             if (days <= 0) return []; // 全期間表示の場合は前期間なし
             
+            // 前期間の終了日を計算
             const previousEndDate = new Date(currentEndDate);
-            previousEndDate.setDate(currentEndDate.getDate() - days);
+            if (days === 1) {
+                // 1日表示の場合：前日
+                previousEndDate.setDate(currentEndDate.getDate() - 1);
+            } else {
+                // 複数日表示の場合：前期間の終了日
+                previousEndDate.setDate(currentEndDate.getDate() - days);
+            }
             
+            // 前期間の開始日を計算
             const previousStartDate = new Date(previousEndDate);
             if (days === 1) {
-                // 1日表示の場合：前日のみ
+                // 1日表示：開始日=終了日（前日のみ）
                 previousStartDate.setTime(previousEndDate.getTime());
             } else {
-                // 複数日表示の場合：前期間の開始日
+                // 複数日表示：期間の開始日を計算
                 previousStartDate.setDate(previousEndDate.getDate() - days + 1);
             }
             
