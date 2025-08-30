@@ -97,7 +97,7 @@ window.addMemo = () => {
     
     const now = new Date();
     const memo = {
-        id: Date.now(),
+        id: Math.floor(Date.now() + Math.random() * 1000), // 確実に整数のみ
         text: memoText,
         category: category,
         priority: priority,
@@ -145,6 +145,13 @@ window.addMemo = () => {
 // Firebaseにメモを保存
 function saveMemoToFirebase(memo) {
     if (!currentUser || !firebase.database) return;
+    
+    console.log('💾 Firebaseに保存するメモID:', {
+        id: memo.id,
+        type: typeof memo.id,
+        isInteger: Number.isInteger(memo.id),
+        path: `users/${currentUser.uid}/memos/${memo.id}`
+    });
     
     firebase.database().ref(`users/${currentUser.uid}/memos/${memo.id}`).set(memo)
     .then(() => {
@@ -332,7 +339,7 @@ window.subdivideMemo = (memoId) => {
     
     const now = new Date();
     const childMemo = {
-        id: Date.now() + Math.floor(Math.random() * 10000), // 整数のみで重複回避
+        id: Math.floor(Date.now() + Math.random() * 10000), // 確実に整数のみ
         text: subdivisionText.trim(),
         category: memo.category, // 親の属性を継承
         priority: memo.priority,
@@ -348,7 +355,10 @@ window.subdivideMemo = (memoId) => {
         parent: memo.text.substring(0, 20),
         child: childMemo.text,
         parentId: childMemo.parentId,
-        level: childMemo.level
+        level: childMemo.level,
+        childId: childMemo.id,
+        childIdType: typeof childMemo.id,
+        isInteger: Number.isInteger(childMemo.id)
     });
     
     // 親タスクの直後に挿入
