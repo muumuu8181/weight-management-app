@@ -416,14 +416,7 @@ window.subdivideMemo = (memoId) => {
     // Firebaseに保存
     if (currentUser) {
         saveMemoToFirebase(childMemo);
-        console.log('🔀 Firebaseに保存実行');
-        
-        // Firebase保存後に再読み込みして表示を更新
-        setTimeout(() => {
-            console.log('🔀 Firebase保存後の再読み込み実行');
-            loadMemoData(); // 正しい関数名に修正
-            console.log('🔀 表示更新完了');
-        }, 500); // 500ms後に再読み込み
+        console.log('🔀 Firebaseに保存実行 - リアルタイムリスナーが自動更新');
     } else {
         localStorage.setItem('memos', JSON.stringify(memoData));
         console.log('🔀 LocalStorageに保存実行');
@@ -642,20 +635,40 @@ window.copyAllMemos = () => {
 
 // 階層対応メモソート関数
 function sortMemosWithHierarchy(memos) {
-    // まず親メモ（parentId がnullまたは未定義）を時系列順でソート
-    const parentMemos = memos.filter(m => !m.parentId).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    console.log('🔄 階層ソート開始 - メモ数:', memos.length);
+    
+    // レベル0（親）メモを時系列順でソート
+    const parentMemos = memos.filter(m => !m.parentId && (m.level === undefined || m.level === 0)).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    console.log('📊 親メモ数:', parentMemos.length);
     
     const result = [];
+    
+    // 再帰的に子メモを追加する関数
+    function addChildrenRecursively(parentId, currentLevel) {
+        // ID型変換対応（数値と文字列の両方でマッチ）
+        const children = memos.filter(m => {
+            const match = (m.parentId == parentId || String(m.parentId) === String(parentId)) && (m.level === currentLevel || (m.level === undefined && currentLevel === 1));
+            return match;
+        }).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        
+        console.log(`📝 レベル${currentLevel}の子メモ（親ID:${parentId}）: ${children.length}件`);
+        
+        children.forEach(child => {
+            result.push(child);
+            // さらに子がいる場合は再帰的に追加（最大4階層まで）
+            if (currentLevel < 3) {
+                addChildrenRecursively(child.id, currentLevel + 1);
+            }
+        });
+    }
     
     // 各親メモとその子メモを順序通りに配置
     parentMemos.forEach(parent => {
         result.push(parent);
-        
-        // この親の子メモを取得して時系列順にソート
-        const children = memos.filter(m => m.parentId === parent.id).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-        result.push(...children);
+        addChildrenRecursively(parent.id, 1);
     });
     
+    console.log('✅ 階層ソート完了 - 結果数:', result.length);
     return result;
 }
 
