@@ -154,16 +154,31 @@ function saveMemoToFirebase(memo) {
     });
 }
 
-// メモ表示を更新
-function updateMemoDisplay() {
+// メモフィルター機能
+window.filterMemos = () => {
+    const filterText = document.getElementById('memoFilter').value.toLowerCase();
+    const filteredData = filterText === '' ? memoData : 
+        memoData.filter(memo => 
+            memo.text.toLowerCase().includes(filterText) ||
+            (memo.category && memo.category.toLowerCase().includes(filterText)) ||
+            (memo.priority && memo.priority.toLowerCase().includes(filterText)) ||
+            (memo.timeframe && memo.timeframe.toLowerCase().includes(filterText))
+        );
+    
+    displayFilteredMemos(filteredData);
+};
+
+// フィルター済みメモを表示
+function displayFilteredMemos(filteredData) {
     const container = document.getElementById('memoListArea');
     
-    if (memoData.length === 0) {
-        container.innerHTML = 'まだメモがありません';
+    if (filteredData.length === 0) {
+        const filterText = document.getElementById('memoFilter').value;
+        container.innerHTML = filterText ? '検索にマッチするメモがありません' : 'まだメモがありません';
         return;
     }
     
-    const html = memoData.map(memo => {
+    const html = filteredData.map(memo => {
         const categoryBadge = memo.category ? 
             `<span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-right: 5px;">${memo.category}</span>` : '';
         
@@ -175,6 +190,9 @@ function updateMemoDisplay() {
         const timeframeBadge = memo.timeframe ? 
             `<span style="background: ${getTimeframeColor(memo.timeframe)}; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-right: 5px;">${getTimeframeIcon(memo.timeframe)} ${memo.timeframe}</span>` : '';
         
+        // テキストを1行に制限（モバイル対応）
+        const truncatedText = memo.text.length > 50 ? memo.text.substring(0, 50) + '...' : memo.text;
+        
         return `
             <div class="memo-item">
                 <div class="memo-header">
@@ -184,14 +202,25 @@ function updateMemoDisplay() {
                     </div>
                     <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn">🗑️</button>
                 </div>
-                <div class="memo-text">
-                    ${memo.text}
+                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    ${truncatedText}
                 </div>
             </div>
         `;
     }).join('');
     
     container.innerHTML = html;
+}
+
+// メモ表示を更新（既存関数を修正）
+function updateMemoDisplay() {
+    // フィルターが適用されている場合はフィルターを維持
+    const filterText = document.getElementById('memoFilter') ? document.getElementById('memoFilter').value : '';
+    if (filterText) {
+        filterMemos();
+    } else {
+        displayFilteredMemos(memoData);
+    }
 }
 
 // メモを削除

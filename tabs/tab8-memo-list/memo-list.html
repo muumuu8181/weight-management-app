@@ -60,6 +60,14 @@
             <button class="universal-copy-btn" onclick="copyAllMemos()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 全メモをコピー</button>
             <button onclick="clearAllMemos()" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; margin-left: 5px;">🗑️ 全削除</button>
         </h3>
+        
+        <!-- フィルター機能 -->
+        <div style="margin-bottom: 15px;">
+            <input type="text" id="memoFilter" placeholder="🔍 メモを検索..." 
+                oninput="filterMemos()" 
+                style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+        </div>
+        
         <div class="data-area" id="memoListArea">
             まだメモがありません
         </div>
