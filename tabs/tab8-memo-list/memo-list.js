@@ -246,8 +246,8 @@ function displayFilteredMemos(filteredData) {
         const deadlineBadge = memo.deadline ? 
             `<span style="background: ${getDeadlineColor(memo.deadline)}; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-right: 5px;">📅 ${memo.deadline}</span>` : '';
         
-        // テキストを1行に制限（モバイル対応）
-        const truncatedText = memo.text.length > 30 ? memo.text.substring(0, 30) + '...' : memo.text;
+        // タップ詳細表示：20文字超過で省略表示
+        const truncatedText = memo.text.length > 20 ? memo.text.substring(0, 20) + '...' : memo.text;
         
         // 階層表示用のインデントと境界線
         const indent = memo.level ? '　'.repeat(memo.level) + '└ ' : '';
@@ -276,7 +276,7 @@ function displayFilteredMemos(filteredData) {
                 </div>
                 <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0.1); user-select: none; touch-action: manipulation;" onclick="handleMemoClick(event, ${memo.id})">
                     <span id="memo-text-${memo.id}">${indent}${truncatedText}</span>
-                    ${memo.text.length > 30 ? '<small style="color: #007bff; margin-left: 5px;">[タップで詳細]</small>' : ''}
+                    ${memo.text.length > 20 ? '<small style="color: #007bff; margin-left: 5px;">[タップで詳細]</small>' : ''}
                 </div>
             </div>
         `;
