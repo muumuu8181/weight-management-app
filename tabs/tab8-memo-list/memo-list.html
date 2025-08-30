@@ -1,0 +1,88 @@
+<!-- タブ8: メモリスト機能 -->
+<div id="tab8Content">
+    <!-- メモ追加エリア -->
+    <div class="input-card" id="memoInput">
+        <h3>📝 メモリスト</h3>
+        
+        <!-- メモ入力フォーム -->
+        <div style="margin-bottom: 15px;">
+            <textarea id="newMemoText" placeholder="考えたこと、やりたいこと、なんでも自由に書いてください..." 
+                style="width: 100%; max-width: 600px; height: 100px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; font-family: inherit; font-size: 14px; line-height: 1.4;"></textarea>
+        </div>
+
+        <!-- カテゴリ・重要度・対応時間の選択 -->
+        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
+            <label style="font-weight: bold;">🏷️ カテゴリ（任意）:</label>
+            <select id="memoCategory" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                <option value="">選択なし</option>
+                <option value="アイデア">💡 アイデア</option>
+                <option value="やること">✅ やること</option>
+                <option value="考え事">🤔 考え事</option>
+                <option value="メモ">📝 メモ</option>
+                <option value="重要">⚠️ 重要</option>
+                <option value="その他">📋 その他</option>
+            </select>
+        </div>
+
+        <!-- 重要度選択 -->
+        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
+            <label style="font-weight: bold;">🎯 重要度:</label>
+            <select id="memoPriority" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                <option value="">選択なし</option>
+                <option value="S">🔥 S - 最重要（緊急対応）</option>
+                <option value="A">⚡ A - 重要（優先対応）</option>
+                <option value="B">📋 B - 中程度（通常対応）</option>
+                <option value="C">📝 C - 低め（時間があるとき）</option>
+            </select>
+        </div>
+
+        <!-- 対応時間選択 -->
+        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
+            <label style="font-weight: bold;">⏰ 対応時間:</label>
+            <select id="memoTimeframe" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                <option value="">選択なし</option>
+                <option value="短期">⚡ 短期（すぐに終わる）</option>
+                <option value="中長期">📅 中長期（時間をかける）</option>
+            </select>
+        </div>
+
+        <!-- 追加ボタン -->
+        <div style="text-align: center;">
+            <button onclick="addMemo()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">➕ メモを追加</button>
+        </div>
+    </div>
+
+    <!-- メモ一覧表示 -->
+    <div class="input-card" id="memoList">
+        <h3>📋 メモ一覧 
+            <button class="universal-copy-btn" onclick="copyAllMemos()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 全メモをコピー</button>
+            <button onclick="clearAllMemos()" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; margin-left: 5px;">🗑️ 全削除</button>
+        </h3>
+        <div class="data-area" id="memoListArea">
+            まだメモがありません
+        </div>
+    </div>
+
+    <!-- メモ統計 -->
+    <div class="input-card" id="memoStats">
+        <h3>📊 メモ統計</h3>
+        <div id="memoStatsArea" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div id="totalMemoCount" style="font-size: 24px; font-weight: bold; color: #007bff;">0</div>
+                <div style="font-size: 12px; color: #6c757d;">総メモ数</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div id="todayMemoCount" style="font-size: 24px; font-weight: bold; color: #28a745;">0</div>
+                <div style="font-size: 12px; color: #6c757d;">今日のメモ</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div id="weekMemoCount" style="font-size: 24px; font-weight: bold; color: #ffc107;">0</div>
+                <div style="font-size: 12px; color: #6c757d;">今週のメモ</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div id="priorityMemoCount" style="font-size: 24px; font-weight: bold; color: #dc3545;">0</div>
+                <div style="font-size: 12px; color: #6c757d;">重要度S・A</div>
+            </div>
+        </div>
+    </div>
+</div>

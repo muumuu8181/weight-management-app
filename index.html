@@ -9,6 +9,10 @@
     <!-- カスタムスタイル -->
     <link rel="stylesheet" href="custom/styles.css">
     
+    <!-- タブ固有スタイル -->
+    <link rel="stylesheet" href="tabs/tab3-room-cleaning/room-cleaning.css">
+    <link rel="stylesheet" href="tabs/tab8-memo-list/memo-list.css">
+    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -20,6 +24,10 @@
     
     <!-- カスタム設定 -->
     <script type="module" src="custom/app-config.js"></script>
+    
+    <!-- タブ固有JavaScript -->
+    <script src="tabs/tab3-room-cleaning/room-cleaning.js"></script>
+    <script src="tabs/tab8-memo-list/memo-list.js"></script>
     <style>
         body { font-family: Arial, sans-serif; padding: 2px; background: #f5f5f5; line-height: 1.2; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 6px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -813,7 +821,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.89';
+        const APP_VERSION = 'v0.90';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -3310,6 +3318,9 @@ ${document.getElementById('logArea').innerText}`;
             document.getElementById('roomDateInput').value = today;
             document.getElementById('roomTimeInput').value = currentTime;
             
+            // カスタム場所を復元
+            loadCustomRooms();
+            
             log('🧹 部屋片付け管理初期化完了');
         }
         
@@ -3443,16 +3454,10 @@ ${document.getElementById('logArea').innerText}`;
             }
             
             // ボタンを追加
-            const roomButtons = document.getElementById('roomButtons');
-            const newButton = document.createElement('button');
-            newButton.type = 'button';
-            newButton.className = 'room-btn';
-            newButton.onclick = () => selectRoom(roomName);
-            newButton.setAttribute('data-room', roomName);
-            newButton.style.cssText = 'background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;';
-            newButton.textContent = `🏠 ${roomName}`;
+            addCustomRoomButton(roomName);
             
-            roomButtons.appendChild(newButton);
+            // カスタム場所をlocalStorageに保存
+            saveCustomRooms();
             
             // 入力をクリア
             document.getElementById('roomUnifiedAddText').value = '';
@@ -3473,7 +3478,49 @@ ${document.getElementById('logArea').innerText}`;
             const roomBtn = document.querySelector(`[data-room="${roomName}"]`);
             if (roomBtn) {
                 roomBtn.remove();
+                saveCustomRooms(); // 削除後に保存
                 log(`🗑️ 場所削除: ${roomName}`);
+            }
+        }
+        
+        // カスタム場所ボタン作成
+        function addCustomRoomButton(roomName) {
+            const roomButtons = document.getElementById('roomButtons');
+            const newButton = document.createElement('button');
+            newButton.type = 'button';
+            newButton.className = 'room-btn';
+            newButton.onclick = () => selectRoom(roomName);
+            newButton.setAttribute('data-room', roomName);
+            newButton.style.cssText = 'background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;';
+            newButton.textContent = `🏠 ${roomName}`;
+            
+            roomButtons.appendChild(newButton);
+        }
+        
+        // カスタム場所をlocalStorageに保存
+        function saveCustomRooms() {
+            const defaultRooms = ['リビング', 'キッチン', '寝室', 'お風呂', 'トイレ', '玄関', 'その他'];
+            const customRooms = Array.from(document.querySelectorAll('.room-btn'))
+                .map(btn => btn.getAttribute('data-room'))
+                .filter(room => !defaultRooms.includes(room));
+            
+            localStorage.setItem('roomApp_customRooms', JSON.stringify(customRooms));
+            log(`💾 カスタム場所保存: ${customRooms.length}件`);
+        }
+        
+        // カスタム場所をlocalStorageから復元
+        function loadCustomRooms() {
+            try {
+                const saved = localStorage.getItem('roomApp_customRooms');
+                if (saved) {
+                    const customRooms = JSON.parse(saved);
+                    customRooms.forEach(roomName => {
+                        addCustomRoomButton(roomName);
+                    });
+                    log(`📂 カスタム場所復元: ${customRooms.length}件`);
+                }
+            } catch (error) {
+                log(`❌ カスタム場所復元エラー: ${error.message}`);
             }
         }
         

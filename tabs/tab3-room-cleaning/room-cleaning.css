@@ -1,0 +1,67 @@
+/* 部屋片付け機能専用スタイル */
+
+.room-mode-control {
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 8px 0;
+    text-align: center;
+}
+
+.room-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.room-btn:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.achievement-btn {
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.achievement-btn:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+#roomUnifiedAddInput {
+    margin-top: 8px;
+    padding: 8px;
+    background: #e8f5e8;
+    border-radius: 5px;
+    border: 2px solid #28a745;
+}
+
+#roomButtons {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+#roomDataDisplay {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background: #fefefe;
+}

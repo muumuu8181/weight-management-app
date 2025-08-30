@@ -1,0 +1,77 @@
+<!-- タブ3: 部屋片付け機能 -->
+<div id="tab3Content">
+    <!-- 片付けタスク入力エリア -->
+    <div class="input-card" id="roomInput">
+        <h3>🧹 部屋片付け記録</h3>
+        
+        <!-- 操作モード選択 -->
+        <div class="room-mode-control" style="background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 8px; margin: 8px 0; text-align: center;">
+            <div style="margin-bottom: 8px;">
+                <span style="font-size: 13px; color: #444; font-weight: bold;">🔧 場所管理モード</span>
+            </div>
+            <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
+                <button id="roomNormalModeBtn" onclick="setRoomMode('normal')" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">📝 通常</button>
+                <button id="roomAddModeBtn" onclick="setRoomMode('add')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">➕ 追加</button>
+                <button id="roomDeleteModeBtn" onclick="setRoomMode('delete')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">🗑️ 削除</button>
+            </div>
+            
+            <!-- 追加モード用の統一入力エリア -->
+            <div id="roomUnifiedAddInput" style="display: none; margin-top: 8px; padding: 8px; background: #e8f5e8; border-radius: 5px; border: 2px solid #28a745;">
+                <div style="margin-bottom: 5px;">
+                    <span style="font-size: 11px; color: #155724; font-weight: bold;">✨ 新しい場所を追加</span>
+                </div>
+                <div style="display: flex; gap: 3px; align-items: center;">
+                    <input type="text" id="roomUnifiedAddText" placeholder="場所名を入力" style="flex: 1; padding: 4px 8px; border: 1px solid #28a745; border-radius: 3px; font-size: 11px;">
+                    <button onclick="executeRoomAdd()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✓ 追加</button>
+                    <button onclick="cancelRoomAdd()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✗ キャンセル</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 日付・時刻表示（自動取得） -->
+        <div style="margin-bottom: 10px;">
+            <input type="date" class="input-field" id="roomDateInput" style="width: 100%;" readonly>
+            <input type="time" class="input-field" id="roomTimeInput" style="width: 100%; margin-top: 5px;" readonly>
+        </div>
+        
+        <!-- 開始・終了ボタン -->
+        <div style="margin-bottom: 15px; text-align: center;">
+            <button id="startRoomBtn" onclick="startRoomCleaning()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; margin-right: 10px;">▶️ 片付け開始</button>
+            <button id="endRoomBtn" onclick="endRoomCleaning()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; display: none;">⏹️ 片付け終了</button>
+        </div>
+        
+        <!-- 片付け場所選択 -->
+        <div style="margin-bottom: 10px;">
+            <div style="text-align: center; margin-bottom: 8px;">
+                <span style="font-size: 13px; color: #444; font-weight: bold;">📍 片付け場所</span>
+            </div>
+            <div id="roomButtons" style="display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px;">
+                <button type="button" class="room-btn" onclick="selectRoom('リビング')" data-room="リビング" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🛋️ リビング</button>
+                <button type="button" class="room-btn" onclick="selectRoom('キッチン')" data-room="キッチン" style="background: #ffc107; color: #212529; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🍳 キッチン</button>
+                <button type="button" class="room-btn" onclick="selectRoom('寝室')" data-room="寝室" style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🛏️ 寝室</button>
+                <button type="button" class="room-btn" onclick="selectRoom('お風呂')" data-room="お風呂" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🛁 お風呂</button>
+                <button type="button" class="room-btn" onclick="selectRoom('洗面所')" data-room="洗面所" style="background: #6f42c1; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🚿 洗面所</button>
+                <button type="button" class="room-btn" onclick="selectRoom('玄関')" data-room="玄関" style="background: #fd7e14; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🚪 玄関</button>
+            </div>
+        </div>
+        
+        <!-- メモ入力 -->
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">📝 片付け内容（任意）:</label>
+            <textarea id="roomMemoText" placeholder="片付けた内容、気づいたことなど..." style="width: 100%; height: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; resize: vertical;"></textarea>
+        </div>
+        
+        <!-- 完了ボタン -->
+        <div style="text-align: center;">
+            <button onclick="saveRoomData()" style="background: #007bff; color: white; border: none; padding: 10px 30px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold;">💾 記録保存</button>
+        </div>
+    </div>
+    
+    <!-- データ表示エリア -->
+    <div class="input-card" style="margin-top: 20px;">
+        <h3>📊 片付け記録一覧</h3>
+        <div id="roomDataDisplay" style="max-height: 300px; overflow-y: auto;">
+            <p style="text-align: center; color: #666; font-style: italic;">記録がありません</p>
+        </div>
+    </div>
+</div>
