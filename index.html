@@ -821,7 +821,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.90';
+        const APP_VERSION = 'v0.91';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -3300,13 +3300,13 @@ ${document.getElementById('logArea').innerText}`;
 
         // ========== 部屋片付け機能 ==========
         
-        // 部屋片付け用変数
-        let allRoomData = [];
-        let selectedRoomValue = '';
-        let selectedRoomAchievement = null;
-        let roomStartTime = null;
-        let roomEndTime = null;
-        let currentRoomMode = 'normal';
+        // 部屋片付け用変数 (分離済み - room-cleaning.jsに移動)
+        // let allRoomData = [];
+        // let selectedRoomValue = '';
+        // let selectedRoomAchievement = null;
+        // let roomStartTime = null;
+        // let roomEndTime = null;
+        // let currentRoomMode = 'normal';
         
         // 部屋片付け管理初期化
         function initRoomManagement() {
