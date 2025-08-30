@@ -104,7 +104,9 @@ window.addMemo = () => {
         timeframe: timeframe,
         timestamp: now.toISOString(),
         date: now.toLocaleDateString('ja-JP'),
-        time: now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+        time: now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
+        parentId: null, // 親タスクID（細分化用）
+        level: 0 // 階層レベル（0=親、1=子、2=孫...）
     };
     
     memoData.unshift(memo); // 新しいメモを先頭に追加
@@ -213,21 +215,26 @@ function displayFilteredMemos(filteredData) {
         // テキストを1行に制限（モバイル対応）
         const truncatedText = memo.text.length > 50 ? memo.text.substring(0, 50) + '...' : memo.text;
         
+        // 階層表示用のインデントと境界線
+        const indent = memo.level ? '　'.repeat(memo.level) + '└ ' : '';
+        const borderLeft = memo.level > 0 ? `border-left: 3px solid ${getPriorityColor(memo.priority || 'C')}; margin-left: ${memo.level * 15}px; padding-left: 8px;` : '';
+        
         return `
-            <div class="memo-item">
+            <div class="memo-item" style="${borderLeft}">
                 <div class="memo-header">
                     <div style="flex: 1;">
-                        ${priorityBadge}${timeframeBadge}${categoryBadge}
+                        ${indent}${priorityBadge}${timeframeBadge}${categoryBadge}
                         <small class="memo-date">${memo.date} ${memo.time}</small>
                     </div>
-                    <div style="display: flex; gap: 5px;">
+                    <div style="display: flex; gap: 3px;">
                         <button onclick="editMemo(${memo.id})" style="background: #17a2b8; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">✏️</button>
+                        <button onclick="subdivideMemo(${memo.id})" style="background: #28a745; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">🔀</button>
                         <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn">🗑️</button>
                     </div>
                 </div>
-                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="toggleMemoDetail(${memo.id})">
-                    <span id="memo-text-${memo.id}">${truncatedText}</span>
-                    ${memo.text.length > 50 ? '<small style="color: #007bff; margin-left: 5px;">[クリックで詳細]</small>' : ''}
+                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0.1);" onclick="toggleMemoDetail(${memo.id})" ontouchend="toggleMemoDetail(${memo.id})">
+                    <span id="memo-text-${memo.id}">${indent}${truncatedText}</span>
+                    ${memo.text.length > 50 ? '<small style="color: #007bff; margin-left: 5px;">[タップで詳細]</small>' : ''}
                 </div>
             </div>
         `;
@@ -258,6 +265,52 @@ window.toggleMemoDetail = (memoId) => {
         parentDiv.style.overflow = 'visible';
         parentDiv.style.textOverflow = 'initial';
     }
+};
+
+// メモ細分化機能
+window.subdivideMemo = (memoId) => {
+    const memo = memoData.find(m => m.id === memoId);
+    if (!memo) return;
+    
+    const subdivisionText = prompt(`【${memo.text.substring(0, 30)}...】を細分化します。\n\n細分化したいタスクを入力してください：`);
+    
+    if (!subdivisionText || !subdivisionText.trim()) {
+        return;
+    }
+    
+    const now = new Date();
+    const childMemo = {
+        id: Date.now() + Math.random(), // 重複回避
+        text: subdivisionText.trim(),
+        category: memo.category, // 親の属性を継承
+        priority: memo.priority,
+        timeframe: 'すぐ', // 細分化したタスクは基本的に短期
+        timestamp: now.toISOString(),
+        date: now.toLocaleDateString('ja-JP'),
+        time: now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
+        parentId: memo.id, // 親タスクID
+        level: memo.level + 1 // 一階層下
+    };
+    
+    // 親タスクの直後に挿入
+    const parentIndex = memoData.findIndex(m => m.id === memoId);
+    if (parentIndex !== -1) {
+        memoData.splice(parentIndex + 1, 0, childMemo);
+    } else {
+        memoData.unshift(childMemo);
+    }
+    
+    // Firebaseに保存
+    if (currentUser) {
+        saveMemoToFirebase(childMemo);
+    } else {
+        localStorage.setItem('memos', JSON.stringify(memoData));
+    }
+    
+    updateMemoDisplay();
+    updateMemoStats();
+    
+    log(`🔀 タスク細分化: ${memo.text.substring(0, 20)}... → ${subdivisionText.substring(0, 20)}...`);
 };
 
 // メモ表示を更新（既存関数を修正）
