@@ -146,14 +146,32 @@ window.addMemo = () => {
 function saveMemoToFirebase(memo) {
     if (!currentUser || !firebase.database) return;
     
+    // 実際の値を詳細確認
+    console.log('🔍 FirebaseパスのID詳細調査:');
+    console.log('  - memo.id の値:', memo.id);
+    console.log('  - memo.id の型:', typeof memo.id);  
+    console.log('  - memo.id を文字列化:', String(memo.id));
+    console.log('  - 小数点が含まれているか:', String(memo.id).includes('.'));
+    console.log('  - 構築されるパス:', `users/${currentUser.uid}/memos/${memo.id}`);
+    
+    // IDを強制的に整数の文字列に変換してからパスを作る
+    const cleanId = String(memo.id).split('.')[0]; // 小数点以下を切り捨て
+    console.log('  - 清浄化後のID:', cleanId);
+    console.log('  - 清浄化後のパス:', `users/${currentUser.uid}/memos/${cleanId}`);
+    
     console.log('💾 Firebaseに保存するメモID:', {
-        id: memo.id,
+        originalId: memo.id,
+        cleanId: cleanId,
         type: typeof memo.id,
         isInteger: Number.isInteger(memo.id),
-        path: `users/${currentUser.uid}/memos/${memo.id}`
+        path: `users/${currentUser.uid}/memos/${cleanId}`
     });
     
-    firebase.database().ref(`users/${currentUser.uid}/memos/${memo.id}`).set(memo)
+    // 清浄化されたIDを使用してFirebaseに保存
+    firebase.database().ref(`users/${currentUser.uid}/memos/${cleanId}`).set({
+        ...memo,
+        id: cleanId // IDも整数文字列に更新
+    })
     .then(() => {
         console.log('メモをFirebaseに保存しました');
     })
