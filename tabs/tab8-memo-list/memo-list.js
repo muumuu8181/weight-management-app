@@ -43,6 +43,46 @@ function getTimeframeIcon(timeframe) {
     }
 }
 
+// 重要度選択
+window.selectPriority = (priority) => {
+    // ボタンのスタイル更新
+    document.querySelectorAll('.priority-btn').forEach(btn => {
+        btn.style.opacity = '0.7';
+        btn.style.transform = 'scale(1)';
+    });
+    
+    const selectedBtn = document.querySelector(`[data-priority="${priority}"]`);
+    if (selectedBtn) {
+        selectedBtn.style.opacity = '1';
+        selectedBtn.style.transform = 'scale(1.05)';
+    }
+    
+    // hidden inputに値を設定
+    document.getElementById('memoPriority').value = priority;
+    
+    log(`🎯 重要度選択: ${priority || 'なし'}`);
+};
+
+// 対応時間選択
+window.selectTimeframe = (timeframe) => {
+    // ボタンのスタイル更新
+    document.querySelectorAll('.timeframe-btn').forEach(btn => {
+        btn.style.opacity = '0.7';
+        btn.style.transform = 'scale(1)';
+    });
+    
+    const selectedBtn = document.querySelector(`[data-timeframe="${timeframe}"]`);
+    if (selectedBtn) {
+        selectedBtn.style.opacity = '1';
+        selectedBtn.style.transform = 'scale(1.05)';
+    }
+    
+    // hidden inputに値を設定
+    document.getElementById('memoTimeframe').value = timeframe;
+    
+    log(`⏰ 対応時間選択: ${timeframe || 'なし'}`);
+};
+
 // メモを追加
 window.addMemo = () => {
     const memoText = document.getElementById('newMemoText').value.trim();
@@ -86,6 +126,16 @@ window.addMemo = () => {
     document.getElementById('memoCategory').value = '';
     document.getElementById('memoPriority').value = '';
     document.getElementById('memoTimeframe').value = '';
+    
+    // ボタンをリセット
+    document.querySelectorAll('.priority-btn').forEach(btn => {
+        btn.style.opacity = btn.getAttribute('data-priority') === '' ? '1' : '0.7';
+        btn.style.transform = 'scale(1)';
+    });
+    document.querySelectorAll('.timeframe-btn').forEach(btn => {
+        btn.style.opacity = btn.getAttribute('data-timeframe') === '' ? '1' : '0.7';
+        btn.style.transform = 'scale(1)';
+    });
     
     log(`📝 メモを追加しました${category ? ` [${category}]` : ''}: ${memoText.substring(0, 30)}${memoText.length > 30 ? '...' : ''}`);
 };

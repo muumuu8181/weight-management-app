@@ -25,25 +25,27 @@
         </div>
 
         <!-- 重要度選択 -->
-        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
-            <label style="font-weight: bold;">🎯 重要度:</label>
-            <select id="memoPriority" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
-                <option value="">選択なし</option>
-                <option value="S">🔥 S - 最重要（緊急対応）</option>
-                <option value="A">⚡ A - 重要（優先対応）</option>
-                <option value="B">📋 B - 中程度（通常対応）</option>
-                <option value="C">📝 C - 低め（時間があるとき）</option>
-            </select>
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 8px;">🎯 重要度:</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="priority-btn" data-priority="" onclick="selectPriority('')" style="background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 1;">なし</button>
+                <button type="button" class="priority-btn" data-priority="S" onclick="selectPriority('S')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🔥 S</button>
+                <button type="button" class="priority-btn" data-priority="A" onclick="selectPriority('A')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⚡ A</button>
+                <button type="button" class="priority-btn" data-priority="B" onclick="selectPriority('B')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📋 B</button>
+                <button type="button" class="priority-btn" data-priority="C" onclick="selectPriority('C')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📝 C</button>
+            </div>
+            <input type="hidden" id="memoPriority" value="">
         </div>
 
         <!-- 対応時間選択 -->
-        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
-            <label style="font-weight: bold;">⏰ 対応時間:</label>
-            <select id="memoTimeframe" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
-                <option value="">選択なし</option>
-                <option value="短期">⚡ 短期（すぐに終わる）</option>
-                <option value="中長期">📅 中長期（時間をかける）</option>
-            </select>
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 8px;">⏰ 対応時間:</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="timeframe-btn" data-timeframe="" onclick="selectTimeframe('')" style="background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 1;">なし</button>
+                <button type="button" class="timeframe-btn" data-timeframe="短期" onclick="selectTimeframe('短期')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⚡ 短期</button>
+                <button type="button" class="timeframe-btn" data-timeframe="中長期" onclick="selectTimeframe('中長期')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📅 中長期</button>
+            </div>
+            <input type="hidden" id="memoTimeframe" value="">
         </div>
 
         <!-- 追加ボタン -->

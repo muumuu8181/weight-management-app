@@ -76,3 +76,19 @@
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 15px;
 }
+
+/* 重要度・対応時間ボタン用スタイル */
+.priority-btn, .timeframe-btn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.priority-btn:hover, .timeframe-btn:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
