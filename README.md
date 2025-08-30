@@ -19,6 +19,15 @@
 3. 📄 **[03_MANDATORY_REQUIREMENTS.md](docs/03_MANDATORY_REQUIREMENTS.md)** - 絶対遵守事項
 4. 📄 **[04_PROJECT_OVERVIEW.md](docs/04_PROJECT_OVERVIEW.md)** - プロジェクト全体像
 
+## 📋 開発引継ぎ文書
+
+最新の機能開発内容は **`issues/`フォルダ** の引継ぎ文書を参照：
+
+- 📄 **[issues/TASK_INTEGRATION_HANDOVER_20250830.md](issues/TASK_INTEGRATION_HANDOVER_20250830.md)** - タスク統合機能開発の完全引継ぎ
+- 🔧 **技術仕様**: v1.10〜v1.21の全変更履歴と実装詳細
+- ⚠️ **重要制約**: セキュリティ制限と4階層制限の詳細
+- 🚀 **拡張可能性**: 今後の改善案とトラブルシューティング
+
 ## 📁 プロジェクト構造
 
 ```

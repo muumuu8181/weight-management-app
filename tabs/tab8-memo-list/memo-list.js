@@ -317,7 +317,7 @@ window.handleMemoClick = (event, memoId) => {
 window.toggleMemoDetail = (memoId) => {
     console.log(`📝 toggleMemoDetail called for memo ${memoId}`);
     
-    const memo = memoData.find(m => m.id === memoId);
+    const memo = memoData.find(m => m.id == memoId || String(m.id) === String(memoId));
     if (!memo) {
         console.log(`❌ Memo not found: ${memoId}`);
         return;
