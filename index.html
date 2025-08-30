@@ -781,7 +781,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.87';
+        const APP_VERSION = 'v0.88';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1902,10 +1902,13 @@
             renderChartWithData(days, filteredData, startDate, end);
         }
 
-        // チャート描画の共通ロジック
+        // チャート描画の共通ロジック（安全アクセス対応）
         function renderChartWithData(days, filteredData, startDate, endDate) {
             const ctx = document.getElementById('weightChart');
-            if (!ctx) return;
+            if (!ctx) {
+                console.log('⚠️ weightChart要素が見つかりません - チャート描画をスキップ');
+                return;
+            }
 
             let chartData, datasets = [];
             let timeUnit, displayFormat, axisLabel;
@@ -2570,18 +2573,26 @@
             document.getElementById('chartPanel').classList.add('hidden');
         }
 
-        // ログ出力関数
+        // ログ出力関数（安全アクセス対応）
         function log(message) {
             const logArea = document.getElementById('logArea');
             const timestamp = new Date().toLocaleTimeString();
-            logArea.innerHTML += `[${timestamp}] ${message}<br>`;
-            logArea.scrollTop = logArea.scrollHeight;
-            console.log(message);
+            
+            // DOM要素が存在しない場合はコンソールログのみ
+            if (logArea) {
+                logArea.innerHTML += `[${timestamp}] ${message}<br>`;
+                logArea.scrollTop = logArea.scrollHeight;
+            }
+            console.log(`[${timestamp}] ${message}`);
         }
 
-        // ログコピー機能
+        // ログコピー機能（安全アクセス対応）
         window.copyLogs = () => {
             const logArea = document.getElementById('logArea');
+            if (!logArea) {
+                console.log('⚠️ logArea要素が見つかりません');
+                return;
+            }
             const logText = logArea.innerText || logArea.textContent;
             navigator.clipboard.writeText(logText).then(() => {
                 alert('✅ ログをコピーしました');

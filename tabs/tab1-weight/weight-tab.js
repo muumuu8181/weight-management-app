@@ -11,9 +11,9 @@ const WeightTab = {
     editingEntryId: null
 };
 
-// 体重管理専用のモード状態管理
-let currentMode = 'normal';
-let selectedTarget = null;
+// 体重管理専用のモード状態管理（グローバル変数を使用）
+// let currentMode = 'normal'; // 既にindex.htmlで定義済み - 重複回避
+// let selectedTarget = null;   // 既にindex.htmlで定義済み - 重複回避
 
 // カスタム項目の永続化機能
 const WEIGHT_STORAGE_KEYS = {
