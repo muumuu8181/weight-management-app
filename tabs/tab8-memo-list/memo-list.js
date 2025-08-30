@@ -97,7 +97,7 @@ window.addMemo = () => {
     
     const now = new Date();
     const memo = {
-        id: Math.floor(Date.now() + Math.random() * 1000), // 確実に整数のみ
+        id: parseInt(Date.now().toString() + Math.floor(Math.random() * 100).toString()), // 文字列連結で確実に整数
         text: memoText,
         category: category,
         priority: priority,
@@ -339,7 +339,7 @@ window.subdivideMemo = (memoId) => {
     
     const now = new Date();
     const childMemo = {
-        id: Math.floor(Date.now() + Math.random() * 10000), // 確実に整数のみ
+        id: parseInt(Date.now().toString() + Math.floor(Math.random() * 1000).toString()), // 文字列連結で確実に整数
         text: subdivisionText.trim(),
         category: memo.category, // 親の属性を継承
         priority: memo.priority,
