@@ -304,16 +304,9 @@
                 <textarea class="input-field" id="memoInput" placeholder="メモ (オプション)" rows="2"></textarea>
                 <button class="save-button" onclick="saveWeightData()">💾 保存</button>
             </div>
-            
-            <div class="input-card">
-                <h3>📈 データ履歴</h3>
-                <div class="data-area" id="weightHistory">
-                    データを読み込み中...<br>
-                </div>
-            </div>
         </div>
 
-        <!-- グラフパネル -->
+        <!-- グラフパネル（上に移動） -->
         <div class="input-card hidden" id="chartPanel">
             <h3>📊 データ推移グラフ</h3>
             <div style="position: relative; height: 300px;">
@@ -339,6 +332,14 @@
                     <span id="chartPeriodInfo" style="font-size: 12px; color: #666; min-width: 120px; text-align: center;">期間を選択してください</span>
                     <button onclick="navigateChart('next')" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold;">次 →</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- データ履歴（グラフの下に移動） -->
+        <div class="input-card hidden" id="weightHistoryPanel">
+            <h3>📈 データ履歴</h3>
+            <div class="data-area" id="weightHistory">
+                データを読み込み中...<br>
             </div>
         </div>
 
@@ -693,7 +694,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.82';
+        const APP_VERSION = 'v0.83';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2303,6 +2304,7 @@
             document.getElementById('modeControl').classList.remove('hidden');
             document.getElementById('weightInput').classList.remove('hidden');
             document.getElementById('chartPanel').classList.remove('hidden');
+            document.getElementById('weightHistoryPanel').classList.remove('hidden');
             document.getElementById('userName').textContent = user.displayName;
             
             // デフォルトでタブ1を表示
@@ -2800,7 +2802,7 @@ ${document.getElementById('logArea').innerText}`;
 
         // 睡眠データ保存
         async function saveSleepData() {
-            if (!window.user) {
+            if (!currentUser) {
                 log('❌ ログインが必要です');
                 return;
             }
@@ -2835,7 +2837,7 @@ ${document.getElementById('logArea').innerText}`;
 
             try {
                 // Firebase保存
-                const sleepRef = database.ref(`users/${window.user.uid}/sleepData/${sleepDate}_${Date.now()}`);
+                const sleepRef = database.ref(`users/${currentUser.uid}/sleepData/${sleepDate}_${Date.now()}`);
                 await sleepRef.set(sleepData);
                 
                 log(`💾 睡眠記録保存完了: ${sleepDate} ${sleepTime}`);
