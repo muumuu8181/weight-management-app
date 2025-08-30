@@ -196,3 +196,41 @@ function showPopupGuide(isMobile) {
 5. **段階的デバッグログ**で問題を可視化
 
 **この解決パターンは、他の認証問題でも応用可能です。**
+
+---
+
+## ⚠️ **Safari固有の問題** (v0.77-v0.80で発見)
+
+### 🔴 **問題**: iOS Safariでポップアップタイムアウトエラー
+**症状**: 
+- iPhoneのSafariでログインボタンを押すと「ポップアップタイムアウト」エラー
+- タイムアウトを15秒→30秒→150秒に延長しても解決せず
+
+### 🔍 **原因**: 
+- **iOS Safariの厳格なポップアップブロッカー**
+- Firebase認証のポップアップ方式がSafariでブロックされる
+- 時間の問題ではなく、根本的にポップアップが開けない
+
+### ✅ **解決方法**:
+1. **Chrome for iOSを使用** → 正常動作確認
+2. **v0.80でiPhone検出時のみリダイレクト方式に自動切り替え**
+
+```javascript
+// v0.80での対応
+const isIPhone = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+if (isIPhone) {
+    // Safariでも動作するリダイレクト方式
+    await auth.signInWithRedirect(provider);
+} else {
+    // その他はポップアップ方式
+    await auth.signInWithPopup(provider);
+}
+```
+
+### 📱 **ブラウザ別動作状況**:
+- ✅ Windows (Chrome/Edge/Firefox): 問題なし
+- ✅ iOS Chrome: 動作OK
+- ❌ iOS Safari: ポップアップブロックで失敗（リダイレクト方式で対応）
+- ✅ Android各種ブラウザ: 問題なし
+
+**教訓**: モバイルブラウザ、特にiOS Safariは独自の制限があるため、複数の認証方式を用意する必要がある。
