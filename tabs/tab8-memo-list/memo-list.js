@@ -225,8 +225,9 @@ function displayFilteredMemos(filteredData) {
                         <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn">🗑️</button>
                     </div>
                 </div>
-                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                    ${truncatedText}
+                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="toggleMemoDetail(${memo.id})">
+                    <span id="memo-text-${memo.id}">${truncatedText}</span>
+                    ${memo.text.length > 50 ? '<small style="color: #007bff; margin-left: 5px;">[クリックで詳細]</small>' : ''}
                 </div>
             </div>
         `;
@@ -234,6 +235,30 @@ function displayFilteredMemos(filteredData) {
     
     container.innerHTML = html;
 }
+
+// メモ詳細表示切り替え
+window.toggleMemoDetail = (memoId) => {
+    const memo = memoData.find(m => m.id === memoId);
+    if (!memo) return;
+    
+    const textElement = document.getElementById(`memo-text-${memoId}`);
+    const parentDiv = textElement.parentElement;
+    
+    if (textElement.textContent === memo.text) {
+        // 詳細表示中 -> 省略表示に戻す
+        const truncatedText = memo.text.length > 50 ? memo.text.substring(0, 50) + '...' : memo.text;
+        textElement.textContent = truncatedText;
+        parentDiv.style.whiteSpace = 'nowrap';
+        parentDiv.style.overflow = 'hidden';
+        parentDiv.style.textOverflow = 'ellipsis';
+    } else {
+        // 省略表示中 -> 詳細表示
+        textElement.textContent = memo.text;
+        parentDiv.style.whiteSpace = 'normal';
+        parentDiv.style.overflow = 'visible';
+        parentDiv.style.textOverflow = 'initial';
+    }
+};
 
 // メモ表示を更新（既存関数を修正）
 function updateMemoDisplay() {
