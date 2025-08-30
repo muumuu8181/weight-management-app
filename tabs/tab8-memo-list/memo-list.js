@@ -232,7 +232,7 @@ function displayFilteredMemos(filteredData) {
                         <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn">🗑️</button>
                     </div>
                 </div>
-                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0.1); user-select: none;" onclick="handleMemoClick(event, ${memo.id})" ontouchstart="handleMemoClick(event, ${memo.id})">
+                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0.1); user-select: none; touch-action: manipulation;" onclick="handleMemoClick(event, ${memo.id})">
                     <span id="memo-text-${memo.id}">${indent}${truncatedText}</span>
                     ${memo.text.length > 50 ? '<small style="color: #007bff; margin-left: 5px;">[タップで詳細]</small>' : ''}
                 </div>
@@ -245,30 +245,46 @@ function displayFilteredMemos(filteredData) {
 
 // デバイス判定とクリックハンドラー統一
 window.handleMemoClick = (event, memoId) => {
+    console.log(`🖱️ handleMemoClick called for memo ${memoId}, event type: ${event?.type || 'unknown'}`);
+    
     // イベント伝播停止
     if (event) {
         event.preventDefault();
         event.stopPropagation();
+        event.stopImmediatePropagation();
     }
     
     // 重複実行防止（より強力に）
     const clickKey = `memo-click-${memoId}`;
-    if (window[clickKey]) return;
+    if (window[clickKey]) {
+        console.log(`⚠️ Duplicate click prevented for memo ${memoId}`);
+        return;
+    }
     window[clickKey] = true;
     
     setTimeout(() => {
         delete window[clickKey];
-    }, 500);
+    }, 800); // より長い時間に
     
     toggleMemoDetail(memoId);
 };
 
 // メモ詳細表示切り替え
 window.toggleMemoDetail = (memoId) => {
+    console.log(`📝 toggleMemoDetail called for memo ${memoId}`);
+    
     const memo = memoData.find(m => m.id === memoId);
-    if (!memo) return;
+    if (!memo) {
+        console.log(`❌ Memo not found: ${memoId}`);
+        return;
+    }
     
     const textElement = document.getElementById(`memo-text-${memoId}`);
+    if (!textElement) {
+        console.log(`❌ Text element not found: memo-text-${memoId}`);
+        return;
+    }
+    
     const parentDiv = textElement.parentElement;
     
     // インデント部分を取得
@@ -278,6 +294,10 @@ window.toggleMemoDetail = (memoId) => {
     const currentTextWithoutIndent = textElement.textContent.replace(indent, '');
     const isExpanded = currentTextWithoutIndent === memo.text;
     
+    console.log(`📝 Current text: "${currentTextWithoutIndent.substring(0, 30)}..."`)
+    console.log(`📝 Full text: "${memo.text.substring(0, 30)}..."`)
+    console.log(`📝 Is expanded: ${isExpanded}`);
+    
     if (isExpanded) {
         // 詳細表示中 -> 省略表示に戻す
         const truncatedText = memo.text.length > 50 ? memo.text.substring(0, 50) + '...' : memo.text;
@@ -285,12 +305,14 @@ window.toggleMemoDetail = (memoId) => {
         parentDiv.style.whiteSpace = 'nowrap';
         parentDiv.style.overflow = 'hidden';
         parentDiv.style.textOverflow = 'ellipsis';
+        console.log(`📝 Collapsed to: "${(indent + truncatedText).substring(0, 30)}..."`);
     } else {
         // 省略表示中 -> 詳細表示
         textElement.textContent = indent + memo.text;
         parentDiv.style.whiteSpace = 'normal';
         parentDiv.style.overflow = 'visible';
         parentDiv.style.textOverflow = 'initial';
+        console.log(`📝 Expanded to: "${(indent + memo.text).substring(0, 30)}..."`);
     }
 };
 
@@ -310,7 +332,7 @@ window.subdivideMemo = (memoId) => {
     
     const now = new Date();
     const childMemo = {
-        id: Date.now() + Math.random(), // 重複回避
+        id: Date.now() + Math.floor(Math.random() * 10000), // 整数のみで重複回避
         text: subdivisionText.trim(),
         category: memo.category, // 親の属性を継承
         priority: memo.priority,
