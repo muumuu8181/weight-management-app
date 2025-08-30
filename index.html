@@ -699,9 +699,12 @@
 
                 <!-- メモ一覧表示 -->
                 <div class="input-card" id="memoList">
-                    <h3>📋 メモ一覧 
-                        <button class="universal-copy-btn" onclick="copyAllMemos()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 全メモをコピー</button>
-                        <button onclick="clearAllMemos()" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; margin-left: 5px;">🗑️ 全削除</button>
+                    <h3 style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>📋 メモ一覧</span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span id="filterCount" style="font-size: 12px; color: #666;"></span>
+                            <button class="universal-copy-btn" onclick="copyAllMemos()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 全メモをコピー</button>
+                        </div>
                     </h3>
                     
                     <!-- フィルター機能 -->
@@ -712,7 +715,6 @@
                                 style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
                             <button onclick="clearFilter()" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px;">✕</button>
                         </div>
-                        <div id="filterCount" style="margin-top: 5px; font-size: 12px; color: #666; text-align: right;"></div>
                     </div>
                     
                     <div class="data-area" id="memoListArea">
@@ -836,7 +838,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.97';
+        const APP_VERSION = 'v0.98';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
