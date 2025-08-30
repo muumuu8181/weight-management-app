@@ -232,7 +232,7 @@ function displayFilteredMemos(filteredData) {
                         <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn">🗑️</button>
                     </div>
                 </div>
-                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0.1);" onclick="toggleMemoDetail(${memo.id})" ontouchend="toggleMemoDetail(${memo.id})">
+                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0.1);" onclick="handleMemoClick(${memo.id})">
                     <span id="memo-text-${memo.id}">${indent}${truncatedText}</span>
                     ${memo.text.length > 50 ? '<small style="color: #007bff; margin-left: 5px;">[タップで詳細]</small>' : ''}
                 </div>
@@ -243,6 +243,19 @@ function displayFilteredMemos(filteredData) {
     container.innerHTML = html;
 }
 
+// デバイス判定とクリックハンドラー統一
+window.handleMemoClick = (memoId) => {
+    // 重複実行防止
+    if (window.clickInProgress) return;
+    window.clickInProgress = true;
+    
+    setTimeout(() => {
+        window.clickInProgress = false;
+    }, 300);
+    
+    toggleMemoDetail(memoId);
+};
+
 // メモ詳細表示切り替え
 window.toggleMemoDetail = (memoId) => {
     const memo = memoData.find(m => m.id === memoId);
@@ -251,16 +264,23 @@ window.toggleMemoDetail = (memoId) => {
     const textElement = document.getElementById(`memo-text-${memoId}`);
     const parentDiv = textElement.parentElement;
     
-    if (textElement.textContent === memo.text) {
+    // インデント部分を取得
+    const indent = memo.level ? '　'.repeat(memo.level) + '└ ' : '';
+    
+    // 現在の表示状態をチェック（インデント部分を除いて）
+    const currentTextWithoutIndent = textElement.textContent.replace(indent, '');
+    const isExpanded = currentTextWithoutIndent === memo.text;
+    
+    if (isExpanded) {
         // 詳細表示中 -> 省略表示に戻す
         const truncatedText = memo.text.length > 50 ? memo.text.substring(0, 50) + '...' : memo.text;
-        textElement.textContent = truncatedText;
+        textElement.textContent = indent + truncatedText;
         parentDiv.style.whiteSpace = 'nowrap';
         parentDiv.style.overflow = 'hidden';
         parentDiv.style.textOverflow = 'ellipsis';
     } else {
         // 省略表示中 -> 詳細表示
-        textElement.textContent = memo.text;
+        textElement.textContent = indent + memo.text;
         parentDiv.style.whiteSpace = 'normal';
         parentDiv.style.overflow = 'visible';
         parentDiv.style.textOverflow = 'initial';
@@ -495,6 +515,25 @@ window.copyAllMemos = () => {
     });
 };
 
+// 階層対応メモソート関数
+function sortMemosWithHierarchy(memos) {
+    // まず親メモ（parentId がnullまたは未定義）を時系列順でソート
+    const parentMemos = memos.filter(m => !m.parentId).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    const result = [];
+    
+    // 各親メモとその子メモを順序通りに配置
+    parentMemos.forEach(parent => {
+        result.push(parent);
+        
+        // この親の子メモを取得して時系列順にソート
+        const children = memos.filter(m => m.parentId === parent.id).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        result.push(...children);
+    });
+    
+    return result;
+}
+
 // メモデータを読み込み
 function loadMemoData() {
     if (currentUser) {
@@ -502,7 +541,9 @@ function loadMemoData() {
         firebase.database().ref(`users/${currentUser.uid}/memos`).on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                memoData = Object.values(data).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                // 階層表示対応のソート：親→子の順序を保持しつつ、時系列順
+                const allMemos = Object.values(data);
+                memoData = sortMemosWithHierarchy(allMemos);
             } else {
                 memoData = [];
             }
@@ -513,7 +554,8 @@ function loadMemoData() {
         // ローカルストレージから読み込み
         const stored = localStorage.getItem('memos');
         if (stored) {
-            memoData = JSON.parse(stored);
+            const allMemos = JSON.parse(stored);
+            memoData = sortMemosWithHierarchy(allMemos);
         }
         updateMemoDisplay();
         updateMemoStats();
