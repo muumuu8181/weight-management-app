@@ -840,7 +840,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.19';
+        const APP_VERSION = 'v1.20';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -3915,26 +3915,7 @@ ${document.getElementById('logArea').innerText}`;
             log('🗑️ メモを削除しました');
         };
 
-        // 全メモを削除
-        window.clearAllMemos = () => {
-            if (!confirm('すべてのメモを削除しますか？\nこの操作は取り消せません。')) {
-                return;
-            }
-            
-            memoData = [];
-            
-            // Firebaseから削除
-            if (currentUser) {
-                firebase.database().ref(`users/${currentUser.uid}/memos`).remove();
-            } else {
-                // ローカルストレージを更新
-                localStorage.setItem('memos', JSON.stringify(memoData));
-            }
-            
-            updateMemoDisplay();
-            updateMemoStats();
-            log('🗑️ すべてのメモを削除しました');
-        };
+        // clearAllMemos関数は安全上の理由により完全削除済み
 
         // メモ統計を更新
         function updateMemoStats() {

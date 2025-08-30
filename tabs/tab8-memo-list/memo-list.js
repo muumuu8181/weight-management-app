@@ -246,8 +246,10 @@ function displayFilteredMemos(filteredData) {
         const deadlineBadge = memo.deadline ? 
             `<span style="background: ${getDeadlineColor(memo.deadline)}; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-right: 5px;">📅 ${memo.deadline}</span>` : '';
         
-        // タップ詳細表示：20文字超過で省略表示
-        const truncatedText = memo.text.length > 20 ? memo.text.substring(0, 20) + '...' : memo.text;
+        // レベル別タップ詳細表示文字数制限
+        const levelLimits = { 0: 20, 1: 17, 2: 14, 3: 11 }; // レベルごとの文字数制限
+        const charLimit = levelLimits[memo.level || 0] || 20;
+        const truncatedText = memo.text.length > charLimit ? memo.text.substring(0, charLimit) + '...' : memo.text;
         
         // 階層表示用のインデントと境界線
         const indent = memo.level ? '　'.repeat(memo.level) + '└ ' : '';
@@ -276,7 +278,7 @@ function displayFilteredMemos(filteredData) {
                 </div>
                 <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0.1); user-select: none; touch-action: manipulation;" onclick="handleMemoClick(event, ${memo.id})">
                     <span id="memo-text-${memo.id}">${indent}${truncatedText}</span>
-                    ${memo.text.length > 20 ? '<small style="color: #007bff; margin-left: 5px;">[タップで詳細]</small>' : ''}
+                    ${memo.text.length > charLimit ? '<small style="color: #007bff; margin-left: 5px;">[タップで詳細]</small>' : ''}
                 </div>
             </div>
         `;
@@ -584,26 +586,7 @@ window.deleteMemo = (memoId) => {
     log('🗑️ メモを削除しました');
 };
 
-// 全メモを削除
-window.clearAllMemos = () => {
-    if (!confirm('すべてのメモを削除しますか？\nこの操作は取り消せません。')) {
-        return;
-    }
-    
-    memoData = [];
-    
-    // Firebaseから削除
-    if (currentUser) {
-        firebase.database().ref(`users/${currentUser.uid}/memos`).remove();
-    } else {
-        // ローカルストレージを更新
-        localStorage.setItem('memos', JSON.stringify(memoData));
-    }
-    
-    updateMemoDisplay();
-    updateMemoStats();
-    log('🗑️ すべてのメモを削除しました');
-};
+// clearAllMemos関数は安全上の理由により完全削除済み
 
 // メモ統計を更新
 function updateMemoStats() {
