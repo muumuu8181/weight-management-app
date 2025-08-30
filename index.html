@@ -694,7 +694,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.84';
+        const APP_VERSION = 'v0.85';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1577,6 +1577,12 @@
                 document.querySelector('.save-button').textContent = '💾 保存';
                 document.querySelector('.save-button').style.background = '#28a745';
                 
+                // 編集モードインジケーターを削除
+                const editModeIndicator = document.getElementById('editModeIndicator');
+                if (editModeIndicator) {
+                    editModeIndicator.remove();
+                }
+                
                 // ボタンのスタイルをリセット
                 document.querySelectorAll('.timing-btn').forEach(btn => {
                     btn.style.opacity = '0.7';
@@ -1634,6 +1640,17 @@
                 window.editingEntryId = entryId;
                 document.querySelector('.save-button').textContent = '✏️ 更新';
                 document.querySelector('.save-button').style.background = '#ffc107';
+                
+                // 編集モードであることを明確に表示
+                const editModeIndicator = document.getElementById('editModeIndicator');
+                if (editModeIndicator) {
+                    editModeIndicator.remove();
+                }
+                const indicator = document.createElement('div');
+                indicator.id = 'editModeIndicator';
+                indicator.innerHTML = '✏️ <strong>編集モード</strong> - ' + entry.date + ' ' + (entry.value || entry.weight) + 'kgのデータを修正して更新ボタンを押してください';
+                indicator.style.cssText = 'background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center; animation: fadeIn 0.3s;';
+                document.querySelector('.save-button').parentNode.insertBefore(indicator, document.querySelector('.save-button'));
                 
                 log(`✏️ 編集モード: ${entry.date} ${entry.value || entry.weight} のデータを編集中`);
                 
@@ -2919,7 +2936,10 @@ ${document.getElementById('logArea').innerText}`;
                     content += `<br>📝 ${data.memo}`;
                 }
                 
-                return `<div style="border-bottom: 1px solid #eee; padding: 10px 0;">${content}</div>`;
+                return `<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0;">
+                    <div>${content}</div>
+                    <button onclick="deleteSleepEntry('${data.id}')" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; flex-shrink: 0;">🗑️</button>
+                </div>`;
             }).join('');
         }
 
@@ -2996,6 +3016,29 @@ ${document.getElementById('logArea').innerText}`;
                 log('❌ コピーに失敗しました');
             });
         }
+
+        // 睡眠データ削除
+        window.deleteSleepEntry = async (entryId) => {
+            if (!currentUser) {
+                log('❌ ログインが必要です');
+                return;
+            }
+            
+            if (!confirm('この睡眠記録を削除しますか？')) {
+                return;
+            }
+            
+            try {
+                const entryRef = database.ref(`users/${currentUser.uid}/sleepData/${entryId}`);
+                await entryRef.remove();
+                
+                log('🗑️ 睡眠記録を削除しました');
+                await loadSleepData(); // データ再読み込み
+                
+            } catch (error) {
+                log(`❌ 削除エラー: ${error.message}`);
+            }
+        };
 
         // =====================
         // メモリスト機能
