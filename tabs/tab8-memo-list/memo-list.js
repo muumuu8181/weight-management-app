@@ -349,11 +349,19 @@ window.toggleMemoDetail = (memoId) => {
 
 // メモ細分化機能
 window.subdivideMemo = (memoId) => {
-    const memo = memoData.find(m => m.id === memoId);
+    console.log('🔀 細分化対象ID:', memoId, 'type:', typeof memoId);
+    console.log('🔀 現在のmemoData IDs:', memoData.map(m => ({id: m.id, type: typeof m.id, text: m.text.substring(0, 20)})));
+    
+    // IDの型変換を試行（数値と文字列の両方でマッチ）
+    const memo = memoData.find(m => m.id == memoId || String(m.id) === String(memoId));
+    
     if (!memo) {
-        alert('親タスクが見つかりません');
+        console.log('❌ メモが見つからない - ID:', memoId);
+        alert(`親タスクが見つかりません\nID: ${memoId}\n利用可能なID: ${memoData.map(m => m.id).join(', ')}`);
         return;
     }
+    
+    console.log('✅ 親タスク発見:', memo.text.substring(0, 30));
     
     // 4階層制限チェック
     const currentLevel = memo.level || 0;
@@ -434,8 +442,18 @@ function updateMemoDisplay() {
 
 // メモ編集機能
 window.editMemo = (memoId) => {
-    const memo = memoData.find(m => m.id === memoId);
-    if (!memo) return;
+    console.log('✏️ 編集対象ID:', memoId, 'type:', typeof memoId);
+    
+    // IDの型変換を試行（数値と文字列の両方でマッチ）
+    const memo = memoData.find(m => m.id == memoId || String(m.id) === String(memoId));
+    
+    if (!memo) {
+        console.log('❌ 編集対象メモが見つからない - ID:', memoId);
+        alert(`編集対象が見つかりません\nID: ${memoId}`);
+        return;
+    }
+    
+    console.log('✅ 編集対象発見:', memo.text.substring(0, 30));
     
     // 編集フォームに値を設定
     document.getElementById('newMemoText').value = memo.text;
@@ -524,11 +542,25 @@ function cancelEdit() {
 
 // メモを削除
 window.deleteMemo = (memoId) => {
-    if (!confirm('このメモを削除しますか？')) {
+    console.log('🗑️ 削除対象ID:', memoId, 'type:', typeof memoId);
+    
+    // IDの型変換を試行（数値と文字列の両方でマッチ）
+    const memo = memoData.find(m => m.id == memoId || String(m.id) === String(memoId));
+    
+    if (!memo) {
+        console.log('❌ 削除対象メモが見つからない - ID:', memoId);
+        alert(`削除対象が見つかりません\nID: ${memoId}`);
         return;
     }
     
-    memoData = memoData.filter(memo => memo.id !== memoId);
+    if (!confirm(`このメモを削除しますか？\n\n${memo.text.substring(0, 50)}...`)) {
+        return;
+    }
+    
+    console.log('✅ 削除実行:', memo.text.substring(0, 30));
+    
+    // IDの型を考慮してフィルタリング
+    memoData = memoData.filter(m => m.id != memoId && String(m.id) !== String(memoId));
     
     // Firebaseから削除
     if (currentUser) {
@@ -688,8 +720,18 @@ function getDeadlineColor(deadline) {
 
 // 締切設定機能
 window.setDeadline = async (memoId) => {
-    const memo = memoData.find(m => m.id === memoId);
-    if (!memo) return;
+    console.log('📅 締切設定対象ID:', memoId, 'type:', typeof memoId);
+    
+    // IDの型変換を試行（数値と文字列の両方でマッチ）
+    const memo = memoData.find(m => m.id == memoId || String(m.id) === String(memoId));
+    
+    if (!memo) {
+        console.log('❌ 締切設定対象メモが見つからない - ID:', memoId);
+        alert(`締切設定対象が見つかりません\nID: ${memoId}`);
+        return;
+    }
+    
+    console.log('✅ 締切設定対象発見:', memo.text.substring(0, 30));
     
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     const currentDeadline = memo.deadline || '';
