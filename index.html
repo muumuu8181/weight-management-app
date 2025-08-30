@@ -694,7 +694,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.85';
+        const APP_VERSION = 'v0.86';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1583,6 +1583,12 @@
                     editModeIndicator.remove();
                 }
                 
+                // キャンセルボタンを削除
+                const cancelButton = document.getElementById('cancelEditButton');
+                if (cancelButton) {
+                    cancelButton.remove();
+                }
+                
                 // ボタンのスタイルをリセット
                 document.querySelectorAll('.timing-btn').forEach(btn => {
                     btn.style.opacity = '0.7';
@@ -1652,6 +1658,18 @@
                 indicator.style.cssText = 'background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center; animation: fadeIn 0.3s;';
                 document.querySelector('.save-button').parentNode.insertBefore(indicator, document.querySelector('.save-button'));
                 
+                // キャンセルボタンを追加
+                const existingCancelButton = document.getElementById('cancelEditButton');
+                if (existingCancelButton) {
+                    existingCancelButton.remove();
+                }
+                const cancelButton = document.createElement('button');
+                cancelButton.id = 'cancelEditButton';
+                cancelButton.innerHTML = '❌ キャンセル';
+                cancelButton.onclick = cancelEdit;
+                cancelButton.style.cssText = 'background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; margin-left: 10px;';
+                document.querySelector('.save-button').parentNode.insertBefore(cancelButton, document.querySelector('.save-button').nextSibling);
+                
                 log(`✏️ 編集モード: ${entry.date} ${entry.value || entry.weight} のデータを編集中`);
                 
                 // ページトップにスクロール
@@ -1660,6 +1678,48 @@
             } catch (error) {
                 log(`❌ 編集エラー: ${error.message}`);
             }
+        };
+        
+        // 編集キャンセル機能
+        window.cancelEdit = () => {
+            // フォームをクリア
+            document.getElementById('dateInput').value = '';
+            document.getElementById('weightValue').value = '';
+            document.getElementById('memoInput').value = '';
+            
+            // 選択状態をリセット
+            selectedTimingValue = '';
+            selectedTopValue = '';
+            selectedBottomValue = '';
+            
+            // 編集モードをリセット
+            window.editingEntryId = null;
+            document.querySelector('.save-button').textContent = '💾 保存';
+            document.querySelector('.save-button').style.background = '#28a745';
+            
+            // 編集モードインジケーターを削除
+            const editModeIndicator = document.getElementById('editModeIndicator');
+            if (editModeIndicator) {
+                editModeIndicator.remove();
+            }
+            
+            // キャンセルボタンを削除
+            const cancelButton = document.getElementById('cancelEditButton');
+            if (cancelButton) {
+                cancelButton.remove();
+            }
+            
+            // ボタンのスタイルをリセット
+            document.querySelectorAll('.timing-btn').forEach(btn => {
+                btn.style.opacity = '0.7';
+                btn.classList.remove('selected');
+            });
+            document.querySelectorAll('.clothing-btn').forEach(btn => {
+                btn.style.opacity = '0.7';
+                btn.style.transform = 'scale(1)';
+            });
+            
+            log('❌ 編集をキャンセルしました');
         };
         
         // データ削除
