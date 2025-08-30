@@ -3320,16 +3320,15 @@ ${document.getElementById('logArea').innerText}`;
             }
         };
 
-        // ========== 部屋片付け機能 ========== (分離済み - 全てコメントアウト)
-        /*
+        // ========== 部屋片付け機能 ==========
         
-        // 部屋片付け用変数 (分離済み - room-cleaning.jsに移動)
-        // let allRoomData = [];
-        // let selectedRoomValue = '';
-        // let selectedRoomAchievement = null;
-        // let roomStartTime = null;
-        // let roomEndTime = null;
-        // let currentRoomMode = 'normal';
+        // 部屋片付け用変数
+        let allRoomData = [];
+        let selectedRoomValue = '';
+        let selectedRoomAchievement = null;
+        let roomStartTime = null;
+        let roomEndTime = null;
+        let currentRoomMode = 'normal';
         
         // 部屋片付け管理初期化
         function initRoomManagement() {
@@ -3751,7 +3750,6 @@ ${document.getElementById('logArea').innerText}`;
                 log(`❌ 削除エラー: ${error.message}`);
             }
         };
-        */ // 部屋片付け機能コメント終了
 
         // ===================== 
         // メモリスト機能 (分離済み - memo-list.jsに移動) - 全てコメントアウト
