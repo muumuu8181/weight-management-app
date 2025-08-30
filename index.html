@@ -694,7 +694,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.86';
+        const APP_VERSION = 'v0.87';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2320,9 +2320,57 @@
 
         // 現在のタブ
         let currentTab = 1;
+        
+        // タブコンテンツ動的読み込み
+        window.loadTabContent = async (tabNumber, tabType) => {
+            try {
+                const tabContentDiv = document.getElementById(`tabContent${tabNumber}`);
+                if (!tabContentDiv) return;
+                
+                // HTMLコンテンツを読み込み
+                const response = await fetch(`tabs/tab${tabNumber}-${tabType}/${tabType}-tab.html`);
+                if (response.ok) {
+                    const htmlContent = await response.text();
+                    tabContentDiv.innerHTML = htmlContent;
+                    
+                    // JavaScriptファイルを動的読み込み
+                    await loadTabScript(tabNumber, tabType);
+                    
+                    log(`✅ タブ${tabNumber}（${tabType}）コンテンツ読み込み完了`);
+                } else {
+                    log(`⚠️ タブ${tabNumber}の分離ファイルが見つかりません - 既存コンテンツを使用`);
+                }
+            } catch (error) {
+                log(`❌ タブ読み込みエラー: ${error.message}`);
+            }
+        };
+        
+        // タブ用JavaScriptの動的読み込み
+        window.loadTabScript = async (tabNumber, tabType) => {
+            try {
+                // 既存のスクリプトタグを削除
+                const existingScript = document.getElementById(`tab${tabNumber}Script`);
+                if (existingScript) {
+                    existingScript.remove();
+                }
+                
+                // 新しいスクリプトタグを作成
+                const script = document.createElement('script');
+                script.id = `tab${tabNumber}Script`;
+                script.src = `tabs/tab${tabNumber}-${tabType}/${tabType}-tab.js`;
+                document.head.appendChild(script);
+                
+                return new Promise((resolve, reject) => {
+                    script.onload = () => resolve();
+                    script.onerror = () => reject(new Error(`Script load failed: ${script.src}`));
+                });
+            } catch (error) {
+                throw error;
+            }
+        };
 
-        // タブ切り替え機能
-        window.switchTab = (tabNumber) => {
+        // タブ切り替え機能（動的読み込み対応）
+        window.switchTab = async (tabNumber) => {
             currentTab = tabNumber;
             
             // すべてのタブボタンを非アクティブに（16タブ対応）
@@ -2335,6 +2383,11 @@
                     tabBtn.style.background = '#007bff';
                     tabBtn.style.color = 'white';
                     tabContent.classList.remove('hidden');
+                    
+                    // 動的読み込み（分離されたタブのみ）
+                    if (i === 1) {
+                        await loadTabContent(1, 'weight');
+                    }
                 } else {
                     // 非アクティブタブ
                     tabBtn.style.background = '#f8f9fa';
