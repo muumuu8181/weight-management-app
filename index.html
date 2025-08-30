@@ -2287,7 +2287,7 @@
             if (tabNumber === 2) {
                 // 睡眠管理タブの初期化（ログインに関係なく実行）
                 initializeSleepManager();
-                if (window.user) {
+                if (currentUser) {
                     loadSleepData();
                 }
             }
@@ -2868,10 +2868,10 @@ ${document.getElementById('logArea').innerText}`;
 
         // 睡眠データ読み込み
         async function loadSleepData() {
-            if (!user) return;
+            if (!currentUser) return;
 
             try {
-                const sleepRef = database.ref(`users/${user.uid}/sleepData`);
+                const sleepRef = database.ref(`users/${currentUser.uid}/sleepData`);
                 const snapshot = await sleepRef.once('value');
                 
                 allSleepData = [];
