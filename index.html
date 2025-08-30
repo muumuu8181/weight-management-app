@@ -213,6 +213,10 @@
 
         <!-- タブコンテンツ -->
         <div id="tabContent1" class="tab-content">
+            <!-- 体重管理コンテンツは動的読み込み -->
+            <div style="text-align: center; padding: 20px; color: #666;">
+                <span>📊 体重管理機能を読み込み中...</span>
+            </div>
         <!-- モード選択エリア -->
         <div class="mode-control hidden" id="modeControl" style="background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 8px; margin: 8px 0; text-align: center;">
             <div style="margin-bottom: 8px;">
@@ -474,9 +478,92 @@
 
         <!-- タブコンテンツ3 -->
         <div id="tabContent3" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx3</h3>
-                <p>こちらのコンテンツは後で実装予定です</p>
+            <!-- 部屋片付け管理 -->
+            <div id="tab3Content">
+                <!-- 片付けタスク入力エリア -->
+                <div class="input-card" id="roomInput">
+                    <h3>🧹 部屋片付け記録</h3>
+                    
+                    <!-- 日付選択 -->
+                    <div style="margin-bottom: 10px;">
+                        <input type="date" class="input-field" id="roomDateInput" style="width: 100%;">
+                    </div>
+                    
+                    <!-- 片付け場所選択 -->
+                    <div style="margin-bottom: 10px;">
+                        <div style="text-align: center; margin-bottom: 8px;">
+                            <span style="font-size: 13px; color: #444; font-weight: bold;">📍 片付け場所</span>
+                        </div>
+                        <div style="display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px;">
+                            <button type="button" class="room-btn" onclick="selectRoom('リビング')" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">🛋️ リビング</button>
+                            <button type="button" class="room-btn" onclick="selectRoom('キッチン')" style="background: #ffc107; color: #212529; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">🍳 キッチン</button>
+                            <button type="button" class="room-btn" onclick="selectRoom('寝室')" style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">🛏️ 寝室</button>
+                            <button type="button" class="room-btn" onclick="selectRoom('お風呂')" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">🛁 お風呂</button>
+                            <button type="button" class="room-btn" onclick="selectRoom('玄関')" style="background: #6f42c1; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">🚪 玄関</button>
+                            <button type="button" class="room-btn" onclick="selectRoom('その他')" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">📦 その他</button>
+                        </div>
+                        <input type="text" class="input-field" id="selectedRoom" placeholder="選択した場所" readonly style="margin-top: 5px; font-size: 12px; padding: 6px; text-align: center; background: #f0f8ff;">
+                    </div>
+                    
+                    <!-- 片付け時間 -->
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #444;">⏱️ 片付け時間（分）</label>
+                        <input type="number" class="input-field" id="roomDuration" placeholder="例: 30" min="1" max="480" style="width: 100%;">
+                    </div>
+                    
+                    <!-- 達成度 -->
+                    <div style="margin-bottom: 10px;">
+                        <div style="text-align: center; margin-bottom: 8px;">
+                            <span style="font-size: 13px; color: #444; font-weight: bold;">📊 達成度</span>
+                        </div>
+                        <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
+                            <button type="button" class="achievement-btn" onclick="selectAchievement(1)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">😞 1</button>
+                            <button type="button" class="achievement-btn" onclick="selectAchievement(2)" style="background: #fd7e14; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">😐 2</button>
+                            <button type="button" class="achievement-btn" onclick="selectAchievement(3)" style="background: #ffc107; color: #212529; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">🙂 3</button>
+                            <button type="button" class="achievement-btn" onclick="selectAchievement(4)" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">😊 4</button>
+                            <button type="button" class="achievement-btn" onclick="selectAchievement(5)" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">🤩 5</button>
+                        </div>
+                        <input type="text" class="input-field" id="selectedAchievement" placeholder="達成度" readonly style="margin-top: 5px; font-size: 12px; padding: 6px; text-align: center; background: #f0f8ff;">
+                    </div>
+                    
+                    <!-- メモ -->
+                    <textarea class="input-field" id="roomMemoInput" placeholder="片付けのメモ・気づき（オプション）" rows="3" style="margin-bottom: 10px;"></textarea>
+                    
+                    <div style="text-align: center;">
+                        <button onclick="saveRoomData()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">💾 片付け記録を保存</button>
+                    </div>
+                </div>
+
+                <!-- 片付け履歴表示 -->
+                <div class="input-card" id="roomHistory">
+                    <h3>🧹 片付け履歴 <button class="universal-copy-btn" onclick="copyRoomHistory()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 履歴をコピー</button></h3>
+                    <div class="data-area" id="roomHistoryArea">
+                        まだ片付け記録がありません
+                    </div>
+                </div>
+
+                <!-- 片付け統計 -->
+                <div class="input-card" id="roomStats">
+                    <h3>📈 片付け統計</h3>
+                    <div id="roomStatsArea" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-size: 24px; color: #007bff; font-weight: bold;" id="totalRoomSessions">-</div>
+                            <div style="font-size: 12px; color: #6c757d;">総片付け回数</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-size: 24px; color: #28a745; font-weight: bold;" id="totalRoomTime">-</div>
+                            <div style="font-size: 12px; color: #6c757d;">総片付け時間</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-size: 24px; color: #ffc107; font-weight: bold;" id="avgRoomAchievement">-</div>
+                            <div style="font-size: 12px; color: #6c757d;">平均達成度</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <div style="font-size: 24px; color: #17a2b8; font-weight: bold;" id="thisMonthRoomCount">-</div>
+                            <div style="font-size: 12px; color: #6c757d;">今月の記録数</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
