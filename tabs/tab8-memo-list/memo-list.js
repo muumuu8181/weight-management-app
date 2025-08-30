@@ -106,7 +106,8 @@ window.addMemo = () => {
         date: now.toLocaleDateString('ja-JP'),
         time: now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
         parentId: null, // 親タスクID（細分化用）
-        level: 0 // 階層レベル（0=親、1=子、2=孫...）
+        level: 0, // 階層レベル（0=親、1=子、2=孫...）
+        deadline: null // 締切日（YYYY-MM-DD形式）
     };
     
     memoData.unshift(memo); // 新しいメモを先頭に追加
@@ -237,6 +238,10 @@ function displayFilteredMemos(filteredData) {
         const timeframeBadge = memo.timeframe ? 
             `<span style="background: ${getTimeframeColor(memo.timeframe)}; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-right: 5px;">${getTimeframeIcon(memo.timeframe)} ${memo.timeframe}</span>` : '';
         
+        // 締切バッジ
+        const deadlineBadge = memo.deadline ? 
+            `<span style="background: ${getDeadlineColor(memo.deadline)}; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-right: 5px;">📅 ${memo.deadline}</span>` : '';
+        
         // テキストを1行に制限（モバイル対応）
         const truncatedText = memo.text.length > 50 ? memo.text.substring(0, 50) + '...' : memo.text;
         
@@ -248,13 +253,14 @@ function displayFilteredMemos(filteredData) {
             <div class="memo-item" style="${borderLeft}">
                 <div class="memo-header">
                     <div style="flex: 1;">
-                        ${indent}${priorityBadge}${timeframeBadge}${categoryBadge}
+                        ${indent}${priorityBadge}${timeframeBadge}${deadlineBadge}${categoryBadge}
                         <small class="memo-date">${memo.date} ${memo.time}</small>
                     </div>
-                    <div style="display: flex; gap: 3px;">
-                        <button onclick="editMemo(${memo.id})" style="background: #17a2b8; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">✏️</button>
-                        <button onclick="subdivideMemo(${memo.id})" style="background: #28a745; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">🔀</button>
-                        <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn">🗑️</button>
+                    <div style="display: flex; gap: 2px;">
+                        <button onclick="editMemo(${memo.id})" style="background: #17a2b8; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">✏️</button>
+                        ${(memo.level || 0) < 3 ? `<button onclick="subdivideMemo(${memo.id})" style="background: #28a745; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">🔀</button>` : ''}
+                        <button onclick="setDeadline(${memo.id})" style="background: #fd7e14; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">📅</button>
+                        <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn" style="padding: 2px 5px; font-size: 9px;">🗑️</button>
                     </div>
                 </div>
                 <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0.1); user-select: none; touch-action: manipulation;" onclick="handleMemoClick(event, ${memo.id})">
@@ -349,7 +355,14 @@ window.subdivideMemo = (memoId) => {
         return;
     }
     
-    const subdivisionText = prompt(`【${memo.text.substring(0, 30)}...】を細分化します。\n\n細分化したいタスクを入力してください：`);
+    // 4階層制限チェック
+    const currentLevel = memo.level || 0;
+    if (currentLevel >= 3) {
+        alert('細分化は4階層（レベル3）まで可能です。\nこれ以上細分化できません。');
+        return;
+    }
+    
+    const subdivisionText = prompt(`【${memo.text.substring(0, 30)}...】を細分化します。\n\n現在のレベル: ${currentLevel} → ${currentLevel + 1}\n\n細分化したいタスクを入力してください：`);
     
     if (!subdivisionText || !subdivisionText.trim()) {
         return;
@@ -366,7 +379,8 @@ window.subdivideMemo = (memoId) => {
         date: now.toLocaleDateString('ja-JP'),
         time: now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
         parentId: memo.id, // 親タスクID
-        level: (memo.level || 0) + 1 // 一階層下
+        level: (memo.level || 0) + 1, // 一階層下
+        deadline: null // 締切は後で設定
     };
     
     console.log('🔀 細分化実行:', {
@@ -656,3 +670,60 @@ function initMemoList() {
     
     log('📝 メモリスト機能初期化完了');
 }
+
+// 締切色取得関数
+function getDeadlineColor(deadline) {
+    if (!deadline) return '#6c757d';
+    
+    const today = new Date();
+    const deadlineDate = new Date(deadline);
+    const diffDays = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) return '#dc3545'; // 過ぎた（赤）
+    if (diffDays === 0) return '#fd7e14'; // 今日（オレンジ）
+    if (diffDays <= 3) return '#ffc107'; // 3日以内（黄）
+    if (diffDays <= 7) return '#28a745'; // 1週間以内（緑）
+    return '#17a2b8'; // それ以上（青）
+}
+
+// 締切設定機能
+window.setDeadline = async (memoId) => {
+    const memo = memoData.find(m => m.id === memoId);
+    if (!memo) return;
+    
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const currentDeadline = memo.deadline || '';
+    
+    const newDeadline = prompt(
+        `【${memo.text.substring(0, 30)}...】の締切を設定\n\n` +
+        `現在の締切: ${currentDeadline || '未設定'}\n\n` +
+        `新しい締切を入力してください（YYYY-MM-DD形式）:\n` +
+        `例: ${today}`,
+        currentDeadline
+    );
+    
+    if (newDeadline === null) return; // キャンセル
+    
+    // 締切をクリア
+    if (newDeadline.trim() === '') {
+        memo.deadline = null;
+    } else if (/^\d{4}-\d{2}-\d{2}$/.test(newDeadline.trim())) {
+        // 日付形式チェック
+        memo.deadline = newDeadline.trim();
+    } else {
+        alert('日付形式が正しくありません。YYYY-MM-DD形式で入力してください。');
+        return;
+    }
+    
+    // Firebaseに保存
+    if (currentUser) {
+        await saveMemoToFirebase(memo);
+    } else {
+        localStorage.setItem('memos', JSON.stringify(memoData));
+    }
+    
+    updateMemoDisplay();
+    
+    const deadlineText = memo.deadline || '締切なし';
+    log(`📅 締切設定: ${memo.text.substring(0, 20)}... → ${deadlineText}`);
+};
