@@ -232,7 +232,7 @@ function displayFilteredMemos(filteredData) {
                         <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn">🗑️</button>
                     </div>
                 </div>
-                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0.1);" onclick="handleMemoClick(${memo.id})">
+                <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0.1); user-select: none;" onclick="handleMemoClick(event, ${memo.id})" ontouchstart="handleMemoClick(event, ${memo.id})">
                     <span id="memo-text-${memo.id}">${indent}${truncatedText}</span>
                     ${memo.text.length > 50 ? '<small style="color: #007bff; margin-left: 5px;">[タップで詳細]</small>' : ''}
                 </div>
@@ -244,14 +244,21 @@ function displayFilteredMemos(filteredData) {
 }
 
 // デバイス判定とクリックハンドラー統一
-window.handleMemoClick = (memoId) => {
-    // 重複実行防止
-    if (window.clickInProgress) return;
-    window.clickInProgress = true;
+window.handleMemoClick = (event, memoId) => {
+    // イベント伝播停止
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    // 重複実行防止（より強力に）
+    const clickKey = `memo-click-${memoId}`;
+    if (window[clickKey]) return;
+    window[clickKey] = true;
     
     setTimeout(() => {
-        window.clickInProgress = false;
-    }, 300);
+        delete window[clickKey];
+    }, 500);
     
     toggleMemoDetail(memoId);
 };
@@ -290,7 +297,10 @@ window.toggleMemoDetail = (memoId) => {
 // メモ細分化機能
 window.subdivideMemo = (memoId) => {
     const memo = memoData.find(m => m.id === memoId);
-    if (!memo) return;
+    if (!memo) {
+        alert('親タスクが見つかりません');
+        return;
+    }
     
     const subdivisionText = prompt(`【${memo.text.substring(0, 30)}...】を細分化します。\n\n細分化したいタスクを入力してください：`);
     
@@ -309,28 +319,42 @@ window.subdivideMemo = (memoId) => {
         date: now.toLocaleDateString('ja-JP'),
         time: now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
         parentId: memo.id, // 親タスクID
-        level: memo.level + 1 // 一階層下
+        level: (memo.level || 0) + 1 // 一階層下
     };
+    
+    console.log('🔀 細分化実行:', {
+        parent: memo.text.substring(0, 20),
+        child: childMemo.text,
+        parentId: childMemo.parentId,
+        level: childMemo.level
+    });
     
     // 親タスクの直後に挿入
     const parentIndex = memoData.findIndex(m => m.id === memoId);
     if (parentIndex !== -1) {
         memoData.splice(parentIndex + 1, 0, childMemo);
+        console.log('🔀 子タスク挿入位置:', parentIndex + 1);
     } else {
         memoData.unshift(childMemo);
+        console.log('🔀 子タスクを先頭に追加');
     }
+    
+    console.log('🔀 現在のmemoData件数:', memoData.length);
     
     // Firebaseに保存
     if (currentUser) {
         saveMemoToFirebase(childMemo);
+        console.log('🔀 Firebaseに保存実行');
     } else {
         localStorage.setItem('memos', JSON.stringify(memoData));
+        console.log('🔀 LocalStorageに保存実行');
     }
     
     updateMemoDisplay();
     updateMemoStats();
     
-    log(`🔀 タスク細分化: ${memo.text.substring(0, 20)}... → ${subdivisionText.substring(0, 20)}...`);
+    log(`🔀 タスク細分化完了: ${memo.text.substring(0, 20)}... → ${subdivisionText.substring(0, 20)}...`);
+    alert(`細分化完了！「${subdivisionText}」を追加しました。`);
 };
 
 // メモ表示を更新（既存関数を修正）
