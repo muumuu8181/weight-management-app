@@ -154,6 +154,12 @@ function saveMemoToFirebase(memo) {
     });
 }
 
+// フィルタークリア機能
+window.clearFilter = () => {
+    document.getElementById('memoFilter').value = '';
+    filterMemos();
+};
+
 // メモフィルター機能
 window.filterMemos = () => {
     const filterText = document.getElementById('memoFilter').value.toLowerCase();
@@ -166,7 +172,21 @@ window.filterMemos = () => {
         );
     
     displayFilteredMemos(filteredData);
+    updateFilterCount(filteredData.length, memoData.length);
 };
+
+// フィルター件数表示
+function updateFilterCount(filteredCount, totalCount) {
+    const countDiv = document.getElementById('filterCount');
+    if (countDiv) {
+        const filterText = document.getElementById('memoFilter').value;
+        if (filterText && filteredCount < totalCount) {
+            countDiv.textContent = `${filteredCount}/${totalCount} 件`;
+        } else {
+            countDiv.textContent = '';
+        }
+    }
+}
 
 // フィルター済みメモを表示
 function displayFilteredMemos(filteredData) {
@@ -200,7 +220,10 @@ function displayFilteredMemos(filteredData) {
                         ${priorityBadge}${timeframeBadge}${categoryBadge}
                         <small class="memo-date">${memo.date} ${memo.time}</small>
                     </div>
-                    <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn">🗑️</button>
+                    <div style="display: flex; gap: 5px;">
+                        <button onclick="editMemo(${memo.id})" style="background: #17a2b8; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">✏️</button>
+                        <button onclick="deleteMemo(${memo.id})" class="memo-delete-btn">🗑️</button>
+                    </div>
                 </div>
                 <div class="memo-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     ${truncatedText}
@@ -221,6 +244,96 @@ function updateMemoDisplay() {
     } else {
         displayFilteredMemos(memoData);
     }
+}
+
+// メモ編集機能
+window.editMemo = (memoId) => {
+    const memo = memoData.find(m => m.id === memoId);
+    if (!memo) return;
+    
+    // 編集フォームに値を設定
+    document.getElementById('newMemoText').value = memo.text;
+    document.getElementById('memoCategory').value = memo.category || '';
+    
+    // ボタン状態を設定
+    selectPriority(memo.priority || '');
+    selectTimeframe(memo.timeframe || '');
+    
+    // 編集モードの表示
+    const addButton = document.querySelector('[onclick="addMemo()"]');
+    addButton.textContent = '📝 メモを更新';
+    addButton.onclick = () => updateMemo(memoId);
+    
+    // キャンセルボタンを追加
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = '❌ キャンセル';
+    cancelButton.style.cssText = 'background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; margin-left: 10px;';
+    cancelButton.onclick = cancelEdit;
+    addButton.parentNode.appendChild(cancelButton);
+    
+    log(`✏️ メモ編集開始: ${memo.text.substring(0, 30)}...`);
+};
+
+// メモ更新
+window.updateMemo = async (memoId) => {
+    const memoText = document.getElementById('newMemoText').value.trim();
+    const category = document.getElementById('memoCategory').value;
+    const priority = document.getElementById('memoPriority').value;
+    const timeframe = document.getElementById('memoTimeframe').value;
+    
+    if (!memoText) {
+        alert('メモ内容を入力してください');
+        return;
+    }
+    
+    // メモデータを更新
+    const memoIndex = memoData.findIndex(m => m.id === memoId);
+    if (memoIndex !== -1) {
+        memoData[memoIndex] = {
+            ...memoData[memoIndex],
+            text: memoText,
+            category: category,
+            priority: priority,
+            timeframe: timeframe
+        };
+        
+        // Firebaseに保存
+        if (currentUser) {
+            await saveMemoToFirebase(memoData[memoIndex]);
+        } else {
+            localStorage.setItem('memos', JSON.stringify(memoData));
+        }
+        
+        updateMemoDisplay();
+        updateMemoStats();
+        cancelEdit();
+        
+        log(`✅ メモ更新完了: ${memoText.substring(0, 30)}...`);
+    }
+};
+
+// 編集キャンセル
+function cancelEdit() {
+    // フォームをクリア
+    document.getElementById('newMemoText').value = '';
+    document.getElementById('memoCategory').value = '';
+    selectPriority('');
+    selectTimeframe('');
+    
+    // ボタンを戻す
+    const addButton = document.querySelector('[onclick^="updateMemo"]') || document.querySelector('button:contains("📝 メモを更新")');
+    if (addButton) {
+        addButton.textContent = '➕ メモを追加';
+        addButton.onclick = addMemo;
+    }
+    
+    // キャンセルボタンを削除
+    const cancelButton = document.querySelector('[onclick="cancelEdit"]');
+    if (cancelButton) {
+        cancelButton.remove();
+    }
+    
+    log('❌ メモ編集をキャンセル');
 }
 
 // メモを削除
