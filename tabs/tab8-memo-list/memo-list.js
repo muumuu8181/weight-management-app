@@ -419,11 +419,9 @@ window.subdivideMemo = (memoId) => {
         console.log('🔀 Firebaseに保存実行');
         
         // Firebase保存後に再読み込みして表示を更新
-        setTimeout(async () => {
+        setTimeout(() => {
             console.log('🔀 Firebase保存後の再読み込み実行');
-            await loadMemosFromFirebase();
-            updateMemoDisplay();
-            updateMemoStats();
+            loadMemoData(); // 正しい関数名に修正
             console.log('🔀 表示更新完了');
         }, 500); // 500ms後に再読み込み
     } else {
