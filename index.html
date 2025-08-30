@@ -2475,9 +2475,10 @@
                     tabContent.classList.remove('hidden');
                     
                     // 動的読み込み（分離されたタブのみ）
-                    if (i === 1) {
-                        await loadTabContent(1, 'weight');
-                    }
+                    // 一時的に無効化 - 従来通りの動作を維持
+                    // if (i === 1) {
+                    //     await loadTabContent(1, 'weight');
+                    // }
                 } else {
                     // 非アクティブタブ
                     tabBtn.style.background = '#f8f9fa';
