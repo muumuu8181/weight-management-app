@@ -344,7 +344,10 @@ window.toggleMemoDetail = (memoId) => {
     
     if (isExpanded) {
         // 詳細表示中 -> 省略表示に戻す
-        const truncatedText = memo.text.length > 50 ? memo.text.substring(0, 50) + '...' : memo.text;
+        // レベル別制限を使用（統一）
+        const levelLimits = { 0: 20, 1: 17, 2: 14, 3: 11 };
+        const charLimit = levelLimits[memo.level || 0] || 20;
+        const truncatedText = memo.text.length > charLimit ? memo.text.substring(0, charLimit) + '...' : memo.text;
         textElement.textContent = indent + truncatedText;
         parentDiv.style.whiteSpace = 'nowrap';
         parentDiv.style.overflow = 'hidden';
