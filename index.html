@@ -704,7 +704,6 @@
                         <div style="display: flex; align-items: center; gap: 5px;">
                             <span id="filterCount" style="font-size: 12px; color: #666;"></span>
                             <button class="universal-copy-btn" onclick="copyAllMemos()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 全メモをコピー</button>
-                            <button onclick="clearAllMemos()" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">🗑️ 全削除</button>
                             <button id="integrationModeBtn" onclick="toggleIntegrationMode()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">🔗 統合モード</button>
                             <button id="executeIntegrationBtn" onclick="executeIntegration()" style="background: #007bff; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; display: none; opacity: 0.5;" disabled>⚡ 統合実行</button>
                         </div>
@@ -841,7 +840,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.17';
+        const APP_VERSION = 'v1.18';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
