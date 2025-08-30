@@ -625,7 +625,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.80';
+        const APP_VERSION = 'v0.81';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1245,8 +1245,8 @@
         };
 
 
-        // 認証状態の監視（改良版 + リダイレクト対応）
-        auth.onAuthStateChanged(async (user) => {
+        // 認証状態の監視（改良版）
+        auth.onAuthStateChanged((user) => {
             currentUser = user;
             if (user) {
                 log(`✅ 認証状態確認: ${user.displayName} でログイン中`);
@@ -1254,15 +1254,6 @@
                 showUserInterface(user);
                 loadUserWeightData(user.uid);
             } else {
-                // リダイレクト結果をチェック（iPhone対応）
-                try {
-                    const result = await auth.getRedirectResult();
-                    if (result.user) {
-                        log(`✅ リダイレクトログイン成功: ${result.user.displayName}`);
-                    }
-                } catch (error) {
-                    // リダイレクトエラーは無視（初回アクセス時など）
-                }
                 log('🔒 認証状態: 未ログイン');
                 showLoginInterface();
             }
@@ -1277,34 +1268,26 @@
                 log('🔐 Googleログイン開始...');
                 const provider = new firebase.auth.GoogleAuthProvider();
                 
-                // モバイルデバイス検出（iPhone専用対応）
+                // モバイルデバイス検出（表示用）
                 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                const isIPhone = /iPhone|iPad|iPod/i.test(navigator.userAgent);
                 
-                // iPhoneはリダイレクト方式、それ以外はポップアップ方式
-                if (isIPhone) {
-                    log('📱 iPhone/iPad検出 - リダイレクト方式でログイン（Safari対応）');
-                    log('🔄 ページがGoogleに移動します...');
-                    // リダイレクト方式（iPhone専用）
-                    await auth.signInWithRedirect(provider);
-                    return; // リダイレクトするのでここで終了
-                } else if (isMobile) {
+                if (isMobile) {
                     log('📱 モバイルデバイス検出 - ポップアップ方式でログイン');
                     log('💡 ポップアップが途中で止まる場合は、ブラウザ設定の確認が必要です');
                 } else {
                     log('🖥️ デスクトップデバイス - ポップアップ方式でログイン');
                 }
                 
-                // ポップアップブロック検知のためのタイムアウト設定（iPhone以外）
+                // ポップアップブロック検知のためのタイムアウト設定
                 log('🪟 ポップアップウィンドウでGoogleログインを開始...');
                 
                 const loginPromise = auth.signInWithPopup(provider);
                 
-                // タイムアウト検知（15秒でポップアップが開かない場合）
+                // タイムアウト検知（15秒でポップアップが開かない場合）- iPhone Safari対応
                 const timeoutPromise = new Promise((_, reject) => {
                     setTimeout(() => {
                         reject(new Error('ポップアップタイムアウト - ブロックされた可能性があります'));
-                    }, 15000);  // 元の15秒に戻す（iPhone以外用）
+                    }, 15000);
                 });
                 
                 try {
