@@ -417,13 +417,21 @@ window.subdivideMemo = (memoId) => {
     if (currentUser) {
         saveMemoToFirebase(childMemo);
         console.log('🔀 Firebaseに保存実行');
+        
+        // Firebase保存後に再読み込みして表示を更新
+        setTimeout(async () => {
+            console.log('🔀 Firebase保存後の再読み込み実行');
+            await loadMemosFromFirebase();
+            updateMemoDisplay();
+            updateMemoStats();
+            console.log('🔀 表示更新完了');
+        }, 500); // 500ms後に再読み込み
     } else {
         localStorage.setItem('memos', JSON.stringify(memoData));
         console.log('🔀 LocalStorageに保存実行');
+        updateMemoDisplay();
+        updateMemoStats();
     }
-    
-    updateMemoDisplay();
-    updateMemoStats();
     
     log(`🔀 タスク細分化完了: ${memo.text.substring(0, 20)}... → ${subdivisionText.substring(0, 20)}...`);
 };
@@ -732,15 +740,18 @@ window.setDeadline = async (memoId) => {
     
     console.log('✅ 締切設定対象発見:', memo.text.substring(0, 30));
     
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD
     const currentDeadline = memo.deadline || '';
     
     const newDeadline = prompt(
         `【${memo.text.substring(0, 30)}...】の締切を設定\n\n` +
         `現在の締切: ${currentDeadline || '未設定'}\n\n` +
         `新しい締切を入力してください（YYYY-MM-DD形式）:\n` +
-        `例: ${today}`,
-        currentDeadline
+        `例: ${tomorrowStr}（明日）`,
+        currentDeadline || tomorrowStr  // デフォルトを明日にする
     );
     
     if (newDeadline === null) return; // キャンセル
