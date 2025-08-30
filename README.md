@@ -52,6 +52,10 @@ weight-management-app/
 1. **core/フォルダは絶対に変更しない**
 2. **バージョン番号は0.01刻みで更新**
 3. **変更後は必ずgit push**
+4. **タブ管理ルール** - 詳細は [TAB_MANAGEMENT_RULES.md](docs/TAB_MANAGEMENT_RULES.md)
+   - 一つのタブにつき一つのフォルダ（HTML/CSS/JS 3ファイル構成）
+   - 共通HTMLに直接記述禁止
+   - `tabs/tab{番号}-{機能名}/` 形式でフォルダ命名
 
 ## 🔧 ローカル開発
 

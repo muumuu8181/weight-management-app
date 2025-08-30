@@ -821,7 +821,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.92';
+        const APP_VERSION = 'v0.93';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -3298,7 +3298,8 @@ ${document.getElementById('logArea').innerText}`;
             }
         };
 
-        // ========== 部屋片付け機能 ==========
+        // ========== 部屋片付け機能 ========== (分離済み - 全てコメントアウト)
+        /*
         
         // 部屋片付け用変数 (分離済み - room-cleaning.jsに移動)
         // let allRoomData = [];
@@ -3728,9 +3729,11 @@ ${document.getElementById('logArea').innerText}`;
                 log(`❌ 削除エラー: ${error.message}`);
             }
         };
+        */ // 部屋片付け機能コメント終了
 
-        // =====================
-        // メモリスト機能 (分離済み - memo-list.jsに移動)
+        // ===================== 
+        // メモリスト機能 (分離済み - memo-list.jsに移動) - 全てコメントアウト
+        /*
         // =====================
         // let memoData = [];
 
@@ -4001,6 +4004,7 @@ ${document.getElementById('logArea').innerText}`;
                 loadMemoData();
             }
         });
+        */ // メモリスト機能コメント終了
 
     </script>
 </body>
