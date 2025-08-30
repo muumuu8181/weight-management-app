@@ -898,12 +898,11 @@ window.executeIntegration = async () => {
         return;
     }
     
-    // 統合タスク名を入力
-    const defaultName = `${memo1.text.substring(0, 15)} + ${memo2.text.substring(0, 15)}`;
+    // 統合タスク名を入力（デフォルトは空）
     const integrationName = prompt(
         '統合タスクの名前を入力してください：\n\n' +
         `統合対象：\n・${memo1.text}\n・${memo2.text}`,
-        defaultName
+        '' // デフォルトを空に
     );
     
     if (integrationName === null) {
