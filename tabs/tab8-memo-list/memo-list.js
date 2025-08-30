@@ -426,7 +426,6 @@ window.subdivideMemo = (memoId) => {
     updateMemoStats();
     
     log(`🔀 タスク細分化完了: ${memo.text.substring(0, 20)}... → ${subdivisionText.substring(0, 20)}...`);
-    alert(`細分化完了！「${subdivisionText}」を追加しました。`);
 };
 
 // メモ表示を更新（既存関数を修正）
