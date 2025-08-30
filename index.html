@@ -821,7 +821,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v0.94';
+        const APP_VERSION = 'v0.95';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2503,6 +2503,9 @@
         window.switchTab = async (tabNumber) => {
             currentTab = tabNumber;
             
+            // 現在のタブを localStorage に保存
+            localStorage.setItem('currentTab', tabNumber);
+            
             // すべてのタブボタンを非アクティブに（16タブ対応）
             for (let i = 1; i <= 16; i++) {
                 const tabBtn = document.getElementById(`tab${i}`);
@@ -2574,8 +2577,10 @@
             document.getElementById('weightHistoryPanel').classList.remove('hidden');
             document.getElementById('userName').textContent = user.displayName;
             
-            // デフォルトでタブ1を表示
-            switchTab(1);
+            // 保存されたタブまたはデフォルトでタブ1を表示
+            const savedTab = localStorage.getItem('currentTab');
+            const tabToShow = savedTab ? parseInt(savedTab) : 1;
+            switchTab(tabToShow);
             
             // カスタム項目を復元（ログイン時に実行）
             loadCustomItems();
