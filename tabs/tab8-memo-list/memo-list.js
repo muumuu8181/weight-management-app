@@ -2,6 +2,9 @@
 
 // メモリスト関連のグローバル変数
 let memoData = [];
+let filteredMemoData = []; // フィルタリング後のデータ
+let activeKeywords = []; // アクティブなキーワードフィルター
+let keywordFilterCount = 1; // キーワードフィルターの個数
 
 // 統合機能関連のグローバル変数
 let isIntegrationMode = false;
@@ -1017,3 +1020,268 @@ async function updateHierarchyRecursively(targetId, newParentId, newLevel) {
         await updateHierarchyRecursively(child.id, targetId, newLevel + 1);
     }
 }
+
+// ========================================
+// ソート・フィルタリング機能
+// ========================================
+
+// ソートとフィルターを適用
+window.applySortAndFilter = () => {
+    log('🔍 ソート・フィルタリング実行中...');
+    
+    // フィルタリングを適用
+    applyFiltering();
+    
+    // ソートを適用
+    applySorting();
+    
+    // メモ表示を更新
+    displayMemos();
+    
+    // フィルター状態を更新
+    updateFilterStatus();
+};
+
+// フィルタリング処理
+function applyFiltering() {
+    // 基本データからスタート
+    filteredMemoData = [...memoData];
+    
+    // キーワードフィルタリング
+    if (activeKeywords.length > 0) {
+        for (const keyword of activeKeywords) {
+            if (keyword.trim()) {
+                filteredMemoData = filteredMemoData.filter(memo => 
+                    memo.text.toLowerCase().includes(keyword.toLowerCase()) ||
+                    memo.category.toLowerCase().includes(keyword.toLowerCase())
+                );
+            }
+        }
+    }
+    
+    log(`🔍 フィルタリング後: ${filteredMemoData.length}件`);
+}
+
+// ソート処理
+function applySorting() {
+    const sortOption = document.getElementById('sortOption').value;
+    
+    switch(sortOption) {
+        case 'newest':
+            filteredMemoData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            break;
+        case 'oldest':
+            filteredMemoData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            break;
+        case 'abc':
+            filteredMemoData.sort((a, b) => a.text.localeCompare(b.text, 'ja'));
+            break;
+        case 'priority':
+            const priorityOrder = {'S': 4, 'A': 3, 'B': 2, 'C': 1, '': 0};
+            filteredMemoData.sort((a, b) => (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0));
+            break;
+        case 'category':
+            filteredMemoData.sort((a, b) => a.category.localeCompare(b.category, 'ja'));
+            break;
+        default:
+            break;
+    }
+    
+    log(`📊 ソート完了: ${sortOption}`);
+}
+
+// 文字フィルター
+window.filterByFirstChar = (char) => {
+    log(`🔤 文字フィルター: ${char}`);
+    
+    // 文字フィルターボタンのスタイル更新
+    document.querySelectorAll('.char-filter-btn').forEach(btn => {
+        btn.style.background = '#e9ecef';
+        btn.style.color = '#495057';
+    });
+    
+    const clickedBtn = event.target;
+    clickedBtn.style.background = '#007bff';
+    clickedBtn.style.color = 'white';
+    
+    // フィルタリング処理
+    if (char === '数') {
+        filteredMemoData = memoData.filter(memo => /^[0-9]/.test(memo.text));
+    } else if (char === 'A') {
+        filteredMemoData = memoData.filter(memo => /^[A-Za-z]/.test(memo.text));
+    } else {
+        // ひらがなフィルター
+        const charRanges = {
+            'あ': ['あ', 'お'], 'か': ['か', 'ご'], 'さ': ['さ', 'ぞ'], 
+            'た': ['た', 'ど'], 'な': ['な', 'の'], 'は': ['は', 'ぽ'],
+            'ま': ['ま', 'も'], 'や': ['や', 'よ'], 'ら': ['ら', 'ろ'], 'わ': ['わ', 'ん']
+        };
+        
+        if (charRanges[char]) {
+            const [start, end] = charRanges[char];
+            filteredMemoData = memoData.filter(memo => {
+                const firstChar = memo.text.charAt(0);
+                return firstChar >= start && firstChar <= end;
+            });
+        }
+    }
+    
+    // ソートも適用
+    applySorting();
+    
+    // 表示更新
+    displayMemos();
+    updateFilterStatus();
+};
+
+// キーワード入力処理
+window.handleKeywordInput = (index) => {
+    const input = document.getElementById(`keywordInput${index}`);
+    const keyword = input.value.trim();
+    
+    // キーワードを更新
+    activeKeywords[index - 1] = keyword;
+    
+    // リアルタイムフィルタリング
+    applySortAndFilter();
+};
+
+// キーワードフィルター追加
+window.addKeywordFilter = () => {
+    keywordFilterCount++;
+    
+    const keywordFilters = document.getElementById('keywordFilters');
+    
+    // 新しい入力フィールドを追加
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.id = `keywordInput${keywordFilterCount}`;
+    newInput.placeholder = `キーワード ${keywordFilterCount}...`;
+    newInput.style.cssText = 'padding: 5px 10px; border: 1px solid #ced4da; border-radius: 4px; margin-right: 5px; margin-top: 5px; width: 150px;';
+    newInput.onkeyup = () => handleKeywordInput(keywordFilterCount);
+    
+    // 削除ボタン
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = '❌';
+    removeBtn.style.cssText = 'background: #dc3545; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; margin-right: 5px; margin-top: 5px;';
+    removeBtn.onclick = () => removeKeywordFilter(keywordFilterCount);
+    
+    // 改行のために div で囲む
+    const filterDiv = document.createElement('div');
+    filterDiv.id = `keywordFilter${keywordFilterCount}`;
+    filterDiv.appendChild(newInput);
+    filterDiv.appendChild(removeBtn);
+    
+    keywordFilters.appendChild(filterDiv);
+    
+    // activeKeywords配列を拡張
+    activeKeywords.push('');
+    
+    log(`➕ キーワードフィルター追加: ${keywordFilterCount}`);
+};
+
+// キーワードフィルター削除
+function removeKeywordFilter(index) {
+    const filterDiv = document.getElementById(`keywordFilter${index}`);
+    if (filterDiv) {
+        filterDiv.remove();
+    }
+    
+    // activeKeywordsから削除
+    activeKeywords = activeKeywords.filter((_, i) => i !== index - 1);
+    
+    // フィルタリング再実行
+    applySortAndFilter();
+    
+    log(`❌ キーワードフィルター削除: ${index}`);
+}
+
+// 全フィルタークリア
+window.clearAllFilters = () => {
+    // キーワードクリア
+    activeKeywords = [];
+    document.getElementById('keywordInput1').value = '';
+    
+    // 追加されたキーワードフィルターを削除
+    for (let i = 2; i <= keywordFilterCount; i++) {
+        const filterDiv = document.getElementById(`keywordFilter${i}`);
+        if (filterDiv) {
+            filterDiv.remove();
+        }
+    }
+    keywordFilterCount = 1;
+    
+    // 文字フィルターボタンリセット
+    document.querySelectorAll('.char-filter-btn').forEach(btn => {
+        btn.style.background = '#e9ecef';
+        btn.style.color = '#495057';
+    });
+    
+    // ソートリセット
+    document.getElementById('sortOption').value = 'newest';
+    
+    // フィルタリング再実行
+    applySortAndFilter();
+    
+    log('🗑️ 全フィルタークリア完了');
+};
+
+// フィルター状態表示更新
+function updateFilterStatus() {
+    const statusDiv = document.getElementById('filterStatus');
+    const total = memoData.length;
+    const filtered = filteredMemoData.length;
+    const sortOption = document.getElementById('sortOption').value;
+    
+    let statusText = `📊 ${filtered}/${total}件を表示中`;
+    
+    if (activeKeywords.filter(k => k.trim()).length > 0) {
+        const keywords = activeKeywords.filter(k => k.trim()).join(', ');
+        statusText += ` | 🔎 キーワード: ${keywords}`;
+    }
+    
+    const sortLabels = {
+        'newest': '新しい順',
+        'oldest': '古い順', 
+        'abc': 'あいうえお順',
+        'priority': '重要度順',
+        'category': 'カテゴリ順'
+    };
+    statusText += ` | 📊 ${sortLabels[sortOption] || sortOption}`;
+    
+    statusDiv.textContent = statusText;
+    
+    // 色分け
+    if (filtered < total) {
+        statusDiv.style.background = '#fff3cd';
+        statusDiv.style.borderColor = '#ffeaa7';
+        statusDiv.style.color = '#856404';
+    } else {
+        statusDiv.style.background = '#ffffff';
+        statusDiv.style.borderColor = '#dee2e6';
+        statusDiv.style.color = '#6c757d';
+    }
+}
+
+// displayMemos関数をオーバーライド
+const originalDisplayMemos = window.displayMemos;
+window.displayMemos = () => {
+    // filteredMemoDataが設定されていない場合は全データを使用
+    if (!filteredMemoData || filteredMemoData.length === 0) {
+        filteredMemoData = [...memoData];
+    }
+    
+    // フィルター済みデータで表示処理を実行
+    const tempMemoData = [...memoData];
+    memoData.length = 0;
+    memoData.push(...filteredMemoData);
+    
+    // 元のdisplayMemos関数を実行
+    if (originalDisplayMemos) {
+        originalDisplayMemos();
+    }
+    
+    // 元のデータに復元
+    memoData.length = 0;
+    memoData.push(...tempMemoData);
+};
