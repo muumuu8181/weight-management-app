@@ -1,5 +1,5 @@
-<!-- タブ8: メモリスト機能 -->
-<div id="tab8Content">
+<!-- 分離されたHTMLを動的読み込み -->
+<div id="tab8ContentContainer"></div>
     <!-- メモ追加エリア -->
     <div class="input-card" id="memoInput">
         <h3>📝 メモリスト</h3>
@@ -32,8 +32,7 @@
                 <button type="button" class="priority-btn" data-priority="S" onclick="selectPriority('S')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🔥 S</button>
                 <button type="button" class="priority-btn" data-priority="A" onclick="selectPriority('A')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⚡ A</button>
                 <button type="button" class="priority-btn" data-priority="B" onclick="selectPriority('B')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📋 B</button>
-                <button type="button" class="priority-btn" data-priority="C" onclick="selectPriority('C')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📝 C</button>
-                <button type="button" class="priority-btn" data-priority="D" onclick="selectPriority('D')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📌 D</button>
+                <!-- <button type="button" class="priority-btn" data-priority="C" onclick="selectPriority('C')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📝 C</button> -->
             </div>
             <input type="hidden" id="memoPriority" value="">
         </div>
@@ -55,70 +54,26 @@
         </div>
     </div>
 
-    <!-- ソート・フィルタリング機能エリア -->
-    <div class="filter-sort-card" style="margin-bottom: 15px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6;">
-        <h4 style="margin: 0 0 15px 0; color: #495057;">🔍 ソート・フィルタリング</h4>
-        
-        <!-- ソート機能 -->
-        <div style="margin-bottom: 15px;">
-            <label style="font-weight: bold; margin-right: 10px;">📊 ソート:</label>
-            <select id="sortOption" onchange="applySortAndFilter()" style="padding: 5px 10px; border: 1px solid #ced4da; border-radius: 4px; margin-right: 15px;">
-                <option value="newest">📅 新しい順</option>
-                <option value="oldest">📅 古い順</option>
-                <option value="abc">🔤 あいうえお順</option>
-                <option value="priority">🎯 重要度順</option>
-                <option value="category">🏷️ カテゴリ順</option>
-            </select>
-        </div>
-
-        <!-- キーワードフィルタリング -->
-        <div style="margin-bottom: 15px;">
-            <label style="font-weight: bold; margin-right: 10px;">🔎 キーワード検索:</label>
-            <div id="keywordFilters" style="display: inline-block;">
-                <input type="text" id="keywordInput1" placeholder="キーワードを入力..." onkeyup="handleKeywordInput(1)" style="padding: 5px 10px; border: 1px solid #ced4da; border-radius: 4px; margin-right: 5px; width: 150px;">
-                <button onclick="addKeywordFilter()" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-right: 10px;">➕ 追加</button>
-            </div>
-            <button onclick="clearAllFilters()" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">🗑️ クリア</button>
-        </div>
-
-        <!-- アルファベットフィルター -->
-        <div style="margin-bottom: 10px;">
-            <label style="font-weight: bold; margin-right: 10px;">🔤 文字フィルター:</label>
-            <div style="display: inline-block;">
-                <button onclick="filterByFirstChar('あ')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">あ</button>
-                <button onclick="filterByFirstChar('か')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">か</button>
-                <button onclick="filterByFirstChar('さ')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">さ</button>
-                <button onclick="filterByFirstChar('た')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">た</button>
-                <button onclick="filterByFirstChar('な')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">な</button>
-                <button onclick="filterByFirstChar('は')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">は</button>
-                <button onclick="filterByFirstChar('ま')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">ま</button>
-                <button onclick="filterByFirstChar('や')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">や</button>
-                <button onclick="filterByFirstChar('ら')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">ら</button>
-                <button onclick="filterByFirstChar('わ')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">わ</button>
-                <button onclick="filterByFirstChar('A')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">A</button>
-                <button onclick="filterByFirstChar('数')" class="char-filter-btn" style="background: #e9ecef; border: 1px solid #adb5bd; padding: 3px 8px; margin: 1px; border-radius: 3px; cursor: pointer; font-size: 12px;">数</button>
-            </div>
-        </div>
-
-        <!-- フィルター状態表示 -->
-        <div id="filterStatus" style="margin-top: 10px; padding: 8px; background: #ffffff; border-radius: 4px; border: 1px solid #dee2e6; font-size: 14px; color: #6c757d;">
-            📊 全てのメモを表示中
-        </div>
-    </div>
-
     <!-- メモ一覧表示 -->
     <div class="input-card" id="memoList">
-        <h3>📋 メモ一覧 
-            <button class="universal-copy-btn" onclick="copyAllMemos()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 全メモをコピー</button>
-            <button id="integrationModeBtn" onclick="toggleIntegrationMode()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; margin-left: 5px;">🔗 統合モード</button>
-            <button id="executeIntegrationBtn" onclick="executeIntegration()" style="background: #007bff; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; margin-left: 5px; display: none; opacity: 0.5;" disabled>⚡ 統合実行</button>
+        <h3 style="display: flex; justify-content: space-between; align-items: center;">
+            <span>📋 メモ一覧</span>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <span id="filterCount" style="font-size: 12px; color: #666;"></span>
+                <button class="universal-copy-btn" onclick="copyAllMemos()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 全メモをコピー</button>
+                <button id="integrationModeBtn" onclick="toggleIntegrationMode()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">🔗 統合モード</button>
+                <button id="executeIntegrationBtn" onclick="executeIntegration()" style="background: #007bff; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; display: none; opacity: 0.5;" disabled>⚡ 統合実行</button>
+            </div>
         </h3>
         
         <!-- フィルター機能 -->
         <div style="margin-bottom: 15px;">
-            <input type="text" id="memoFilter" placeholder="🔍 メモを検索..." 
-                oninput="filterMemos()" 
-                style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" id="memoFilter" placeholder="🔍 メモを検索..." 
+                    oninput="filterMemos()" 
+                    style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                <button onclick="clearFilter()" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px;">✕</button>
+            </div>
         </div>
         
         <div class="data-area" id="memoListArea">
@@ -148,4 +103,3 @@
             </div>
         </div>
     </div>
-</div>
