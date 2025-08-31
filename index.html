@@ -835,7 +835,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.45';
+        const APP_VERSION = 'v1.46';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2561,6 +2561,12 @@
                     // 動的読み込み（分離されたタブのみ）
                     if (i === 1) {
                         await loadTabContent(1, 'weight');
+                    } else if (i === 2) {
+                        await loadTabContent(2, 'sleep');
+                    } else if (i === 3) {
+                        await loadTabContent(3, 'room-cleaning');
+                    } else if (i === 8) {
+                        await loadTabContent(8, 'memo-list');
                     }
                 } else {
                     // 非アクティブタブ
