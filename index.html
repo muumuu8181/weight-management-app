@@ -818,7 +818,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.56';
+        const APP_VERSION = 'v1.57';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2556,9 +2556,13 @@
                     
                     // 動的読み込み（分離されたタブのみ）
                     // tab1は体重管理要素が共通領域にあるため動的読み込み無効
-                    // if (i === 1) {
-                    //     await loadTabContent(1, 'weight');
-                    // }
+                    if (i === 2) {
+                        await loadTabContent(2, 'sleep');
+                    } else if (i === 3) {
+                        await loadTabContent(3, 'room-cleaning');
+                    } else if (i === 8) {
+                        await loadTabContent(8, 'memo-list');
+                    }
                 } else {
                     // 非アクティブタブ
                     if (tabBtn) {

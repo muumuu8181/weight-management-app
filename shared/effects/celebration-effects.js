@@ -8,6 +8,8 @@ class CelebrationEffects {
         this.activeEffects = new Set();
         this.soundEnabled = true;
         this.vibrationEnabled = true;
+        this.lastCelebrationTime = 0;
+        this.debounceDelay = 1000; // 1秒間は重複実行を防ぐ
         this.init();
     }
 
@@ -40,6 +42,16 @@ class CelebrationEffects {
 
     // 🎊 メイン祝福エフェクト（全部入り）
     async celebrate(options = {}) {
+        const now = Date.now();
+        
+        // デバウンス: 短時間での重複実行を防ぐ
+        if (now - this.lastCelebrationTime < this.debounceDelay) {
+            console.log('🎉 Celebration debounced - too frequent calls');
+            return;
+        }
+        
+        this.lastCelebrationTime = now;
+
         const config = {
             type: 'achievement', // achievement, record, milestone, victory
             title: '🎉 新記録達成！',
@@ -50,10 +62,12 @@ class CelebrationEffects {
             ...options
         };
 
-        const effectId = Date.now().toString();
+        const effectId = now.toString();
         this.activeEffects.add(effectId);
 
         try {
+            console.log(`🎉 Starting celebration effect: ${config.type} - ${config.title}`);
+            
             // 複数エフェクトを同時実行
             await Promise.all([
                 this.showAchievementPopup(config),
@@ -64,11 +78,16 @@ class CelebrationEffects {
             ]);
         } finally {
             this.activeEffects.delete(effectId);
+            console.log(`🎉 Celebration effect completed: ${effectId}`);
         }
     }
 
     // 🏆 達成ポップアップ
     async showAchievementPopup(config) {
+        // 既存のポップアップを削除
+        const existingPopups = document.querySelectorAll('.achievement-popup');
+        existingPopups.forEach(popup => popup.remove());
+
         const popup = document.createElement('div');
         popup.className = 'achievement-popup';
         popup.innerHTML = `
@@ -80,18 +99,25 @@ class CelebrationEffects {
             </div>
         `;
 
-        document.getElementById('celebration-container').appendChild(popup);
+        const container = document.getElementById('celebration-container');
+        if (container) {
+            container.appendChild(popup);
 
-        // アニメーション開始
-        requestAnimationFrame(() => {
-            popup.style.animation = `achievementSlideIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)`;
-        });
+            // アニメーション開始
+            requestAnimationFrame(() => {
+                popup.style.animation = `achievementSlideIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)`;
+            });
 
-        // 自動削除
-        setTimeout(() => {
-            popup.style.animation = `achievementSlideOut 0.5s ease-in`;
-            setTimeout(() => popup.remove(), 500);
-        }, config.duration - 500);
+            // 自動削除
+            setTimeout(() => {
+                if (popup.parentNode) {
+                    popup.style.animation = `achievementSlideOut 0.5s ease-in`;
+                    setTimeout(() => {
+                        if (popup.parentNode) popup.remove();
+                    }, 500);
+                }
+            }, config.duration - 500);
+        }
     }
 
     // 🎊 紙吹雪爆発
