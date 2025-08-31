@@ -17,6 +17,8 @@
     "test:custom": "node tools/testing/ui-test-runner.js",
     "test:storage": "node tools/data-storage/tests/level1-tests.js",
     "test:weight": "node tools/testing/weight-management-tests.js",
+    "test:data-period": "node tools/testing/simple-data-tester.js",
+    "test:display": "node tools/testing/simple-display-checker.js index.html",
     "storage:demo": "node -e \"console.log('Open tools/data-storage/examples/basic-demo.html in a browser to see the demo')\"",
     "setup": "npm install && bash scripts/setup.sh",
     "help": "echo '🚀 Universal Template v0.01 - カップラーメン方式\\n\\n🚨 開発前必読: MANDATORY_REQUIREMENTS.md\\n\\n基本コマンド:\\n  npm start     # お湯を注ぐだけ - 全自動セットアップ\\n  npm test      # 全機能テスト (報告前必須)\\n  npm run dev   # 開発モード\\n\\n📋 必須要件:\\n  1. Firebase Database 必須使用\\n  2. Google認証 必須実装\\n  3. テスト実行 必須確認\\n  4. ログ・コピー機能 除去禁止\\n  5. Core部分 変更禁止\\n\\n詳細ヘルプ:\\n  node tools/testing/ui-test-runner.js --help'"

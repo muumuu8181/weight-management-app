@@ -88,6 +88,48 @@ npx http-server -p 8000
 http://localhost:8000
 ```
 
+## 🧪 JSDoMテストツール群
+
+### 📋 **利用可能なテストツール**
+
+#### 1. **UI Test Runner** (汎用性: ★★★★★)
+```bash
+# ボタンテスト自動化
+npm run test:ui
+node tools/testing/ui-test-runner.js --target your-page.html --auto-detect
+```
+
+#### 2. **Browser API Enhancements** (汎用性: ★★★★★)
+```javascript
+// JSDoM環境でのブラウザAPI拡張
+const BrowserAPIEnhancements = require('./tools/testing/browser-api-enhancements.js');
+```
+
+#### 3. **Weight Management Tests** (汎用性: ★★★☆☆)
+```bash
+# 体重管理機能単体テスト
+npm run test:weight
+```
+
+#### 4. **Display State Checker** (汎用性: ★★★★☆)
+```bash
+# 要素表示状態診断
+node jsdom_display_checker.js
+```
+
+### 🎯 **テスト実行方法**
+
+```bash
+# 全テスト実行
+npm test
+
+# 個別テスト
+npm run test:ui          # UIボタンテスト
+npm run test:weight      # 体重管理テスト  
+npm run test:storage     # データストレージテスト
+npm run test:firebase    # Firebase接続テスト
+```
+
 ## 📝 ライセンス
 
 - **ライセンス**: MIT
