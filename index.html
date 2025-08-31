@@ -692,7 +692,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.29';
+        const APP_VERSION = 'v1.30';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2465,24 +2465,25 @@
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
             const todayString = `${year}-${month}-${day}`;
-            document.getElementById('dateInput').value = todayString;
-            document.getElementById('weightValue').value = '72.0';
+            // 分離されたタブの要素は動的読み込み後に初期化されるためコメントアウト
+            // document.getElementById('dateInput').value = todayString;
+            // document.getElementById('weightValue').value = '72.0';
             
-            // タイミングボタンの初期状態設定
-            document.querySelectorAll('.timing-btn').forEach(btn => {
-                btn.style.opacity = '0.7';
-                btn.classList.remove('selected');
-            });
+            // タイミングボタンの初期状態設定も分離後に実行
+            // document.querySelectorAll('.timing-btn').forEach(btn => {
+            //     btn.style.opacity = '0.7';
+            //     btn.classList.remove('selected');
+            // });
             
-            // 服装ボタンの初期状態設定
-            document.querySelectorAll('.clothing-btn').forEach(btn => {
-                btn.style.opacity = '0.7';
-                btn.style.transform = 'scale(1)';
-            });
+            // 服装ボタンの初期状態設定も分離後に実行
+            // document.querySelectorAll('.clothing-btn').forEach(btn => {
+            //     btn.style.opacity = '0.7';
+            //     btn.style.transform = 'scale(1)';
+            // });
             
-            // デフォルト服装選択: 上=なし, 下=トランクス
-            selectClothingTop('なし');
-            selectClothingBottom('トランクス');
+            // デフォルト服装選択も分離後に実行
+            // selectClothingTop('なし');
+            // selectClothingBottom('トランクス');
             
         }
 
