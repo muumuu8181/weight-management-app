@@ -835,7 +835,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.42';
+        const APP_VERSION = 'v1.43';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1910,8 +1910,10 @@
                     
                     // 直近7件のみ表示
                     const recentEntries = entries.slice(-7);
+                    log(`🔍 表示対象: ${recentEntries.length}件`);
+                    log(`🔍 要素詳細: ${historyDiv.tagName}#${historyDiv.id}`);
                     
-                    historyDiv.innerHTML = recentEntries.map(entry => {
+                    const historyHTML = recentEntries.map(entry => {
                         let displayText = `${entry.date}`;
                         if (entry.time) displayText += ` ${entry.time}`;
                         displayText += `: ${entry.value || entry.weight}kg`;
@@ -1925,7 +1927,11 @@
                         
                         if (entry.memo) displayText += ` - ${entry.memo}`;
                         return `<div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 0; border-bottom: 1px solid #eee;"><span>${displayText}</span><div style="display: flex; gap: 2px;"><button onclick="editWeightEntry('${entry.id}')" style="background: #007bff; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">✏️</button><button onclick="deleteWeightEntry('${entry.id}')" style="background: #dc3545; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">🗑️</button></div></div>`;
-                    }).join('');
+                    });
+                    
+                    log(`🔍 生成HTML長: ${historyHTML.join('').length}文字`);
+                    historyDiv.innerHTML = historyHTML.join('');
+                    log(`🔍 更新後要素内容: ${historyDiv.innerHTML.substring(0,100)}...`);
                     
                     log(`📈 データ履歴読み込み完了: ${entries.length}件`);
                 } else {
