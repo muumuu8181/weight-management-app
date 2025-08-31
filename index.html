@@ -835,7 +835,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.47';
+        const APP_VERSION = 'v1.48';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2552,11 +2552,18 @@
                 const tabBtn = document.getElementById(`tab${i}`);
                 const tabContent = document.getElementById(`tabContent${i}`);
                 
+                log(`🔍 タブ${i}: ボタン=${tabBtn ? '存在' : 'なし'}, コンテンツ=${tabContent ? '存在' : 'なし'}`);
+                
                 if (i === tabNumber) {
                     // アクティブタブ
-                    tabBtn.style.background = '#007bff';
-                    tabBtn.style.color = 'white';
-                    tabContent.classList.remove('hidden');
+                    if (tabBtn) {
+                        tabBtn.style.background = '#007bff';
+                        tabBtn.style.color = 'white';
+                    }
+                    if (tabContent) {
+                        tabContent.classList.remove('hidden');
+                        log(`✅ タブ${i}コンテンツを表示`);
+                    }
                     
                     // 動的読み込み（分離されたタブのみ）
                     if (i === 1) {
@@ -2564,9 +2571,14 @@
                     }
                 } else {
                     // 非アクティブタブ
-                    tabBtn.style.background = '#f8f9fa';
-                    tabBtn.style.color = '#495057';
-                    tabContent.classList.add('hidden');
+                    if (tabBtn) {
+                        tabBtn.style.background = '#f8f9fa';
+                        tabBtn.style.color = '#495057';
+                    }
+                    if (tabContent) {
+                        tabContent.classList.add('hidden');
+                        log(`❌ タブ${i}コンテンツを非表示`);
+                    }
                 }
             }
             
