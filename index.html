@@ -2572,9 +2572,10 @@
                     }
                     
                     // 動的読み込み（分離されたタブのみ）
-                    if (i === 1) {
-                        await loadTabContent(1, 'weight');
-                    }
+                    // tab1は体重管理要素が共通領域にあるため動的読み込み無効
+                    // if (i === 1) {
+                    //     await loadTabContent(1, 'weight');
+                    // }
                 } else {
                     // 非アクティブタブ
                     if (tabBtn) {
