@@ -835,7 +835,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.48';
+        const APP_VERSION = 'v1.49';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2598,6 +2598,21 @@
             if (titleElement && tabTitles[tabNumber]) {
                 titleElement.textContent = `${tabTitles[tabNumber]} ${APP_VERSION}`;
             }
+            
+            // 体重管理専用要素の表示制御
+            const weightElements = ['weightInput', 'chartPanel', 'weightHistoryPanel'];
+            weightElements.forEach(elementId => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    if (tabNumber === 1) {
+                        element.classList.remove('hidden');
+                        log(`✅ 体重管理要素 ${elementId} を表示`);
+                    } else {
+                        element.classList.add('hidden');
+                        log(`❌ 体重管理要素 ${elementId} を非表示`);
+                    }
+                }
+            });
             
             // タブ固有の初期化処理
             if (tabNumber === 2) {
