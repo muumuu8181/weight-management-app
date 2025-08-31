@@ -26,8 +26,7 @@
     <script type="module" src="custom/app-config.js"></script>
     
     <!-- タブ固有JavaScript -->
-    <script src="tabs/tab3-room-cleaning/room-cleaning.js"></script>
-    <script src="tabs/tab8-memo-list/memo-list.js"></script>
+    <!-- タブ用JSは動的読み込みのためstatic読み込み削除 -->
     <style>
         body { font-family: Arial, sans-serif; padding: 2px; background: #f5f5f5; line-height: 1.2; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 6px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -382,7 +381,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.60';
+        const APP_VERSION = 'v1.61';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
