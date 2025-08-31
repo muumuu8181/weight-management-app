@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Celebration Effects Demo</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .demo-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .demo-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .demo-btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border: none;
+            color: white;
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .demo-btn:active {
+            transform: translateY(0);
+        }
+
+        .demo-btn.achievement {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+        }
+
+        .demo-btn.record {
+            background: linear-gradient(45deg, #FF1493, #00CED1);
+        }
+
+        .demo-btn.milestone {
+            background: linear-gradient(45deg, #9370DB, #20B2AA);
+        }
+
+        .demo-btn.victory {
+            background: linear-gradient(45deg, #FF0000, #FFD700);
+        }
+
+        .settings {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .setting-group {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        select {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+
+        .description {
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .toggle-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .toggle-btn.active {
+            background: #4ECDC4;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🎉 Celebration Effects</h1>
+        <p>最高のお祝いエフェクトシステムのデモ</p>
+        
+        <div class="demo-buttons">
+            <button class="demo-btn achievement" onclick="testAchievement()">
+                🏆 達成エフェクト
+            </button>
+            <button class="demo-btn record" onclick="testRecord()">
+                📈 新記録エフェクト
+            </button>
+            <button class="demo-btn milestone" onclick="testMilestone()">
+                🎯 マイルストーン
+            </button>
+            <button class="demo-btn victory" onclick="testVictory()">
+                👑 大勝利エフェクト
+            </button>
+            <button class="demo-btn" onclick="testCustom()">
+                ✨ カスタム
+            </button>
+            <button class="demo-btn" onclick="testExtreme()">
+                🔥 EXTREME
+            </button>
+        </div>
+
+        <div class="settings">
+            <div class="setting-group">
+                <label>強度:</label>
+                <select id="intensity">
+                    <option value="low">低</option>
+                    <option value="medium">中</option>
+                    <option value="high" selected>高</option>
+                    <option value="extreme">極限</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>音効:</label>
+                <button class="toggle-btn active" id="soundToggle" onclick="toggleSound()">ON</button>
+            </div>
+            <div class="setting-group">
+                <label>振動:</label>
+                <button class="toggle-btn active" id="vibrationToggle" onclick="toggleVibration()">ON</button>
+            </div>
+        </div>
+
+        <div class="description">
+            <p><strong>使い方:</strong></p>
+            <ul style="text-align: left; max-width: 500px; margin: 0 auto;">
+                <li>各ボタンをクリックして異なるタイプの祝福エフェクトを体験</li>
+                <li>強度設定で派手さを調整</li>
+                <li>音効・振動のON/OFFが可能</li>
+                <li>紙吹雪、画面フラッシュ、サウンド、バイブレーションが組み合わさった最高の演出</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 30px; font-size: 12px; opacity: 0.6;">
+            <p>JavaScript関数呼び出し例:</p>
+            <code>celebrate({ type: 'achievement', title: '🎯 目標達成!', intensity: 'high' });</code>
+        </div>
+    </div>
+
+    <script src="celebration-effects.js"></script>
+    <script>
+        function testAchievement() {
+            const intensity = document.getElementById('intensity').value;
+            celebrate({
+                type: 'achievement',
+                title: '🏆 目標達成！',
+                message: 'おめでとうございます！素晴らしい成果です！',
+                intensity: intensity,
+                duration: 4000
+            });
+        }
+
+        function testRecord() {
+            const intensity = document.getElementById('intensity').value;
+            celebrate({
+                type: 'record',
+                title: '📈 新記録達成！',
+                message: '過去最高を更新しました！',
+                intensity: intensity,
+                duration: 5000
+            });
+        }
+
+        function testMilestone() {
+            const intensity = document.getElementById('intensity').value;
+            celebrate({
+                type: 'milestone',
+                title: '🎯 マイルストーン到達！',
+                message: '重要な節目を迎えました！',
+                intensity: intensity,
+                duration: 4500
+            });
+        }
+
+        function testVictory() {
+            const intensity = document.getElementById('intensity').value;
+            celebrate({
+                type: 'victory',
+                title: '👑 大勝利！',
+                message: '完全なる勝利です！',
+                intensity: intensity,
+                duration: 6000
+            });
+        }
+
+        function testCustom() {
+            const intensity = document.getElementById('intensity').value;
+            celebrate({
+                type: 'achievement',
+                title: '✨ カスタム祝福！',
+                message: '自由にメッセージを設定できます',
+                color: '#FF69B4',
+                intensity: intensity,
+                duration: 4000
+            });
+        }
+
+        function testExtreme() {
+            celebrate({
+                type: 'victory',
+                title: '🔥 EXTREME MODE！',
+                message: '最大級の祝福エフェクト！',
+                intensity: 'extreme',
+                duration: 8000
+            });
+        }
+
+        function toggleSound() {
+            const btn = document.getElementById('soundToggle');
+            const isActive = btn.classList.contains('active');
+            
+            if (isActive) {
+                btn.classList.remove('active');
+                btn.textContent = 'OFF';
+                window.celebrationEffects.enableSound(false);
+            } else {
+                btn.classList.add('active');
+                btn.textContent = 'ON';
+                window.celebrationEffects.enableSound(true);
+            }
+        }
+
+        function toggleVibration() {
+            const btn = document.getElementById('vibrationToggle');
+            const isActive = btn.classList.contains('active');
+            
+            if (isActive) {
+                btn.classList.remove('active');
+                btn.textContent = 'OFF';
+                window.celebrationEffects.enableVibration(false);
+            } else {
+                btn.classList.add('active');
+                btn.textContent = 'ON';
+                window.celebrationEffects.enableVibration(true);
+            }
+        }
+
+        // 初期メッセージ
+        setTimeout(() => {
+            celebrate({
+                type: 'achievement',
+                title: '🎉 デモ開始！',
+                message: 'ボタンをクリックしてエフェクトを体験してください',
+                intensity: 'medium',
+                duration: 3000
+            });
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -818,7 +818,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.55';
+        const APP_VERSION = 'v1.56';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1876,6 +1876,12 @@
                 const data = snapshot.val();
                 log(`🔍 Firebase応答: データ=${data ? 'あり' : 'なし'}`);
                 
+                // tab1がアクティブな時のみデータ表示処理を実行
+                if (currentTab !== 1) {
+                    log(`⚠️ tab1非アクティブのため体重データ表示をスキップ（現在: tab${currentTab}）`);
+                    return;
+                }
+                
                 const historyDiv = document.getElementById('weightHistory');
                 log(`🔍 weightHistory要素: ${historyDiv ? '存在' : '不存在'}`);
                 
@@ -2586,7 +2592,13 @@
             // 体重管理要素は常に表示（tabContent1内にあるため自動制御される）
             
             // タブ固有の初期化処理
-            if (tabNumber === 2) {
+            if (tabNumber === 1) {
+                // 体重管理タブの初期化
+                if (currentUser) {
+                    log('🔄 体重管理タブ: データ再読み込み開始');
+                    loadUserWeightData(currentUser.uid);
+                }
+            } else if (tabNumber === 2) {
                 // 睡眠管理タブの初期化（ログインに関係なく実行）
                 initializeSleepManager();
                 if (currentUser) {
@@ -3197,6 +3209,7 @@ ${document.getElementById('logArea').innerText}`;
             if (!currentUser) return;
 
             try {
+                log('🔄 睡眠データ読み込み開始...');
                 const sleepRef = database.ref(`users/${currentUser.uid}/sleepData`);
                 const snapshot = await sleepRef.once('value');
                 
@@ -3205,6 +3218,9 @@ ${document.getElementById('logArea').innerText}`;
                     Object.entries(snapshot.val()).forEach(([key, data]) => {
                         allSleepData.push({id: key, ...data});
                     });
+                    log(`📊 睡眠データ読み込み完了: ${allSleepData.length}件`);
+                } else {
+                    log('📊 睡眠データなし');
                 }
                 
                 // 日付順でソート
