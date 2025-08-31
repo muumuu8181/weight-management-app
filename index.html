@@ -221,33 +221,78 @@
 
         <!-- タブコンテンツ -->
         <div id="tabContent1" class="tab-content">
-            <!-- 体重管理専用コンテンツをここに統合 -->
-            <!-- モード制御パネル -->
-            <div class="input-card hidden" id="modeControl">
-                <div style="text-align: center; margin-bottom: 8px;">
-                    <span style="font-size: 13px; color: #444; font-weight: bold;">🔧 操作モード</span>
+            <!-- 体重管理機能 -->
+            <div id="tab1Content">
+                <!-- 体重入力エリア -->
+                <div class="input-card" id="weightInput">
+                    <h3>📊 体重記録</h3>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <input type="date" id="dateInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                        <input type="time" id="timeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                        <input type="number" id="weightValue" placeholder="72.0" step="0.1" onkeydown="handleWeightKeypress(event)" style="width: 80px; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                        <span style="font-size: 14px; color: #666;">kg</span>
+                        <button onclick="saveWeightData()" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer;">💾 保存</button>
+                    </div>
+
+                    <!-- 測定タイミング選択 -->
+                    <div style="margin: 10px 0;">
+                        <label style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 5px;">⏰ 測定タイミング:</label>
+                        <div id="timingButtons" style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 5px;">
+                            <button type="button" class="timing-btn" data-timing="朝食前" onclick="selectTiming('朝食前')" style="background: #ffc107; color: #212529; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">⏰ 朝食前</button>
+                            <button type="button" class="timing-btn" data-timing="昼食前" onclick="selectTiming('昼食前')" style="background: #fd7e14; color: white; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">⏰ 昼食前</button>
+                            <button type="button" class="timing-btn" data-timing="夕食前" onclick="selectTiming('夕食前')" style="background: #dc3545; color: white; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">⏰ 夕食前</button>
+                            <button type="button" class="timing-btn" data-timing="就寝前" onclick="selectTiming('就寝前')" style="background: #6f42c1; color: white; border: none; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">⏰ 就寝前</button>
+                        </div>
+                        <input type="hidden" id="selectedTiming" value="">
+                    </div>
+
+                    <!-- 服装選択 -->
+                    <div style="margin: 10px 0;">
+                        <label style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 5px;">👕 上半身の服装:</label>
+                        <div id="topClothingButtons" style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px;">
+                            <button type="button" class="clothing-btn" data-clothing-top="なし" onclick="selectClothingTop('なし')" style="background: #17a2b8; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">👕 なし</button>
+                            <button type="button" class="clothing-btn" data-clothing-top="Tシャツ" onclick="selectClothingTop('Tシャツ')" style="background: #28a745; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">👕 Tシャツ</button>
+                            <button type="button" class="clothing-btn" data-clothing-top="長袖" onclick="selectClothingTop('長袖')" style="background: #ffc107; color: #212529; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">👕 長袖</button>
+                            <button type="button" class="clothing-btn" data-clothing-top="パーカー" onclick="selectClothingTop('パーカー')" style="background: #6c757d; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">👕 パーカー</button>
+                        </div>
+
+                        <label style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 5px;">🩲 下半身の服装:</label>
+                        <div id="bottomClothingButtons" style="display: flex; gap: 5px; flex-wrap: wrap;">
+                            <button type="button" class="clothing-btn" data-clothing-bottom="トランクス" onclick="selectClothingBottom('トランクス')" style="background: #007bff; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">🩲 トランクス</button>
+                            <button type="button" class="clothing-btn" data-clothing-bottom="ショーツ" onclick="selectClothingBottom('ショーツ')" style="background: #e83e8c; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">🩲 ショーツ</button>
+                            <button type="button" class="clothing-btn" data-clothing-bottom="パジャマ" onclick="selectClothingBottom('パジャマ')" style="background: #fd7e14; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">🩲 パジャマ</button>
+                            <button type="button" class="clothing-btn" data-clothing-bottom="ジーンズ" onclick="selectClothingBottom('ジーンズ')" style="background: #20c997; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">🩲 ジーンズ</button>
+                        </div>
+                        <input type="hidden" id="selectedClothingTop" value="">
+                        <input type="hidden" id="selectedClothingBottom" value="">
+                    </div>
+
+                    <!-- メモ入力 -->
+                    <div style="margin: 10px 0;">
+                        <label style="font-size: 14px; font-weight: bold; color: #333;">📝 メモ（任意）:</label>
+                        <input type="text" id="memoInput" placeholder="体調や特記事項など" style="width: 100%; max-width: 300px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; margin-top: 5px;">
+                    </div>
                 </div>
-                <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
-                    <button id="normalModeBtn" onclick="setMode('normal')" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">📝 通常</button>
-                    <button id="addModeBtn" onclick="setMode('add')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">➕ 追加</button>
-                    <button id="deleteModeBtn" onclick="setMode('delete')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">🗑️ 削除</button>
-                </div>
-            <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
-                <span style="font-size: 11px; color: #666;">対象:</span>
-                <button id="timingTargetBtn" onclick="selectTarget('timing')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">⏰ タイミング</button>
-                <button id="topTargetBtn" onclick="selectTarget('top')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">👕 上</button>
-                <button id="bottomTargetBtn" onclick="selectTarget('bottom')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">👖 下</button>
-            </div>
-            
-            <!-- 追加モード用の統一入力エリア -->
-            <div id="unifiedAddInput" style="display: none; margin-top: 8px; padding: 8px; background: #e8f5e8; border-radius: 5px; border: 2px solid #28a745;">
-                <div style="margin-bottom: 5px;">
-                    <span style="font-size: 11px; color: #155724; font-weight: bold;">✨ 新規項目を追加</span>
-                </div>
-                <div style="display: flex; gap: 3px; align-items: center;">
-                    <input type="text" id="unifiedAddText" placeholder="項目名を入力" style="flex: 1; padding: 4px 8px; border: 1px solid #28a745; border-radius: 3px; font-size: 11px;">
-                    <button onclick="executeAdd()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✓ 追加</button>
-                    <button onclick="cancelAdd()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✗ キャンセル</button>
+
+                <!-- グラフパネル -->
+                <div class="input-card" id="chartPanel">
+                    <h3>📊 データ推移グラフ</h3>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="weightChart"></canvas>
+                    </div>
+                    <div style="margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap;">
+                        <button onclick="updateChartRange(1)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1日</button>
+                        <button onclick="updateChartRange(7)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1週間</button>
+                        <button onclick="updateChartRange(30)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1ヶ月</button>
+                        <button onclick="updateChartRange(90)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">3ヶ月</button>
+                        <button onclick="updateChartRange(365)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1年</button>
+                        <button onclick="updateChartRange(0)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">全期間</button>
+                    </div>
+
+                    <h3>📋 データ履歴 <button class="universal-copy-btn" onclick="copyWeightHistory()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 履歴をコピー</button></h3>
+                    <div class="data-area" id="historyArea">
+                        データなし
+                    </div>
                 </div>
             </div>
         </div>
@@ -271,43 +316,6 @@
             <button class="universal-copy-btn" onclick="testPopup()" style="background: #20c997; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🧪 ポップアップテスト</button>
         </div>
 
-        <!-- グラフパネル（上に移動） -->
-        <div class="input-card" id="chartPanel">
-            <h3>📊 データ推移グラフ</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="weightChart"></canvas>
-            </div>
-            
-            <!-- 期間選択とナビゲーション -->
-            <div style="margin-top: 10px;">
-                <!-- 期間選択ボタン -->
-                <div style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px;">
-                    <button onclick="updateChartRange(1)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1日</button>
-                    <button onclick="updateChartRange(7)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1週間</button>
-                    <button onclick="updateChartRange(30)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1ヶ月</button>
-                    <button onclick="updateChartRange(90)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">3ヶ月</button>
-                    <button onclick="updateChartRange(365)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1年</button>
-                    <button onclick="updateChartRange(0)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">全期間</button>
-                    <button id="previousPeriodBtn" onclick="togglePreviousPeriod()" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">前期間の記録</button>
-                </div>
-                
-                <!-- ナビゲーションボタン -->
-                <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-                    <button onclick="navigateChart('prev')" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold;">← 前</button>
-                    <span id="chartPeriodInfo" style="font-size: 12px; color: #666; min-width: 120px; text-align: center;">期間を選択してください</span>
-                    <button onclick="navigateChart('next')" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold;">次 →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- データ履歴（グラフの下に移動） -->
-        <div class="input-card" id="weightHistoryPanel">
-            <h3>📈 データ履歴</h3>
-            <div class="data-area" id="weightHistory">
-                データを読み込み中...<br>
-            </div>
-        </div>
-        </div> <!-- タブコンテンツ1終了 -->
 
         <!-- タブコンテンツ2 -->
         <div id="tabContent2" class="tab-content hidden">
@@ -774,7 +782,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.53';
+        const APP_VERSION = 'v1.54';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
