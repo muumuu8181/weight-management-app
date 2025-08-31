@@ -1,36 +1,5 @@
-<!-- 体重管理タブ個別コンテンツ -->
-<!-- モード選択エリア -->
-<div class="mode-control hidden" id="modeControl" style="background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 8px; margin: 8px 0; text-align: center;">
-    <div style="margin-bottom: 8px;">
-        <span style="font-size: 13px; color: #444; font-weight: bold;">🔧 操作モード</span>
-    </div>
-    <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
-        <button id="normalModeBtn" onclick="setMode('normal')" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">📝 通常</button>
-        <button id="addModeBtn" onclick="setMode('add')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">➕ 追加</button>
-        <button id="deleteModeBtn" onclick="setMode('delete')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">🗑️ 削除</button>
-    </div>
-    <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
-        <span style="font-size: 11px; color: #666;">対象:</span>
-        <button id="timingTargetBtn" onclick="selectTarget('timing')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">⏰ タイミング</button>
-        <button id="topTargetBtn" onclick="selectTarget('top')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">👕 上</button>
-        <button id="bottomTargetBtn" onclick="selectTarget('bottom')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">👖 下</button>
-    </div>
-    
-    <!-- 追加モード用の統一入力エリア -->
-    <div id="unifiedAddInput" style="display: none; margin-top: 8px; padding: 8px; background: #e8f5e8; border-radius: 5px; border: 2px solid #28a745;">
-        <div style="margin-bottom: 5px;">
-            <span style="font-size: 11px; color: #155724; font-weight: bold;">✨ 新規項目を追加</span>
-        </div>
-        <div style="display: flex; gap: 3px; align-items: center;">
-            <input type="text" id="unifiedAddText" placeholder="項目名を入力" style="flex: 1; padding: 4px 8px; border: 1px solid #28a745; border-radius: 3px; font-size: 11px;">
-            <button onclick="executeAdd()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✓ 追加</button>
-            <button onclick="cancelAdd()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✗ キャンセル</button>
-        </div>
-    </div>
-</div>
-
-<!-- データ入力セクション -->
-<div class="weight-input hidden" id="weightInput">
+<!-- 体重管理専用コンテンツ（オリジナルレイアウト） -->
+<div class="weight-input" id="weightInput">
     <div class="input-card">
         <h3 style="margin-top: 0; margin-bottom: 8px;">📝 データを記録</h3>
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -92,8 +61,8 @@
     </div>
 </div>
 
-<!-- グラフパネル（上に移動） -->
-<div class="input-card hidden" id="chartPanel">
+<!-- グラフパネル -->
+<div class="input-card" id="chartPanel">
     <h3>📊 データ推移グラフ</h3>
     <div style="position: relative; height: 300px;">
         <canvas id="weightChart"></canvas>
@@ -113,16 +82,27 @@
         </div>
         
         <!-- ナビゲーションボタン -->
-        <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-            <button onclick="navigateChart('prev')" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold;">← 前</button>
-            <span id="chartPeriodInfo" style="font-size: 12px; color: #666; min-width: 120px; text-align: center;">期間を選択してください</span>
-            <button onclick="navigateChart('next')" style="background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold;">次 →</button>
+        <div style="display: flex; gap: 5px; margin-bottom: 8px; justify-content: center;">
+            <button onclick="goToPreviousWeek()" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">← 前週</button>
+            <button onclick="goToThisWeek()" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">今週</button>
+            <button onclick="goToNextWeek()" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">次週 →</button>
+        </div>
+        
+        <!-- 前期間比較ボタン -->
+        <div style="text-align: center; margin-top: 10px;">
+            <button onclick="togglePreviousPeriod()" style="background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px;" id="togglePreviousPeriodBtn">📊 前期間と比較</button>
+        </div>
+        
+        <!-- 前期間データ表示エリア -->
+        <div id="previousPeriodArea" style="display: none; margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+            <h4 style="margin-top: 0; color: #495057;">📊 前期間データ比較</h4>
+            <div id="previousPeriodData">読み込み中...</div>
         </div>
     </div>
 </div>
 
-<!-- データ履歴（グラフの下に移動） -->
-<div class="input-card hidden" id="weightHistoryPanel">
+<!-- データ履歴 -->
+<div class="input-card" id="weightHistoryPanel">
     <h3>📈 データ履歴</h3>
     <div class="data-area" id="weightHistory">
         データを読み込み中...<br>

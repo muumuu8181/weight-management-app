@@ -419,7 +419,7 @@ class CelebrationEffects {
             }
 
             .achievement-popup {
-                position: absolute;
+                position: fixed;
                 top: 20%;
                 left: 50%;
                 transform: translateX(-50%);
@@ -430,6 +430,7 @@ class CelebrationEffects {
                 box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 20px rgba(255,215,0,0.5);
                 text-align: center;
                 z-index: 10000;
+                pointer-events: none;
             }
 
             .achievement-content {
