@@ -134,6 +134,12 @@
             transform: translateX(-50%) !important;
             pointer-events: none !important;
         }
+
+        @keyframes rainbow-pulse {
+            0% { transform: scale(1); filter: hue-rotate(0deg); }
+            50% { transform: scale(1.05); filter: hue-rotate(180deg); }
+            100% { transform: scale(1); filter: hue-rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -159,6 +165,9 @@
             </button>
             <button class="demo-btn" onclick="testExtreme()">
                 🔥 EXTREME
+            </button>
+            <button class="demo-btn" onclick="testMegaCelebration()" style="background: linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff80, #0080ff, #8000ff, #ff0080); animation: rainbow-pulse 2s infinite;">
+                🌟 MEGA ULTIMATE 🌟
             </button>
         </div>
 
@@ -264,6 +273,33 @@
                 intensity: 'extreme',
                 duration: 8000
             });
+        }
+
+        function testMegaCelebration() {
+            // 究極のメガ祝福モード - 複数のエフェクトを連続実行
+            const megaMessages = [
+                { title: '🌟 LEGENDARY ACHIEVEMENT！', message: '史上最高の成果です！', type: 'victory' },
+                { title: '👑 ULTIMATE CHAMPION！', message: '完璧なる王者の証！', type: 'achievement' },
+                { title: '🔥 IMPOSSIBLE MADE POSSIBLE！', message: '不可能を可能にした奇跡！', type: 'record' }
+            ];
+
+            megaMessages.forEach((msg, index) => {
+                setTimeout(() => {
+                    celebrate({
+                        ...msg,
+                        intensity: 'extreme',
+                        duration: 6000
+                    });
+                }, index * 2000);
+            });
+
+            // 特別な全画面フラッシュエフェクト
+            setTimeout(() => {
+                document.body.style.animation = 'rainbow-pulse 3s ease-in-out';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 3000);
+            }, 1000);
         }
 
         function toggleSound() {

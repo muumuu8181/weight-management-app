@@ -185,6 +185,157 @@ class CelebrationEffects {
         }
     }
 
+    // 💥 パーティクル爆発エフェクト
+    async createParticleExplosion(config) {
+        const intensity = this.getIntensityMultiplier(config.intensity);
+        const colors = ['#FFD700', '#FF6347', '#32CD32', '#1E90FF', '#FF1493'];
+        
+        for (let burst = 0; burst < intensity * 3; burst++) {
+            setTimeout(() => {
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                
+                for (let i = 0; i < 30; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle-explosion';
+                    
+                    const size = Math.random() * 6 + 2;
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = Math.random() * 500 + 200;
+                    const life = Math.random() * 2000 + 1000;
+                    
+                    particle.style.cssText = `
+                        position: absolute;
+                        left: ${centerX}px;
+                        top: ${centerY}px;
+                        width: ${size}px;
+                        height: ${size}px;
+                        background: ${colors[Math.floor(Math.random() * colors.length)]};
+                        border-radius: 50%;
+                        pointer-events: none;
+                        box-shadow: 0 0 10px currentColor;
+                    `;
+                    
+                    particle.style.animation = `particleExplode ${life}ms ease-out forwards`;
+                    particle.style.setProperty('--angle', angle);
+                    particle.style.setProperty('--velocity', velocity);
+                    
+                    document.getElementById('celebration-container').appendChild(particle);
+                    setTimeout(() => particle.remove(), life);
+                }
+            }, burst * 200);
+        }
+    }
+
+    // 📳 画面シェイクエフェクト
+    async triggerScreenShake(config) {
+        const intensity = this.getIntensityMultiplier(config.intensity);
+        const body = document.body;
+        const originalTransform = body.style.transform || '';
+        
+        let shakeCount = intensity * 20;
+        const shakeInterval = setInterval(() => {
+            if (shakeCount <= 0) {
+                clearInterval(shakeInterval);
+                body.style.transform = originalTransform;
+                return;
+            }
+            
+            const x = (Math.random() - 0.5) * intensity * 10;
+            const y = (Math.random() - 0.5) * intensity * 10;
+            body.style.transform = `${originalTransform} translate(${x}px, ${y}px)`;
+            
+            shakeCount--;
+        }, 50);
+    }
+
+    // 🌈 レインボーウェーブ
+    async createRainbowWave(config) {
+        const wave = document.createElement('div');
+        wave.className = 'rainbow-wave';
+        wave.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #ff000080 12.5%, 
+                #ff800080 25%, 
+                #ffff0080 37.5%, 
+                #80ff0080 50%, 
+                #0080ff80 62.5%, 
+                #8000ff80 75%, 
+                #ff0080ff80 87.5%, 
+                transparent 100%);
+            pointer-events: none;
+            animation: rainbowWave 2s ease-in-out;
+            z-index: 9998;
+        `;
+        
+        document.getElementById('celebration-container').appendChild(wave);
+        setTimeout(() => wave.remove(), 2000);
+    }
+
+    // 💫 フローティングテキスト
+    async showFloatingText(config) {
+        const texts = ['AMAZING!', 'AWESOME!', 'FANTASTIC!', 'INCREDIBLE!', 'PERFECT!'];
+        const intensity = this.getIntensityMultiplier(config.intensity);
+        
+        for (let i = 0; i < intensity * 3; i++) {
+            setTimeout(() => {
+                const text = document.createElement('div');
+                text.className = 'floating-text';
+                text.textContent = texts[Math.floor(Math.random() * texts.length)];
+                
+                const x = Math.random() * window.innerWidth;
+                const y = window.innerHeight * 0.3 + Math.random() * window.innerHeight * 0.4;
+                
+                text.style.cssText = `
+                    position: absolute;
+                    left: ${x}px;
+                    top: ${y}px;
+                    font-size: ${Math.random() * 30 + 20}px;
+                    font-weight: bold;
+                    color: #FFD700;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+                    pointer-events: none;
+                    animation: floatingText 3s ease-out forwards;
+                    z-index: 9999;
+                `;
+                
+                document.getElementById('celebration-container').appendChild(text);
+                setTimeout(() => text.remove(), 3000);
+            }, i * 500);
+        }
+    }
+
+    // ✨ レンズフレア効果
+    async createLensFlare(config) {
+        const flare = document.createElement('div');
+        flare.className = 'lens-flare';
+        flare.innerHTML = `
+            <div class="flare-center"></div>
+            <div class="flare-ring"></div>
+            <div class="flare-beam"></div>
+        `;
+        
+        flare.style.cssText = `
+            position: fixed;
+            top: 10%;
+            right: 10%;
+            width: 200px;
+            height: 200px;
+            pointer-events: none;
+            animation: lensFlare 3s ease-out;
+            z-index: 9997;
+        `;
+        
+        document.getElementById('celebration-container').appendChild(flare);
+        setTimeout(() => flare.remove(), 3000);
+    }
+
     // ⚡ 画面フラッシュ
     async triggerScreenFlash(config) {
         const flash = document.createElement('div');
@@ -423,6 +574,64 @@ class CelebrationEffects {
                 50% { transform: scale(1.5) rotate(180deg); opacity: 0.8; }
             }
 
+            @keyframes particleExplode {
+                from {
+                    transform: translate(0, 0) scale(1);
+                    opacity: 1;
+                }
+                to {
+                    transform: translate(
+                        calc(cos(var(--angle)) * var(--velocity) * 1px),
+                        calc(sin(var(--angle)) * var(--velocity) * 1px)
+                    ) scale(0);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes rainbowWave {
+                0% {
+                    transform: translateX(-100%);
+                    opacity: 0;
+                }
+                50% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes floatingText {
+                0% {
+                    transform: translateY(0) scale(0.5);
+                    opacity: 0;
+                }
+                20% {
+                    transform: translateY(-20px) scale(1.2);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-100px) scale(0.8);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes lensFlare {
+                0% {
+                    opacity: 0;
+                    transform: scale(0) rotate(0deg);
+                }
+                50% {
+                    opacity: 1;
+                    transform: scale(1.5) rotate(180deg);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(0.5) rotate(360deg);
+                }
+            }
+
             .achievement-popup {
                 position: fixed;
                 top: 20%;
@@ -484,6 +693,46 @@ class CelebrationEffects {
 
             .screen-flash {
                 animation: screenFlash 0.6s ease-out;
+            }
+
+            .lens-flare .flare-center {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 60px;
+                height: 60px;
+                background: radial-gradient(circle, #ffffff 0%, #ffff00 50%, transparent 70%);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                animation: pulse 1s infinite alternate;
+            }
+
+            .lens-flare .flare-ring {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 120px;
+                height: 120px;
+                border: 3px solid rgba(255, 255, 255, 0.5);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                animation: rotate 2s linear infinite;
+            }
+
+            .lens-flare .flare-beam {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 200px;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, #ffffff, transparent);
+                transform: translate(-50%, -50%);
+                animation: rotate 3s linear infinite reverse;
+            }
+
+            @keyframes rotate {
+                from { transform: translate(-50%, -50%) rotate(0deg); }
+                to { transform: translate(-50%, -50%) rotate(360deg); }
             }
         `;
     }

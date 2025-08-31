@@ -1,0 +1,307 @@
+/**
+ * 共通コンポーネントスタイル
+ * アプリケーション内で再利用されるUIコンポーネント
+ */
+
+/* ユーザー情報バー */
+.user-info {
+    background: #d4edda;
+    color: #155724;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-photo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-left: 8px;
+}
+
+/* タブナビゲーション */
+.tab-navigation {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    flex-wrap: wrap;
+}
+
+.tab-button {
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tab-button:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.tab-button.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.tab-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff4757;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 16px;
+    text-align: center;
+}
+
+/* 入力カード */
+.input-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.input-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.input-card h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #333;
+    font-size: 18px;
+}
+
+/* データ表示エリア */
+.data-area {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 12px;
+    min-height: 60px;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    overflow-y: auto;
+    max-height: 200px;
+}
+
+.data-area:empty:before {
+    content: "データがありません";
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* ログエリア */
+.log-area {
+    background: #343a40;
+    color: #f8f9fa;
+    padding: 12px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 11px;
+    line-height: 1.3;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.log-warn {
+    color: #ffc107;
+}
+
+.log-error {
+    color: #dc3545;
+}
+
+/* ボタンスタイル */
+.btn-primary {
+    background: #007bff;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+    border: none;
+}
+
+.btn-success:hover {
+    background: #1e7e34;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: #212529;
+    border: none;
+}
+
+.btn-warning:hover {
+    background: #e0a800;
+}
+
+.btn-info {
+    background: #17a2b8;
+    color: white;
+    border: none;
+}
+
+.btn-info:hover {
+    background: #138496;
+}
+
+/* コピーボタン */
+.universal-copy-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s ease;
+}
+
+.universal-copy-btn:hover {
+    background: #1e7e34;
+}
+
+/* 認証セクション */
+.auth-section {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.auth-section h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.auth-section .google-login-btn {
+    background: #4285f4;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.auth-section .google-login-btn:hover {
+    background: #357ae8;
+}
+
+/* ローディングスピナー */
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* アラートメッセージ */
+.alert {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .tab-navigation {
+        gap: 4px;
+    }
+    
+    .tab-button {
+        padding: 6px 8px;
+        font-size: 11px;
+    }
+    
+    .input-card {
+        padding: 12px;
+    }
+    
+    .input-card h3 {
+        font-size: 16px;
+    }
+}
