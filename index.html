@@ -692,7 +692,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.30';
+        const APP_VERSION = 'v1.31';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2336,6 +2336,21 @@
                     
                     // JavaScriptファイルを動的読み込み
                     await loadTabScript(tabNumber, tabType);
+                    
+                    // 分離されたタブの要素を表示
+                    if (tabNumber === 1) {
+                        const modeControl = document.getElementById('modeControl');
+                        if (modeControl) modeControl.classList.remove('hidden');
+                        
+                        const weightInput = document.getElementById('weightInput');
+                        if (weightInput) weightInput.classList.remove('hidden');
+                        
+                        const chartPanel = document.getElementById('chartPanel');
+                        if (chartPanel) chartPanel.classList.remove('hidden');
+                        
+                        const weightHistoryPanel = document.getElementById('weightHistoryPanel');
+                        if (weightHistoryPanel) weightHistoryPanel.classList.remove('hidden');
+                    }
                     
                     log(`✅ タブ${tabNumber}（${tabType}）コンテンツ読み込み完了`);
                 } else {

@@ -2,7 +2,11 @@
 // 共通機能への依存: currentUser, database, log, firebase
 
 // 体重管理専用変数（スコープ分離）
-const WeightTab = {
+if (typeof window.WeightTab !== 'undefined') {
+    // 既に読み込まれている場合はスキップ
+    console.log('WeightTab already loaded, skipping...');
+} else {
+window.WeightTab = {
     selectedTimingValue: '',
     selectedTopValue: '',
     selectedBottomValue: '',
@@ -330,3 +334,5 @@ if (typeof window !== 'undefined') {
         initWeightTab();
     };
 }
+
+} // WeightTab 重複チェック終了
