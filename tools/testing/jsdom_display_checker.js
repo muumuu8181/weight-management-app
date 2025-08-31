@@ -77,9 +77,15 @@ if (require.main === module) {
         const result = checkWeightDisplay();
         console.log('\n📊 チェック完了');
         
+        // 出力ディレクトリ作成
+        const outputDir = './tools/testing/analysis-results/';
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir, { recursive: true });
+        }
+        
         // 結果をJSONで保存
-        fs.writeFileSync('weight_display_check.json', JSON.stringify(result.summary, null, 2));
-        console.log('💾 結果保存: weight_display_check.json');
+        fs.writeFileSync(`${outputDir}weight_display_check.json`, JSON.stringify(result.summary, null, 2));
+        console.log(`💾 結果保存: ${outputDir}weight_display_check.json`);
         
     } catch (error) {
         console.log('❌ JSDoMチェックエラー:', error.message);

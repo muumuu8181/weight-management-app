@@ -122,13 +122,18 @@ if __name__ == "__main__":
     print(f"体重関連コード: {len(result['weight_related'])}箇所")
     print(f"関数ブロック: {len(result['functions_to_remove'])}個")
     
+    # 出力ディレクトリ作成
+    import os
+    output_dir = './tools/testing/analysis-results/'
+    os.makedirs(output_dir, exist_ok=True)
+    
     # 詳細結果をJSONで出力
-    with open('weight_analysis.json', 'w') as f:
+    with open(f'{output_dir}weight_analysis.json', 'w') as f:
         json.dump(result, f, indent=2, ensure_ascii=False)
     
     # 除去スクリプト生成
     removal_script = analyzer.generate_removal_script(result)
-    with open('remove_weight_code.sh', 'w') as f:
+    with open(f'{output_dir}remove_weight_code.sh', 'w') as f:
         f.write(removal_script)
     
     print("\n生成ファイル:")

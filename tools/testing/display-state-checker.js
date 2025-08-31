@@ -157,11 +157,11 @@ class DisplayStateChecker {
     async checkDisplayState() {
         const targetPath = path.resolve(this.options.targetFile);
         
-        if (!await fs.pathExists(targetPath)) {
+        if (!fs.existsSync(targetPath)) {
             throw new Error(`ファイルが見つかりません: ${targetPath}`);
         }
         
-        const html = await fs.readFile(targetPath, 'utf8');
+        const html = fs.readFileSync(targetPath, 'utf8');
         
         const dom = new JSDOM(html, {
             runScripts: "dangerously",
@@ -170,6 +170,9 @@ class DisplayStateChecker {
         });
         
         const { window, document } = dom;
+        
+        // DOM読み込み完了を待つ
+        await new Promise(resolve => setTimeout(resolve, 100));
         
         // チェック対象要素の決定
         let checkElements = this.options.checkElements;
@@ -219,7 +222,7 @@ class DisplayStateChecker {
         
         // 結果保存
         if (this.options.outputFile) {
-            await fs.writeJson(this.options.outputFile, results, { spaces: 2 });
+            fs.writeFileSync(this.options.outputFile, JSON.stringify(results, null, 2));
             console.log(`\n💾 詳細結果保存: ${this.options.outputFile}`);
         }
         

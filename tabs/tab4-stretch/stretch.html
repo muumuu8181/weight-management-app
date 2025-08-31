@@ -1,0 +1,110 @@
+<!-- タブ4: ストレッチ管理 -->
+<div id="tab4Content">
+    <!-- ストレッチ記録入力エリア -->
+    <div class="input-card" id="stretchInput">
+        <h3>🧘 ストレッチ記録</h3>
+        
+        <!-- 日付選択 -->
+        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+            <label style="font-weight: bold;">📅 記録日:</label>
+            <input type="date" id="stretchDateInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+        </div>
+
+        <!-- ストレッチタイプ選択 -->
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 8px;">🧘 ストレッチタイプ:</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="stretch-type-btn" data-type="朝ストレッチ" onclick="selectStretchType('朝ストレッチ')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🌅 朝ストレッチ</button>
+                <button type="button" class="stretch-type-btn" data-type="デスクワーク" onclick="selectStretchType('デスクワーク')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">💻 デスクワーク</button>
+                <button type="button" class="stretch-type-btn" data-type="運動前" onclick="selectStretchType('運動前')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🏃 運動前</button>
+                <button type="button" class="stretch-type-btn" data-type="運動後" onclick="selectStretchType('運動後')" style="background: #6f42c1; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">💪 運動後</button>
+                <button type="button" class="stretch-type-btn" data-type="就寝前" onclick="selectStretchType('就寝前')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🌙 就寝前</button>
+            </div>
+            <input type="hidden" id="selectedStretchType" value="">
+        </div>
+
+        <!-- 日付・時刻表示（自動取得） -->
+        <div style="margin-bottom: 10px;">
+            <input type="time" class="input-field" id="stretchTimeInput" style="width: 100%;" readonly>
+        </div>
+        
+        <!-- 開始・終了ボタン -->
+        <div style="margin-bottom: 15px; text-align: center;">
+            <button id="startStretchBtn" onclick="startStretching()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; margin-right: 10px;">▶️ ストレッチ開始</button>
+            <button id="endStretchBtn" onclick="endStretching()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; display: none;">⏹️ ストレッチ終了</button>
+            <div id="stretchTimer" style="margin-top: 10px; font-size: 18px; font-weight: bold; color: #007bff; display: none;">00:00</div>
+        </div>
+
+        <!-- 強度選択 -->
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 8px;">💪 強度:</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="intensity-btn" data-intensity="1" onclick="selectIntensity(1)" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😌 1 (軽め)</button>
+                <button type="button" class="intensity-btn" data-intensity="2" onclick="selectIntensity(2)" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🙂 2 (普通)</button>
+                <button type="button" class="intensity-btn" data-intensity="3" onclick="selectIntensity(3)" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😤 3 (きつめ)</button>
+                <button type="button" class="intensity-btn" data-intensity="4" onclick="selectIntensity(4)" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😵 4 (激しい)</button>
+            </div>
+            <input type="hidden" id="selectedIntensity" value="">
+        </div>
+
+        <!-- 部位選択 -->
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 8px;">🎯 対象部位:</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="body-part-btn" data-part="首・肩" onclick="toggleBodyPart('首・肩')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🦴 首・肩</button>
+                <button type="button" class="body-part-btn" data-part="腰" onclick="toggleBodyPart('腰')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🏋️ 腰</button>
+                <button type="button" class="body-part-btn" data-part="脚" onclick="toggleBodyPart('脚')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🦵 脚</button>
+                <button type="button" class="body-part-btn" data-part="腕" onclick="toggleBodyPart('腕')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">💪 腕</button>
+                <button type="button" class="body-part-btn" data-part="全身" onclick="toggleBodyPart('全身')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🧘 全身</button>
+            </div>
+            <input type="hidden" id="selectedBodyParts" value="">
+        </div>
+
+        <!-- メモ入力 -->
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">📝 メモ（任意）:</label>
+            <input type="text" id="stretchMemoInput" placeholder="気づき、効果など" style="width: 100%; max-width: 400px; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+        </div>
+
+        <!-- 継続時間表示（隠しフィールド） -->
+        <div style="margin-bottom: 15px; display: none;">
+            <input type="number" id="stretchDuration" min="1" max="180">
+        </div>
+
+        <!-- 保存ボタン -->
+        <div style="text-align: center;">
+            <button onclick="saveStretchData()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">💾 ストレッチ記録を保存</button>
+        </div>
+    </div>
+
+    <!-- ストレッチ履歴表示 -->
+    <div class="input-card" id="stretchHistory">
+        <h3>📊 ストレッチ履歴 <button class="universal-copy-btn" onclick="copyStretchHistory()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 履歴をコピー</button></h3>
+        <div class="data-area" id="stretchHistoryArea">
+            まだストレッチ記録がありません
+        </div>
+    </div>
+
+    <!-- ストレッチ統計 -->
+    <div class="input-card" id="stretchStats">
+        <h3>📈 ストレッチ統計</h3>
+        <div id="stretchStatsArea" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div style="font-size: 24px; font-weight: bold; color: #007bff;">--</div>
+                <div style="font-size: 12px; color: #6c757d;">今週の回数</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div style="font-size: 24px; font-weight: bold; color: #28a745;">--</div>
+                <div style="font-size: 12px; color: #6c757d;">平均時間</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div style="font-size: 24px; font-weight: bold; color: #ffc107;">--</div>
+                <div style="font-size: 12px; color: #6c757d;">最頻部位</div>
+            </div>
+            <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">--</div>
+                <div style="font-size: 12px; color: #6c757d;">継続日数</div>
+            </div>
+        </div>
+    </div>
+</div>

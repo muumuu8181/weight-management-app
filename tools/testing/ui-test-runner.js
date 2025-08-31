@@ -455,7 +455,13 @@ class JSDOMButtonTestRunner {
       errors: this.results.errors
     };
     
-    const jsonLogPath = `test-evidence-${timestamp}.json`;
+    // 出力ディレクトリ作成
+    const outputDir = './tools/testing/test-results/';
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+    
+    const jsonLogPath = `${outputDir}test-evidence-${timestamp}.json`;
     await fs.writeFile(jsonLogPath, JSON.stringify(jsonLogData, null, 2));
     this.log(`JSONエビデンス保存完了: ${jsonLogPath}`, 'success');
     
@@ -475,7 +481,7 @@ class JSDOMButtonTestRunner {
       ].map(field => `"${String(field).replace(/"/g, '""')}"`).join(',');
     }).join('\n');
     
-    const csvLogPath = `test-evidence-${timestamp}.csv`;
+    const csvLogPath = `${outputDir}test-evidence-${timestamp}.csv`;
     await fs.writeFile(csvLogPath, csvHeader + csvRows);
     this.log(`CSVエビデンス保存完了: ${csvLogPath}`, 'success');
     
@@ -525,7 +531,7 @@ class JSDOMButtonTestRunner {
       'テストエビデンス終了'
     ].filter(line => line !== undefined).join('\n');
     
-    const textLogPath = `test-evidence-${timestamp}.txt`;
+    const textLogPath = `${outputDir}test-evidence-${timestamp}.txt`;
     await fs.writeFile(textLogPath, textLog);
     this.log(`テキストエビデンス保存完了: ${textLogPath}`, 'success');
     
