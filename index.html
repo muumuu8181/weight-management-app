@@ -835,7 +835,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.44';
+        const APP_VERSION = 'v1.45';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1932,6 +1932,19 @@
                     log(`🔍 生成HTML長: ${historyHTML.join('').length}文字`);
                     historyDiv.innerHTML = historyHTML.join('');
                     log(`🔍 更新後要素内容: ${historyDiv.innerHTML.substring(0,100)}...`);
+                    
+                    // 履歴パネルとチャートパネルを強制表示
+                    const weightHistoryPanel = document.getElementById('weightHistoryPanel');
+                    if (weightHistoryPanel) {
+                        weightHistoryPanel.classList.remove('hidden');
+                        log(`✅ weightHistoryPanel強制表示`);
+                    }
+                    
+                    const chartPanel = document.getElementById('chartPanel');
+                    if (chartPanel) {
+                        chartPanel.classList.remove('hidden');
+                        log(`✅ chartPanel強制表示`);
+                    }
                     
                     log(`📈 データ履歴読み込み完了: ${entries.length}件`);
                 } else {

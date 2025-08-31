@@ -1,0 +1,32 @@
+{
+  "weightHistory": {
+    "exists": true,
+    "hidden": false,
+    "display": "block",
+    "contentLength": 46
+  },
+  "weightHistoryPanel": {
+    "exists": true,
+    "hidden": true,
+    "display": "none",
+    "contentLength": 146
+  },
+  "weightChart": {
+    "exists": true,
+    "hidden": false,
+    "display": "",
+    "contentLength": 0
+  },
+  "chartPanel": {
+    "exists": true,
+    "hidden": true,
+    "display": "none",
+    "contentLength": 2633
+  },
+  "tabContent1": {
+    "exists": true,
+    "hidden": false,
+    "display": "block",
+    "contentLength": 2866
+  }
+}
