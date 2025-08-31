@@ -709,7 +709,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.58';
+        const APP_VERSION = 'v1.59';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2379,7 +2379,7 @@
                 if (!tabContentDiv) return;
                 
                 // HTMLコンテンツを読み込み
-                const response = await fetch(`tabs/tab${tabNumber}-${tabType}/${tabType}-tab.html`);
+                const response = await fetch(`tabs/tab${tabNumber}-${tabType}/tab-${tabType}.html`);
                 if (response.ok) {
                     const htmlContent = await response.text();
                     tabContentDiv.innerHTML = htmlContent;
