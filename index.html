@@ -246,234 +246,12 @@
 
         <!-- タブコンテンツ2 -->
         <div id="tabContent2" class="tab-content hidden">
-            <!-- タブ2: 睡眠管理 -->
-            <div id="tab2Content">
-                <!-- 睡眠記録入力エリア -->
-                <div class="input-card" id="sleepInput">
-                    <h3>🛏️ 睡眠記録</h3>
-                    
-                    <!-- 日付選択 -->
-                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
-                        <label style="font-weight: bold;">📅 記録日:</label>
-                        <input type="date" id="sleepDateInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
-                    </div>
-
-                    <!-- 睡眠記録タイプ選択 -->
-                    <div style="margin-bottom: 15px;">
-                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">🛏️ 睡眠タイプ:</label>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button type="button" class="sleep-type-btn" data-type="夜間睡眠" onclick="selectSleepType('夜間睡眠')" style="background: #6f42c1; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🌙 夜間睡眠</button>
-                            <button type="button" class="sleep-type-btn" data-type="昼寝" onclick="selectSleepType('昼寝')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">☀️ 昼寝</button>
-                            <button type="button" class="sleep-type-btn" data-type="仮眠" onclick="selectSleepType('仮眠')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 仮眠</button>
-                        </div>
-                        <input type="hidden" id="selectedSleepType" value="">
-                    </div>
-
-
-                    <!-- 記録時間 -->
-                    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
-                        <div>
-                            <label style="font-weight: bold; display: block; margin-bottom: 3px;">⏰ 記録時間:</label>
-                            <input type="time" id="sleepTimeInput" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
-                        </div>
-                    </div>
-
-                    <!-- 睡眠の質評価 -->
-                    <div style="margin-bottom: 15px;">
-                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">⭐ 睡眠の質:</label>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button type="button" class="quality-btn" data-quality="1" onclick="selectQuality(1)" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 1 (最悪)</button>
-                            <button type="button" class="quality-btn" data-quality="2" onclick="selectQuality(2)" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😪 2 (悪い)</button>
-                            <button type="button" class="quality-btn" data-quality="3" onclick="selectQuality(3)" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😐 3 (普通)</button>
-                            <button type="button" class="quality-btn" data-quality="4" onclick="selectQuality(4)" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😊 4 (良い)</button>
-                            <button type="button" class="quality-btn" data-quality="5" onclick="selectQuality(5)" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 5 (最高)</button>
-                        </div>
-                        <input type="hidden" id="selectedQuality" value="">
-                    </div>
-
-                    <!-- 睡眠タグ選択 -->
-                    <div style="margin-bottom: 15px;">
-                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">🏷️ 睡眠タグ（複数選択可）:</label>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button type="button" class="sleep-tag-btn" data-tag="二度寝" onclick="toggleSleepTag('二度寝')" style="background: #6f42c1; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 二度寝</button>
-                            <button type="button" class="sleep-tag-btn" data-tag="夢を見た" onclick="toggleSleepTag('夢を見た')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">💭 夢を見た</button>
-                            <button type="button" class="sleep-tag-btn" data-tag="熟睡" onclick="toggleSleepTag('熟睡')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😴 熟睡</button>
-                            <button type="button" class="sleep-tag-btn" data-tag="途中で起きた" onclick="toggleSleepTag('途中で起きた')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😪 途中で起きた</button>
-                            <button type="button" class="sleep-tag-btn" data-tag="寝つきが悪い" onclick="toggleSleepTag('寝つきが悪い')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">😣 寝つきが悪い</button>
-                        </div>
-                        <input type="hidden" id="selectedSleepTags" value="">
-                        <div style="margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; min-height: 20px;">
-                            <span style="font-size: 12px; color: #666;">選択中:</span>
-                            <span id="selectedTagsDisplay" style="font-size: 12px; color: #007bff; font-weight: bold;">なし</span>
-                        </div>
-                    </div>
-
-                    <!-- メモ入力 -->
-                    <div style="margin-bottom: 15px;">
-                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">📝 メモ（任意）:</label>
-                        <input type="text" id="sleepMemoInput" placeholder="体調、起きた時の感想など" style="width: 100%; max-width: 400px; padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
-                    </div>
-
-                    <!-- 保存ボタン -->
-                    <div style="text-align: center;">
-                        <button onclick="saveSleepData()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">💾 睡眠記録を保存</button>
-                    </div>
-                </div>
-
-                <!-- 睡眠履歴表示 -->
-                <div class="input-card" id="sleepHistory">
-                    <h3>📊 睡眠履歴 <button class="universal-copy-btn" onclick="copySleepHistory()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 履歴をコピー</button></h3>
-                    <div class="data-area" id="sleepHistoryArea">
-                        まだ睡眠記録がありません
-                    </div>
-                </div>
-
-                <!-- 睡眠統計 -->
-                <div class="input-card" id="sleepStats">
-                    <h3>📈 睡眠統計</h3>
-                    <div id="sleepStatsArea" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-size: 24px; font-weight: bold; color: #007bff;">--</div>
-                            <div style="font-size: 12px; color: #6c757d;">平均睡眠時間</div>
-                        </div>
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-size: 24px; font-weight: bold; color: #28a745;">--</div>
-                            <div style="font-size: 12px; color: #6c757d;">平均睡眠の質</div>
-                        </div>
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-size: 24px; font-weight: bold; color: #ffc107;">--</div>
-                            <div style="font-size: 12px; color: #6c757d;">今週の記録数</div>
-                        </div>
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">--</div>
-                            <div style="font-size: 12px; color: #6c757d;">今月の記録数</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- コンテンツは動的読み込み -->
         </div>
 
         <!-- タブコンテンツ3 -->
         <div id="tabContent3" class="tab-content hidden">
-            <!-- 部屋片付け管理 -->
-            <div id="tab3Content">
-                <!-- 片付けタスク入力エリア -->
-                <div class="input-card" id="roomInput">
-                    <h3>🧹 部屋片付け記録</h3>
-                    
-                    <!-- 操作モード選択 -->
-                    <div class="room-mode-control" style="background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 8px; margin: 8px 0; text-align: center;">
-                        <div style="margin-bottom: 8px;">
-                            <span style="font-size: 13px; color: #444; font-weight: bold;">🔧 場所管理モード</span>
-                        </div>
-                        <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
-                            <button id="roomNormalModeBtn" onclick="setRoomMode('normal')" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">📝 通常</button>
-                            <button id="roomAddModeBtn" onclick="setRoomMode('add')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">➕ 追加</button>
-                            <button id="roomDeleteModeBtn" onclick="setRoomMode('delete')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">🗑️ 削除</button>
-                        </div>
-                        
-                        <!-- 追加モード用の統一入力エリア -->
-                        <div id="roomUnifiedAddInput" style="display: none; margin-top: 8px; padding: 8px; background: #e8f5e8; border-radius: 5px; border: 2px solid #28a745;">
-                            <div style="margin-bottom: 5px;">
-                                <span style="font-size: 11px; color: #155724; font-weight: bold;">✨ 新しい場所を追加</span>
-                            </div>
-                            <div style="display: flex; gap: 3px; align-items: center;">
-                                <input type="text" id="roomUnifiedAddText" placeholder="場所名を入力" style="flex: 1; padding: 4px 8px; border: 1px solid #28a745; border-radius: 3px; font-size: 11px;">
-                                <button onclick="executeRoomAdd()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✓ 追加</button>
-                                <button onclick="cancelRoomAdd()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✗ キャンセル</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 日付・時刻表示（自動取得） -->
-                    <div style="margin-bottom: 10px;">
-                        <input type="date" class="input-field" id="roomDateInput" style="width: 100%;" readonly>
-                        <input type="time" class="input-field" id="roomTimeInput" style="width: 100%; margin-top: 5px;" readonly>
-                    </div>
-                    
-                    <!-- 開始・終了ボタン -->
-                    <div style="margin-bottom: 15px; text-align: center;">
-                        <button id="startRoomBtn" onclick="startRoomCleaning()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; margin-right: 10px;">▶️ 片付け開始</button>
-                        <button id="endRoomBtn" onclick="endRoomCleaning()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; display: none;">⏹️ 片付け終了</button>
-                    </div>
-                    
-                    <!-- 片付け場所選択 -->
-                    <div style="margin-bottom: 10px;">
-                        <div style="text-align: center; margin-bottom: 8px;">
-                            <span style="font-size: 13px; color: #444; font-weight: bold;">📍 片付け場所</span>
-                        </div>
-                        <div id="roomButtons" style="display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px;">
-                            <button type="button" class="room-btn" onclick="selectRoom('リビング')" data-room="リビング" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🛋️ リビング</button>
-                            <button type="button" class="room-btn" onclick="selectRoom('キッチン')" data-room="キッチン" style="background: #ffc107; color: #212529; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🍳 キッチン</button>
-                            <button type="button" class="room-btn" onclick="selectRoom('寝室')" data-room="寝室" style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🛏️ 寝室</button>
-                            <button type="button" class="room-btn" onclick="selectRoom('お風呂')" data-room="お風呂" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🛁 お風呂</button>
-                            <button type="button" class="room-btn" onclick="selectRoom('トイレ')" data-room="トイレ" style="background: #fd79a8; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🚽 トイレ</button>
-                            <button type="button" class="room-btn" onclick="selectRoom('玄関')" data-room="玄関" style="background: #6f42c1; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🚪 玄関</button>
-                            <button type="button" class="room-btn" onclick="selectRoom('その他')" data-room="その他" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📦 その他</button>
-                        </div>
-                        <input type="text" class="input-field" id="selectedRoom" placeholder="選択した場所" readonly style="margin-top: 5px; font-size: 12px; padding: 6px; text-align: center; background: #f0f8ff;">
-                    </div>
-                    
-                    <!-- 片付け時間（自動計算） -->
-                    <div style="margin-bottom: 10px;">
-                        <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #444;">⏱️ 片付け時間</label>
-                        <input type="text" class="input-field" id="roomDuration" placeholder="開始ボタンで計測開始" readonly style="width: 100%; text-align: center; background: #f0f8ff;">
-                    </div>
-                    
-                    <!-- 達成度 -->
-                    <div style="margin-bottom: 10px;">
-                        <div style="text-align: center; margin-bottom: 8px;">
-                            <span style="font-size: 13px; color: #444; font-weight: bold;">📊 達成度</span>
-                        </div>
-                        <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
-                            <button type="button" class="achievement-btn" onclick="selectAchievement(1)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">😞 1</button>
-                            <button type="button" class="achievement-btn" onclick="selectAchievement(2)" style="background: #fd7e14; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">😐 2</button>
-                            <button type="button" class="achievement-btn" onclick="selectAchievement(3)" style="background: #ffc107; color: #212529; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">🙂 3</button>
-                            <button type="button" class="achievement-btn" onclick="selectAchievement(4)" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">😊 4</button>
-                            <button type="button" class="achievement-btn" onclick="selectAchievement(5)" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">🤩 5</button>
-                        </div>
-                        <input type="text" class="input-field" id="selectedAchievement" placeholder="達成度" readonly style="margin-top: 5px; font-size: 12px; padding: 6px; text-align: center; background: #f0f8ff;">
-                    </div>
-                    
-                    <!-- メモ -->
-                    <textarea class="input-field" id="roomMemoInput" placeholder="片付けのメモ・気づき（オプション）" rows="3" style="margin-bottom: 10px;"></textarea>
-                    
-                    <div style="text-align: center;">
-                        <button onclick="saveRoomData()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">💾 片付け記録を保存</button>
-                    </div>
-                </div>
-
-                <!-- 片付け履歴表示 -->
-                <div class="input-card" id="roomHistory">
-                    <h3>🧹 片付け履歴 <button class="universal-copy-btn" onclick="copyRoomHistory()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 履歴をコピー</button></h3>
-                    <div class="data-area" id="roomHistoryArea">
-                        まだ片付け記録がありません
-                    </div>
-                </div>
-
-                <!-- 片付け統計 -->
-                <div class="input-card" id="roomStats">
-                    <h3>📈 片付け統計</h3>
-                    <div id="roomStatsArea" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-size: 24px; color: #007bff; font-weight: bold;" id="totalRoomSessions">-</div>
-                            <div style="font-size: 12px; color: #6c757d;">総片付け回数</div>
-                        </div>
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-size: 24px; color: #28a745; font-weight: bold;" id="totalRoomTime">-</div>
-                            <div style="font-size: 12px; color: #6c757d;">総片付け時間</div>
-                        </div>
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-size: 24px; color: #ffc107; font-weight: bold;" id="avgRoomAchievement">-</div>
-                            <div style="font-size: 12px; color: #6c757d;">平均達成度</div>
-                        </div>
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div style="font-size: 24px; color: #17a2b8; font-weight: bold;" id="thisMonthRoomCount">-</div>
-                            <div style="font-size: 12px; color: #6c757d;">今月の記録数</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- コンテンツは動的読み込み -->
         </div>
 
         <!-- タブコンテンツ4 -->
@@ -510,112 +288,7 @@
 
         <!-- タブコンテンツ8: メモリスト -->
         <div id="tabContent8" class="tab-content hidden">
-            <!-- 分離されたHTMLを動的読み込み -->
-            <div id="tab8ContentContainer"></div>
-                <!-- メモ追加エリア -->
-                <div class="input-card" id="memoInput">
-                    <h3>📝 メモリスト</h3>
-                    
-                    <!-- メモ入力フォーム -->
-                    <div style="margin-bottom: 15px;">
-                        <textarea id="newMemoText" placeholder="考えたこと、やりたいこと、なんでも自由に書いてください..." 
-                            style="width: 100%; max-width: 600px; height: 100px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; font-family: inherit; font-size: 14px; line-height: 1.4;"></textarea>
-                    </div>
-
-                    <!-- カテゴリ・重要度・対応時間の選択 -->
-                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
-                        <label style="font-weight: bold;">🏷️ カテゴリ（任意）:</label>
-                        <select id="memoCategory" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
-                            <option value="">選択なし</option>
-                            <option value="アイデア">💡 アイデア</option>
-                            <option value="やること">✅ やること</option>
-                            <option value="考え事">🤔 考え事</option>
-                            <option value="メモ">📝 メモ</option>
-                            <option value="重要">⚠️ 重要</option>
-                            <option value="その他">📋 その他</option>
-                        </select>
-                    </div>
-
-                    <!-- 重要度選択 -->
-                    <div style="margin-bottom: 15px;">
-                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">🎯 重要度:</label>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button type="button" class="priority-btn" data-priority="" onclick="selectPriority('')" style="background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 1;">なし</button>
-                            <button type="button" class="priority-btn" data-priority="S" onclick="selectPriority('S')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🔥 S</button>
-                            <button type="button" class="priority-btn" data-priority="A" onclick="selectPriority('A')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⚡ A</button>
-                            <button type="button" class="priority-btn" data-priority="B" onclick="selectPriority('B')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📋 B</button>
-                            <!-- <button type="button" class="priority-btn" data-priority="C" onclick="selectPriority('C')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📝 C</button> -->
-                        </div>
-                        <input type="hidden" id="memoPriority" value="">
-                    </div>
-
-                    <!-- 対応時間選択 -->
-                    <div style="margin-bottom: 15px;">
-                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">⏰ 対応時間:</label>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button type="button" class="timeframe-btn" data-timeframe="" onclick="selectTimeframe('')" style="background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 1;">なし</button>
-                            <button type="button" class="timeframe-btn" data-timeframe="短期" onclick="selectTimeframe('短期')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⚡ 短期</button>
-                            <button type="button" class="timeframe-btn" data-timeframe="中長期" onclick="selectTimeframe('中長期')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📅 中長期</button>
-                        </div>
-                        <input type="hidden" id="memoTimeframe" value="">
-                    </div>
-
-                    <!-- 追加ボタン -->
-                    <div style="text-align: center;">
-                        <button onclick="addMemo()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">➕ メモを追加</button>
-                    </div>
-                </div>
-
-                <!-- メモ一覧表示 -->
-                <div class="input-card" id="memoList">
-                    <h3 style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>📋 メモ一覧</span>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span id="filterCount" style="font-size: 12px; color: #666;"></span>
-                            <button class="universal-copy-btn" onclick="copyAllMemos()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 全メモをコピー</button>
-                            <button id="integrationModeBtn" onclick="toggleIntegrationMode()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">🔗 統合モード</button>
-                            <button id="executeIntegrationBtn" onclick="executeIntegration()" style="background: #007bff; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; display: none; opacity: 0.5;" disabled>⚡ 統合実行</button>
-                        </div>
-                    </h3>
-                    
-                    <!-- フィルター機能 -->
-                    <div style="margin-bottom: 15px;">
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="text" id="memoFilter" placeholder="🔍 メモを検索..." 
-                                oninput="filterMemos()" 
-                                style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
-                            <button onclick="clearFilter()" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px;">✕</button>
-                        </div>
-                    </div>
-                    
-                    <div class="data-area" id="memoListArea">
-                        まだメモがありません
-                    </div>
-                </div>
-
-                <!-- メモ統計 -->
-                <div class="input-card" id="memoStats">
-                    <h3>📊 メモ統計</h3>
-                    <div id="memoStatsArea" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div id="totalMemoCount" style="font-size: 24px; font-weight: bold; color: #007bff;">0</div>
-                            <div style="font-size: 12px; color: #6c757d;">総メモ数</div>
-                        </div>
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div id="todayMemoCount" style="font-size: 24px; font-weight: bold; color: #28a745;">0</div>
-                            <div style="font-size: 12px; color: #6c757d;">今日のメモ</div>
-                        </div>
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div id="weekMemoCount" style="font-size: 24px; font-weight: bold; color: #ffc107;">0</div>
-                            <div style="font-size: 12px; color: #6c757d;">今週のメモ</div>
-                        </div>
-                        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                            <div id="priorityMemoCount" style="font-size: 24px; font-weight: bold; color: #dc3545;">0</div>
-                            <div style="font-size: 12px; color: #6c757d;">重要度S・A</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- コンテンツは動的読み込み -->
         </div>
 
         <!-- タブ9-16の空コンテンツ -->
@@ -709,7 +382,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.59';
+        const APP_VERSION = 'v1.60';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2408,7 +2081,7 @@
                 // 新しいスクリプトタグを作成
                 const script = document.createElement('script');
                 script.id = `tab${tabNumber}Script`;
-                script.src = `tabs/tab${tabNumber}-${tabType}/${tabType}-tab.js`;
+                script.src = `tabs/tab${tabNumber}-${tabType}/tab-${tabType}.js`;
                 document.head.appendChild(script);
                 
                 return new Promise((resolve, reject) => {
