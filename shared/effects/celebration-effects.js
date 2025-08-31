@@ -72,6 +72,11 @@ class CelebrationEffects {
             await Promise.all([
                 this.showAchievementPopup(config),
                 this.createConfettiExplosion(config),
+                this.createParticleExplosion(config),
+                this.triggerScreenShake(config),
+                this.createRainbowWave(config),
+                this.showFloatingText(config),
+                this.createLensFlare(config),
                 this.triggerScreenFlash(config),
                 this.playVictorySound(config),
                 this.triggerVibration(config)
