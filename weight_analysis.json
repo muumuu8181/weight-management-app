@@ -1,0 +1,606 @@
+{
+  "total_lines": 3870,
+  "weight_related": [
+    {
+      "line": 106,
+      "content": ".timing-btn {",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 120,
+      "content": ".timing-btn:hover {",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 123,
+      "content": ".timing-btn.selected {",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 130,
+      "content": ".timing-btn {",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 138,
+      "content": ".clothing-btn {",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 150,
+      "content": ".clothing-btn:hover {",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 155,
+      "content": ".clothing-btn {",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 695,
+      "content": "customTimings: 'weightApp_customTimings',",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 695,
+      "content": "customTimings: 'weightApp_customTimings',",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 696,
+      "content": "customTops: 'weightApp_customTops',",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 696,
+      "content": "customTops: 'weightApp_customTops',",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 697,
+      "content": "customBottoms: 'weightApp_customBottoms'",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 697,
+      "content": "customBottoms: 'weightApp_customBottoms'",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 702,
+      "content": "const customTimings = Array.from(document.querySelectorAll('.timing-btn:not([data-timing=\"起床後\"]):not([data-timing=\"トイレ前\"]):not([data-timing=\"トイレ後\"]):not([data-timing=\"風呂前\"]):not([data-timing=\"風呂後\"]):not([data-timing=\"食事前\"]):not([data-timing=\"食事後\"])'))",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 708,
+      "content": "const customTops = Array.from(document.querySelectorAll('.clothing-btn[data-clothing-top]:not([data-clothing-top=\"なし\"]):not([data-clothing-top=\"下着シャツ\"]):not([data-clothing-top=\"ワイシャツ\"])'))",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 714,
+      "content": "const customBottoms = Array.from(document.querySelectorAll('.clothing-btn[data-clothing-bottom]:not([data-clothing-bottom=\"なし\"]):not([data-clothing-bottom=\"トランクス\"]):not([data-clothing-bottom=\"ハーフパンツ\"])'))",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 735,
+      "content": "button.className = 'timing-btn';",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 753,
+      "content": "button.className = 'clothing-btn';",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 771,
+      "content": "button.className = 'clothing-btn';",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 867,
+      "content": "button.className = 'timing-btn';",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 872,
+      "content": "button.className = 'clothing-btn';",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 877,
+      "content": "button.className = 'clothing-btn';",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 989,
+      "content": "timing: document.getElementById('timingTargetBtn'),",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 1014,
+      "content": "timing: '.timing-btn',",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 1015,
+      "content": "top: '.clothing-btn[data-clothing-top]',",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 1016,
+      "content": "bottom: '.clothing-btn[data-clothing-bottom]'",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 1051,
+      "content": "const allButtons = document.querySelectorAll('.timing-btn, .clothing-btn');",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 1051,
+      "content": "const allButtons = document.querySelectorAll('.timing-btn, .clothing-btn');",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 1054,
+      "content": "const item = btn.getAttribute('data-timing') || btn.getAttribute('data-clothing-top') || btn.getAttribute('data-clothing-bottom');",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 1054,
+      "content": "const item = btn.getAttribute('data-timing') || btn.getAttribute('data-clothing-top') || btn.getAttribute('data-clothing-bottom');",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 1064,
+      "content": "if (btn.classList.contains('timing-btn')) {",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 1103,
+      "content": "window.handleWeightKeypress = (event) => {",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1103,
+      "content": "window.handleWeightKeypress = (event) => {",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1104,
+      "content": "const weightInput = document.getElementById('weightValue');",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1104,
+      "content": "const weightInput = document.getElementById('weightValue');",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1105,
+      "content": "const currentValue = parseFloat(weightInput.value) || 72.0;",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1105,
+      "content": "const currentValue = parseFloat(weightInput.value) || 72.0;",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1109,
+      "content": "weightInput.value = (currentValue + 0.1).toFixed(1);",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1109,
+      "content": "weightInput.value = (currentValue + 0.1).toFixed(1);",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1112,
+      "content": "weightInput.value = Math.max(0, currentValue - 0.1).toFixed(1);",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1112,
+      "content": "weightInput.value = Math.max(0, currentValue - 0.1).toFixed(1);",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1118,
+      "content": "selectedTimingValue = timing;",
+      "pattern": "selectedTimingValue"
+    },
+    {
+      "line": 1122,
+      "content": "document.querySelectorAll('.timing-btn').forEach(btn => {",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 1139,
+      "content": "selectedTopValue = clothing;",
+      "pattern": "selectedTopValue"
+    },
+    {
+      "line": 1143,
+      "content": "document.querySelectorAll('.clothing-btn[data-clothing-top]').forEach(btn => {",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 1160,
+      "content": "selectedBottomValue = clothing;",
+      "pattern": "selectedBottomValue"
+    },
+    {
+      "line": 1164,
+      "content": "document.querySelectorAll('.clothing-btn[data-clothing-bottom]').forEach(btn => {",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 1192,
+      "content": "button.className = 'clothing-btn';",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 1236,
+      "content": "button.className = 'clothing-btn';",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 1280,
+      "content": "button.className = 'timing-btn';",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 1315,
+      "content": "// loadUserWeightData(user.uid); // 分離済み",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1315,
+      "content": "// loadUserWeightData(user.uid); // 分離済み",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1315,
+      "content": "// loadUserWeightData(user.uid); // 分離済み",
+      "pattern": "loadUserWeightData"
+    },
+    {
+      "line": 1481,
+      "content": "window.saveWeightData = async () => {",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1481,
+      "content": "window.saveWeightData = async () => {",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1481,
+      "content": "window.saveWeightData = async () => {",
+      "pattern": "saveWeightData"
+    },
+    {
+      "line": 1488,
+      "content": "const weight = document.getElementById('weightValue').value;",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1488,
+      "content": "const weight = document.getElementById('weightValue').value;",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1506,
+      "content": "const weightData = {",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1506,
+      "content": "const weightData = {",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1510,
+      "content": "timing: selectedTimingValue || '',",
+      "pattern": "selectedTimingValue"
+    },
+    {
+      "line": 1512,
+      "content": "top: selectedTopValue || '',",
+      "pattern": "selectedTopValue"
+    },
+    {
+      "line": 1513,
+      "content": "bottom: selectedBottomValue || ''",
+      "pattern": "selectedBottomValue"
+    },
+    {
+      "line": 1521,
+      "content": "if (window.editingEntryId) {",
+      "pattern": "editingEntryId"
+    },
+    {
+      "line": 1523,
+      "content": "const entryRef = database.ref(`users/${currentUser.uid}/weights/${window.editingEntryId}`);",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1523,
+      "content": "const entryRef = database.ref(`users/${currentUser.uid}/weights/${window.editingEntryId}`);",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1523,
+      "content": "const entryRef = database.ref(`users/${currentUser.uid}/weights/${window.editingEntryId}`);",
+      "pattern": "editingEntryId"
+    },
+    {
+      "line": 1528,
+      "content": "timing: selectedTimingValue || '',",
+      "pattern": "selectedTimingValue"
+    },
+    {
+      "line": 1530,
+      "content": "top: selectedTopValue || '',",
+      "pattern": "selectedTopValue"
+    },
+    {
+      "line": 1531,
+      "content": "bottom: selectedBottomValue || ''",
+      "pattern": "selectedBottomValue"
+    },
+    {
+      "line": 1539,
+      "content": "const userRef = database.ref(`users/${currentUser.uid}/weights`);",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1539,
+      "content": "const userRef = database.ref(`users/${currentUser.uid}/weights`);",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1540,
+      "content": "await userRef.push(weightData);",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1540,
+      "content": "await userRef.push(weightData);",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1545,
+      "content": "if (window.editingEntryId) {",
+      "pattern": "editingEntryId"
+    },
+    {
+      "line": 1550,
+      "content": "if (selectedTimingValue) logMessage += ` (${selectedTimingValue})`;",
+      "pattern": "selectedTimingValue"
+    },
+    {
+      "line": 1551,
+      "content": "if (selectedTopValue || selectedBottomValue) {",
+      "pattern": "selectedTopValue"
+    },
+    {
+      "line": 1551,
+      "content": "if (selectedTopValue || selectedBottomValue) {",
+      "pattern": "selectedBottomValue"
+    },
+    {
+      "line": 1552,
+      "content": "const clothingInfo = [selectedTopValue, selectedBottomValue].filter(Boolean).join(', ');",
+      "pattern": "selectedTopValue"
+    },
+    {
+      "line": 1552,
+      "content": "const clothingInfo = [selectedTopValue, selectedBottomValue].filter(Boolean).join(', ');",
+      "pattern": "selectedBottomValue"
+    },
+    {
+      "line": 1558,
+      "content": "document.getElementById('weightValue').value = '72.0';",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1558,
+      "content": "document.getElementById('weightValue').value = '72.0';",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1562,
+      "content": "selectedTimingValue = '';",
+      "pattern": "selectedTimingValue"
+    },
+    {
+      "line": 1563,
+      "content": "selectedTopValue = '';",
+      "pattern": "selectedTopValue"
+    },
+    {
+      "line": 1564,
+      "content": "selectedBottomValue = '';",
+      "pattern": "selectedBottomValue"
+    },
+    {
+      "line": 1567,
+      "content": "window.editingEntryId = null;",
+      "pattern": "editingEntryId"
+    },
+    {
+      "line": 1584,
+      "content": "document.querySelectorAll('.timing-btn').forEach(btn => {",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 1588,
+      "content": "document.querySelectorAll('.clothing-btn').forEach(btn => {",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 1594,
+      "content": "loadUserWeightData(currentUser.uid);",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1594,
+      "content": "loadUserWeightData(currentUser.uid);",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1594,
+      "content": "loadUserWeightData(currentUser.uid);",
+      "pattern": "loadUserWeightData"
+    },
+    {
+      "line": 1601,
+      "content": "window.editWeightEntry = async (entryId) => {",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1601,
+      "content": "window.editWeightEntry = async (entryId) => {",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1608,
+      "content": "const entryRef = database.ref(`users/${currentUser.uid}/weights/${entryId}`);",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1608,
+      "content": "const entryRef = database.ref(`users/${currentUser.uid}/weights/${entryId}`);",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1619,
+      "content": "document.getElementById('weightValue').value = entry.value || entry.weight;",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1619,
+      "content": "document.getElementById('weightValue').value = entry.value || entry.weight;",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1637,
+      "content": "window.editingEntryId = entryId;",
+      "pattern": "editingEntryId"
+    },
+    {
+      "line": 1678,
+      "content": "document.getElementById('weightValue').value = '';",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1678,
+      "content": "document.getElementById('weightValue').value = '';",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1682,
+      "content": "selectedTimingValue = '';",
+      "pattern": "selectedTimingValue"
+    },
+    {
+      "line": 1683,
+      "content": "selectedTopValue = '';",
+      "pattern": "selectedTopValue"
+    },
+    {
+      "line": 1684,
+      "content": "selectedBottomValue = '';",
+      "pattern": "selectedBottomValue"
+    },
+    {
+      "line": 1687,
+      "content": "window.editingEntryId = null;",
+      "pattern": "editingEntryId"
+    },
+    {
+      "line": 1704,
+      "content": "document.querySelectorAll('.timing-btn').forEach(btn => {",
+      "pattern": "timing.*btn"
+    },
+    {
+      "line": 1708,
+      "content": "document.querySelectorAll('.clothing-btn').forEach(btn => {",
+      "pattern": "clothing.*btn"
+    },
+    {
+      "line": 1717,
+      "content": "window.deleteWeightEntry = async (entryId) => {",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1717,
+      "content": "window.deleteWeightEntry = async (entryId) => {",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1729,
+      "content": "const entryRef = database.ref(`users/${currentUser.uid}/weights/${entryId}`);",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1729,
+      "content": "const entryRef = database.ref(`users/${currentUser.uid}/weights/${entryId}`);",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1738,
+      "content": "function loadUserWeightData(userId) {",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1738,
+      "content": "function loadUserWeightData(userId) {",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1738,
+      "content": "function loadUserWeightData(userId) {",
+      "pattern": "loadUserWeightData"
+    },
+    {
+      "line": 1739,
+      "content": "const userRef = database.ref(`users/${userId}/weights`);",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1739,
+      "content": "const userRef = database.ref(`users/${userId}/weights`);",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1742,
+      "content": "const historyDiv = document.getElementById('weightHistory');",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1742,
+      "content": "const historyDiv = document.getElementById('weightHistory');",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1750,
+      "content": "allWeightData = entries.sort((a, b) => new Date(a.date) - new Date(b.date));",
+      "pattern": "weight[A-Z]\\w*"
+    },
+    {
+      "line": 1750,
+      "content": "allWeightData = entries.sort((a, b) => new Date(a.date) - new Date(b.date));",
+      "pattern": "Weight[A-Z]\\w*"
+    },
+    {
+      "line": 1750,
+      "content": "allWeightData = entries.sort((a, b) => new Date(a.date) - new Date(b.date));",
+      "pattern": "allWeightData"
+    },
+    {
+      "line": 1769,
+      "content": 
