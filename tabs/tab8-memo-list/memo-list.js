@@ -17,6 +17,7 @@ function getPriorityColor(priority) {
         case 'A': return '#fd7e14'; // オレンジ
         case 'B': return '#ffc107'; // 黄色
         case 'C': return '#6c757d'; // グレー
+        case 'D': return '#28a745'; // 緑
         default: return '#6c757d';
     }
 }
@@ -28,6 +29,7 @@ function getPriorityIcon(priority) {
         case 'A': return '⚡';
         case 'B': return '📋';
         case 'C': return '📝';
+        case 'D': return '📌';
         default: return '';
     }
 }
@@ -1077,7 +1079,7 @@ function applySorting() {
             filteredMemoData.sort((a, b) => a.text.localeCompare(b.text, 'ja'));
             break;
         case 'priority':
-            const priorityOrder = {'S': 4, 'A': 3, 'B': 2, 'C': 1, '': 0};
+            const priorityOrder = {'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, '': 0};
             filteredMemoData.sort((a, b) => (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0));
             break;
         case 'category':
