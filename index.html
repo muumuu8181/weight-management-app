@@ -221,15 +221,17 @@
 
         <!-- タブコンテンツ -->
         <div id="tabContent1" class="tab-content">
-            <!-- 体重管理コンテンツは動的読み込み -->
-            <div style="text-align: center; padding: 20px; color: #666;">
-                <span>📊 体重管理機能を読み込み中...</span>
-            </div>
-            <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
-                <button id="normalModeBtn" onclick="setMode('normal')" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">📝 通常</button>
-                <button id="addModeBtn" onclick="setMode('add')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">➕ 追加</button>
-                <button id="deleteModeBtn" onclick="setMode('delete')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">🗑️ 削除</button>
-            </div>
+            <!-- 体重管理専用コンテンツをここに統合 -->
+            <!-- モード制御パネル -->
+            <div class="input-card hidden" id="modeControl">
+                <div style="text-align: center; margin-bottom: 8px;">
+                    <span style="font-size: 13px; color: #444; font-weight: bold;">🔧 操作モード</span>
+                </div>
+                <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
+                    <button id="normalModeBtn" onclick="setMode('normal')" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">📝 通常</button>
+                    <button id="addModeBtn" onclick="setMode('add')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">➕ 追加</button>
+                    <button id="deleteModeBtn" onclick="setMode('delete')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">🗑️ 削除</button>
+                </div>
             <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
                 <span style="font-size: 11px; color: #666;">対象:</span>
                 <button id="timingTargetBtn" onclick="selectTarget('timing')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">⏰ タイミング</button>
@@ -251,7 +253,7 @@
         </div>
 
         <!-- データ入力セクション -->
-        <div class="weight-input hidden" id="weightInput">
+        <div class="weight-input" id="weightInput">
             <div class="input-card">
                 <h3 style="margin-top: 0; margin-bottom: 8px;">📝 データを記録</h3>
                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -314,7 +316,7 @@
         </div>
 
         <!-- グラフパネル（上に移動） -->
-        <div class="input-card hidden" id="chartPanel">
+        <div class="input-card" id="chartPanel">
             <h3>📊 データ推移グラフ</h3>
             <div style="position: relative; height: 300px;">
                 <canvas id="weightChart"></canvas>
@@ -343,7 +345,7 @@
         </div>
 
         <!-- データ履歴（グラフの下に移動） -->
-        <div class="input-card hidden" id="weightHistoryPanel">
+        <div class="input-card" id="weightHistoryPanel">
             <h3>📈 データ履歴</h3>
             <div class="data-area" id="weightHistory">
                 データを読み込み中...<br>
@@ -835,7 +837,11 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
+<<<<<<< HEAD
         const APP_VERSION = 'v1.46';
+=======
+        const APP_VERSION = 'v1.50';
+>>>>>>> bfcd7cca510911b49606e589eeb4bd237b6952da
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2552,11 +2558,18 @@
                 const tabBtn = document.getElementById(`tab${i}`);
                 const tabContent = document.getElementById(`tabContent${i}`);
                 
+                log(`🔍 タブ${i}: ボタン=${tabBtn ? '存在' : 'なし'}, コンテンツ=${tabContent ? '存在' : 'なし'}`);
+                
                 if (i === tabNumber) {
                     // アクティブタブ
-                    tabBtn.style.background = '#007bff';
-                    tabBtn.style.color = 'white';
-                    tabContent.classList.remove('hidden');
+                    if (tabBtn) {
+                        tabBtn.style.background = '#007bff';
+                        tabBtn.style.color = 'white';
+                    }
+                    if (tabContent) {
+                        tabContent.classList.remove('hidden');
+                        log(`✅ タブ${i}コンテンツを表示`);
+                    }
                     
                     // 動的読み込み（分離されたタブのみ）
                     if (i === 1) {
@@ -2564,9 +2577,14 @@
                     }
                 } else {
                     // 非アクティブタブ
-                    tabBtn.style.background = '#f8f9fa';
-                    tabBtn.style.color = '#495057';
-                    tabContent.classList.add('hidden');
+                    if (tabBtn) {
+                        tabBtn.style.background = '#f8f9fa';
+                        tabBtn.style.color = '#495057';
+                    }
+                    if (tabContent) {
+                        tabContent.classList.add('hidden');
+                        log(`❌ タブ${i}コンテンツを非表示`);
+                    }
                 }
             }
             
@@ -2586,6 +2604,8 @@
             if (titleElement && tabTitles[tabNumber]) {
                 titleElement.textContent = `${tabTitles[tabNumber]} ${APP_VERSION}`;
             }
+            
+            // 体重管理要素は常に表示（tabContent1内にあるため自動制御される）
             
             // タブ固有の初期化処理
             if (tabNumber === 2) {
