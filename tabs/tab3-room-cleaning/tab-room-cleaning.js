@@ -6,6 +6,7 @@ let selectedRoomAchievement = null;
 let roomStartTime = null;
 let roomEndTime = null;
 let currentRoomMode = 'normal';
+let allRoomData = [];
 
 // 部屋片付け管理初期化
 function initRoomManagement() {
@@ -269,7 +270,7 @@ window.saveRoomData = async () => {
         
         log('✅ 部屋片付けデータ保存完了');
         resetRoomForm();
-        loadRoomData();
+        window.loadRoomData();
         
     } catch (error) {
         log(`❌ 部屋片付けデータ保存エラー: ${error.message}`);
@@ -304,7 +305,7 @@ function resetRoomForm() {
 }
 
 // 部屋片付けデータ読み込み
-async function loadRoomData() {
+window.loadRoomData = async () => {
     if (!currentUser) return;
     
     try {
@@ -342,10 +343,13 @@ async function loadRoomData() {
         
         roomDataDisplay.innerHTML = html;
         
+        // allRoomDataも更新（統計・履歴用）
+        allRoomData = roomEntries.map(([key, entry]) => ({ id: key, ...entry }));
+        
     } catch (error) {
         log(`❌ 部屋片付けデータ読み込みエラー: ${error.message}`);
     }
-}
+};
 
 // 部屋片付け記録削除
 window.deleteRoomEntry = async (entryKey) => {
@@ -358,9 +362,93 @@ window.deleteRoomEntry = async (entryKey) => {
         await entryRef.remove();
         
         log('🗑️ 部屋片付け記録を削除しました');
-        loadRoomData();
+        window.loadRoomData();
         
     } catch (error) {
         log(`❌ 部屋片付け記録削除エラー: ${error.message}`);
     }
+};
+
+// 部屋片付け履歴表示更新
+function updateRoomHistory() {
+    log('🔍 updateRoomHistory() 開始');
+    const historyArea = document.getElementById('roomHistoryArea');
+    
+    log(`📊 部屋データ件数: ${allRoomData.length}`);
+    log('🔍 historyArea要素:', historyArea ? '存在' : '見つからない');
+    
+    if (!historyArea) {
+        log('❌ roomHistoryArea要素が見つかりません');
+        return;
+    }
+    
+    if (allRoomData.length === 0) {
+        historyArea.innerHTML = 'まだ片付け記録がありません';
+        log('ℹ️ 部屋データなし - プレースホルダー表示');
+        return;
+    }
+    
+    // 直近7件表示
+    const recentData = allRoomData.slice(0, 7);
+    log(`📋 表示データ件数: ${recentData.length}`);
+    
+    historyArea.innerHTML = recentData.map(data => {
+        let content = `<strong>${data.date}</strong> ${data.time} `;
+        content += `📍 ${data.room} `;
+        content += `⏱️ ${data.duration} `;
+        content += `📊 ${data.achievement}/5`;
+        if (data.memo) {
+            content += `<br>📝 ${data.memo}`;
+        }
+        
+        return `<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0;">
+            <div>${content}</div>
+            <button onclick="deleteRoomEntry('${data.id}')" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; flex-shrink: 0;">🗑️</button>
+        </div>`;
+    }).join('');
+    
+    log('✅ updateRoomHistory() 完了');
+}
+
+// 部屋片付け統計更新
+function updateRoomStats() {
+    const totalSessions = allRoomData.length;
+    const totalMinutes = allRoomData.reduce((sum, data) => {
+        const minutes = parseInt(data.duration) || 0;
+        return sum + minutes;
+    }, 0);
+    const avgAchievement = totalSessions > 0 ? 
+        (allRoomData.reduce((sum, data) => sum + (data.achievement || 0), 0) / totalSessions).toFixed(1) : 0;
+    
+    // 今月の記録数
+    const thisMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+    const thisMonthCount = allRoomData.filter(data => data.date.startsWith(thisMonth)).length;
+    
+    const totalSessionsEl = document.getElementById('totalRoomSessions');
+    const totalTimeEl = document.getElementById('totalRoomTime');
+    const avgAchievementEl = document.getElementById('avgRoomAchievement');
+    const thisMonthEl = document.getElementById('thisMonthRoomCount');
+    
+    if (totalSessionsEl) totalSessionsEl.textContent = totalSessions;
+    if (totalTimeEl) totalTimeEl.textContent = `${totalMinutes}分`;
+    if (avgAchievementEl) avgAchievementEl.textContent = avgAchievement;
+    if (thisMonthEl) thisMonthEl.textContent = thisMonthCount;
+}
+
+// 部屋片付け履歴コピー
+window.copyRoomHistory = () => {
+    if (allRoomData.length === 0) {
+        log('📋 コピーする片付けデータがありません');
+        return;
+    }
+    
+    const copyText = allRoomData.slice(0, 7).map(data => 
+        `${data.date} ${data.time} ${data.room} ${data.duration} 達成度${data.achievement}/5${data.memo ? ` ${data.memo}` : ''}`
+    ).join('\n');
+    
+    navigator.clipboard.writeText(copyText).then(() => {
+        log('📋 片付け履歴をクリップボードにコピーしました');
+    }).catch(() => {
+        log('❌ クリップボードのコピーに失敗しました');
+    });
 };

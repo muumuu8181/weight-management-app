@@ -399,7 +399,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.82';
+        const APP_VERSION = 'v1.83';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -3713,39 +3713,7 @@ ${document.getElementById('logArea').innerText}`;
             }
         };
         
-        // 部屋片付けデータ読み込み
-        window.loadRoomData = async () => {
-            log('📚 loadRoomData() 開始');
-            if (!currentUser) {
-                log('⚠️ currentUserがないため、loadRoomData()を終了');
-                return;
-            }
-            
-            try {
-                const roomRef = database.ref(`users/${currentUser.uid}/roomData`);
-                const snapshot = await roomRef.once('value');
-                
-                allRoomData = [];
-                if (snapshot.val()) {
-                    Object.entries(snapshot.val()).forEach(([key, data]) => {
-                        allRoomData.push({ id: key, ...data });
-                    });
-                    
-                    // 日付順でソート（新しい順）
-                    allRoomData.sort((a, b) => {
-                        const dateA = new Date(a.date + ' ' + (a.time || '00:00'));
-                        const dateB = new Date(b.date + ' ' + (b.time || '00:00'));
-                        return dateB - dateA;
-                    });
-                }
-                
-                updateRoomHistory();
-                updateRoomStats();
-                
-            } catch (error) {
-                log(`❌ 部屋片付けデータ読み込みエラー: ${error.message}`);
-            }
-        };
+        // 部屋片付けデータ読み込み（外部JSファイルで定義済み）
         
         // フォームリセット
         function resetRoomForm() {
