@@ -399,7 +399,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.80';
+        const APP_VERSION = 'v1.81';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2544,8 +2544,16 @@
                     } else if (tabNumber === 3 && currentUser) {
                         log('🔄 部屋片付けタブ: JS読み込み完了後のデータ読み込み開始');
                         setTimeout(() => {
-                            loadRoomData();
-                        }, 100);
+                            if (typeof window.loadRoomData === 'function') {
+                                window.loadRoomData();
+                                log('✅ 部屋片付けデータ読み込み実行');
+                            } else if (typeof loadRoomData === 'function') {
+                                loadRoomData();
+                                log('✅ 部屋片付けデータ読み込み実行（ローカル関数）');
+                            } else {
+                                log('❌ loadRoomData関数が見つかりません');
+                            }
+                        }, 200); // 少し長めの待機時間
                     } else if (tabNumber === 8 && currentUser) {
                         log('🔄 メモリストタブ: JS読み込み完了後のデータ読み込み開始');
                         setTimeout(() => {
