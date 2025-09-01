@@ -1,4 +1,35 @@
 <!-- 体重管理専用コンテンツ（オリジナルレイアウト） -->
+
+<!-- モード制御パネル -->
+<div class="input-card" id="modeControl">
+    <div style="text-align: center; margin-bottom: 8px;">
+        <span style="font-size: 13px; color: #444; font-weight: bold;">🔧 操作モード</span>
+    </div>
+    <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
+        <button id="normalModeBtn" onclick="setMode('normal')" style="background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">📝 通常</button>
+        <button id="addModeBtn" onclick="setMode('add')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">➕ 追加</button>
+        <button id="deleteModeBtn" onclick="setMode('delete')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px;">🗑️ 削除</button>
+    </div>
+    <div style="display: flex; gap: 5px; justify-content: center; align-items: center;">
+        <span style="font-size: 11px; color: #666;">対象:</span>
+        <button id="timingTargetBtn" onclick="selectTarget('timing')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">⏰ タイミング</button>
+        <button id="topTargetBtn" onclick="selectTarget('top')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">👕 上</button>
+        <button id="bottomTargetBtn" onclick="selectTarget('bottom')" style="background: #6c757d; color: white; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">👖 下</button>
+    </div>
+    
+    <!-- 追加モード用の統一入力エリア -->
+    <div id="unifiedAddInput" style="display: none; margin-top: 8px; padding: 8px; background: #e8f5e8; border-radius: 5px; border: 2px solid #28a745;">
+        <div style="margin-bottom: 5px;">
+            <span style="font-size: 11px; color: #155724; font-weight: bold;">✨ 新規項目を追加</span>
+        </div>
+        <div style="display: flex; gap: 3px; align-items: center;">
+            <input type="text" id="unifiedAddText" placeholder="項目名を入力" style="flex: 1; padding: 4px 8px; border: 1px solid #28a745; border-radius: 3px; font-size: 11px;">
+            <button onclick="executeAdd()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✓ 追加</button>
+            <button onclick="cancelAdd()" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">✗ キャンセル</button>
+        </div>
+    </div>
+</div>
+
 <div class="weight-input" id="weightInput">
     <div class="input-card">
         <h3 style="margin-top: 0; margin-bottom: 8px;">📝 データを記録</h3>
