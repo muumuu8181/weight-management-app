@@ -9,49 +9,30 @@
     <meta http-equiv="Expires" content="0">
     <title>体重管理アプリ</title>
     
-    <!-- カスタムスタイル -->
+    <!-- 外部CSS -->
     <link rel="stylesheet" href="custom/styles.css">
-    
-    <!-- タブ固有スタイル -->
     <link rel="stylesheet" href="tabs/tab3-room-cleaning/room-cleaning.css">
     <link rel="stylesheet" href="tabs/tab4-stretch/tab-stretch.css">
     <link rel="stylesheet" href="tabs/tab8-memo-list/memo-list.css">
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    
-    <!-- Chart.js with date adapter -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-    
-    <!-- カスタム設定 -->
-    <script type="module" src="custom/app-config.js"></script>
-    
-    <!-- 共通JavaScript関数 -->
-    <script src="shared/common-functions.js"></script>
-    
-    <!-- 共通ユーティリティ -->
-    <script src="shared/utils/validation.js"></script>
-    <script src="shared/utils/custom-items.js"></script>
-    <script src="shared/utils/data-operations.js"></script>
-    
-    <!-- 共通コンポーネント -->
-    <script src="shared/components/dom-utils.js"></script>
-    <script src="shared/components/mode-control.js"></script>
-    
-    <!-- 認証・デバッグ・ログ関数 -->
-    <script src="shared/core/auth.js"></script>
-    <script src="shared/utils/debug.js"></script>
-    <script src="shared/utils/logging.js"></script>
-    
-    <!-- 外部CSSファイル -->
     <link rel="stylesheet" href="shared/styles/app-layout.css">
     <link rel="stylesheet" href="shared/styles/timing-clothing-buttons.css">
     
-    <!-- タブ固有JavaScript -->
-    <!-- タブ用JSは動的読み込みのためstatic読み込み削除 -->
+    <!-- 外部JS -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script type="module" src="custom/app-config.js"></script>
+    <script src="shared/common-functions.js"></script>
+    <script src="shared/utils/validation.js"></script>
+    <script src="shared/utils/custom-items.js"></script>
+    <script src="shared/utils/data-operations.js"></script>
+    <script src="shared/components/dom-utils.js"></script>
+    <script src="shared/components/mode-control.js"></script>
+    <script src="shared/core/auth.js"></script>
+    <script src="shared/utils/debug.js"></script>
+    <script src="shared/utils/logging.js"></script>
 </head>
 <body>
     <div class="container">
@@ -63,27 +44,8 @@
 
         <!-- タブナビゲーション -->
         <div id="tabNavigation" class="hidden" style="margin-bottom: 15px;">
-            <div style="display: flex; border-bottom: 2px solid #ddd; flex-wrap: wrap;">
-                <button id="tab1" class="tab-btn active" onclick="switchTab(1)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #007bff; color: white; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">体重</button>
-                <button id="tab2" class="tab-btn" onclick="switchTab(2)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">睡眠</button>
-                <button id="tab3" class="tab-btn" onclick="switchTab(3)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">部屋片づけ</button>
-                <button id="tab4" class="tab-btn" onclick="switchTab(4)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">ストレッチ</button>
-                <button id="tab5" class="tab-btn" onclick="switchTab(5)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx5</button>
-                <button id="tab6" class="tab-btn" onclick="switchTab(6)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx6</button>
-                <button id="tab7" class="tab-btn" onclick="switchTab(7)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx7</button>
-                <button id="tab8" class="tab-btn" onclick="switchTab(8)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">メモリスト</button>
-            </div>
-            <!-- 2行目のタブ（9-16） -->
-            <div style="display: flex; border-bottom: 2px solid #ddd; flex-wrap: wrap;">
-                <button id="tab9" class="tab-btn" onclick="switchTab(9)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx9</button>
-                <button id="tab10" class="tab-btn" onclick="switchTab(10)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx10</button>
-                <button id="tab11" class="tab-btn" onclick="switchTab(11)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx11</button>
-                <button id="tab12" class="tab-btn" onclick="switchTab(12)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx12</button>
-                <button id="tab13" class="tab-btn" onclick="switchTab(13)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx13</button>
-                <button id="tab14" class="tab-btn" onclick="switchTab(14)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx14</button>
-                <button id="tab15" class="tab-btn" onclick="switchTab(15)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-right: 1px; margin-bottom: 1px; font-size: 12px;">xx15</button>
-                <button id="tab16" class="tab-btn" onclick="switchTab(16)" style="flex: 1; min-width: 80px; padding: 8px 10px; border: none; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px 5px 0 0; margin-bottom: 1px; font-size: 12px;">xx16</button>
-            </div>
+            <div id="tabRow1" class="tab-row"></div>
+            <div id="tabRow2" class="tab-row"></div>
         </div>
 
         <!-- アプリタイトル -->
@@ -115,18 +77,10 @@
                 🔐 Google認証準備完了<br>
             </div>
             
-            <!-- デバッグボタンエリア -->
-            <div style="margin-top: 8px; text-align: center;">
-                <button class="universal-copy-btn" onclick="debugFirebaseConnection()" style="background: #ff6b6b; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔍 Firebase Debug</button>
-                <button class="universal-copy-btn" onclick="checkLoginIssues()" style="background: #ffc107; color: #212529; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">⚠️ ログイン問題診断</button>
-                <button class="universal-copy-btn" onclick="copyDebugInfo()" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📋 デバッグ情報をコピー</button>
-                <button class="universal-copy-btn" onclick="checkDatabaseStructure()" style="background: #6f42c1; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🏗️ DB構造確認</button>
-                <button class="universal-copy-btn" onclick="checkMobileSupport()" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📱 モバイル診断</button>
-                <button class="universal-copy-btn" onclick="forceAuthCheck()" style="background: #fd7e14; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔄 認証状態確認</button>
-                <button class="universal-copy-btn" onclick="checkFirebaseConfig()" style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔧 Firebase設定</button>
-                <button class="universal-copy-btn" onclick="testPopup()" style="background: #20c997; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🧪 ポップアップテスト</button>
-            </div>
+            <div id="debugButtons" class="debug-button-grid"></div>
         </div>
+
+
         <!-- タブコンテンツ2 -->
         <div id="tabContent2" class="tab-content hidden">
             <!-- コンテンツは動的読み込み -->
@@ -142,95 +96,22 @@
             <!-- ストレッチコンテンツは動的読み込み -->
         </div>
 
-        <!-- タブコンテンツ5 -->
-        <div id="tabContent5" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx5</h3>
-                <p>こちらのコンテンツは後で実装予定です</p>
-            </div>
-        </div>
-
-        <!-- タブコンテンツ6 -->
-        <div id="tabContent6" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx6</h3>
-                <p>こちらのコンテンツは後で実装予定です</p>
-            </div>
-        </div>
-
-        <!-- タブコンテンツ7 -->
-        <div id="tabContent7" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx7</h3>
-                <p>こちらのコンテンツは後で実装予定です</p>
-            </div>
-        </div>
-
-        <!-- タブコンテンツ8: メモリスト -->
-        <div id="tabContent8" class="tab-content hidden">
-            <!-- コンテンツは動的読み込み -->
-        </div>
-
-        <!-- タブ9-16の空コンテンツ -->
-        <div id="tabContent9" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx9</h3>
-                <p>このタブはまだ実装されていません</p>
-            </div>
-        </div>
-
-        <div id="tabContent10" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx10</h3>
-                <p>このタブはまだ実装されていません</p>
-            </div>
-        </div>
-
-        <div id="tabContent11" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx11</h3>
-                <p>このタブはまだ実装されていません</p>
-            </div>
-        </div>
-
-        <div id="tabContent12" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx12</h3>
-                <p>このタブはまだ実装されていません</p>
-            </div>
-        </div>
-
-        <div id="tabContent13" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx13</h3>
-                <p>このタブはまだ実装されていません</p>
-            </div>
-        </div>
-
-        <div id="tabContent14" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx14</h3>
-                <p>このタブはまだ実装されていません</p>
-            </div>
-        </div>
-
-        <div id="tabContent15" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx15</h3>
-                <p>このタブはまだ実装されていません</p>
-            </div>
-        </div>
-
-        <div id="tabContent16" class="tab-content hidden">
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <h3>🔧 xx16</h3>
-                <p>このタブはまだ実装されていません</p>
-            </div>
-        </div>
+        <!-- 実装済みタブ（動的読み込み） -->
+        <div id="tabContent5" class="tab-content hidden"></div>
+        <div id="tabContent6" class="tab-content hidden"></div>
+        <div id="tabContent7" class="tab-content hidden"></div>
+        <div id="tabContent8" class="tab-content hidden"><!-- メモリスト動的読み込み --></div>
+        <div id="tabContent9" class="tab-content hidden"></div>
+        <div id="tabContent10" class="tab-content hidden"></div>
+        <div id="tabContent11" class="tab-content hidden"></div>
+        <div id="tabContent12" class="tab-content hidden"></div>
+        <div id="tabContent13" class="tab-content hidden"></div>
+        <div id="tabContent14" class="tab-content hidden"></div>
+        <div id="tabContent15" class="tab-content hidden"></div>
+        <div id="tabContent16" class="tab-content hidden"></div>
     </div>
 
     <script>
-        // Core Firebase設定（変更禁止 - core/src/firebase-config.js参照）
         const firebaseConfig = {
             apiKey: "AIzaSyA5PXKChizYDCXF_GJ4KL6Ylq9K5hCPXWE",
             authDomain: "shares-b1b97.firebaseapp.com",
@@ -240,28 +121,12 @@
             messagingSenderId: "38311063248",
             appId: "1:38311063248:web:0d2d5726d12b305b24b8d5"
         };
-
-        // Firebase初期化
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
-
-        let currentUser = null;
-        let selectedTimingValue = '';
-        let selectedTopValue = '';
-        let selectedBottomValue = '';
-        let weightChart = null;
-        let allWeightData = [];
-        window.editingEntryId = null;
-
-        // 統一モード状態管理（外部ファイルで定義済み）
-
-        // 前期間比較機能の状態管理
-
-        // アプリバージョン（一元管理）
-        const APP_VERSION = 'v2.15';
-        
-        // 認証状態の監視
+        let currentUser = null, currentTab = 1;
+        const APP_VERSION = 'v2.13';
+        // 認証状態の監視（改良版 + リダイレクト対応）
         auth.onAuthStateChanged(async (user) => {
             currentUser = user;
             if (user) {
@@ -286,13 +151,16 @@
 
         // 初期化完了ログ
         log('🔄 Firebase認証システム初期化完了 - 認証状態を確認中...');
-        // ユーザーのデータを読み込み
-        // loadUserWeightData関数は tabs/tab1-weight/tab-weight.js に移動済み
 
-        // グラフを更新
-        // 現在のタブ
-        let currentTab = 1;
-        
+
+
+
+
+
+
+
+
+
         // タブコンテンツ動的読み込み
         window.loadTabContent = async (tabNumber, tabType) => {
             try {
@@ -528,6 +396,8 @@
             document.getElementById('weightInput').classList.add('hidden');
             document.getElementById('chartPanel').classList.add('hidden');
         }
+
+
         // アプリ初期化
         function initializeApp() {
             // バージョン表示の動的設定
