@@ -387,7 +387,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.65';
+        const APP_VERSION = 'v1.67';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2609,10 +2609,7 @@ ${document.getElementById('logArea').innerText}`;
         // ========== 睡眠管理機能 ==========
 
         // 睡眠管理用変数
-        let allSleepData = [];
-        let selectedSleepType = '';
-        let selectedSleepQuality = '';
-        let selectedSleepTags = [];
+        // 睡眠管理変数はtab-sleep.jsで宣言
 
         // 睡眠管理初期化
         function initializeSleepManager() {
