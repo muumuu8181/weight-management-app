@@ -399,7 +399,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.81';
+        const APP_VERSION = 'v1.82';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -2715,8 +2715,13 @@
             // カスタム項目を復元（ログイン時に実行）
             loadCustomItems();
             
-            // メモデータを読み込み（ログイン時）
-            loadMemoData();
+            // メモデータを読み込み（ログイン時、存在チェック付き）
+            if (typeof loadMemoData === 'function') {
+                loadMemoData();
+                log('✅ メモデータ読み込み実行');
+            } else {
+                log('⚠️ loadMemoData関数未定義 - 初期化時スキップ');
+            }
             
             // 今日の日付と体重デフォルト値を設定（タイムゾーン考慮）
             const today = new Date();
