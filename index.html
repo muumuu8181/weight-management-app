@@ -261,7 +261,7 @@
         // 前期間比較機能の状態管理
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v2.10';
+        const APP_VERSION = 'v2.11';
         
         // カラー配列定数化（3箇所の重複統一）
 
@@ -288,8 +288,7 @@
                 log(`✅ 認証状態確認: ${user.displayName} でログイン中`);
                 log(`📧 メール: ${user.email}`);
                 showUserInterface(user);
-                log('🔄 体重データ読み込み開始...');
-                loadUserWeightData(user.uid);
+                log('🔄 体重データ読み込み（外部JSで実行）');
             } else {
                 // リダイレクト結果をチェック（iPhone対応）
                 try {
