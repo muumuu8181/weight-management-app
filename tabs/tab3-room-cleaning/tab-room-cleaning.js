@@ -264,7 +264,7 @@ window.saveRoomData = async () => {
         };
         
         // Firebaseに保存
-        const userRoomRef = firebase.database().ref(`roomData/${currentUser.uid}`);
+        const userRoomRef = firebase.database().ref(`users/${currentUser.uid}/roomData`);
         await userRoomRef.push(roomData);
         
         log('✅ 部屋片付けデータ保存完了');
@@ -308,7 +308,7 @@ async function loadRoomData() {
     if (!currentUser) return;
     
     try {
-        const userRoomRef = firebase.database().ref(`roomData/${currentUser.uid}`);
+        const userRoomRef = firebase.database().ref(`users/${currentUser.uid}/roomData`);
         const snapshot = await userRoomRef.orderByChild('date').limitToLast(10).once('value');
         
         const roomDataDisplay = document.getElementById('roomDataDisplay');
@@ -354,7 +354,7 @@ window.deleteRoomEntry = async (entryKey) => {
     if (!confirm('この記録を削除しますか？')) return;
     
     try {
-        const entryRef = firebase.database().ref(`roomData/${currentUser.uid}/${entryKey}`);
+        const entryRef = firebase.database().ref(`users/${currentUser.uid}/roomData/${entryKey}`);
         await entryRef.remove();
         
         log('🗑️ 部屋片付け記録を削除しました');
