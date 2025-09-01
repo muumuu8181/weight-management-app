@@ -387,7 +387,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.71';
+        const APP_VERSION = 'v1.72';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -428,9 +428,12 @@
         function loadCustomItems() {
             // タイミング項目の復元
             const savedTimings = localStorage.getItem(STORAGE_KEYS.customTimings);
+            log(`🔍 localStorage確認: customTimings=${savedTimings ? 'あり' : 'なし'}`);
             if (savedTimings) {
                 const timings = JSON.parse(savedTimings);
                 const container = document.getElementById('timingButtons');
+                log(`🔍 timingButtons要素: ${container ? '存在' : '不存在'}`);
+                log(`🔍 復元対象: ${timings.length}個のカスタム項目`);
                 timings.forEach(item => {
                     const button = document.createElement('button');
                     button.type = 'button';
