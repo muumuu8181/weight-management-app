@@ -387,7 +387,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.75';
+        const APP_VERSION = 'v1.76';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -452,6 +452,34 @@
 
         // グローバル変数: loadCustomItems実行フラグ
         let isLoadCustomItemsExecuted = false;
+        
+        // カスタム項目リセット機能（重複解決用）
+        async function resetCustomItems() {
+            if (currentUser) {
+                try {
+                    // Firebaseから削除
+                    const customItemsRef = database.ref(`users/${currentUser.uid}/customItems`);
+                    await customItemsRef.remove();
+                    
+                    // localStorageからも削除
+                    localStorage.removeItem(STORAGE_KEYS.customTimings);
+                    localStorage.removeItem(STORAGE_KEYS.customTops);
+                    localStorage.removeItem(STORAGE_KEYS.customBottoms);
+                    
+                    // 画面からカスタムボタン削除
+                    document.querySelectorAll('.timing-btn[data-original-color]').forEach(btn => btn.remove());
+                    document.querySelectorAll('.clothing-btn[data-original-color]').forEach(btn => btn.remove());
+                    
+                    // 実行フラグリセット
+                    isLoadCustomItemsExecuted = false;
+                    
+                    log('✅ カスタム項目完全リセット完了');
+                    alert('カスタム項目をリセットしました。追加ボタンで再作成してください。');
+                } catch (error) {
+                    log(`❌ リセットエラー: ${error.message}`);
+                }
+            }
+        }
 
         // カスタム項目をFirebase優先で復元（完全重複防止機能付き）
         async function loadCustomItems() {

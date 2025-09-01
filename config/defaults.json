@@ -1,0 +1,11 @@
+{
+  "defaultClothing": {
+    "top": "なし",
+    "bottom": "トランクス"
+  },
+  "defaultTiming": "起床後",
+  "ui": {
+    "showPreviousPeriod": false,
+    "chartDefaultRange": 7
+  }
+}
