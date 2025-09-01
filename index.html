@@ -387,7 +387,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.74';
+        const APP_VERSION = 'v1.75';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -450,14 +450,28 @@
             }
         }
 
-        // カスタム項目をFirebase優先で復元（重複防止機能付き）
+        // グローバル変数: loadCustomItems実行フラグ
+        let isLoadCustomItemsExecuted = false;
+
+        // カスタム項目をFirebase優先で復元（完全重複防止機能付き）
         async function loadCustomItems() {
-            // 重複チェック: 既にカスタムボタンが存在する場合はスキップ
-            const existingCustomButtons = document.querySelectorAll('[data-original-color]');
-            if (existingCustomButtons.length > 0) {
-                log(`⚠️ カスタム項目復元スキップ: 既に${existingCustomButtons.length}個のカスタムボタンが存在`);
+            // 実行制御: 既に実行済みの場合は即座にreturn
+            if (isLoadCustomItemsExecuted) {
+                log('⚠️ カスタム項目復元スキップ: 既に実行済み');
                 return;
             }
+            
+            // 既存のカスタムボタンを完全削除（最優先実行）
+            const existingTimingButtons = document.querySelectorAll('.timing-btn[data-original-color]');
+            const existingClothingButtons = document.querySelectorAll('.clothing-btn[data-original-color]');
+            
+            existingTimingButtons.forEach(btn => btn.remove());
+            existingClothingButtons.forEach(btn => btn.remove());
+            
+            log(`🧹 既存カスタムボタン完全削除: タイミング${existingTimingButtons.length}個、服装${existingClothingButtons.length}個`);
+            
+            // 実行フラグをtrueに設定
+            isLoadCustomItemsExecuted = true;
             
             let timings = [];
             let tops = [];
@@ -524,11 +538,11 @@
                 }
             }
 
-            // 既存のカスタムボタンをすべて削除（重複防止）
-            document.querySelectorAll('[data-original-color]').forEach(btn => {
-                btn.remove();
-            });
-            log('🧹 既存カスタムボタンを削除（重複防止）');
+            // 削除処理は関数先頭で実行済みのためコメントアウト
+            // document.querySelectorAll('[data-original-color]').forEach(btn => {
+            //     btn.remove();
+            // });
+            // log('🧹 既存カスタムボタンを削除（重複防止）');
 
             // タイミング項目の復元
             if (timings.length > 0) {
@@ -1380,7 +1394,9 @@
         window.handleLogout = async () => {
             try {
                 await auth.signOut();
-                log('📤 ログアウト完了');
+                // loadCustomItems実行フラグをリセット（次回ログイン時に再実行可能にする）
+                isLoadCustomItemsExecuted = false;
+                log('📤 ログアウト完了 (カスタム項目フラグリセット済み)');
             } catch (error) {
                 log(`❌ ログアウトエラー: ${error.message}`);
             }
@@ -2271,10 +2287,9 @@
                     // JavaScriptファイルを動的読み込み
                     await loadTabScript(tabNumber, tabType);
                     
-                    // tab1の場合はカスタム項目を復元
+                    // tab1の場合のデフォルト服装選択処理（カスタム項目復元は signinWithGoogle で実行）
                     if (tabNumber === 1 && currentUser) {
-                        await loadCustomItems();
-                        log(`🔄 カスタム追加項目復元実行`);
+                        log(`🔄 tab1: デフォルト服装選択実行`);
                         
                         // デフォルト服装選択: 上=なし, 下=トランクス
                         setTimeout(() => {
@@ -2390,7 +2405,7 @@
                 if (currentUser) {
                     log('🔄 体重管理タブ: データ再読み込み開始');
                     loadUserWeightData(currentUser.uid);
-                    loadCustomItems(); // カスタム追加タイミング項目を復元
+                    // カスタム項目復元は signinWithGoogle で実行済みのため削除
                 }
             } else if (tabNumber === 2) {
                 // 睡眠管理タブの初期化（ログインに関係なく実行）
