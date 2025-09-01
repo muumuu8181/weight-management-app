@@ -15,9 +15,11 @@ function initializeSleepManager() {
     const todayString = `${year}-${month}-${day}`;
     document.getElementById('sleepDateInput').value = todayString;
     
-    // 時間入力の監視
-    document.getElementById('bedTimeInput').addEventListener('change', calculateSleepDuration);
-    document.getElementById('wakeTimeInput').addEventListener('change', calculateSleepDuration);
+    // 時間入力の監視（要素存在チェック）
+    const bedTimeInput = document.getElementById('bedTimeInput');
+    const wakeTimeInput = document.getElementById('wakeTimeInput');
+    if (bedTimeInput) bedTimeInput.addEventListener('change', calculateSleepDuration);
+    if (wakeTimeInput) wakeTimeInput.addEventListener('change', calculateSleepDuration);
     
     log('🛏️ 睡眠管理システム初期化完了');
 }
