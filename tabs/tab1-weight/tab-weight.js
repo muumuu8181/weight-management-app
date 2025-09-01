@@ -39,7 +39,11 @@ window.initWeightTab = () => {
     const dateInput = document.getElementById('dateInput');
     const weightInput = document.getElementById('weightValue');
     if (dateInput) dateInput.value = todayString;
-    if (weightInput) weightInput.value = '72.0';
+    if (weightInput && typeof APP_CONFIG !== 'undefined' && APP_CONFIG.defaults) {
+        weightInput.value = APP_CONFIG.defaults.weight.toString();
+    } else if (weightInput) {
+        weightInput.value = '72.0'; // フォールバック値
+    }
     
     // 既存の体重管理変数を移行
     if (typeof selectedTimingValue !== 'undefined') {
@@ -61,6 +65,14 @@ window.initWeightTab = () => {
     // カスタム項目復元
     if (typeof loadCustomItems === 'function') {
         loadCustomItems();
+    }
+    
+    // デフォルト服装選択: 上=なし, 下=トランクス
+    if (typeof window.selectClothingTop === 'function') {
+        window.selectClothingTop('なし');
+    }
+    if (typeof window.selectClothingBottom === 'function') {
+        window.selectClothingBottom('トランクス');
     }
     
     // 初期データ読み込み

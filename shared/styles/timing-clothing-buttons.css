@@ -1,0 +1,83 @@
+/* タイミング・服装ボタン系スタイル */
+
+/* 文字数別ボタン幅調整 */
+.timing-btn[data-timing*="帰宅:食事有+半日(7時間以上)"],
+.timing-btn[data-timing*="ある程度飲んだ後"] {
+    width: 200px !important; /* 3ボタン分 */
+    flex-shrink: 0;
+}
+.timing-btn[data-timing*="帰宅:食事無し"],
+.timing-btn[data-timing*="帰宅後"] {
+    width: 140px !important; /* 2ボタン分 */
+    flex-shrink: 0;
+}
+
+/* タイミングパネルのスタイル */
+.timing-panel { 
+    background: #f8f9fa; 
+    border: 2px solid #e9ecef; 
+    border-radius: 8px; 
+    padding: 8px; 
+    margin: 5px 0; 
+}
+.timing-buttons { 
+    display: flex; 
+    gap: 4px; 
+    flex-wrap: wrap; 
+    justify-content: center;
+}
+.timing-btn { 
+    background: #6c757d; 
+    color: white; 
+    border: none; 
+    padding: 6px 8px; 
+    border-radius: 12px; 
+    cursor: pointer; 
+    font-size: 11px;
+    transition: all 0.2s;
+    min-width: 85px;
+    text-align: center;
+    flex: 1;
+    max-width: 120px;
+}
+.timing-btn:hover {
+    transform: scale(1.05);
+}
+.timing-btn.selected {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+    .timing-buttons { gap: 3px; }
+    .timing-btn { 
+        padding: 4px 6px; 
+        font-size: 10px;
+        min-width: 75px;
+    }
+}
+
+/* 服装ボタンのスタイル統一 */
+.clothing-btn {
+    border: none;
+    padding: 6px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 10px;
+    min-width: 85px;
+    text-align: center;
+    transition: all 0.2s;
+    flex: 1;
+    max-width: 120px;
+}
+.clothing-btn:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .clothing-btn {
+        padding: 4px 6px;
+        min-width: 75px;
+        font-size: 9px;
+    }
+}
