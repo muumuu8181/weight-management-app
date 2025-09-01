@@ -21,8 +21,15 @@
 
 ## 📋 開発引継ぎ文書
 
-最新の機能開発内容は **`issues/`フォルダ** の引継ぎ文書を参照：
+最新の機能開発内容は **`issues/`フォルダ** と **`handover/`フォルダ** の引継ぎ文書を参照：
 
+### **🎉 v2.00 メジャーリリース - JavaScript完全分離達成**
+- 📄 **[handover/TAB_BUNRI_SAKUGYO_LESSONS_LEARNED_v2.00.md](handover/TAB_BUNRI_SAKUGYO_LESSONS_LEARNED_v2.00.md)** - **タブ分離作業の完全記録**
+- 🏆 **劇的成果**: index.html 4,127行 → 1,971行 (52%削減)
+- 🧪 **汎用ツール**: 全タブ対応のテストツール群整備
+- 🔧 **分離完了**: 体重・睡眠・部屋片付け・メモリストの完全外部化
+
+### **📋 過去の開発記録**
 - 📄 **[issues/TASK_INTEGRATION_HANDOVER_20250830.md](issues/TASK_INTEGRATION_HANDOVER_20250830.md)** - タスク統合機能開発の完全引継ぎ
 - 🔧 **技術仕様**: v1.10〜v1.21の全変更履歴と実装詳細
 - ⚠️ **重要制約**: セキュリティ制限と4階層制限の詳細
