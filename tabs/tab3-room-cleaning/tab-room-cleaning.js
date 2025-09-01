@@ -325,28 +325,12 @@ window.loadRoomData = async () => {
         const data = snapshot.val();
         const roomEntries = Object.entries(data).reverse(); // 新しい順
         
-        let html = '';
-        roomEntries.forEach(([key, entry]) => {
-            html += `
-                <div style="border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 5px; background: #fefefe;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
-                        <div>
-                            <strong>📍 ${entry.room}</strong>
-                            <div style="font-size: 12px; color: #666;">
-                                📅 ${entry.date} 🕐 ${entry.time}
-                            </div>
-                        </div>
-                        <button onclick="deleteRoomEntry('${key}')" style="background: #dc3545; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">削除</button>
-                    </div>
-                    ${entry.memo ? `<div style="margin-top: 5px; font-size: 12px; color: #555; font-style: italic;">💭 ${entry.memo}</div>` : ''}
-                </div>
-            `;
-        });
-        
-        roomDataDisplay.innerHTML = html;
-        
-        // allRoomDataも更新（統計・履歴用）
+        // allRoomDataを更新（統計・履歴用）
         allRoomData = roomEntries.map(([key, entry]) => ({ id: key, ...entry }));
+        
+        // 統計と履歴表示を更新
+        updateRoomHistory();
+        updateRoomStats();
         
     } catch (error) {
         log(`❌ 部屋片付けデータ読み込みエラー: ${error.message}`);
