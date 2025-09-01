@@ -127,8 +127,6 @@
                 <button class="universal-copy-btn" onclick="testPopup()" style="background: #20c997; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🧪 ポップアップテスト</button>
             </div>
         </div>
-
-
         <!-- タブコンテンツ2 -->
         <div id="tabContent2" class="tab-content hidden">
             <!-- コンテンツは動的読み込み -->
@@ -261,25 +259,13 @@
         // 前期間比較機能の状態管理
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v2.11';
+        const APP_VERSION = 'v2.14';
         
         // カラー配列定数化（3箇所の重複統一）
 
         // カスタム項目関連の関数は tabs/tab1-weight/tab-weight.js に移動済み
 
-
-
-
-
         // 統一モードシステム完了 - 古い個別関数群は削除済み
-
-
-
-
-
-
-
-
 
         // 認証状態の監視（改良版 + リダイレクト対応）
         auth.onAuthStateChanged(async (user) => {
@@ -306,24 +292,10 @@
 
         // 初期化完了ログ
         log('🔄 Firebase認証システム初期化完了 - 認証状態を確認中...');
-
-
-
-
         // ユーザーのデータを読み込み
         // loadUserWeightData関数は tabs/tab1-weight/tab-weight.js に移動済み
 
         // グラフを更新
-
-
-
-
-
-
-
-
-
-
         // 現在のタブ
         let currentTab = 1;
         
@@ -562,8 +534,6 @@
             document.getElementById('weightInput').classList.add('hidden');
             document.getElementById('chartPanel').classList.add('hidden');
         }
-
-
         // アプリ初期化
         function initializeApp() {
             // バージョン表示の動的設定
