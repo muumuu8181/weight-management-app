@@ -1,32 +1,20 @@
 {
   "weightHistory": {
-    "exists": true,
-    "hidden": false,
-    "display": "block",
-    "contentLength": 46
+    "exists": false
   },
   "weightHistoryPanel": {
-    "exists": true,
-    "hidden": true,
-    "display": "none",
-    "contentLength": 146
+    "exists": false
   },
   "weightChart": {
-    "exists": true,
-    "hidden": false,
-    "display": "",
-    "contentLength": 0
+    "exists": false
   },
   "chartPanel": {
-    "exists": true,
-    "hidden": true,
-    "display": "none",
-    "contentLength": 2633
+    "exists": false
   },
   "tabContent1": {
     "exists": true,
     "hidden": false,
     "display": "block",
-    "contentLength": 2866
+    "contentLength": 47
   }
 }
