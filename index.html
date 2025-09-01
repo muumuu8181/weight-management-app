@@ -387,7 +387,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.72';
+        const APP_VERSION = 'v1.73';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -400,7 +400,7 @@
         };
 
         // カスタム項目をlocalStorageに保存
-        function saveCustomItems() {
+        async function saveCustomItems() {
             const customTimings = Array.from(document.querySelectorAll('.timing-btn:not([data-timing="起床後"]):not([data-timing="トイレ前"]):not([data-timing="トイレ後"]):not([data-timing="風呂前"]):not([data-timing="風呂後"]):not([data-timing="食事前"]):not([data-timing="食事後"])'))
                 .map(btn => ({
                     text: btn.getAttribute('data-timing'),
@@ -419,68 +419,258 @@
                     color: btn.style.background
                 }));
 
-            localStorage.setItem(STORAGE_KEYS.customTimings, JSON.stringify(customTimings));
-            localStorage.setItem(STORAGE_KEYS.customTops, JSON.stringify(customTops));
-            localStorage.setItem(STORAGE_KEYS.customBottoms, JSON.stringify(customBottoms));
+            log(`💾 保存対象: ${customTimings.length}個のタイミング、${customTops.length}個の上半身、${customBottoms.length}個の下半身`);
+
+            // Firebase保存
+            if (currentUser) {
+                try {
+                    const customItemsRef = database.ref(`users/${currentUser.uid}/customItems`);
+                    await customItemsRef.set({
+                        timings: customTimings,
+                        tops: customTops,
+                        bottoms: customBottoms
+                    });
+                    log('✅ カスタム項目をFirebaseに保存完了');
+                } catch (error) {
+                    log(`❌ Firebase保存エラー: ${error.message}`);
+                    // Firebase保存に失敗した場合でもlocalStorageには保存
+                }
+            } else {
+                log('⚠️ Firebase保存スキップ: ユーザー未ログイン');
+            }
+            
+            // localStorage にもバックアップ保存
+            try {
+                localStorage.setItem(STORAGE_KEYS.customTimings, JSON.stringify(customTimings));
+                localStorage.setItem(STORAGE_KEYS.customTops, JSON.stringify(customTops));
+                localStorage.setItem(STORAGE_KEYS.customBottoms, JSON.stringify(customBottoms));
+                log('✅ localStorage にもバックアップ保存完了');
+            } catch (error) {
+                log(`❌ localStorage保存エラー: ${error.message}`);
+            }
         }
 
-        // カスタム項目をlocalStorageから復元
-        function loadCustomItems() {
+        // カスタム項目をFirebase優先で復元
+        async function loadCustomItems() {
+            let timings = [];
+            let tops = [];
+            let bottoms = [];
+            
+            // まずFirebaseから取得を試行
+            if (currentUser) {
+                try {
+                    const customItemsRef = database.ref(`users/${currentUser.uid}/customItems`);
+                    const snapshot = await customItemsRef.once('value');
+                    if (snapshot.val()) {
+                        const data = snapshot.val();
+                        timings = data.timings || [];
+                        tops = data.tops || [];
+                        bottoms = data.bottoms || [];
+                        log(`🔍 Firebase取得成功: タイミング${timings.length}個、上半身${tops.length}個、下半身${bottoms.length}個`);
+                    } else {
+                        log('🔍 Firebase確認: customItems=なし（初回またはデータなし）');
+                    }
+                } catch (error) {
+                    log(`❌ Firebase読み込みエラー: ${error.message}`);
+                }
+            } else {
+                log('⚠️ Firebase読み込みスキップ: ユーザー未ログイン');
+            }
+            
+            // Firebaseにデータがない場合はlocalStorageから取得（フォールバック）
+            if (timings.length === 0) {
+                const savedTimings = localStorage.getItem(STORAGE_KEYS.customTimings);
+                if (savedTimings) {
+                    try {
+                        timings = JSON.parse(savedTimings);
+                        log(`🔄 localStorage fallback: タイミング${timings.length}個を復元`);
+                    } catch (error) {
+                        log(`❌ localStorage解析エラー（タイミング）: ${error.message}`);
+                        timings = [];
+                    }
+                }
+            }
+            
+            if (tops.length === 0) {
+                const savedTops = localStorage.getItem(STORAGE_KEYS.customTops);
+                if (savedTops) {
+                    try {
+                        tops = JSON.parse(savedTops);
+                        log(`🔄 localStorage fallback: 上半身${tops.length}個を復元`);
+                    } catch (error) {
+                        log(`❌ localStorage解析エラー（上半身）: ${error.message}`);
+                        tops = [];
+                    }
+                }
+            }
+            
+            if (bottoms.length === 0) {
+                const savedBottoms = localStorage.getItem(STORAGE_KEYS.customBottoms);
+                if (savedBottoms) {
+                    try {
+                        bottoms = JSON.parse(savedBottoms);
+                        log(`🔄 localStorage fallback: 下半身${bottoms.length}個を復元`);
+                    } catch (error) {
+                        log(`❌ localStorage解析エラー（下半身）: ${error.message}`);
+                        bottoms = [];
+                    }
+                }
+            }
+
             // タイミング項目の復元
-            const savedTimings = localStorage.getItem(STORAGE_KEYS.customTimings);
-            log(`🔍 localStorage確認: customTimings=${savedTimings ? 'あり' : 'なし'}`);
-            if (savedTimings) {
-                const timings = JSON.parse(savedTimings);
+            if (timings.length > 0) {
                 const container = document.getElementById('timingButtons');
-                log(`🔍 timingButtons要素: ${container ? '存在' : '不存在'}`);
-                log(`🔍 復元対象: ${timings.length}個のカスタム項目`);
-                timings.forEach(item => {
-                    const button = document.createElement('button');
-                    button.type = 'button';
-                    button.className = 'timing-btn';
-                    button.setAttribute('data-timing', item.text);
-                    button.onclick = () => selectTiming(item.text);
-                    button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
-                    button.setAttribute('data-original-color', item.color);
-                    button.textContent = `⏰ ${item.text}`;
-                    container.appendChild(button);
-                });
+                if (container) {
+                    timings.forEach(item => {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'timing-btn';
+                        button.setAttribute('data-timing', item.text);
+                        button.onclick = () => selectTiming(item.text);
+                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                        button.setAttribute('data-original-color', item.color);
+                        button.textContent = `⏰ ${item.text}`;
+                        container.appendChild(button);
+                    });
+                    log(`✅ タイミング項目復元完了: ${timings.length}個`);
+                } else {
+                    log('❌ timingButtons要素が見つかりません');
+                }
             }
 
             // 上半身項目の復元
-            const savedTops = localStorage.getItem(STORAGE_KEYS.customTops);
-            if (savedTops) {
-                const tops = JSON.parse(savedTops);
+            if (tops.length > 0) {
                 const container = document.getElementById('topClothingButtons');
-                tops.forEach(item => {
-                    const button = document.createElement('button');
-                    button.type = 'button';
-                    button.className = 'clothing-btn';
-                    button.setAttribute('data-clothing-top', item.text);
-                    button.onclick = () => selectClothingTop(item.text);
-                    button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
-                    button.setAttribute('data-original-color', item.color);
-                    button.textContent = `👔 ${item.text}`;
-                    container.appendChild(button);
-                });
+                if (container) {
+                    tops.forEach(item => {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'clothing-btn';
+                        button.setAttribute('data-clothing-top', item.text);
+                        button.onclick = () => selectClothingTop(item.text);
+                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                        button.setAttribute('data-original-color', item.color);
+                        button.textContent = `👔 ${item.text}`;
+                        container.appendChild(button);
+                    });
+                    log(`✅ 上半身項目復元完了: ${tops.length}個`);
+                } else {
+                    log('❌ topClothingButtons要素が見つかりません');
+                }
             }
 
             // 下半身項目の復元
-            const savedBottoms = localStorage.getItem(STORAGE_KEYS.customBottoms);
-            if (savedBottoms) {
-                const bottoms = JSON.parse(savedBottoms);
+            if (bottoms.length > 0) {
                 const container = document.getElementById('bottomClothingButtons');
-                bottoms.forEach(item => {
-                    const button = document.createElement('button');
-                    button.type = 'button';
-                    button.className = 'clothing-btn';
-                    button.setAttribute('data-clothing-bottom', item.text);
-                    button.onclick = () => selectClothingBottom(item.text);
-                    button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
-                    button.setAttribute('data-original-color', item.color);
-                    button.textContent = `👖 ${item.text}`;
-                    container.appendChild(button);
-                });
+                if (container) {
+                    bottoms.forEach(item => {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'clothing-btn';
+                        button.setAttribute('data-clothing-bottom', item.text);
+                        button.onclick = () => selectClothingBottom(item.text);
+                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                        button.setAttribute('data-original-color', item.color);
+                        button.textContent = `👖 ${item.text}`;
+                        container.appendChild(button);
+                    });
+                    log(`✅ 下半身項目復元完了: ${bottoms.length}個`);
+                } else {
+                    log('❌ bottomClothingButtons要素が見つかりません');
+                }
+            }
+            
+            // iOS/iPhone向け自動移行機能
+            await migrateLocalStorageToFirebase();
+        }
+
+        // iPhone→Firebase移行機能（初回ログイン時のデータ移行）
+        async function migrateLocalStorageToFirebase() {
+            // ログインしていない場合はスキップ
+            if (!currentUser) {
+                return;
+            }
+            
+            // 移行完了フラグをチェック（ユーザー毎）
+            const migrationKey = `migration_completed_${currentUser.uid}`;
+            const migrationCompleted = localStorage.getItem(migrationKey);
+            
+            if (migrationCompleted === 'true') {
+                log('✅ 移行済み: このユーザーのlocalStorage→Firebase移行は完了済み');
+                return;
+            }
+            
+            try {
+                // localStorageからデータを取得
+                const localTimings = localStorage.getItem(STORAGE_KEYS.customTimings);
+                const localTops = localStorage.getItem(STORAGE_KEYS.customTops);
+                const localBottoms = localStorage.getItem(STORAGE_KEYS.customBottoms);
+                
+                let hasLocalData = false;
+                let migrationData = {
+                    timings: [],
+                    tops: [],
+                    bottoms: []
+                };
+                
+                // ローカルデータの解析・準備
+                if (localTimings) {
+                    try {
+                        migrationData.timings = JSON.parse(localTimings);
+                        hasLocalData = true;
+                        log(`📱 移行データ準備: タイミング${migrationData.timings.length}個`);
+                    } catch (error) {
+                        log(`❌ タイミングデータ解析エラー: ${error.message}`);
+                    }
+                }
+                
+                if (localTops) {
+                    try {
+                        migrationData.tops = JSON.parse(localTops);
+                        hasLocalData = true;
+                        log(`📱 移行データ準備: 上半身${migrationData.tops.length}個`);
+                    } catch (error) {
+                        log(`❌ 上半身データ解析エラー: ${error.message}`);
+                    }
+                }
+                
+                if (localBottoms) {
+                    try {
+                        migrationData.bottoms = JSON.parse(localBottoms);
+                        hasLocalData = true;
+                        log(`📱 移行データ準備: 下半身${migrationData.bottoms.length}個`);
+                    } catch (error) {
+                        log(`❌ 下半身データ解析エラー: ${error.message}`);
+                    }
+                }
+                
+                // ローカルデータがあり、かつFirebaseにデータが無い場合のみ移行実行
+                if (hasLocalData) {
+                    const customItemsRef = database.ref(`users/${currentUser.uid}/customItems`);
+                    const snapshot = await customItemsRef.once('value');
+                    
+                    if (!snapshot.val()) {
+                        // Firebaseにデータが無い場合のみ移行実行
+                        await customItemsRef.set(migrationData);
+                        log(`🚀 localStorage→Firebase移行完了: タイミング${migrationData.timings.length}個、上半身${migrationData.tops.length}個、下半身${migrationData.bottoms.length}個`);
+                        
+                        // 移行完了フラグを設定
+                        localStorage.setItem(migrationKey, 'true');
+                        log('✅ 移行完了フラグ設定済み');
+                    } else {
+                        log('ℹ️ Firebase側にデータ存在 - 移行スキップ');
+                        // Firebaseにデータがある場合も移行完了とマーク
+                        localStorage.setItem(migrationKey, 'true');
+                    }
+                } else {
+                    log('ℹ️ ローカルデータなし - 移行スキップ');
+                    // ローカルデータが無い場合も移行完了とマーク
+                    localStorage.setItem(migrationKey, 'true');
+                }
+                
+            } catch (error) {
+                log(`❌ 移行処理エラー: ${error.message}`);
+                // エラーが発生した場合は移行フラグを設定せず、次回再試行
             }
         }
 
