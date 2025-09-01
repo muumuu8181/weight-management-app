@@ -401,7 +401,7 @@
         // 前期間比較機能の状態管理
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v2.00';
+        const APP_VERSION = 'v1.99';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1673,25 +1673,413 @@ ${document.getElementById('logArea').innerText}`;
 
         // ========== 部屋片付け機能 ==========
         
+        // 部屋片付け用変数（room-cleaning.jsで宣言済み）
         
+        // 部屋片付け管理初期化
+        function initRoomManagement() {
+            // 現在の日付・時刻を設定
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            const currentTime = now.toTimeString().slice(0, 5);
+            
+            document.getElementById('roomDateInput').value = today;
+            document.getElementById('roomTimeInput').value = currentTime;
+            
+            // カスタム場所を復元
+            loadCustomRooms();
+            
+            log('🧹 部屋片付け管理初期化完了');
+        }
         
+        // 場所管理モード設定
+        window.setRoomMode = (mode) => {
+            currentRoomMode = mode;
+            
+            // ボタンの見た目を更新
+            document.getElementById('roomNormalModeBtn').style.background = mode === 'normal' ? '#007bff' : '#6c757d';
+            document.getElementById('roomAddModeBtn').style.background = mode === 'add' ? '#007bff' : '#6c757d';
+            document.getElementById('roomDeleteModeBtn').style.background = mode === 'delete' ? '#007bff' : '#6c757d';
+            
+            // 追加入力エリアの表示切り替え
+            const addInput = document.getElementById('roomUnifiedAddInput');
+            if (mode === 'add') {
+                addInput.style.display = 'block';
+            } else {
+                addInput.style.display = 'none';
+            }
+            
+            log(`🔧 場所管理モード: ${mode}`);
+        };
         
+        // 片付け場所選択
+        window.selectRoom = (room) => {
+            if (currentRoomMode === 'delete') {
+                // 削除モード: カスタム場所のみ削除可能
+                const isCustomRoom = !['リビング', 'キッチン', '寝室', 'お風呂', 'トイレ', '玄関', 'その他'].includes(room);
+                if (isCustomRoom) {
+                    if (confirm(`「${room}」を削除しますか？`)) {
+                        removeCustomRoom(room);
+                    }
+                } else {
+                    log('❌ デフォルト場所は削除できません');
+                }
+                return;
+            }
+            
+            // 通常選択
+            selectedRoomValue = room;
+            document.getElementById('selectedRoom').value = room;
+            
+            // ボタンのスタイル更新
+            document.querySelectorAll('.room-btn').forEach(btn => {
+                if (btn.getAttribute('data-room') === room) {
+                    btn.style.opacity = '1';
+                    btn.style.transform = 'scale(1.05)';
+                } else {
+                    btn.style.opacity = '0.7';
+                    btn.style.transform = 'scale(1)';
+                }
+            });
+            
+            log(`📍 場所選択: ${room}`);
+        };
         
+        // 片付け開始
+        window.startRoomCleaning = () => {
+            if (!selectedRoomValue) {
+                log('❌ 片付け場所を選択してください');
+                return;
+            }
+            
+            roomStartTime = new Date();
+            const timeString = roomStartTime.toTimeString().slice(0, 5);
+            
+            // ボタン表示切り替え
+            document.getElementById('startRoomBtn').style.display = 'none';
+            document.getElementById('endRoomBtn').style.display = 'inline-block';
+            
+            // 時刻表示を開始時刻に更新
+            document.getElementById('roomTimeInput').value = timeString;
+            document.getElementById('roomDuration').value = '計測中...';
+            
+            log(`▶️ 片付け開始: ${selectedRoomValue} - ${timeString}`);
+        };
         
+        // 片付け終了
+        window.endRoomCleaning = () => {
+            if (!roomStartTime) {
+                log('❌ 片付けが開始されていません');
+                return;
+            }
+            
+            roomEndTime = new Date();
+            const duration = Math.round((roomEndTime - roomStartTime) / (1000 * 60)); // 分単位
+            
+            // ボタン表示を戻す
+            document.getElementById('startRoomBtn').style.display = 'inline-block';
+            document.getElementById('endRoomBtn').style.display = 'none';
+            
+            // 時間表示を更新
+            document.getElementById('roomDuration').value = `${duration}分`;
+            
+            log(`⏹️ 片付け終了: ${selectedRoomValue} - ${duration}分間`);
+        };
         
+        // 達成度選択
+        window.selectAchievement = (level) => {
+            selectedRoomAchievement = level;
+            document.getElementById('selectedAchievement').value = `${level}/5`;
+            
+            // ボタンのスタイル更新
+            document.querySelectorAll('.achievement-btn').forEach(btn => {
+                btn.style.opacity = '0.7';
+                btn.style.transform = 'scale(1)';
+            });
+            
+            const selectedBtn = document.querySelector(`[onclick="selectAchievement(${level})"]`);
+            if (selectedBtn) {
+                selectedBtn.style.opacity = '1';
+                selectedBtn.style.transform = 'scale(1.1)';
+            }
+            
+            log(`📊 達成度選択: ${level}/5`);
+        };
         
+        // カスタム場所追加
+        window.executeRoomAdd = () => {
+            const roomName = document.getElementById('roomUnifiedAddText').value.trim();
+            if (!roomName) {
+                log('❌ 場所名を入力してください');
+                return;
+            }
+            
+            // 重複チェック
+            const existingBtn = document.querySelector(`[data-room="${roomName}"]`);
+            if (existingBtn) {
+                log(`❌ 「${roomName}」は既に存在します`);
+                return;
+            }
+            
+            // ボタンを追加
+            addCustomRoomButton(roomName);
+            
+            // カスタム場所をlocalStorageに保存
+            saveCustomRooms();
+            
+            // 入力をクリア
+            document.getElementById('roomUnifiedAddText').value = '';
+            setRoomMode('normal');
+            
+            log(`✅ 新しい場所追加: ${roomName}`);
+        };
         
+        // カスタム場所追加キャンセル
+        window.cancelRoomAdd = () => {
+            document.getElementById('roomUnifiedAddText').value = '';
+            setRoomMode('normal');
+            log('❌ 場所追加をキャンセル');
+        };
         
+        // カスタム場所削除
+        function removeCustomRoom(roomName) {
+            const roomBtn = document.querySelector(`[data-room="${roomName}"]`);
+            if (roomBtn) {
+                roomBtn.remove();
+                saveCustomRooms(); // 削除後に保存
+                log(`🗑️ 場所削除: ${roomName}`);
+            }
+        }
         
+        // カスタム場所ボタン作成
+        function addCustomRoomButton(roomName) {
+            const roomButtons = document.getElementById('roomButtons');
+            const newButton = document.createElement('button');
+            newButton.type = 'button';
+            newButton.className = 'room-btn';
+            newButton.onclick = () => selectRoom(roomName);
+            newButton.setAttribute('data-room', roomName);
+            newButton.style.cssText = 'background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;';
+            newButton.textContent = `🏠 ${roomName}`;
+            
+            roomButtons.appendChild(newButton);
+        }
         
+        // カスタム場所をlocalStorageに保存
+        function saveCustomRooms() {
+            const defaultRooms = ['リビング', 'キッチン', '寝室', 'お風呂', 'トイレ', '玄関', 'その他'];
+            const customRooms = Array.from(document.querySelectorAll('.room-btn'))
+                .map(btn => btn.getAttribute('data-room'))
+                .filter(room => !defaultRooms.includes(room));
+            
+            localStorage.setItem('roomApp_customRooms', JSON.stringify(customRooms));
+            log(`💾 カスタム場所保存: ${customRooms.length}件`);
+        }
         
+        // カスタム場所をlocalStorageから復元
+        function loadCustomRooms() {
+            try {
+                const saved = localStorage.getItem('roomApp_customRooms');
+                if (saved) {
+                    const customRooms = JSON.parse(saved);
+                    customRooms.forEach(roomName => {
+                        addCustomRoomButton(roomName);
+                    });
+                    log(`📂 カスタム場所復元: ${customRooms.length}件`);
+                }
+            } catch (error) {
+                log(`❌ カスタム場所復元エラー: ${error.message}`);
+            }
+        }
         
+        // 部屋片付けデータ保存
+        window.saveRoomData = async () => {
+            if (!currentUser) {
+                log('❌ ログインが必要です');
+                return;
+            }
+            
+            if (!selectedRoomValue) {
+                log('❌ 片付け場所を選択してください');
+                return;
+            }
+            
+            if (!selectedRoomAchievement) {
+                log('❌ 達成度を選択してください');
+                return;
+            }
+            
+            const duration = document.getElementById('roomDuration').value;
+            if (duration === '開始ボタンで計測開始' || duration === '計測中...') {
+                log('❌ 片付け時間を計測してください');
+                return;
+            }
+            
+            try {
+                log('💾 部屋片付けデータを保存中...');
+                
+                const roomData = {
+                    date: document.getElementById('roomDateInput').value,
+                    time: document.getElementById('roomTimeInput').value,
+                    room: selectedRoomValue,
+                    duration: duration,
+                    achievement: selectedRoomAchievement,
+                    memo: document.getElementById('roomMemoInput').value || '',
+                    userEmail: currentUser.email,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP,
+                    createdAt: new Date().toISOString()
+                };
+                
+                const userRef = database.ref(`users/${currentUser.uid}/roomData`);
+                await userRef.push(roomData);
+                
+                log(`✅ 片付け記録保存完了: ${selectedRoomValue} - ${duration} (達成度${selectedRoomAchievement}/5)`);
+                
+                // フォームをリセット
+                resetRoomForm();
+                
+                // データ再読み込み
+                await loadRoomData();
+                
+            } catch (error) {
+                log(`❌ 保存エラー: ${error.message}`);
+            }
+        };
         
+        // 部屋片付けデータ読み込み（外部JSファイルで定義済み）
         
+        // フォームリセット
+        function resetRoomForm() {
+            selectedRoomValue = '';
+            selectedRoomAchievement = null;
+            roomStartTime = null;
+            roomEndTime = null;
+            
+            document.getElementById('selectedRoom').value = '';
+            document.getElementById('selectedAchievement').value = '';
+            document.getElementById('roomDuration').value = '開始ボタンで計測開始';
+            document.getElementById('roomMemoInput').value = '';
+            
+            // ボタンスタイルをリセット
+            document.querySelectorAll('.room-btn').forEach(btn => {
+                btn.style.opacity = '0.7';
+                btn.style.transform = 'scale(1)';
+            });
+            document.querySelectorAll('.achievement-btn').forEach(btn => {
+                btn.style.opacity = '0.7';
+                btn.style.transform = 'scale(1)';
+            });
+            
+            // 開始・終了ボタンをリセット
+            document.getElementById('startRoomBtn').style.display = 'inline-block';
+            document.getElementById('endRoomBtn').style.display = 'none';
+            
+            // 日時を現在時刻に更新
+            const now = new Date();
+            document.getElementById('roomDateInput').value = now.toISOString().split('T')[0];
+            document.getElementById('roomTimeInput').value = now.toTimeString().slice(0, 5);
+        }
         
+        // 部屋片付け履歴表示更新
+        function updateRoomHistory() {
+            log('🔍 updateRoomHistory() 開始');
+            const historyArea = document.getElementById('roomHistoryArea');
+            
+            log(`📊 部屋データ件数: ${allRoomData.length}`);
+            log('🔍 historyArea要素:', historyArea ? '存在' : '見つからない');
+            
+            if (!historyArea) {
+                log('❌ roomHistoryArea要素が見つかりません');
+                return;
+            }
+            
+            if (allRoomData.length === 0) {
+                historyArea.innerHTML = 'まだ片付け記録がありません';
+                log('ℹ️ 部屋データなし - プレースホルダー表示');
+                return;
+            }
+            
+            // 直近7件表示
+            const recentData = allRoomData.slice(0, 7);
+            log(`📋 表示データ件数: ${recentData.length}`);
+            
+            historyArea.innerHTML = recentData.map(data => {
+                let content = `<strong>${data.date}</strong> ${data.time} `;
+                content += `📍 ${data.room} `;
+                content += `⏱️ ${data.duration} `;
+                content += `📊 ${data.achievement}/5`;
+                if (data.memo) {
+                    content += `<br>📝 ${data.memo}`;
+                }
+                
+                return `<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0;">
+                    <div>${content}</div>
+                    <button onclick="deleteRoomEntry('${data.id}')" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; flex-shrink: 0;">🗑️</button>
+                </div>`;
+            }).join('');
+            
+            log('✅ updateRoomHistory() 完了');
+        }
         
+        // 部屋片付け統計更新
+        function updateRoomStats() {
+            const totalSessions = allRoomData.length;
+            const totalMinutes = allRoomData.reduce((sum, data) => {
+                const minutes = parseInt(data.duration) || 0;
+                return sum + minutes;
+            }, 0);
+            const avgAchievement = totalSessions > 0 ? 
+                (allRoomData.reduce((sum, data) => sum + (data.achievement || 0), 0) / totalSessions).toFixed(1) : 0;
+            
+            // 今月の記録数
+            const thisMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+            const thisMonthCount = allRoomData.filter(data => data.date.startsWith(thisMonth)).length;
+            
+            document.getElementById('totalRoomSessions').textContent = totalSessions;
+            document.getElementById('totalRoomTime').textContent = `${totalMinutes}分`;
+            document.getElementById('avgRoomAchievement').textContent = avgAchievement;
+            document.getElementById('thisMonthRoomCount').textContent = thisMonthCount;
+        }
         
+        // 部屋片付け履歴コピー
+        window.copyRoomHistory = () => {
+            if (allRoomData.length === 0) {
+                log('📋 コピーする片付けデータがありません');
+                return;
+            }
+            
+            const copyText = allRoomData.slice(0, 7).map(data => 
+                `${data.date} ${data.time} ${data.room} ${data.duration} 達成度${data.achievement}/5${data.memo ? ` ${data.memo}` : ''}`
+            ).join('\n');
+            
+            navigator.clipboard.writeText(copyText).then(() => {
+                log('📋 片付け履歴をクリップボードにコピーしました');
+            }).catch(() => {
+                log('❌ コピーに失敗しました');
+            });
+        };
         
+        // 部屋片付けデータ削除
+        window.deleteRoomEntry = async (entryId) => {
+            if (!currentUser) {
+                log('❌ ログインが必要です');
+                return;
+            }
+            
+            if (!confirm('この片付け記録を削除しますか？')) {
+                return;
+            }
+            
+            try {
+                const entryRef = database.ref(`users/${currentUser.uid}/roomData/${entryId}`);
+                await entryRef.remove();
+                
+                log('🗑️ 片付け記録を削除しました');
+                await loadRoomData();
+                
+            } catch (error) {
+                log(`❌ 削除エラー: ${error.message}`);
+            }
+        };
 
         // ===================== 
         // メモリスト機能 (分離済み - memo-list.jsに移動) - 全てコメントアウト
