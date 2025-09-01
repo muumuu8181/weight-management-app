@@ -399,7 +399,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.77';
+        const APP_VERSION = 'v1.80';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -881,16 +881,30 @@
         window.executeAdd = () => {
             const newItem = document.getElementById('unifiedAddText').value.trim();
             if (!newItem || !selectedTarget) return;
-
-            // ランダムカラー生成
-            const randomColor = RANDOM_COLORS[Math.floor(Math.random() * RANDOM_COLORS.length)];
             
-            // 対象に応じてボタン作成
+            // 重複チェック
             const containers = {
                 timing: document.getElementById('timingButtons'),
                 top: document.getElementById('topClothingButtons'),
                 bottom: document.getElementById('bottomClothingButtons')
             };
+            
+            const targetContainer = containers[selectedTarget];
+            const existingButtons = Array.from(targetContainer.children);
+            
+            // 既存項目名チェック
+            const isDuplicate = existingButtons.some(button => {
+                const existingText = button.textContent.replace(/^(⏰|👔|👖)\s/, '').trim();
+                return existingText.toLowerCase() === newItem.toLowerCase();
+            });
+            
+            if (isDuplicate) {
+                alert(`「${newItem}」は既に存在します。別の名前を入力してください。`);
+                return;
+            }
+
+            // ランダムカラー生成
+            const randomColor = RANDOM_COLORS[Math.floor(Math.random() * RANDOM_COLORS.length)];
             
             const button = document.createElement('button');
             button.type = 'button';
@@ -2645,9 +2659,22 @@
                 }
             } else if (tabNumber === 3) {
                 // 部屋片付けタブの初期化
+                log('🔄 部屋片付けタブに切り替え - 初期化開始');
                 initRoomManagement();
                 if (currentUser) {
+                    log('📚 loadRoomData()を呼び出し中...');
                     loadRoomData();
+                } else {
+                    log('⚠️ ユーザー未ログイン - loadRoomData()スキップ');
+                }
+            } else if (tabNumber === 8) {
+                // メモリストタブの初期化
+                log('🔄 メモリストタブに切り替え - 初期化開始');
+                if (currentUser) {
+                    log('📚 loadMemoData()を呼び出し中...');
+                    loadMemoData();
+                } else {
+                    log('⚠️ ユーザー未ログイン - loadMemoData()スキップ');
                 }
             }
             
@@ -3677,7 +3704,11 @@ ${document.getElementById('logArea').innerText}`;
         
         // 部屋片付けデータ読み込み
         window.loadRoomData = async () => {
-            if (!currentUser) return;
+            log('📚 loadRoomData() 開始');
+            if (!currentUser) {
+                log('⚠️ currentUserがないため、loadRoomData()を終了');
+                return;
+            }
             
             try {
                 const roomRef = database.ref(`users/${currentUser.uid}/roomData`);
@@ -3739,15 +3770,26 @@ ${document.getElementById('logArea').innerText}`;
         
         // 部屋片付け履歴表示更新
         function updateRoomHistory() {
+            log('🔍 updateRoomHistory() 開始');
             const historyArea = document.getElementById('roomHistoryArea');
+            
+            log(`📊 部屋データ件数: ${allRoomData.length}`);
+            log('🔍 historyArea要素:', historyArea ? '存在' : '見つからない');
+            
+            if (!historyArea) {
+                log('❌ roomHistoryArea要素が見つかりません');
+                return;
+            }
             
             if (allRoomData.length === 0) {
                 historyArea.innerHTML = 'まだ片付け記録がありません';
+                log('ℹ️ 部屋データなし - プレースホルダー表示');
                 return;
             }
             
             // 直近7件表示
             const recentData = allRoomData.slice(0, 7);
+            log(`📋 表示データ件数: ${recentData.length}`);
             
             historyArea.innerHTML = recentData.map(data => {
                 let content = `<strong>${data.date}</strong> ${data.time} `;
@@ -3763,6 +3805,8 @@ ${document.getElementById('logArea').innerText}`;
                     <button onclick="deleteRoomEntry('${data.id}')" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px; flex-shrink: 0;">🗑️</button>
                 </div>`;
             }).join('');
+            
+            log('✅ updateRoomHistory() 完了');
         }
         
         // 部屋片付け統計更新
@@ -3935,10 +3979,20 @@ ${document.getElementById('logArea').innerText}`;
 
         // メモ表示を更新
         function updateMemoDisplay() {
+            log('🔍 updateMemoDisplay() 開始');
             const container = document.getElementById('memoListArea');
+            
+            log(`📊 メモデータ件数: ${memoData.length}`);
+            log('🔍 memoListArea要素:', container ? '存在' : '見つからない');
+            
+            if (!container) {
+                log('❌ memoListArea要素が見つかりません');
+                return;
+            }
             
             if (memoData.length === 0) {
                 container.innerHTML = 'まだメモがありません';
+                log('ℹ️ メモデータなし - プレースホルダー表示');
                 return;
             }
             
@@ -3971,6 +4025,8 @@ ${document.getElementById('logArea').innerText}`;
             }).join('');
             
             container.innerHTML = html;
+            
+            log('✅ updateMemoDisplay() 完了');
         }
 
         // メモを削除
@@ -4040,15 +4096,20 @@ ${document.getElementById('logArea').innerText}`;
 
         // メモデータを読み込み
         function loadMemoData() {
+            log('📚 loadMemoData() 開始');
             if (currentUser) {
                 // Firebaseから読み込み
                 firebase.database().ref(`users/${currentUser.uid}/memos`).on('value', (snapshot) => {
+                    log('🔥 Firebaseからメモデータ取得中...');
                     const data = snapshot.val();
                     if (data) {
                         memoData = Object.values(data).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                        log(`✅ メモデータ${memoData.length}件を取得`);
                     } else {
                         memoData = [];
+                        log('ℹ️ Firebaseにメモデータなし');
                     }
+                    log('🔄 updateMemoDisplay()、updateMemoStats()を呼び出し');
                     updateMemoDisplay();
                     updateMemoStats();
                 });
