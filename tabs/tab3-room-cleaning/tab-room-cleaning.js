@@ -260,6 +260,8 @@ window.saveRoomData = async () => {
             date: document.getElementById('roomDateInput').value,
             time: document.getElementById('roomTimeInput').value,
             room: selectedRoomValue,
+            duration: document.getElementById('roomDuration').value,
+            achievement: selectedRoomAchievement,
             memo: document.getElementById('roomMemoText') ? document.getElementById('roomMemoText').value : '',
             timestamp: new Date().toISOString()
         };
