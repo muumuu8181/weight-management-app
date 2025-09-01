@@ -402,7 +402,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.91';
+        const APP_VERSION = 'v1.92';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1128,16 +1128,7 @@
         // カスタム項目判定（統一版）
         // isCustomItem関数（外部ファイルで定義済み）
 
-        // カスタム項目削除（統一版）
-        function deleteCustomItem(item, target) {
-            const selector = `[data-${target === 'timing' ? 'timing' : target === 'top' ? 'clothing-top' : 'clothing-bottom'}="${item}"]`;
-            const button = document.querySelector(selector);
-            if (button && isCustomItem(item, target)) {
-                button.remove();
-                saveCustomItems();
-                log(`🗑️ カスタム項目削除: ${item} (${target === 'timing' ? 'タイミング' : target === 'top' ? '上半身' : '下半身'})`);
-            }
-        }
+        // deleteCustomItem関数（外部ファイルで定義済み）
 
         // 個別削除機能（確認ダイアログ付き）
         async function deleteCustomTiming(itemText, event) {
