@@ -29,6 +29,18 @@ const WEIGHT_STORAGE_KEYS = {
 window.initWeightTab = () => {
     log('🏋️ 体重管理タブ初期化中...');
     
+    // 今日の日付と体重デフォルト値を設定（タイムゾーン考慮）
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayString = `${year}-${month}-${day}`;
+    
+    const dateInput = document.getElementById('dateInput');
+    const weightInput = document.getElementById('weightValue');
+    if (dateInput) dateInput.value = todayString;
+    if (weightInput) weightInput.value = '72.0';
+    
     // 既存の体重管理変数を移行
     if (typeof selectedTimingValue !== 'undefined') {
         WeightTab.selectedTimingValue = selectedTimingValue;
@@ -47,10 +59,12 @@ window.initWeightTab = () => {
     }
     
     // カスタム項目復元
-    loadCustomItems();
+    if (typeof loadCustomItems === 'function') {
+        loadCustomItems();
+    }
     
     // 初期データ読み込み
-    if (currentUser) {
+    if (currentUser && typeof loadUserWeightData === 'function') {
         loadUserWeightData(currentUser.uid);
     }
     
