@@ -1,0 +1,168 @@
+{
+  "file": "tabs/tab1-weight/tab-weight.html",
+  "timestamp": "2025-09-01T07:01:22.816Z",
+  "results": {
+    "dateInput": {
+      "exists": true,
+      "visible": true,
+      "content": {
+        "tagName": "INPUT",
+        "id": "dateInput",
+        "className": "input-field",
+        "content": "",
+        "style": "flex: 1; min-width: 140px;",
+        "attributes": [
+          {
+            "name": "type",
+            "value": "date"
+          },
+          {
+            "name": "class",
+            "value": "input-field"
+          },
+          {
+            "name": "id",
+            "value": "dateInput"
+          },
+          {
+            "name": "style",
+            "value": "flex: 1; min-width: 140px;"
+          }
+        ]
+      }
+    },
+    "weightValue": {
+      "exists": true,
+      "visible": true,
+      "content": {
+        "tagName": "INPUT",
+        "id": "weightValue",
+        "className": "input-field",
+        "content": "",
+        "style": "flex: 1; min-width: 100px;",
+        "attributes": [
+          {
+            "name": "type",
+            "value": "number"
+          },
+          {
+            "name": "class",
+            "value": "input-field"
+          },
+          {
+            "name": "id",
+            "value": "weightValue"
+          },
+          {
+            "name": "placeholder",
+            "value": "値"
+          },
+          {
+            "name": "step",
+            "value": "0.1"
+          },
+          {
+            "name": "min",
+            "value": "0"
+          },
+          {
+            "name": "max",
+            "value": "300"
+          },
+          {
+            "name": "value",
+            "value": "72.0"
+          },
+          {
+            "name": "style",
+            "value": "flex: 1; min-width: 100px;"
+          },
+          {
+            "name": "onkeydown",
+            "value": "handleWeightKeypress(event)"
+          }
+        ]
+      }
+    },
+    "weightChart": {
+      "exists": true,
+      "visible": true,
+      "content": {
+        "tagName": "CANVAS",
+        "id": "weightChart",
+        "className": "",
+        "content": "",
+        "style": "",
+        "attributes": [
+          {
+            "name": "id",
+            "value": "weightChart"
+          }
+        ]
+      }
+    },
+    "chartPanel": {
+      "exists": true,
+      "visible": true,
+      "content": {
+        "tagName": "DIV",
+        "id": "chartPanel",
+        "className": "input-card",
+        "content": "\n    <h3>📊 データ推移グラフ</h3>\n    <div style=\"position: relative; height: 300px;\">\n        <canvas id=\"weightChart\"></canvas>\n    </div>\n    \n    <!-- 期間選択とナビゲーション -->\n    <div style=\"margin-top: 10px;\">\n        <!-- 期間選択ボタン -->\n        <div style=\"display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px;\">\n            <button onclick=\"updateChartRange(1)\" style=\"background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;\">1日</button>\n            <button onclick=\"updateChartRange(7)\" style=\"background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;\">1週間</button>\n            <button onclick=\"updateChartRange(30)\" style=\"background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;\">1ヶ月</button>\n            <button onclick=\"updateChartRange(90)\" style=\"background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;\">3ヶ月</button>\n            <button onclick=\"updateChartRange(365)\" style=\"background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;\">1年</button>\n            <button onclick=\"updateChartRange(0)\" style=\"background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;\">全期間</button>\n            <button id=\"previousPeriodBtn\" onclick=\"togglePreviousPeriod()\" style=\"background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;\">前期間の記録</button>\n        </div>\n        \n        <!-- ナビゲーションボタン -->\n        <div style=\"display: flex; gap: 5px; margin-bottom: 8px; justify-content: center;\">\n            <button onclick=\"goToPreviousWeek()\" style=\"background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;\">← 前週</button>\n            <button onclick=\"goToThisWeek()\" style=\"background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;\">今週</button>\n            <button onclick=\"goToNextWeek()\" style=\"background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;\">次週 →</button>\n        </div>\n        \n        <!-- 前期間比較ボタン -->\n        <div style=\"text-align: center; margin-top: 10px;\">\n            <button onclick=\"togglePreviousPeriod()\" style=\"background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px;\" id=\"togglePreviousPeriodBtn\">📊 前期間と比較</button>\n        </div>\n        \n        <!-- 前期間データ表示エリア -->\n        <div id=\"previousPeriodArea\" style=\"display: none; margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px;\">\n            <h4 style=\"margin-top: 0; color: #495057;\">📊 前期間データ比較</h4>\n            <div id=\"previousPeriodData\">読み込み中...</div>\n        </div>\n    </div>\n",
+        "style": "",
+        "attributes": [
+          {
+            "name": "class",
+            "value": "input-card"
+          },
+          {
+            "name": "id",
+            "value": "chartPanel"
+          }
+        ]
+      }
+    },
+    "weightHistory": {
+      "exists": true,
+      "visible": true,
+      "content": {
+        "tagName": "DIV",
+        "id": "weightHistory",
+        "className": "data-area",
+        "content": "\n        データを読み込み中...<br>\n    ",
+        "style": "",
+        "attributes": [
+          {
+            "name": "class",
+            "value": "data-area"
+          },
+          {
+            "name": "id",
+            "value": "weightHistory"
+          }
+        ]
+      }
+    },
+    "weightHistoryPanel": {
+      "exists": true,
+      "visible": true,
+      "content": {
+        "tagName": "DIV",
+        "id": "weightHistoryPanel",
+        "className": "input-card",
+        "content": "\n    <h3>📈 データ履歴</h3>\n    <div class=\"data-area\" id=\"weightHistory\">\n        データを読み込み中...<br>\n    </div>\n",
+        "style": "",
+        "attributes": [
+          {
+            "name": "class",
+            "value": "input-card"
+          },
+          {
+            "name": "id",
+            "value": "weightHistoryPanel"
+          }
+        ]
+      }
+    }
+  }
+}

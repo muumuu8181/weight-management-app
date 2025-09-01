@@ -1,0 +1,187 @@
+{
+  "timestamp": "2025-09-01T07:05:28.491Z",
+  "summary": {
+    "totalElements": 12,
+    "existingElements": 8,
+    "visibleElements": 8,
+    "readyElements": 0
+  },
+  "results": {
+    "weight": {
+      "file": "tabs/tab1-weight/tab-weight.html",
+      "chartLibrary": "Chart.js",
+      "dataSource": "Firebase weights collection",
+      "elements": {
+        "weightChart": {
+          "exists": true,
+          "visible": true,
+          "ready": false,
+          "info": {
+            "tagName": "CANVAS",
+            "classList": [],
+            "style": "",
+            "offsetWidth": 0,
+            "offsetHeight": 0,
+            "hasContent": "",
+            "contentLength": 0
+          }
+        },
+        "chartPanel": {
+          "exists": true,
+          "visible": true,
+          "ready": false,
+          "info": {
+            "tagName": "DIV",
+            "classList": [
+              "input-card"
+            ],
+            "style": "",
+            "offsetWidth": 0,
+            "offsetHeight": 0,
+            "hasContent": true,
+            "contentLength": 3087
+          }
+        },
+        "weightHistory": {
+          "exists": true,
+          "visible": true,
+          "ready": false,
+          "info": {
+            "tagName": "DIV",
+            "classList": [
+              "data-area"
+            ],
+            "style": "",
+            "offsetWidth": 0,
+            "offsetHeight": 0,
+            "hasContent": true,
+            "contentLength": 30
+          }
+        },
+        "weightHistoryPanel": {
+          "exists": true,
+          "visible": true,
+          "ready": false,
+          "info": {
+            "tagName": "DIV",
+            "classList": [
+              "input-card"
+            ],
+            "style": "",
+            "offsetWidth": 0,
+            "offsetHeight": 0,
+            "hasContent": true,
+            "contentLength": 106
+          }
+        }
+      }
+    },
+    "sleep": {
+      "file": "index.html",
+      "chartLibrary": "Chart.js",
+      "dataSource": "Firebase sleepData collection",
+      "elements": {
+        "sleepChart": {
+          "exists": false,
+          "visible": false,
+          "ready": false,
+          "info": null
+        },
+        "sleepHistory": {
+          "exists": false,
+          "visible": false,
+          "ready": false,
+          "info": null
+        },
+        "sleepStats": {
+          "exists": false,
+          "visible": false,
+          "ready": false,
+          "info": null
+        }
+      }
+    },
+    "room": {
+      "file": "tabs/tab3-room-cleaning/tab-room-cleaning.html",
+      "chartLibrary": "HTML Table",
+      "dataSource": "Firebase roomData collection",
+      "elements": {
+        "roomHistoryArea": {
+          "exists": true,
+          "visible": true,
+          "ready": false,
+          "info": {
+            "tagName": "DIV",
+            "classList": [
+              "data-area"
+            ],
+            "style": "",
+            "offsetWidth": 0,
+            "offsetHeight": 0,
+            "hasContent": true,
+            "contentLength": 35
+          }
+        },
+        "roomStatsArea": {
+          "exists": true,
+          "visible": true,
+          "ready": false,
+          "info": {
+            "tagName": "DIV",
+            "classList": [],
+            "style": "display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;",
+            "offsetWidth": 0,
+            "offsetHeight": 0,
+            "hasContent": true,
+            "contentLength": 1238
+          }
+        }
+      }
+    },
+    "memo": {
+      "file": "tabs/tab8-memo-list/tab-memo-list.html",
+      "chartLibrary": "Dynamic HTML",
+      "dataSource": "Firebase memos collection",
+      "elements": {
+        "memoListArea": {
+          "exists": true,
+          "visible": true,
+          "ready": false,
+          "info": {
+            "tagName": "DIV",
+            "classList": [
+              "data-area"
+            ],
+            "style": "",
+            "offsetWidth": 0,
+            "offsetHeight": 0,
+            "hasContent": true,
+            "contentLength": 32
+          }
+        },
+        "memoStats": {
+          "exists": true,
+          "visible": true,
+          "ready": false,
+          "info": {
+            "tagName": "DIV",
+            "classList": [
+              "input-card"
+            ],
+            "style": "",
+            "offsetWidth": 0,
+            "offsetHeight": 0,
+            "hasContent": true,
+            "contentLength": 1391
+          }
+        },
+        "filterStatus": {
+          "exists": false,
+          "visible": false,
+          "ready": false,
+          "info": null
+        }
+      }
+    }
+  }
+}

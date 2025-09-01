@@ -1255,4 +1255,543 @@ function loadUserWeightData(userId) {
     });
 }
 
+// ========================================
+// Chart.js関連の変数・関数群（index.htmlから完全コピー移動）
+// ========================================
+
+// Chart.js関連のグローバル変数
+let showPreviousPeriod = false; // 前期間表示のON/OFF
+
+// チャートナビゲーション用変数
+let currentChartDays = 30; // デフォルト期間
+let currentChartDate = new Date(); // 基準日
+
+// 日付指定でチャートを更新
+function updateChartWithDate(days, endDate) {
+    const ctx = document.getElementById('weightChart');
+    if (!ctx) return;
+
+    const end = new Date(endDate);
+    const startDate = new Date(end);
+    if (days > 0) {
+        startDate.setDate(end.getDate() - days);
+    } else {
+        // 全期間の場合、最も古いデータから
+        if (WeightTab.allWeightData.length > 0) {
+            startDate.setTime(new Date(WeightTab.allWeightData[0].date).getTime());
+        }
+    }
+
+    // 期間内のデータをフィルタリング
+    const filteredData = WeightTab.allWeightData.filter(entry => {
+        const entryDate = new Date(entry.date);
+        return entryDate >= startDate && entryDate <= end;
+    });
+
+    // 既存のupdateChart関数のロジックを使用してチャートを描画
+    renderChartWithData(days, filteredData, startDate, end);
+}
+
+// チャート描画の共通ロジック（安全アクセス対応）
+function renderChartWithData(days, filteredData, startDate, endDate) {
+    const ctx = document.getElementById('weightChart');
+    if (!ctx) {
+        console.log('⚠️ weightChart要素が見つかりません - チャート描画をスキップ');
+        return;
+    }
+
+    let chartData, datasets = [];
+    let timeUnit, displayFormat, axisLabel;
+    let dateRangeText = '';
+
+    if (days === 1) {
+        // 1日表示：時間軸を使用（24時間表示）
+        chartData = filteredData.map(entry => {
+            const dateTime = entry.time ? 
+                new Date(`${entry.date}T${entry.time}:00`) : 
+                new Date(`${entry.date}T12:00:00`); // 時間なしの場合は12:00とする
+            
+            return {
+                x: dateTime,
+                y: parseFloat(entry.value || entry.weight)
+            };
+        }).sort((a, b) => a.x - b.x);
+        
+        // 対象日付を表示用に設定
+        if (filteredData.length > 0) {
+            const targetDate = new Date(filteredData[0].date);
+            const dateStr = `${targetDate.getMonth() + 1}/${targetDate.getDate()}`;
+            dateRangeText = `${dateStr}のデータ`;
+        }
+        
+        datasets.push({
+            label: '体重',
+            data: chartData,
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension: 0.1,
+            pointRadius: 4,
+            pointHoverRadius: 6
+        });
+
+        // 前期間データを追加（1日表示用）
+        if (showPreviousPeriod) {
+            const previousData = getPreviousPeriodData(days, endDate);
+            if (previousData.length > 0) {
+                const previousChartData = previousData.map(entry => {
+                    const dateTime = entry.time ? 
+                        new Date(`${entry.date}T${entry.time}:00`) : 
+                        new Date(`${entry.date}T12:00:00`);
+                    
+                    return {
+                        x: dateTime,
+                        y: parseFloat(entry.weight || entry.value)
+                    };
+                }).sort((a, b) => a.x - b.x);
+
+                datasets.push({
+                    label: '前日の記録',
+                    data: previousChartData,
+                    borderColor: 'rgba(128, 128, 128, 0.6)',
+                    backgroundColor: 'rgba(128, 128, 128, 0.1)',
+                    tension: 0.1,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    borderDash: [5, 5]
+                });
+            }
+        }
+        
+        timeUnit = 'hour';
+        displayFormat = 'HH:mm';
+        axisLabel = '時間';
+    } else {
+        // 複数日表示：日付でグループ化（最大値・最小値・平均値を表示）
+        const groupedData = {};
+        filteredData.forEach(entry => {
+            if (!groupedData[entry.date]) {
+                groupedData[entry.date] = [];
+            }
+            groupedData[entry.date].push(parseFloat(entry.value || entry.weight));
+        });
+
+        const avgData = [], maxData = [], minData = [];
+        Object.keys(groupedData).sort().forEach(date => {
+            const values = groupedData[date];
+            const avg = values.reduce((a, b) => a + b, 0) / values.length;
+            const max = Math.max(...values);
+            const min = Math.min(...values);
+            
+            avgData.push({ x: date, y: avg });
+            maxData.push({ x: date, y: max });
+            minData.push({ x: date, y: min });
+        });
+
+        // 複数測定日がある場合のみ全系列を表示
+        const hasMultipleMeasurements = Object.values(groupedData).some(values => values.length > 1);
+        
+        if (hasMultipleMeasurements) {
+            const avgDataForDisplay = [];
+            const maxDataForDisplay = [];
+            const minDataForDisplay = [];
+            
+            avgData.forEach(item => {
+                const date = item.x;
+                if (groupedData[date] && groupedData[date].length > 1) {
+                    avgDataForDisplay.push(item);
+                }
+            });
+            
+            maxData.forEach(item => {
+                const date = item.x;
+                if (groupedData[date] && groupedData[date].length > 1) {
+                    maxDataForDisplay.push(item);
+                }
+            });
+            
+            minData.forEach(item => {
+                const date = item.x;
+                if (groupedData[date] && groupedData[date].length > 1) {
+                    minDataForDisplay.push(item);
+                }
+            });
+
+            datasets.push({
+                label: '平均値',
+                data: avgDataForDisplay,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            });
+
+            if (maxDataForDisplay.length > 0) {
+                datasets.push({
+                    label: '最大値',
+                    data: maxDataForDisplay,
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    tension: 0.1,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    borderDash: [5, 5]
+                });
+
+                datasets.push({
+                    label: '最小値',
+                    data: minDataForDisplay,
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    tension: 0.1,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    borderDash: [5, 5]
+                });
+            }
+        } else {
+            datasets.push({
+                label: '体重',
+                data: avgData,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            });
+        }
+
+        // 前期間データを追加（複数日表示用）
+        if (showPreviousPeriod) {
+            const previousData = getPreviousPeriodData(days, endDate);
+            if (previousData.length > 0) {
+                const previousGroupedData = {};
+                previousData.forEach(entry => {
+                    if (!previousGroupedData[entry.date]) {
+                        previousGroupedData[entry.date] = [];
+                    }
+                    previousGroupedData[entry.date].push(parseFloat(entry.weight || entry.value));
+                });
+
+                const previousAvgData = [];
+                Object.keys(previousGroupedData).sort().forEach(date => {
+                    const values = previousGroupedData[date];
+                    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+                    previousAvgData.push({ x: date, y: avg });
+                });
+
+                const periodName = days === 7 ? '前週' : days === 30 ? '前月' : days === 90 ? '前3ヶ月' : days === 365 ? '前年' : '前期間';
+                datasets.push({
+                    label: `${periodName}の記録`,
+                    data: previousAvgData,
+                    borderColor: 'rgba(128, 128, 128, 0.6)',
+                    backgroundColor: 'rgba(128, 128, 128, 0.1)',
+                    tension: 0.1,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    borderDash: [5, 5]
+                });
+            }
+        }
+        
+        // 期間表示テキストを設定
+        if (avgData.length > 0) {
+            const startStr = new Date(avgData[0].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            const endStr = new Date(avgData[avgData.length - 1].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            dateRangeText = `${startStr}～${endStr}`;
+        }
+        
+        timeUnit = 'day';
+        displayFormat = 'MM/dd';
+        axisLabel = '日付';
+    }
+
+    // 期間表示を更新
+    updateDateRangeDisplay(dateRangeText);
+
+    // グラフを描画
+    if (WeightTab.weightChart) {
+        WeightTab.weightChart.destroy();
+    }
+
+    const chartConfig = {
+        type: 'line',
+        data: {
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.parsed.y.toFixed(1)}kg`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: timeUnit,
+                        displayFormats: {
+                            hour: displayFormat,
+                            day: displayFormat
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: axisLabel
+                    },
+                    // 1日表示の場合は24時間表示
+                    ...(days === 1 && filteredData.length > 0 ? {
+                        min: new Date(`${filteredData[0].date}T00:00:00`),
+                        max: new Date(`${filteredData[0].date}T23:59:59`)
+                    } : {})
+                },
+                y: {
+                    min: 71.5,
+                    max: 74.0,
+                    title: {
+                        display: true,
+                        text: '体重 (kg)'
+                    },
+                    ticks: {
+                        stepSize: 0.5,
+                        callback: function(value) {
+                            return value.toFixed(1) + 'kg';
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    WeightTab.weightChart = new Chart(ctx, chartConfig);
+    log(`📊 グラフ更新: ${filteredData.length}件のデータ表示 ${dateRangeText}`);
+}
+
+function updateChart(days = 30) {
+    // 現在の日付を基準に更新
+    currentChartDays = days;
+    currentChartDate = new Date();
+    
+    const ctx = document.getElementById('weightChart');
+    if (!ctx) return;
+
+    const now = new Date();
+    const startDate = new Date(now);
+    if (days > 0) {
+        startDate.setDate(now.getDate() - days);
+    } else {
+        // 全期間の場合、最も古いデータから
+        if (WeightTab.allWeightData.length > 0) {
+            startDate.setTime(new Date(WeightTab.allWeightData[0].date).getTime());
+        }
+    }
+
+    // 期間内のデータをフィルタリング
+    const filteredData = WeightTab.allWeightData.filter(entry => {
+        const entryDate = new Date(entry.date);
+        return entryDate >= startDate && entryDate <= now;
+    });
+
+    // 共通の描画ロジックを使用
+    renderChartWithData(days, filteredData, startDate, now);
+    
+    // 期間情報を更新
+    updateChartPeriodInfo();
+}
+
+// 日付範囲表示を更新
+function updateDateRangeDisplay(rangeText) {
+    const chartContainer = document.querySelector('#chartPanel div[style*="position: relative"]');
+    if (!chartContainer) {
+        // フォールバック: chartPanelを使用
+        const chartPanel = document.getElementById('chartPanel');
+        if (!chartPanel) {
+            console.warn('Chart panel not found for date range display');
+            return;
+        }
+        
+        let rangeDisplay = document.getElementById('chartDateRange');
+        if (!rangeDisplay) {
+            rangeDisplay = document.createElement('div');
+            rangeDisplay.id = 'chartDateRange';
+            rangeDisplay.style.cssText = 'text-align: right; font-size: 12px; color: #666; margin-bottom: 5px; padding: 2px 0;';
+            const h3 = chartPanel.querySelector('h3');
+            if (h3) {
+                h3.insertAdjacentElement('afterend', rangeDisplay);
+            }
+        }
+        if (rangeDisplay && rangeText) {
+            rangeDisplay.textContent = rangeText;
+        }
+        return;
+    }
+
+    let rangeDisplay = document.getElementById('chartDateRange');
+    if (!rangeDisplay) {
+        // 日付範囲表示エリアが存在しない場合は作成
+        rangeDisplay = document.createElement('div');
+        rangeDisplay.id = 'chartDateRange';
+        rangeDisplay.style.cssText = 'position: absolute; top: 5px; right: 10px; background: rgba(255,255,255,0.9); padding: 4px 8px; border-radius: 4px; font-size: 12px; color: #666; border: 1px solid #ddd; z-index: 10;';
+        chartContainer.appendChild(rangeDisplay);
+    }
+    if (rangeDisplay && rangeText) {
+        rangeDisplay.textContent = rangeText;
+    }
+}
+
+// グラフの表示期間を変更
+window.updateChartRange = (days) => {
+    updateChart(days);
+    const rangeName = days === 1 ? '1日' :
+                    days === 7 ? '1週間' : 
+                    days === 30 ? '1ヶ月' : 
+                    days === 90 ? '3ヶ月' : 
+                    days === 365 ? '1年' : '全期間';
+    log(`📊 グラフ表示期間変更: ${rangeName}`);
+}
+
+// チャートナビゲーション機能
+window.navigateChart = (direction) => {
+    if (currentChartDays === 0) {
+        log('⚠️ 全期間表示中はナビゲーションできません');
+        return;
+    }
+
+    const today = new Date();
+    
+    if (direction === 'prev') {
+        // 前の期間へ
+        currentChartDate.setDate(currentChartDate.getDate() - currentChartDays);
+    } else if (direction === 'next') {
+        // 次の期間へ
+        currentChartDate.setDate(currentChartDate.getDate() + currentChartDays);
+        
+        // 未来に行き過ぎないよう制限
+        if (currentChartDate > today) {
+            currentChartDate = new Date(today);
+        }
+    }
+    
+    // チャートを更新
+    updateChartWithDate(currentChartDays, currentChartDate);
+    
+    // 期間情報を更新
+    updateChartPeriodInfo();
+    
+    const direction_jp = direction === 'prev' ? '前' : '次';
+    log(`📊 チャート${direction_jp}へナビゲーション`);
+};
+
+// 期間情報表示を更新
+function updateChartPeriodInfo() {
+    const periodInfo = document.getElementById('chartPeriodInfo');
+    if (!periodInfo) return;
+    
+    const endDate = new Date(currentChartDate);
+    const startDate = new Date(currentChartDate);
+    
+    if (currentChartDays === 1) {
+        // 1日表示
+        periodInfo.textContent = `${endDate.getMonth() + 1}/${endDate.getDate()} (1日)`;
+    } else if (currentChartDays === 7) {
+        // 1週間表示
+        startDate.setDate(endDate.getDate() - 6);
+        periodInfo.textContent = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (1週間)`;
+    } else if (currentChartDays === 30) {
+        // 1ヶ月表示
+        startDate.setDate(endDate.getDate() - 29);
+        periodInfo.textContent = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (1ヶ月)`;
+    } else if (currentChartDays === 90) {
+        // 3ヶ月表示
+        startDate.setDate(endDate.getDate() - 89);
+        periodInfo.textContent = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (3ヶ月)`;
+    } else if (currentChartDays === 365) {
+        // 1年表示
+        startDate.setDate(endDate.getDate() - 364);
+        periodInfo.textContent = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${endDate.getMonth() + 1}/${endDate.getDate()} (1年)`;
+    } else {
+        periodInfo.textContent = '全期間';
+    }
+}
+
+// 前期間比較機能
+window.togglePreviousPeriod = function togglePreviousPeriod() {
+    showPreviousPeriod = !showPreviousPeriod;
+    const btn = document.getElementById('previousPeriodBtn');
+    
+    if (showPreviousPeriod) {
+        btn.style.background = '#dc3545';
+        btn.textContent = '前期間OFF';
+    } else {
+        btn.style.background = '#28a745';
+        btn.textContent = '前期間の記録';
+    }
+    
+    // チャートを再描画
+    updateChartWithDate(currentChartDays, currentChartDate);
+    log(`📊 前期間比較: ${showPreviousPeriod ? 'ON' : 'OFF'}`);
+}
+
+// 前期間データを取得
+function getPreviousPeriodData(days, currentEndDate) {
+    if (days <= 0) return []; // 全期間表示の場合は前期間なし
+    
+    // 前期間の終了日を計算
+    const previousEndDate = new Date(currentEndDate);
+    if (days === 1) {
+        // 1日表示の場合：前日
+        previousEndDate.setDate(currentEndDate.getDate() - 1);
+    } else {
+        // 複数日表示の場合：前期間の終了日
+        previousEndDate.setDate(currentEndDate.getDate() - days);
+    }
+    
+    // 前期間の開始日を計算
+    const previousStartDate = new Date(previousEndDate);
+    if (days === 1) {
+        // 1日表示：開始日=終了日（前日のみ）
+        previousStartDate.setTime(previousEndDate.getTime());
+    } else {
+        // 複数日表示：期間の開始日を計算
+        previousStartDate.setDate(previousEndDate.getDate() - days + 1);
+    }
+    
+    // デバッグログ
+    log(`🔍 前期間データ取得: ${days}日, 現在終了日: ${currentEndDate.toDateString()}`);
+    log(`🔍 前期間範囲: ${previousStartDate.toDateString()} - ${previousEndDate.toDateString()}`);
+    
+    // 前期間のデータをフィルタリング
+    const filteredData = WeightTab.allWeightData.filter(entry => {
+        const entryDate = new Date(entry.date);
+        const entryDateStr = entry.date; // YYYY-MM-DD形式の文字列
+        const previousStartStr = previousStartDate.toISOString().split('T')[0];
+        const previousEndStr = previousEndDate.toISOString().split('T')[0];
+        
+        // デバッグ用
+        if (days === 1) {
+            log(`🔍 データ確認: ${entryDateStr} vs ${previousStartStr}-${previousEndStr}`);
+        }
+        
+        return entryDateStr >= previousStartStr && entryDateStr <= previousEndStr;
+    });
+    
+    log(`🔍 前期間データ件数: ${filteredData.length}件`);
+    return filteredData;
+}
+
+// テスト環境でのアクセス用（本番環境に影響なし）
+if (typeof window !== 'undefined' && typeof module !== 'undefined') {
+    window.getPreviousPeriodData = getPreviousPeriodData;
+}
+
 } // WeightTab 重複チェック終了
