@@ -90,8 +90,9 @@
         <textarea class="input-field" id="memoInput" placeholder="メモ (オプション)" rows="2"></textarea>
         <button class="save-button" onclick="saveWeightData()">💾 保存</button>
         
-        <!-- デバッグ: カスタム項目リセット -->
+        <!-- デバッグ: カスタム項目管理 -->
         <div style="margin-top: 10px; text-align: center;">
+            <button onclick="setFixedCustomItems()" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 12px; margin-right: 5px;">🔧 安定設定復元</button>
             <button onclick="resetCustomItems()" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 12px;">🗑️ カスタム項目リセット</button>
         </div>
     </div>

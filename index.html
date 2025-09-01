@@ -465,6 +465,37 @@
         // グローバル変数: loadCustomItems実行フラグ
         let isLoadCustomItemsExecuted = false;
         
+        // 固定カスタム項目を強制設定（安定表示用）
+        async function setFixedCustomItems() {
+            const fixedTimings = [
+                {text: "帰宅後", color: "#6c757d"},
+                {text: "何となく", color: "#6c757d"},
+                {text: "帰宅:食事無し", color: "#6c757d"},
+                {text: "ある程度飲んだ後", color: "#6c757d"},
+                {text: "帰宅:食事有+半日(7時間以上)", color: "#6c757d"},
+                {text: "飲んだ後", color: "#6c757d"},
+                {text: "トイレ(L)後", color: "#6c757d"}
+            ];
+            
+            if (currentUser) {
+                try {
+                    const customItemsRef = database.ref(`users/${currentUser.uid}/customItems`);
+                    await customItemsRef.set({
+                        timings: fixedTimings,
+                        tops: [],
+                        bottoms: []
+                    });
+                    log('✅ 固定カスタム項目をFirebaseに設定完了');
+                    
+                    // 実行フラグリセットして再読み込み
+                    isLoadCustomItemsExecuted = false;
+                    location.reload(); // ページリロードで確実に反映
+                } catch (error) {
+                    log(`❌ 固定設定エラー: ${error.message}`);
+                }
+            }
+        }
+        
         // カスタム項目リセット機能（重複解決用）
         async function resetCustomItems() {
             if (currentUser) {
