@@ -2531,7 +2531,7 @@
                     // JavaScriptファイルを動的読み込み
                     await loadTabScript(tabNumber, tabType);
                     
-                    // tab1の場合のデフォルト服装選択処理（カスタム項目復元は signinWithGoogle で実行）
+                    // タブ固有の初期化処理（JSファイル読み込み完了後）
                     if (tabNumber === 1 && currentUser) {
                         log(`🔄 tab1: デフォルト服装選択実行`);
                         
@@ -2540,6 +2540,16 @@
                             selectClothingTop('なし');
                             selectClothingBottom('トランクス');
                             log(`🔄 デフォルト服装選択完了: 上=なし, 下=トランクス`);
+                        }, 100);
+                    } else if (tabNumber === 3 && currentUser) {
+                        log('🔄 部屋片付けタブ: JS読み込み完了後のデータ読み込み開始');
+                        setTimeout(() => {
+                            loadRoomData();
+                        }, 100);
+                    } else if (tabNumber === 8 && currentUser) {
+                        log('🔄 メモリストタブ: JS読み込み完了後のデータ読み込み開始');
+                        setTimeout(() => {
+                            loadMemoData();
                         }, 100);
                     }
                     
@@ -2658,24 +2668,12 @@
                     loadSleepData();
                 }
             } else if (tabNumber === 3) {
-                // 部屋片付けタブの初期化
-                log('🔄 部屋片付けタブに切り替え - 初期化開始');
+                // 部屋片付けタブの初期化（データ読み込みはloadTabContent完了後に実行）
+                log('🔄 部屋片付けタブに切り替え - 初期化のみ実行');
                 initRoomManagement();
-                if (currentUser) {
-                    log('📚 loadRoomData()を呼び出し中...');
-                    loadRoomData();
-                } else {
-                    log('⚠️ ユーザー未ログイン - loadRoomData()スキップ');
-                }
             } else if (tabNumber === 8) {
-                // メモリストタブの初期化
-                log('🔄 メモリストタブに切り替え - 初期化開始');
-                if (currentUser) {
-                    log('📚 loadMemoData()を呼び出し中...');
-                    loadMemoData();
-                } else {
-                    log('⚠️ ユーザー未ログイン - loadMemoData()スキップ');
-                }
+                // メモリストタブの初期化（データ読み込みはloadTabContent完了後に実行）
+                log('🔄 メモリストタブに切り替え - 初期化のみ実行');
             }
             
             log(`📑 タブ切り替え: タブ${tabNumber}`);
