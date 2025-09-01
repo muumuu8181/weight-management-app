@@ -312,7 +312,7 @@ window.loadRoomData = async () => {
         const userRoomRef = firebase.database().ref(`users/${currentUser.uid}/roomData`);
         const snapshot = await userRoomRef.orderByChild('date').limitToLast(10).once('value');
         
-        const roomDataDisplay = document.getElementById('roomDataDisplay');
+        const roomDataDisplay = document.getElementById('roomHistoryArea');
         if (!roomDataDisplay) return;
         
         if (!snapshot.exists()) {
