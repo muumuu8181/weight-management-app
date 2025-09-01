@@ -1,0 +1,2329 @@
+{
+  "timestamp": "2025-09-01T21:42:01.367Z",
+  "totalDeclarations": 708,
+  "duplicateCount": 249,
+  "errors": [
+    {
+      "name": "firebaseConfig",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\firebase.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "auth",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\firebase.js",
+        "shared\\core\\firebase.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "database",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\firebase.js",
+        "shared\\core\\firebase.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "currentUser",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\firebase.js",
+        "shared\\core\\firebase.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "selectedTimingValue",
+      "locations": [
+        "index.html",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "weightChart",
+      "locations": [
+        "index.html",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "allWeightData",
+      "locations": [
+        "index.html",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "APP_VERSION",
+      "locations": [
+        "index.html",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "result",
+      "locations": [
+        "index.html",
+        "index.html",
+        "shared\\common.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\core\\firebase.js",
+        "shared\\core\\utils.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "provider",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\firebase.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "isMobile",
+      "locations": [
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\firebase.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "currentTab",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\tabs.js",
+        "shared\\core\\tabs.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "i",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\tabs.js",
+        "shared\\core\\tabs.js",
+        "shared\\core\\utils.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "tabBtn",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\tabs.js",
+        "shared\\core\\tabs.js",
+        "shared\\core\\tabs.js",
+        "shared\\core\\tabs.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "tabContent",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\tabs.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "weightInput",
+      "locations": [
+        "index.html",
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "chartPanel",
+      "locations": [
+        "index.html",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "weightHistoryPanel",
+      "locations": [
+        "index.html",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "logArea",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\utils.js",
+        "shared\\utils\\data-operations.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "timestamp",
+      "locations": [
+        "index.html",
+        "shared\\core\\utils.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "userAgent",
+      "locations": [
+        "index.html",
+        "index.html"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "userRef",
+      "locations": [
+        "index.html",
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "snapshot",
+      "locations": [
+        "index.html",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "data",
+      "locations": [
+        "index.html",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "entries",
+      "locations": [
+        "index.html",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "debugInfo",
+      "locations": [
+        "index.html",
+        "shared\\utils\\data-operations.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "textArea",
+      "locations": [
+        "index.html",
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "showUserInterface",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\firebase.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "showLoginInterface",
+      "locations": [
+        "index.html",
+        "shared\\common.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "log",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\utils.js",
+        "shared\\core\\utils.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "editingEntryId",
+      "locations": [
+        "index.html",
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "handleGoogleLogin",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\firebase.js",
+        "shared\\core\\firebase.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "handleLogout",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\firebase.js",
+        "shared\\core\\firebase.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "initWeightTab",
+      "locations": [
+        "index.html",
+        "index.html",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "loadRoomData",
+      "locations": [
+        "index.html",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "switchTab",
+      "locations": [
+        "index.html",
+        "shared\\common.js",
+        "shared\\core\\tabs.js",
+        "shared\\core\\tabs.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "copyDebugInfo",
+      "locations": [
+        "index.html",
+        "shared\\utils\\data-operations.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "defaults",
+      "locations": [
+        "shared\\common-functions.js",
+        "shared\\utils\\custom-items.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "selector",
+      "locations": [
+        "shared\\common-functions.js",
+        "shared\\utils\\custom-items.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "button",
+      "locations": [
+        "shared\\common-functions.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\mode-control.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab2-sleep\\tab-sleep.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "isCustomItem",
+      "locations": [
+        "shared\\common-functions.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "deleteCustomItem",
+      "locations": [
+        "shared\\common-functions.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "element",
+      "locations": [
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "container",
+      "locations": [
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "buttons",
+      "locations": [
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\mode-control.js",
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "allButtons",
+      "locations": [
+        "shared\\components\\dom-utils.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "selectedBtn",
+      "locations": [
+        "shared\\components\\dom-utils.js",
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "input",
+      "locations": [
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "shared\\components\\dom-utils.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "toggleElement",
+      "locations": [
+        "shared\\components\\dom-utils.js",
+        "shared\\core\\utils.js",
+        "shared\\core\\utils.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "currentMode",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "selectedTarget",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "inputArea",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "shared\\components\\mode-control.js",
+        "shared\\components\\mode-control.js",
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "textField",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "newItem",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "containers",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "targetContainer",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "existingButtons",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "isDuplicate",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "existingText",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "randomColor",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "targetName",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "colors",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "selectors",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "originalColor",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "handleModeAction",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "showUnifiedAddInput",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "updateModeUI",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "updateAddModeGuidance",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "updateDeleteModeGuidance",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "updateTargetUI",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "updateDeleteModeDisplay",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "restoreNormalDisplay",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "initializeModeControl",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "shared\\components\\mode-control.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "setMode",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "selectTarget",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "executeAdd",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "cancelAdd",
+      "locations": [
+        "shared\\components\\mode-control.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "APP_INFO",
+      "locations": [
+        "shared\\configs\\constants.js",
+        "shared\\configs\\constants.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "TABS",
+      "locations": [
+        "shared\\configs\\constants.js",
+        "shared\\configs\\constants.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "DB_PATHS",
+      "locations": [
+        "shared\\configs\\constants.js",
+        "shared\\configs\\constants.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "UI_CONFIG",
+      "locations": [
+        "shared\\configs\\constants.js",
+        "shared\\configs\\constants.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "INPUT_LIMITS",
+      "locations": [
+        "shared\\configs\\constants.js",
+        "shared\\configs\\constants.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "MESSAGES",
+      "locations": [
+        "shared\\configs\\constants.js",
+        "shared\\configs\\constants.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "DATE_FORMATS",
+      "locations": [
+        "shared\\configs\\constants.js",
+        "shared\\configs\\constants.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "STORAGE_KEYS",
+      "locations": [
+        "shared\\configs\\constants.js",
+        "shared\\configs\\constants.js",
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "API_CONFIG",
+      "locations": [
+        "shared\\configs\\constants.js",
+        "shared\\configs\\constants.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "DEBUG_CONFIG",
+      "locations": [
+        "shared\\configs\\constants.js",
+        "shared\\configs\\constants.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "getCurrentTab",
+      "locations": [
+        "shared\\core\\tabs.js",
+        "shared\\core\\tabs.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "setTabEnabled",
+      "locations": [
+        "shared\\core\\tabs.js",
+        "shared\\core\\tabs.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "setTabBadge",
+      "locations": [
+        "shared\\core\\tabs.js",
+        "shared\\core\\tabs.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "logMessage",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "year",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "month",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "day",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "minutes",
+      "locations": [
+        "shared\\core\\utils.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "formatDate",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\core\\utils.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "formatTime",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\core\\utils.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "arrayToCSV",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\core\\utils.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "copyToClipboard",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\core\\utils.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "clamp",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\core\\utils.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "generateRandomString",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\core\\utils.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "debounce",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\core\\utils.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "deepClone",
+      "locations": [
+        "shared\\core\\utils.js",
+        "shared\\core\\utils.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "style",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\ultimate-effects-collection.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "now",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "intensity",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "x",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\ultimate-effects-collection.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "y",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\ultimate-effects-collection.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "angle",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "velocity",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "particle",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "text",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\ultimate-effects-collection.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "flash",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\ultimate-effects-collection.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "oscillator",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "gainNode",
+      "locations": [
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js",
+        "shared\\effects\\celebration-effects.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "j",
+      "locations": [
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "distance",
+      "locations": [
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "petal",
+      "locations": [
+        "shared\\effects\\ultimate-effects-collection.js",
+        "shared\\effects\\ultimate-effects-collection.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "RANDOM_COLORS",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "customTimings",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "customTops",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "customBottoms",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "customItemsRef",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "isLoadCustomItemsExecuted",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "fixedTimings",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "existingTimingButtons",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "existingClothingButtons",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "timings",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "tops",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "bottoms",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "saveCustomItems",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "setFixedCustomItems",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "loadCustomItems",
+      "locations": [
+        "shared\\utils\\custom-items.js",
+        "shared\\utils\\custom-items.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "date",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "weight",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "memo",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "timeString",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "weightData",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "entryRef",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "clothingInfo",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "editModeIndicator",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "cancelButton",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js",
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "entry",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "indicator",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "existingCancelButton",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "saveWeightData",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "editWeightEntry",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "cancelEdit",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "deleteWeightEntry",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "selectTiming",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "selectClothingTop",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "selectClothingBottom",
+      "locations": [
+        "shared\\utils\\data-operations.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "currentValue",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "today",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "getTodayString",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "getCurrentTimeString",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "validateWeight",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "validateDate",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "validateMemo",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "validateWeightData",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "formatWeight",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "formatDateDisplay",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "formatTimestamp",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "sanitizeInput",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "shared\\utils\\validation.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "handleWeightKeypress",
+      "locations": [
+        "shared\\utils\\validation.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "todayString",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "buttonWidth",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "textAlign",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "item",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "confirmDelete",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "historyDiv",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "recentEntries",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "displayText",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "ctx",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "startDate",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "filteredData",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "entryDate",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "chartData",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "timeUnit",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "dateRangeText",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "dateTime",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "targetDate",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "dateStr",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "previousData",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "groupedData",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "avgData",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "values",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "avg",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "max",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "min",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "hasMultipleMeasurements",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "avgDataForDisplay",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "maxDataForDisplay",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "minDataForDisplay",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "startStr",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "endStr",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "chartConfig",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "chartContainer",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "rangeDisplay",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "h3",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "rangeName",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "btn",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "loadUserWeightData",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "updateChart",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "updateDateRangeDisplay",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "togglePreviousPeriod",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "getPreviousPeriodData",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\tab-weight.js"
+      ],
+      "type": "function"
+    },
+    {
+      "name": "updateChartRange",
+      "locations": [
+        "tabs\\tab1-weight\\tab-weight.js",
+        "tabs\\tab1-weight\\weight.js"
+      ],
+      "type": "window property"
+    },
+    {
+      "name": "saveButton",
+      "locations": [
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "originalText",
+      "locations": [
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "originalStyle",
+      "locations": [
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "dataRef",
+      "locations": [
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab1-weight\\weight.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "index",
+      "locations": [
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "sleepRef",
+      "locations": [
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab2-sleep\\tab-sleep.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "historyArea",
+      "locations": [
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "recentData",
+      "locations": [
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "content",
+      "locations": [
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "avgDuration",
+      "locations": [
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "weekAgo",
+      "locations": [
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "monthAgo",
+      "locations": [
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "weekCount",
+      "locations": [
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "copyText",
+      "locations": [
+        "tabs\\tab2-sleep\\tab-sleep.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "currentTime",
+      "locations": [
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "selectedRoomInput",
+      "locations": [
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "startBtn",
+      "locations": [
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "endBtn",
+      "locations": [
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "durationInput",
+      "locations": [
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "duration",
+      "locations": [
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "customRooms",
+      "locations": [
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "userRoomRef",
+      "locations": [
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "tabs\\tab3-room-cleaning\\tab-room-cleaning.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "timer",
+      "locations": [
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab4-stretch\\tab-stretch.js",
+        "tabs\\tab4-stretch\\tab-stretch.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "memoText",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "category",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "priority",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "timeframe",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "filterText",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "levelLimits",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "charLimit",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "truncatedText",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "indent",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "addButton",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "children",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "allMemos",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "executeBtn",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "maxLevel",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "child",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "keyword",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "sortOption",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    },
+    {
+      "name": "filterDiv",
+      "locations": [
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js",
+        "tabs\\tab8-memo-list\\tab-memo-list.js"
+      ],
+      "type": "variable"
+    }
+  ]
+}

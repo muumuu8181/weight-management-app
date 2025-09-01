@@ -282,7 +282,10 @@ window.selectTiming = (timing) => {
 // 上半身服装選択機能
 window.selectClothingTop = (clothing) => {
     selectedTopValue = clothing;
-    document.getElementById('selectedTop').value = clothing;
+    const selectedTopElement = document.getElementById('selectedTop');
+    if (selectedTopElement) {
+        selectedTopElement.value = clothing;
+    }
     
     // すべての上半身ボタンから選択状態を削除
     document.querySelectorAll('.clothing-btn[data-clothing-top]').forEach(btn => {
@@ -303,7 +306,10 @@ window.selectClothingTop = (clothing) => {
 // 下半身服装選択機能
 window.selectClothingBottom = (clothing) => {
     selectedBottomValue = clothing;
-    document.getElementById('selectedBottom').value = clothing;
+    const selectedBottomElement = document.getElementById('selectedBottom');
+    if (selectedBottomElement) {
+        selectedBottomElement.value = clothing;
+    }
     
     // すべての下半身ボタンから選択状態を削除
     document.querySelectorAll('.clothing-btn[data-clothing-bottom]').forEach(btn => {
