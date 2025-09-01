@@ -28,6 +28,9 @@
     <!-- カスタム設定 -->
     <script type="module" src="custom/app-config.js"></script>
     
+    <!-- 共通JavaScript関数 -->
+    <script src="shared/common-functions.js"></script>
+    
     <!-- タブ固有JavaScript -->
     <!-- タブ用JSは動的読み込みのためstatic読み込み削除 -->
     <style>
@@ -399,7 +402,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.86';
+        const APP_VERSION = 'v1.91';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -1123,14 +1126,7 @@
         }
 
         // カスタム項目判定（統一版）
-        function isCustomItem(item, target) {
-            const defaults = {
-                timing: ['起床後', 'トイレ前', 'トイレ後', '風呂前', '風呂後', '食事前', '食事後'],
-                top: ['なし', '下着シャツ', 'ワイシャツ'],
-                bottom: ['なし', 'トランクス', 'ハーフパンツ']
-            };
-            return !defaults[target].includes(item);
-        }
+        // isCustomItem関数（外部ファイルで定義済み）
 
         // カスタム項目削除（統一版）
         function deleteCustomItem(item, target) {
