@@ -1,0 +1,90 @@
+{
+  "file": "index.html",
+  "timestamp": "2025-09-01T21:03:10.936Z",
+  "results": {
+    "tabContent1": {
+      "exists": true,
+      "visible": true,
+      "content": {
+        "tagName": "DIV",
+        "id": "tabContent1",
+        "className": "tab-content",
+        "content": "\n            <!-- 体重管理コンテンツは動的読み込み -->\n        ",
+        "style": "",
+        "attributes": [
+          {
+            "name": "id",
+            "value": "tabContent1"
+          },
+          {
+            "name": "class",
+            "value": "tab-content"
+          }
+        ]
+      }
+    },
+    "tabContent2": {
+      "exists": true,
+      "visible": false,
+      "content": {
+        "tagName": "DIV",
+        "id": "tabContent2",
+        "className": "tab-content hidden",
+        "content": "\n            <!-- コンテンツは動的読み込み -->\n        ",
+        "style": "",
+        "attributes": [
+          {
+            "name": "id",
+            "value": "tabContent2"
+          },
+          {
+            "name": "class",
+            "value": "tab-content hidden"
+          }
+        ]
+      }
+    },
+    "tabContent3": {
+      "exists": true,
+      "visible": false,
+      "content": {
+        "tagName": "DIV",
+        "id": "tabContent3",
+        "className": "tab-content hidden",
+        "content": "\n            <!-- コンテンツは動的読み込み -->\n        ",
+        "style": "",
+        "attributes": [
+          {
+            "name": "id",
+            "value": "tabContent3"
+          },
+          {
+            "name": "class",
+            "value": "tab-content hidden"
+          }
+        ]
+      }
+    },
+    "tabContent8": {
+      "exists": true,
+      "visible": false,
+      "content": {
+        "tagName": "DIV",
+        "id": "tabContent8",
+        "className": "tab-content hidden",
+        "content": "\n            <!-- コンテンツは動的読み込み -->\n        ",
+        "style": "",
+        "attributes": [
+          {
+            "name": "id",
+            "value": "tabContent8"
+          },
+          {
+            "name": "class",
+            "value": "tab-content hidden"
+          }
+        ]
+      }
+    }
+  }
+}
