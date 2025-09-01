@@ -34,6 +34,18 @@
         body { font-family: Arial, sans-serif; padding: 2px; background: #f5f5f5; line-height: 1.2; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 6px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
+        /* 文字数別ボタン幅調整 */
+        .timing-btn[data-timing*="帰宅:食事有+半日(7時間以上)"],
+        .timing-btn[data-timing*="ある程度飲んだ後"] {
+            width: 200px !important; /* 3ボタン分 */
+            flex-shrink: 0;
+        }
+        .timing-btn[data-timing*="帰宅:食事無し"],
+        .timing-btn[data-timing*="帰宅後"] {
+            width: 140px !important; /* 2ボタン分 */
+            flex-shrink: 0;
+        }
+        
         /* スマホ対応 */
         @media (max-width: 768px) {
             body { padding: 3px; }
@@ -582,7 +594,17 @@
                         button.className = 'timing-btn';
                         button.setAttribute('data-timing', item.text);
                         button.onclick = () => selectTiming(item.text);
-                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7; position: relative; padding-right: 35px;`;
+                        // 文字数に応じてボタン幅を調整
+                        let buttonWidth = 'auto';
+                        let textAlign = 'center';
+                        if (item.text.length > 15) {
+                            buttonWidth = '200px'; // 3ボタン分
+                            textAlign = 'left';
+                        } else if (item.text.length > 8) {
+                            buttonWidth = '140px'; // 2ボタン分
+                            textAlign = 'left';
+                        }
+                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7; position: relative; padding-right: 35px; width: ${buttonWidth}; flex-shrink: 0; text-align: ${textAlign}; padding-left: 10px;`;
                         button.setAttribute('data-original-color', item.color);
                         
                         // innerHTML を使用して削除ボタン付きの内容を設定
@@ -606,7 +628,17 @@
                         button.className = 'clothing-btn';
                         button.setAttribute('data-clothing-top', item.text);
                         button.onclick = () => selectClothingTop(item.text);
-                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7; position: relative; padding-right: 35px;`;
+                        // 文字数に応じてボタン幅を調整
+                        let buttonWidth = 'auto';
+                        let textAlign = 'center';
+                        if (item.text.length > 15) {
+                            buttonWidth = '200px'; // 3ボタン分
+                            textAlign = 'left';
+                        } else if (item.text.length > 8) {
+                            buttonWidth = '140px'; // 2ボタン分
+                            textAlign = 'left';
+                        }
+                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7; position: relative; padding-right: 35px; width: ${buttonWidth}; flex-shrink: 0; text-align: ${textAlign}; padding-left: 10px;`;
                         button.setAttribute('data-original-color', item.color);
                         
                         // innerHTML を使用して削除ボタン付きの内容を設定
@@ -630,7 +662,17 @@
                         button.className = 'clothing-btn';
                         button.setAttribute('data-clothing-bottom', item.text);
                         button.onclick = () => selectClothingBottom(item.text);
-                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7; position: relative; padding-right: 35px;`;
+                        // 文字数に応じてボタン幅を調整
+                        let buttonWidth = 'auto';
+                        let textAlign = 'center';
+                        if (item.text.length > 15) {
+                            buttonWidth = '200px'; // 3ボタン分
+                            textAlign = 'left';
+                        } else if (item.text.length > 8) {
+                            buttonWidth = '140px'; // 2ボタン分
+                            textAlign = 'left';
+                        }
+                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7; position: relative; padding-right: 35px; width: ${buttonWidth}; flex-shrink: 0; text-align: ${textAlign}; padding-left: 10px;`;
                         button.setAttribute('data-original-color', item.color);
                         
                         // innerHTML を使用して削除ボタン付きの内容を設定
