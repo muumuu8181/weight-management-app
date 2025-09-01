@@ -387,7 +387,7 @@
         let showPreviousPeriod = false; // 前期間表示のON/OFF
 
         // アプリバージョン（一元管理）
-        const APP_VERSION = 'v1.76';
+        const APP_VERSION = 'v1.77';
         
         // カラー配列定数化（3箇所の重複統一）
         const RANDOM_COLORS = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a55eea'];
@@ -572,7 +572,7 @@
             // });
             // log('🧹 既存カスタムボタンを削除（重複防止）');
 
-            // タイミング項目の復元
+            // タイミング項目の復元（削除ボタン付き）
             if (timings.length > 0) {
                 const container = document.getElementById('timingButtons');
                 if (container) {
@@ -582,18 +582,21 @@
                         button.className = 'timing-btn';
                         button.setAttribute('data-timing', item.text);
                         button.onclick = () => selectTiming(item.text);
-                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7; position: relative; padding-right: 35px;`;
                         button.setAttribute('data-original-color', item.color);
-                        button.textContent = `⏰ ${item.text}`;
+                        
+                        // innerHTML を使用して削除ボタン付きの内容を設定
+                        button.innerHTML = `⏰ ${item.text} <span style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.3); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; color: white;" onclick="deleteCustomTiming('${item.text}', event)">✕</span>`;
+                        
                         container.appendChild(button);
                     });
-                    log(`✅ タイミング項目復元完了: ${timings.length}個`);
+                    log(`✅ タイミング項目復元完了（削除ボタン付き）: ${timings.length}個`);
                 } else {
                     log('❌ timingButtons要素が見つかりません');
                 }
             }
 
-            // 上半身項目の復元
+            // 上半身項目の復元（削除ボタン付き）
             if (tops.length > 0) {
                 const container = document.getElementById('topClothingButtons');
                 if (container) {
@@ -603,18 +606,21 @@
                         button.className = 'clothing-btn';
                         button.setAttribute('data-clothing-top', item.text);
                         button.onclick = () => selectClothingTop(item.text);
-                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7; position: relative; padding-right: 35px;`;
                         button.setAttribute('data-original-color', item.color);
-                        button.textContent = `👔 ${item.text}`;
+                        
+                        // innerHTML を使用して削除ボタン付きの内容を設定
+                        button.innerHTML = `👔 ${item.text} <span style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.3); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; color: white;" onclick="deleteCustomTop('${item.text}', event)">✕</span>`;
+                        
                         container.appendChild(button);
                     });
-                    log(`✅ 上半身項目復元完了: ${tops.length}個`);
+                    log(`✅ 上半身項目復元完了（削除ボタン付き）: ${tops.length}個`);
                 } else {
                     log('❌ topClothingButtons要素が見つかりません');
                 }
             }
 
-            // 下半身項目の復元
+            // 下半身項目の復元（削除ボタン付き）
             if (bottoms.length > 0) {
                 const container = document.getElementById('bottomClothingButtons');
                 if (container) {
@@ -624,12 +630,15 @@
                         button.className = 'clothing-btn';
                         button.setAttribute('data-clothing-bottom', item.text);
                         button.onclick = () => selectClothingBottom(item.text);
-                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7;`;
+                        button.style.cssText = `background: ${item.color}; color: white; opacity: 0.7; position: relative; padding-right: 35px;`;
                         button.setAttribute('data-original-color', item.color);
-                        button.textContent = `👖 ${item.text}`;
+                        
+                        // innerHTML を使用して削除ボタン付きの内容を設定
+                        button.innerHTML = `👖 ${item.text} <span style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.3); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; color: white;" onclick="deleteCustomBottom('${item.text}', event)">✕</span>`;
+                        
                         container.appendChild(button);
                     });
-                    log(`✅ 下半身項目復元完了: ${bottoms.length}個`);
+                    log(`✅ 下半身項目復元完了（削除ボタン付き）: ${bottoms.length}個`);
                 } else {
                     log('❌ bottomClothingButtons要素が見つかりません');
                 }
@@ -1044,6 +1053,126 @@
                 button.remove();
                 saveCustomItems();
                 log(`🗑️ カスタム項目削除: ${item} (${target === 'timing' ? 'タイミング' : target === 'top' ? '上半身' : '下半身'})`);
+            }
+        }
+
+        // 個別削除機能（確認ダイアログ付き）
+        async function deleteCustomTiming(itemText, event) {
+            // イベント伝播を停止（ボタンクリックの阻止）
+            event.stopPropagation();
+            
+            // 確認ダイアログ表示
+            const confirmDelete = confirm(`カスタムタイミング「${itemText}」を削除しますか？\n\n削除すると元に戻せません。`);
+            if (!confirmDelete) {
+                log(`🚫 削除キャンセル: ${itemText}`);
+                return;
+            }
+            
+            try {
+                // DOMから削除
+                const button = document.querySelector(`[data-timing="${itemText}"]`);
+                if (button && button.hasAttribute('data-original-color')) {
+                    button.remove();
+                    log(`✅ DOM削除成功: ${itemText}`);
+                } else {
+                    log(`⚠️ 削除対象なし（デフォルト項目？）: ${itemText}`);
+                    return;
+                }
+                
+                // Firebaseから削除
+                if (currentUser) {
+                    const customItemsRef = database.ref(`users/${currentUser.uid}/customItems/timings`);
+                    const snapshot = await customItemsRef.once('value');
+                    if (snapshot.val()) {
+                        const timings = snapshot.val();
+                        const updatedTimings = timings.filter(item => item.text !== itemText);
+                        await customItemsRef.set(updatedTimings);
+                        log(`🔥 Firebase削除完了: ${itemText}`);
+                    }
+                }
+                
+                // データ保存
+                await saveCustomItems();
+                log(`🗑️ カスタムタイミング削除完了: ${itemText}`);
+                
+            } catch (error) {
+                log(`❌ 削除エラー: ${error.message}`);
+            }
+        }
+        
+        async function deleteCustomTop(itemText, event) {
+            event.stopPropagation();
+            
+            const confirmDelete = confirm(`カスタム上半身「${itemText}」を削除しますか？\n\n削除すると元に戻せません。`);
+            if (!confirmDelete) {
+                log(`🚫 削除キャンセル: ${itemText}`);
+                return;
+            }
+            
+            try {
+                const button = document.querySelector(`[data-clothing-top="${itemText}"]`);
+                if (button && button.hasAttribute('data-original-color')) {
+                    button.remove();
+                    log(`✅ DOM削除成功: ${itemText}`);
+                } else {
+                    log(`⚠️ 削除対象なし（デフォルト項目？）: ${itemText}`);
+                    return;
+                }
+                
+                if (currentUser) {
+                    const customItemsRef = database.ref(`users/${currentUser.uid}/customItems/tops`);
+                    const snapshot = await customItemsRef.once('value');
+                    if (snapshot.val()) {
+                        const tops = snapshot.val();
+                        const updatedTops = tops.filter(item => item.text !== itemText);
+                        await customItemsRef.set(updatedTops);
+                        log(`🔥 Firebase削除完了: ${itemText}`);
+                    }
+                }
+                
+                await saveCustomItems();
+                log(`🗑️ カスタム上半身削除完了: ${itemText}`);
+                
+            } catch (error) {
+                log(`❌ 削除エラー: ${error.message}`);
+            }
+        }
+        
+        async function deleteCustomBottom(itemText, event) {
+            event.stopPropagation();
+            
+            const confirmDelete = confirm(`カスタム下半身「${itemText}」を削除しますか？\n\n削除すると元に戻せません。`);
+            if (!confirmDelete) {
+                log(`🚫 削除キャンセル: ${itemText}`);
+                return;
+            }
+            
+            try {
+                const button = document.querySelector(`[data-clothing-bottom="${itemText}"]`);
+                if (button && button.hasAttribute('data-original-color')) {
+                    button.remove();
+                    log(`✅ DOM削除成功: ${itemText}`);
+                } else {
+                    log(`⚠️ 削除対象なし（デフォルト項目？）: ${itemText}`);
+                    return;
+                }
+                
+                if (currentUser) {
+                    const customItemsRef = database.ref(`users/${currentUser.uid}/customItems/bottoms`);
+                    const snapshot = await customItemsRef.once('value');
+                    if (snapshot.val()) {
+                        const bottoms = snapshot.val();
+                        const updatedBottoms = bottoms.filter(item => item.text !== itemText);
+                        await customItemsRef.set(updatedBottoms);
+                        log(`🔥 Firebase削除完了: ${itemText}`);
+                    }
+                }
+                
+                await saveCustomItems();
+                log(`🗑️ カスタム下半身削除完了: ${itemText}`);
+                
+            } catch (error) {
+                log(`❌ 削除エラー: ${error.message}`);
             }
         }
 
