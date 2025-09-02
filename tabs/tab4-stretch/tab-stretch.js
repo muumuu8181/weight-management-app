@@ -1,7 +1,10 @@
 // タブ4: ストレッチ管理JavaScript
 
 // ストレッチ管理用変数
-let allStretchData = [];
+if (typeof window.allStretchData === 'undefined') {
+    window.allStretchData = [];
+}
+let allStretchData = window.allStretchData;
 let selectedStretchType = '';
 let selectedIntensity = '';
 let selectedBodyParts = [];

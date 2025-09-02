@@ -1,7 +1,10 @@
 // メモリスト機能のJavaScript
 
 // メモリスト関連のグローバル変数
-let memoData = [];
+if (typeof window.memoData === 'undefined') {
+    window.memoData = [];
+}
+let memoData = window.memoData;
 let filteredMemoData = []; // フィルタリング後のデータ
 let activeKeywords = []; // アクティブなキーワードフィルター
 let keywordFilterCount = 1; // キーワードフィルターの個数

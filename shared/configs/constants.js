@@ -6,7 +6,7 @@
 // アプリケーション情報
 const APP_INFO = {
     NAME: '体重管理アプリ',
-    VERSION: '2.20',
+    VERSION: '2.21',
     DESCRIPTION: '体重・睡眠・ストレッチ・部屋片付け管理システム',
     DEVELOPER: 'Claude Code Team'
 };
