@@ -12,7 +12,7 @@ window.markRequiredFields = function(config, delay = 300) {
 // 即座実行版（内部関数）
 function markRequiredFieldsImmediate(config) {
     if (!config || (!config.required && !config.optional)) {
-        log('⚠️ フィールド設定が無効です');
+        if (typeof log === 'function') log('⚠️ フィールド設定が無効です');
         return;
     }
     
@@ -22,13 +22,31 @@ function markRequiredFieldsImmediate(config) {
             const field = document.getElementById(fieldId);
             if (!field) return;
             
-            // ラベルを探す（for属性またはフィールドの直前）
+            // ラベルを探す（複数の方法で検索）
             let label = document.querySelector(`label[for="${fieldId}"]`);
             if (!label) {
-                // for属性がない場合、フィールドの直前のlabelを探す
-                const parent = field.closest('.input-row');
+                // 1. 親要素内のlabelを探す
+                const parent = field.closest('.input-row, div, .input-card');
                 if (parent) {
                     label = parent.querySelector('label');
+                }
+            }
+            if (!label) {
+                // 2. フィールドの直前の兄弟要素を探す
+                let prevElement = field.previousElementSibling;
+                while (prevElement) {
+                    if (prevElement.tagName === 'LABEL') {
+                        label = prevElement;
+                        break;
+                    }
+                    prevElement = prevElement.previousElementSibling;
+                }
+            }
+            if (!label) {
+                // 3. 同じ親要素内で最初のlabelを探す
+                const container = field.parentElement;
+                if (container) {
+                    label = container.querySelector('label');
                 }
             }
             
@@ -42,11 +60,11 @@ function markRequiredFieldsImmediate(config) {
                 // フィールドにも必須クラス追加
                 field.classList.add('required-field');
                 
-                console.log(`✅ 必須バッジ追加: ${fieldId}`);
+                if (typeof log === 'function') log(`✅ 必須バッジ追加: ${fieldId}`);
             } else if (!label) {
-                console.log(`⚠️ ラベルが見つかりません: ${fieldId}`);
+                if (typeof log === 'function') log(`⚠️ ラベルが見つかりません: ${fieldId}`);
             } else {
-                console.log(`ℹ️ 必須バッジ既存: ${fieldId}`);
+                if (typeof log === 'function') log(`ℹ️ 必須バッジ既存: ${fieldId}`);
             }
         });
     }
@@ -77,16 +95,18 @@ function markRequiredFieldsImmediate(config) {
                 // フィールドにもオプションクラス追加
                 field.classList.add('optional-field');
                 
-                console.log(`✅ 任意バッジ追加: ${fieldId}`);
+                if (typeof log === 'function') log(`✅ 任意バッジ追加: ${fieldId}`);
             } else if (!label) {
-                console.log(`⚠️ ラベルが見つかりません: ${fieldId}`);
+                if (typeof log === 'function') log(`⚠️ ラベルが見つかりません: ${fieldId}`);
             } else {
-                console.log(`ℹ️ 任意バッジ既存: ${fieldId}`);
+                if (typeof log === 'function') log(`ℹ️ 任意バッジ既存: ${fieldId}`);
             }
         });
     }
     
-    log(`✅ フィールドバッジ設定完了: 必須${config.required?.length || 0}項目、任意${config.optional?.length || 0}項目`);
+    if (typeof log === 'function') {
+        log(`✅ フィールドバッジ設定完了: 必須${config.required?.length || 0}項目、任意${config.optional?.length || 0}項目`);
+    }
 };
 
 // バッジ除去（リセット用）
