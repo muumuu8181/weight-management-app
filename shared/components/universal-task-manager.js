@@ -848,94 +848,6 @@ class UniversalTaskManager {
         console.log('❌ 統合モードキャンセル');
     }
     
-    // ソート機能
-    applySorting() {
-        const sortOption = document.getElementById(`${this.containerId}_sortOption`).value;
-        let sortedTasks = [...this.taskData];
-        
-        switch (sortOption) {
-            case 'priority':
-                // 重要度順 (S > A > B > C > D > なし)
-                const priorityOrder = { 'S': 0, 'A': 1, 'B': 2, 'C': 3, 'D': 4, '': 5 };
-                sortedTasks.sort((a, b) => {
-                    const aOrder = priorityOrder[a.priority || ''] || 5;
-                    const bOrder = priorityOrder[b.priority || ''] || 5;
-                    return aOrder - bOrder;
-                });
-                break;
-                
-            case 'deadline':
-                // 締切順（近い順、未設定は最後）
-                sortedTasks.sort((a, b) => {
-                    if (!a.deadline && !b.deadline) return 0;
-                    if (!a.deadline) return 1;
-                    if (!b.deadline) return -1;
-                    return new Date(a.deadline) - new Date(b.deadline);
-                });
-                break;
-                
-            case 'category':
-                // カテゴリ順（アルファベット順）
-                sortedTasks.sort((a, b) => {
-                    const aCategory = a.category || '';
-                    const bCategory = b.category || '';
-                    return aCategory.localeCompare(bCategory);
-                });
-                break;
-                
-            default:
-                // デフォルト（作成日時順）- 元の階層ソートを維持
-                sortedTasks = this.sortByHierarchy();
-                break;
-        }
-        
-        // 階層構造を維持しつつソート（デフォルト以外の場合）
-        if (sortOption !== 'default') {
-            sortedTasks = this.maintainHierarchyInSort(sortedTasks);
-        }
-        
-        this.displayTasks(sortedTasks);
-        console.log('📊 ソート適用:', sortOption);
-    }
-    
-    // 階層構造を維持しながらソート
-    maintainHierarchyInSort(sortedTasks) {
-        const result = [];
-        const processed = new Set();
-        
-        // レベル0のタスクから処理
-        const parents = sortedTasks.filter(task => (task.level || 0) === 0);
-        
-        const addWithChildren = (parent) => {
-            if (processed.has(parent.id)) return;
-            
-            result.push(parent);
-            processed.add(parent.id);
-            
-            // 子タスクを再帰的に追加
-            const addChildren = (parentId, level) => {
-                const children = sortedTasks.filter(task => 
-                    task.parentId == parentId && (task.level || 0) === level
-                );
-                
-                children.forEach(child => {
-                    if (!processed.has(child.id)) {
-                        result.push(child);
-                        processed.add(child.id);
-                        if (level < 3) {
-                            addChildren(child.id, level + 1);
-                        }
-                    }
-                });
-            };
-            
-            addChildren(parent.id, 1);
-        };
-        
-        parents.forEach(addWithChildren);
-        return result;
-    }
-    
     // 締切日フォーマット
     formatDeadline(deadline) {
         if (!deadline) return '';
@@ -1278,9 +1190,7 @@ class UniversalTaskManager {
                 break;
         }
         
-        if (this.currentSort !== 'default') {
-            sortedTasks = this.maintainHierarchyInSort(sortedTasks);
-        }
+        // 階層構造を維持（デフォルト以外でも階層は保持）
         
         this.displayTasks(sortedTasks);
         this.updateFilterCount(sortedTasks.length, this.taskData.length);
