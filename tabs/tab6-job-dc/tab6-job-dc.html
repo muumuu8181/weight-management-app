@@ -1,0 +1,126 @@
+<!-- JOB_DC タスク管理・キャリア形成タブ -->
+
+<!-- タスク追加エリア -->
+<div class="input-card" id="jobTaskInput">
+    <h3>💼 JOB_DC タスク管理</h3>
+    
+    <!-- タスク入力フォーム -->
+    <div style="margin-bottom: 15px;">
+        <textarea id="newTaskText" placeholder="タスク内容を入力..." 
+            style="width: 100%; max-width: 600px; height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; font-family: inherit; font-size: 14px; line-height: 1.4;"></textarea>
+    </div>
+
+    <!-- スキル分類選択 -->
+    <div style="margin-bottom: 15px;">
+        <label style="font-weight: bold; display: block; margin-bottom: 8px;">🎯 スキル分類:</label>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="skill-btn" data-skill="" onclick="selectSkillType('')" style="background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 1;">未分類</button>
+            <button type="button" class="skill-btn" data-skill="案件固有" onclick="selectSkillType('案件固有')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🔴 案件固有</button>
+            <button type="button" class="skill-btn" data-skill="市場汎用" onclick="selectSkillType('市場汎用')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🟢 市場汎用</button>
+            <button type="button" class="skill-btn" data-skill="自動化推進" onclick="selectSkillType('自動化推進')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🟡 自動化推進</button>
+        </div>
+        <input type="hidden" id="taskSkillType" value="">
+    </div>
+
+    <!-- 重要度選択 -->
+    <div style="margin-bottom: 15px;">
+        <label style="font-weight: bold; display: block; margin-bottom: 8px;">📊 重要度:</label>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="priority-btn" data-priority="" onclick="selectTaskPriority('')" style="background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 1;">なし</button>
+            <button type="button" class="priority-btn" data-priority="S" onclick="selectTaskPriority('S')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🔥 S</button>
+            <button type="button" class="priority-btn" data-priority="A" onclick="selectTaskPriority('A')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⚡ A</button>
+            <button type="button" class="priority-btn" data-priority="B" onclick="selectTaskPriority('B')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📋 B</button>
+        </div>
+        <input type="hidden" id="taskPriority" value="">
+    </div>
+
+    <!-- 予想工数選択 -->
+    <div style="margin-bottom: 15px;">
+        <label style="font-weight: bold; display: block; margin-bottom: 8px;">⏰ 予想工数:</label>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="time-btn" data-time="" onclick="selectEstimatedTime('')" style="background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 1;">未設定</button>
+            <button type="button" class="time-btn" data-time="5分" onclick="selectEstimatedTime('5分')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⚡ 5分</button>
+            <button type="button" class="time-btn" data-time="30分" onclick="selectEstimatedTime('30分')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📅 30分</button>
+            <button type="button" class="time-btn" data-time="1時間" onclick="selectEstimatedTime('1時間')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🕐 1時間</button>
+            <button type="button" class="time-btn" data-time="半日" onclick="selectEstimatedTime('半日')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📆 半日</button>
+        </div>
+        <input type="hidden" id="taskEstimatedTime" value="">
+    </div>
+
+    <!-- 自動化目標 -->
+    <div style="margin-bottom: 15px;">
+        <label style="font-weight: bold; display: block; margin-bottom: 8px;">🎯 自動化目標:</label>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="automation-btn" data-automation="" onclick="selectAutomationGoal('')" style="background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 1;">対象外</button>
+            <button type="button" class="automation-btn" data-automation="即削除" onclick="selectAutomationGoal('即削除')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🗑️ 即削除</button>
+            <button type="button" class="automation-btn" data-automation="1分目標" onclick="selectAutomationGoal('1分目標')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⏱️ 1分目標</button>
+            <button type="button" class="automation-btn" data-automation="0分目標" onclick="selectAutomationGoal('0分目標')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🎯 0分目標</button>
+        </div>
+        <input type="hidden" id="taskAutomationGoal" value="">
+    </div>
+
+    <!-- 保存ボタン -->
+    <button class="save-button" onclick="saveJobTask()">💾 タスク保存</button>
+</div>
+
+<!-- キャリア分析パネル -->
+<div class="input-card" id="careerAnalysisPanel">
+    <h3>📈 キャリア分析</h3>
+    
+    <!-- 今日の作業時間統計 -->
+    <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+        <h4 style="margin-top: 0; color: #495057;">📊 今日の作業時間統計</h4>
+        <div id="todayStats">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span>🔴 案件固有作業:</span>
+                <span id="todayProjectSpecific" style="font-weight: bold; color: #dc3545;">0分</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span>🟢 市場汎用作業:</span>
+                <span id="todayMarketable" style="font-weight: bold; color: #28a745;">0分</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span>🟡 自動化推進:</span>
+                <span id="todayAutomation" style="font-weight: bold; color: #ffc107;">0分</span>
+            </div>
+            <hr style="margin: 10px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: bold;">📈 キャリア価値向上度:</span>
+                <span id="careerValueScore" style="font-weight: bold; font-size: 18px; color: #007bff;">85%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自動化進捗 -->
+    <div style="margin-bottom: 20px; padding: 15px; background: #fff3cd; border-radius: 8px;">
+        <h4 style="margin-top: 0; color: #856404;">🎯 自動化進捗</h4>
+        <div id="automationProgress">
+            <div style="margin-bottom: 10px;">
+                <span>今月の案件固有作業削減:</span>
+                <div style="background: #e9ecef; height: 20px; border-radius: 10px; margin: 5px 0;">
+                    <div id="reductionProgress" style="background: #28a745; height: 100%; width: 60%; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">-60%</div>
+                </div>
+            </div>
+            <div style="font-size: 12px; color: #666;">
+                目標: 毎日の案件作業を1分以内に短縮
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- タスク一覧 -->
+<div class="input-card" id="jobTaskList">
+    <h3>📋 タスク一覧</h3>
+    
+    <!-- フィルター -->
+    <div style="margin-bottom: 15px; display: flex; gap: 8px; flex-wrap: wrap;">
+        <button onclick="filterTasks('all')" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">全て</button>
+        <button onclick="filterTasks('案件固有')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">🔴 案件固有</button>
+        <button onclick="filterTasks('市場汎用')" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">🟢 市場汎用</button>
+        <button onclick="filterTasks('自動化推進')" style="background: #ffc107; color: #212529; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">🟡 自動化推進</button>
+    </div>
+    
+    <div class="data-area" id="jobTaskHistory">
+        データを読み込み中...<br>
+    </div>
+</div>

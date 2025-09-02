@@ -1,0 +1,232 @@
+/* JOB_DC タブ専用スタイル */
+
+/* ボタンスタイル統一 */
+.skill-btn, .priority-btn, .time-btn, .automation-btn {
+    transition: all 0.2s ease;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+}
+
+.skill-btn:hover, .priority-btn:hover, .time-btn:hover, .automation-btn:hover {
+    opacity: 1 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.skill-btn.selected, .priority-btn.selected, .time-btn.selected, .automation-btn.selected {
+    opacity: 1 !important;
+    border: 2px solid #007bff;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+
+/* タスクリストスタイル */
+.task-item {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+}
+
+.task-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+
+.task-item.completed {
+    opacity: 0.7;
+    background: #f8f9fa;
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+/* スキル分類バッジ */
+.skill-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.skill-badge.案件固有 {
+    background: #dc3545;
+    color: white;
+}
+
+.skill-badge.市場汎用 {
+    background: #28a745;
+    color: white;
+}
+
+.skill-badge.自動化推進 {
+    background: #ffc107;
+    color: #212529;
+}
+
+.skill-badge.未分類 {
+    background: #6c757d;
+    color: white;
+}
+
+/* 優先度バッジ */
+.priority-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.priority-badge.S {
+    background: #dc3545;
+    color: white;
+}
+
+.priority-badge.A {
+    background: #fd7e14;
+    color: white;
+}
+
+.priority-badge.B {
+    background: #ffc107;
+    color: #212529;
+}
+
+/* 工数バッジ */
+.time-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 8px;
+    background: #17a2b8;
+    color: white;
+}
+
+/* 自動化目標バッジ */
+.automation-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.automation-badge.即削除 {
+    background: #dc3545;
+    color: white;
+}
+
+.automation-badge.1分目標 {
+    background: #fd7e14;
+    color: white;
+}
+
+.automation-badge.0分目標 {
+    background: #28a745;
+    color: white;
+}
+
+/* 統計パネル */
+.stats-panel {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.stats-panel h4 {
+    color: white;
+    margin-top: 0;
+}
+
+/* プログレスバー */
+.progress-bar {
+    background: #e9ecef;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+/* キャリア価値スコア */
+.career-score {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 12px;
+    margin: 10px 0;
+}
+
+/* アクションボタン */
+.action-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-right: 5px;
+    transition: background 0.2s ease;
+}
+
+.action-btn:hover {
+    background: #0056b3;
+}
+
+.action-btn.complete {
+    background: #28a745;
+}
+
+.action-btn.complete:hover {
+    background: #1e7e34;
+}
+
+.action-btn.delete {
+    background: #dc3545;
+}
+
+.action-btn.delete:hover {
+    background: #c82333;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .skill-btn, .priority-btn, .time-btn, .automation-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+        margin: 2px;
+    }
+    
+    .task-item {
+        padding: 10px;
+    }
+    
+    .career-score {
+        font-size: 20px;
+        padding: 12px;
+    }
+}

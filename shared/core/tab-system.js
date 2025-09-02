@@ -8,7 +8,13 @@ async function loadTabContent(tabNumber, tabType) {
         if (!tabContentDiv) return;
         
         // HTMLコンテンツを読み込み
-        const response = await fetch(`tabs/tab${tabNumber}-${tabType}/tab-${tabType}.html`);
+        let htmlPath;
+        if (tabNumber === 6) {
+            htmlPath = `tabs/tab${tabNumber}-${tabType}/tab${tabNumber}-${tabType}.html`;
+        } else {
+            htmlPath = `tabs/tab${tabNumber}-${tabType}/tab-${tabType}.html`;
+        }
+        const response = await fetch(htmlPath);
         if (response.ok) {
             const htmlContent = await response.text();
             tabContentDiv.innerHTML = htmlContent;
@@ -52,6 +58,16 @@ async function loadTabContent(tabNumber, tabType) {
                         log('❌ initDashboard関数が見つかりません');
                     }
                 }, 200);
+            } else if (tabNumber === 6 && currentUser) {
+                log('🔄 JOB_DCタブ: JS読み込み完了後の初期化開始');
+                setTimeout(() => {
+                    if (typeof window.initJobDCTab === 'function') {
+                        window.initJobDCTab();
+                        log('✅ JOB_DC初期化完了');
+                    } else {
+                        log('❌ initJobDCTab関数が見つかりません');
+                    }
+                }, 200);
             } else if (tabNumber === 8 && currentUser) {
                 log('🔄 メモリストタブ: JS読み込み完了後のデータ読み込み開始');
                 setTimeout(() => {
@@ -80,7 +96,12 @@ async function loadTabScript(tabNumber, tabType) {
         // 新しいスクリプトタグを作成
         const script = document.createElement('script');
         script.id = `tab${tabNumber}Script`;
-        script.src = `tabs/tab${tabNumber}-${tabType}/tab-${tabType}.js`;
+        // tab6の場合は特別なファイル名
+        if (tabNumber === 6) {
+            script.src = `tabs/tab${tabNumber}-${tabType}/tab${tabNumber}-${tabType}.js`;
+        } else {
+            script.src = `tabs/tab${tabNumber}-${tabType}/tab-${tabType}.js`;
+        }
         document.head.appendChild(script);
         
         return new Promise((resolve, reject) => {
