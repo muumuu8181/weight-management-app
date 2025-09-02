@@ -64,6 +64,53 @@
             </div>
         </div>
 
+        <!-- 週次データ活動状況 -->
+        <div class="weekly-activity" style="background: #f8f9fa; border: 2px solid #007bff; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+            <h4 style="color: #007bff; margin: 0 0 15px 0;">📅 週次活動状況</h4>
+            <div class="weekly-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                
+                <!-- 体重管理週次データ -->
+                <div class="weekly-card" style="background: rgba(0, 123, 255, 0.05); border: 1px solid rgba(0, 123, 255, 0.2); border-radius: 5px; padding: 10px;">
+                    <div style="font-weight: bold; color: #007bff; font-size: 12px; margin-bottom: 8px;">📊 体重管理</div>
+                    <div class="weekly-data" id="weightWeeklyData">
+                        <div class="week-item">今週: <span id="weightThisWeek">--</span>件</div>
+                        <div class="week-item">先週: <span id="weightLastWeek">--</span>件</div>
+                        <div class="week-item">今月: <span id="weightThisMonth">--</span>件</div>
+                    </div>
+                </div>
+
+                <!-- 睡眠管理週次データ -->
+                <div class="weekly-card" style="background: rgba(111, 66, 193, 0.05); border: 1px solid rgba(111, 66, 193, 0.2); border-radius: 5px; padding: 10px;">
+                    <div style="font-weight: bold; color: #6f42c1; font-size: 12px; margin-bottom: 8px;">🛏️ 睡眠管理</div>
+                    <div class="weekly-data" id="sleepWeeklyData">
+                        <div class="week-item">今週: <span id="sleepThisWeek">--</span>件</div>
+                        <div class="week-item">先週: <span id="sleepLastWeek">--</span>件</div>
+                        <div class="week-item">今月: <span id="sleepThisMonth">--</span>件</div>
+                    </div>
+                </div>
+
+                <!-- 部屋片付け週次データ -->
+                <div class="weekly-card" style="background: rgba(40, 167, 69, 0.05); border: 1px solid rgba(40, 167, 69, 0.2); border-radius: 5px; padding: 10px;">
+                    <div style="font-weight: bold; color: #28a745; font-size: 12px; margin-bottom: 8px;">🏠 部屋片付け</div>
+                    <div class="weekly-data" id="roomWeeklyData">
+                        <div class="week-item">今週: <span id="roomThisWeek">--</span>件</div>
+                        <div class="week-item">先週: <span id="roomLastWeek">--</span>件</div>
+                        <div class="week-item">今月: <span id="roomThisMonth">--</span>件</div>
+                    </div>
+                </div>
+
+                <!-- メモリスト週次データ -->
+                <div class="weekly-card" style="background: rgba(255, 193, 7, 0.05); border: 1px solid rgba(255, 193, 7, 0.2); border-radius: 5px; padding: 10px;">
+                    <div style="font-weight: bold; color: #e6a302; font-size: 12px; margin-bottom: 8px;">📝 メモリスト</div>
+                    <div class="weekly-data" id="memoWeeklyData">
+                        <div class="week-item">今週: <span id="memoThisWeek">--</span>件</div>
+                        <div class="week-item">先週: <span id="memoLastWeek">--</span>件</div>
+                        <div class="week-item">今月: <span id="memoThisMonth">--</span>件</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 全体的な改善傾向表示 -->
         <div class="overall-progress" style="background: #e8f5e8; border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
             <h4 style="color: #155724; margin: 0 0 10px 0;">🎯 総合改善状況</h4>

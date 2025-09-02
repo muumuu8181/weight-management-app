@@ -256,6 +256,7 @@ function updateAllSummaries() {
     updateSleepSummary();
     updateRoomSummary();
     updateMemoSummary();
+    updateWeeklyData();
 }
 
 // 体重サマリー更新
@@ -797,5 +798,100 @@ window.exportTrendData = function() {
     URL.revokeObjectURL(url);
     log('📊 詳細データをJSONファイルとしてエクスポートしました');
 };
+
+// 週次データ統計更新
+function updateWeeklyData() {
+    log('📅 週次データ統計計算開始');
+    
+    // 日付計算
+    const today = new Date();
+    const thisWeekStart = getWeekStart(today);
+    const lastWeekStart = getWeekStart(new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000));
+    const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    
+    log(`📅 今週開始: ${thisWeekStart.toLocaleDateString()}`);
+    log(`📅 先週開始: ${lastWeekStart.toLocaleDateString()}`);
+    log(`📅 今月開始: ${thisMonthStart.toLocaleDateString()}`);
+    
+    // 体重管理週次データ
+    updateTabWeeklyData('weight', dashboardData.weight, thisWeekStart, lastWeekStart, thisMonthStart);
+    
+    // 睡眠管理週次データ
+    updateTabWeeklyData('sleep', dashboardData.sleep, thisWeekStart, lastWeekStart, thisMonthStart);
+    
+    // 部屋片付け週次データ
+    updateTabWeeklyData('room', dashboardData.room, thisWeekStart, lastWeekStart, thisMonthStart);
+    
+    // メモリスト週次データ
+    updateTabWeeklyData('memo', dashboardData.memo, thisWeekStart, lastWeekStart, thisMonthStart);
+    
+    log('✅ 週次データ統計計算完了');
+}
+
+// 各タブの週次データ更新
+function updateTabWeeklyData(tabName, data, thisWeekStart, lastWeekStart, thisMonthStart) {
+    if (!data || data.length === 0) {
+        document.getElementById(`${tabName}ThisWeek`).textContent = '0';
+        document.getElementById(`${tabName}LastWeek`).textContent = '0';
+        document.getElementById(`${tabName}ThisMonth`).textContent = '0';
+        return;
+    }
+    
+    let thisWeekCount = 0;
+    let lastWeekCount = 0;
+    let thisMonthCount = 0;
+    
+    data.forEach(item => {
+        const itemDate = getItemDate(item);
+        if (!itemDate) return;
+        
+        if (itemDate >= thisWeekStart) {
+            thisWeekCount++;
+        } else if (itemDate >= lastWeekStart && itemDate < thisWeekStart) {
+            lastWeekCount++;
+        }
+        
+        if (itemDate >= thisMonthStart) {
+            thisMonthCount++;
+        }
+    });
+    
+    document.getElementById(`${tabName}ThisWeek`).textContent = thisWeekCount;
+    document.getElementById(`${tabName}LastWeek`).textContent = lastWeekCount;
+    document.getElementById(`${tabName}ThisMonth`).textContent = thisMonthCount;
+    
+    log(`📊 ${tabName}週次統計: 今週${thisWeekCount}件, 先週${lastWeekCount}件, 今月${thisMonthCount}件`);
+}
+
+// 週の開始日取得（月曜日開始）
+function getWeekStart(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // 月曜日を週の開始とする
+    const weekStart = new Date(d.setDate(diff));
+    weekStart.setHours(0, 0, 0, 0);
+    return weekStart;
+}
+
+// データ項目から日付取得
+function getItemDate(item) {
+    // 複数の日付フィールドパターンに対応
+    let dateStr = item.date || item.timestamp || item.createdAt || item.recordDate;
+    
+    if (!dateStr) return null;
+    
+    // タイムスタンプの場合は数値チェック
+    if (typeof dateStr === 'number') {
+        return new Date(dateStr);
+    }
+    
+    // 文字列の場合はDate変換
+    if (typeof dateStr === 'string') {
+        const date = new Date(dateStr);
+        return isNaN(date.getTime()) ? null : date;
+    }
+    
+    return null;
+}
 
 log('✅ ダッシュボードJavaScript読み込み完了');

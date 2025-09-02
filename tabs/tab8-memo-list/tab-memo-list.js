@@ -686,6 +686,15 @@ function sortMemosWithHierarchy(memos) {
 
 // メモデータを読み込み
 function loadMemoData() {
+    // 必須・オプション項目の表示設定（初回のみ）
+    if (typeof window.markRequiredFields === 'function') {
+        const memoFieldConfig = {
+            required: ['newMemoText'],
+            optional: ['memoCategory', 'memoPriority', 'memoTimeframe', 'deadlineInput']
+        };
+        window.markRequiredFields(memoFieldConfig);
+    }
+    
     if (currentUser) {
         // Firebaseから読み込み
         firebase.database().ref(`users/${currentUser.uid}/memos`).on('value', (snapshot) => {

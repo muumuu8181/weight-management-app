@@ -29,6 +29,15 @@ function initializePedometerManagement() {
         btn.style.opacity = '0.7';
     });
     
+    // 必須・オプション項目の表示設定
+    if (typeof window.markRequiredFields === 'function') {
+        const pedometerFieldConfig = {
+            required: ['pedometerDateInput', 'stepsInput', 'selectedExerciseType'],
+            optional: ['pedometerTimeInput', 'distanceInput', 'caloriesInput', 'pedometerMemoInput']
+        };
+        window.markRequiredFields(pedometerFieldConfig);
+    }
+    
     log('🚶 万歩計管理初期化完了');
     
     // データを読み込み
@@ -78,19 +87,21 @@ window.savePedometerData = async () => {
             userEmail: currentUser.email
         };
         
-        // データ検証
-        if (!pedometerData.date) {
-            log('❌ 日付を入力してください');
-            return;
+        // 必須項目検証（共通関数使用）
+        const pedometerFieldConfig = {
+            required: ['pedometerDateInput', 'stepsInput', 'selectedExerciseType'],
+            optional: ['pedometerTimeInput', 'distanceInput', 'caloriesInput', 'pedometerMemoInput']
+        };
+        
+        if (typeof window.validateRequiredFields === 'function') {
+            if (!window.validateRequiredFields(pedometerFieldConfig)) {
+                return;
+            }
         }
         
+        // 追加検証（歩数の数値チェック）
         if (pedometerData.steps <= 0) {
-            log('❌ 歩数を入力してください');
-            return;
-        }
-        
-        if (!pedometerData.exerciseType) {
-            log('❌ 運動種別を選択してください');
+            log('❌ 歩数は1以上の値を入力してください');
             return;
         }
         

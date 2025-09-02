@@ -26,6 +26,15 @@ function initializeStretchManager() {
     const currentTime = today.toTimeString().slice(0, 5);
     document.getElementById('stretchTimeInput').value = currentTime;
     
+    // 必須・オプション項目の表示設定
+    if (typeof window.markRequiredFields === 'function') {
+        const stretchFieldConfig = {
+            required: ['stretchDateInput', 'selectedStretchType'],
+            optional: ['stretchTimeInput', 'selectedIntensity', 'selectedBodyParts', 'stretchMemoInput']
+        };
+        window.markRequiredFields(stretchFieldConfig);
+    }
+    
     log('🧘 ストレッチ管理システム初期化完了');
 }
 

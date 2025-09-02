@@ -57,6 +57,15 @@ function initializeWeightManager() {
     // カスタム項目を復元
     loadCustomItems();
     
+    // 必須・オプション項目の表示設定
+    if (typeof window.markRequiredFields === 'function') {
+        const weightFieldConfig = {
+            required: ['dateInput', 'weightValue', 'selectedTiming'],
+            optional: ['timeInput', 'selectedTop', 'selectedBottom', 'memoInput']
+        };
+        window.markRequiredFields(weightFieldConfig);
+    }
+    
     log(`🚀 体重管理アプリ起動完了 ${APP_VERSION}`);
 }
 

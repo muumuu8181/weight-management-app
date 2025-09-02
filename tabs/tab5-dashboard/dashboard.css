@@ -278,6 +278,42 @@
     border: 1px solid #f5c6cb;
 }
 
+/* 週次データエリア */
+.weekly-activity {
+    margin-bottom: 20px;
+}
+
+.weekly-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.weekly-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.weekly-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.weekly-data {
+    font-size: 11px;
+}
+
+.week-item {
+    margin: 3px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.week-item span {
+    font-weight: bold;
+    color: #495057;
+}
+
 /* ハイライト効果 */
 .highlight-positive {
     background: linear-gradient(90deg, #d4edda 0%, transparent 100%);

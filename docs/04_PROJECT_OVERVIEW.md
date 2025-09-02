@@ -6,19 +6,38 @@
 
 ```
 weight-management-app/
-├── 🚫 core/                    # 絶対に触ってはいけない領域
+├── README.md                    # このファイル（エントリーポイント）
+├── index.html                   # メインアプリケーション
+├── package.json                 # npm設定
+│
+├── 📁 answers/                  # 📝 検証・解答集
+├── 📁 archive/                  # 📚 古いバージョン（参考のみ）
+├── 📁 config/                   # ⚙️ 設定ファイル
+├── 🚫 core/                     # ⚠️ 絶対に触ってはいけない領域
 │   ├── src/firebase-config.js  # Firebase設定（変更禁止）
 │   └── universal-system/       # Core機能（変更禁止）
-├── ✅ custom/                   # 自由にカスタマイズ可能
+├── ✅ custom/                   # 🎨 自由にカスタマイズ可能
 │   ├── app-config.js           # アプリ設定
 │   └── styles.css              # カスタムCSS
-├── index.html                  # メインアプリケーション
-├── tabs/                       # タブベース機能
+├── 📁 docs/                     # 📚 教科書・マニュアル系（固定的な学習用文書）
+├── 📁 examples/                 # 🔬 サンプルコード・データ
+│   └── data/                   # サンプルデータ
+├── 📁 handover/                 # 📊 開発記録・技術的変更履歴（流動的）
+├── 📁 issues/                   # 🔴 現在の未解決問題
+├── 📁 jsdom-storage/            # 🧪 テスト用ストレージ
+├── 📁 node_modules/             # 📦 npm依存関係
+├── 📁 scripts/                  # 📜 スクリプトファイル
+├── 📁 shared/                   # 🔗 共通機能・ライブラリ
+├── 📁 tabs/                     # 📱 タブベース機能
 │   ├── tab1-weight/           # 体重管理（完成）
 │   ├── tab2-sleep/            # 睡眠管理（完成）
-│   └── tab3-xxx3/             # 未実装
-├── issues/                    # 🔴 現在の未解決問題
-└── tools/                     # テストツール・データストレージ
+│   ├── tab3-room-cleaning/    # 部屋片付け
+│   ├── tab4-stretch/          # ストレッチ
+│   ├── tab5-dashboard/        # ダッシュボード
+│   ├── tab6-job-dc/           # JOB_DC（キャリア管理）
+│   ├── tab7-pedometer/        # 万歩計
+│   └── tab8-memo-list/        # メモリスト
+└── 📁 tools/                    # 🛠️ テストツール・データストレージ
 ```
 
 ### 🚫 **絶対に触ってはいけない場所**

@@ -52,6 +52,11 @@ weight-management-app/
 ├── index.html                   # アプリケーション本体
 ├── package.json                 # npm設定
 │
+├── 📁 answers/                  # 📝 検証・解答集
+├── 📁 archive/                  # 📚 古いバージョン（参考のみ）
+├── 📁 config/                   # ⚙️ 設定ファイル
+├── 📁 core/                     # ⚠️ 変更禁止（Firebase設定等）
+├── 📁 custom/                   # ✅ カスタマイズ可能領域
 ├── 📁 docs/                     # 📚 教科書・マニュアル系（固定的な学習用文書）
 │   ├── 01_QUICK_START.md       # 最初に読む！
 │   ├── 02_DEVELOPER_WORKFLOW.md
@@ -60,15 +65,16 @@ weight-management-app/
 │   ├── 05_AI_CHECKLIST.md
 │   ├── 06_GITHUB_PAGES_MANUAL.md
 │   └── troubleshooting/        # トラブルシューティング
-│       ├── mobile-login-safari-issue.md
-│       └── INCIDENT_REPORT.md
-│
-├── 📁 core/                     # ⚠️ 変更禁止（Firebase設定等）
-├── 📁 custom/                   # ✅ カスタマイズ可能領域
-├── 📁 issues/                   # 🔴 未解決問題・現在進行中の課題
+├── 📁 examples/                 # 🔬 サンプルコード・データ
+│   └── data/                   # サンプルデータ
 ├── 📁 handover/                 # 📊 開発記録・技術的変更履歴（流動的）
-├── 📁 archive/                  # 古いバージョン（参考のみ）
-└── 📁 node_modules/             # npm依存関係
+├── 📁 issues/                   # 🔴 未解決問題・現在進行中の課題
+├── 📁 jsdom-storage/            # 🧪 テスト用ストレージ
+├── 📁 node_modules/             # 📦 npm依存関係
+├── 📁 scripts/                  # 📜 スクリプトファイル
+├── 📁 shared/                   # 🔗 共通機能・ライブラリ
+├── 📁 tabs/                     # 📱 タブ固有機能
+└── 📁 tools/                    # 🛠️ 開発ツール
 
 ```
 

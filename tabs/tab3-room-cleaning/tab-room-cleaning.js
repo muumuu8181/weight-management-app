@@ -36,6 +36,15 @@ function initRoomManagement() {
     // カスタム場所を復元
     loadCustomRooms();
     
+    // 必須・オプション項目の表示設定
+    if (typeof window.markRequiredFields === 'function') {
+        const roomFieldConfig = {
+            required: ['roomDateInput', 'selectedRoom'],
+            optional: ['roomTimeInput', 'roomMemoInput', 'roomUnifiedAddText']
+        };
+        window.markRequiredFields(roomFieldConfig);
+    }
+    
     log('🧹 部屋片付け管理初期化完了');
 }
 

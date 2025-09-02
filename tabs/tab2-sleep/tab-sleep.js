@@ -30,6 +30,15 @@ function initializeSleepManager() {
         }
     }
     
+    // 必須・オプション項目の表示設定
+    if (typeof window.markRequiredFields === 'function') {
+        const sleepFieldConfig = {
+            required: ['sleepDateInput', 'sleepTimeInput'],
+            optional: ['selectedSleepType', 'selectedQuality', 'selectedSleepTags', 'sleepMemoInput']
+        };
+        window.markRequiredFields(sleepFieldConfig);
+    }
+    
     log('🛏️ 睡眠管理システム初期化完了');
 }
 
