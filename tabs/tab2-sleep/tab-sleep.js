@@ -30,14 +30,17 @@ function initializeSleepManager() {
         }
     }
     
-    // 必須・オプション項目の表示設定
-    if (typeof window.markRequiredFields === 'function') {
-        const sleepFieldConfig = {
-            required: ['sleepDateInput', 'sleepTimeInput'],
-            optional: ['selectedSleepType', 'selectedQuality', 'selectedSleepTags', 'sleepMemoInput']
-        };
-        window.markRequiredFields(sleepFieldConfig);
-    }
+    // 必須・オプション項目の表示設定（HTML読み込み後に実行）
+    setTimeout(() => {
+        if (typeof window.markRequiredFields === 'function') {
+            const sleepFieldConfig = {
+                required: ['sleepDateInput', 'sleepTimeInput'],
+                optional: ['selectedSleepType', 'selectedQuality', 'selectedSleepTags', 'sleepMemoInput']
+            };
+            window.markRequiredFields(sleepFieldConfig, 0);
+            log('🏷️ 睡眠管理タブ: バッジ適用完了');
+        }
+    }, 500);
     
     log('🛏️ 睡眠管理システム初期化完了');
 }

@@ -1,6 +1,6 @@
 {
   "name": "universal-template-system",
-  "version": "0.05.0",
+  "version": "0.06.0",
   "description": "よっぽどの馬鹿でも使えるUniversalテンプレートシステム - カップラーメン方式",
   "main": "universal-system/core/universal-template.js",
   "scripts": {
@@ -8,7 +8,8 @@
     "start": "npm run init && echo '🎉 Universal Template v0.01 起動完了'",
     "dev": "npm run init",
     "test": "npm run test:all",
-    "test:all": "npm run test:firebase && npm run test:ui && npm run test:storage && npm run test:weight",
+    "test:all": "npm run test:firebase && npm run test:ui && npm run test:storage && npm run test:weight && npm run test:field-validation",
+    "test:field-validation": "node tools/testing/field-validation-checker.js",
     "test:firebase": "echo '🔥 Firebase動作テスト実行中...' && node -e \"console.log('✅ Firebase設定確認完了')\"",
     "test:ui": "node tools/testing/ui-test-runner.js -t examples/simple-button-app.html",
     "test:ui-auto": "node tools/testing/ui-test-runner.js -t examples/simple-button-app.html --auto-detect",

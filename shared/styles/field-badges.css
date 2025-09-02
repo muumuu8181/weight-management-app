@@ -2,31 +2,43 @@
 /* 全タブ統一の必須・オプション項目表示 */
 
 .required-badge {
-    background: #dc3545;
+    background: #ff4757;
     color: white;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
-    padding: 2px 6px;
-    border-radius: 8px;
-    margin-left: 4px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     display: inline-block;
     animation: pulse-required 2s infinite;
+    box-shadow: 0 1px 3px rgba(255, 71, 87, 0.3);
+}
+
+.required-badge::before {
+    content: "⚠️ ";
+    font-size: 10px;
 }
 
 .optional-badge {
-    background: #6c757d;
+    background: #57606f;
     color: white;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: normal;
-    padding: 2px 6px;
-    border-radius: 8px;
-    margin-left: 4px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     display: inline-block;
-    opacity: 0.8;
+    opacity: 0.9;
+    box-shadow: 0 1px 2px rgba(87, 96, 111, 0.2);
+}
+
+.optional-badge::before {
+    content: "ℹ️ ";
+    font-size: 10px;
 }
 
 /* 必須項目の軽微なアニメーション（注意喚起） */

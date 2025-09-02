@@ -1,0 +1,380 @@
+/* 統計・分析系UI共通スタイルシート */
+/* 全タブで使用可能な汎用分析カードデザイン */
+
+/* ダッシュボードコンテナ */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* タブ切り替えボタンエリア */
+.dashboard-tab-switcher {
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.dashboard-tab-switcher button {
+    transition: all 0.3s ease;
+    margin: 2px;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.dashboard-tab-switcher button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* グリッドレイアウト */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* サマリーカード */
+.summary-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.summary-card h4 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* メトリック表示 */
+.metric-item {
+    margin: 8px 0;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.metric-item:last-child {
+    border-bottom: none;
+}
+
+.metric-item span {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* 傾向インジケーター */
+.trend-indicator {
+    margin-top: 10px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.trend-up {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.trend-down {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.trend-stable {
+    background: linear-gradient(135deg, #e2e6ea 0%, #d6d8db 100%);
+    color: #6c757d;
+    border: 1px solid #d6d8db;
+}
+
+/* 週次データエリア */
+.weekly-activity {
+    margin-bottom: 20px;
+}
+
+.weekly-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.weekly-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.weekly-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.weekly-data {
+    font-size: 11px;
+}
+
+.week-item {
+    margin: 3px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.week-item span {
+    font-weight: bold;
+    color: #495057;
+}
+
+/* 全体的な改善状況エリア */
+.overall-progress {
+    background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+    border: 2px solid #28a745;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.1);
+}
+
+.overall-progress h4 {
+    color: #155724;
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+}
+
+#improvementScore {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+    padding: 10px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 6px;
+}
+
+#improvementDetails {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #155724;
+}
+
+/* 詳細ビューカード */
+.detail-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.detail-card h4 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* チャートコンテナ */
+.detail-card canvas {
+    max-height: 300px;
+    margin-bottom: 15px;
+}
+
+/* ダッシュボードビュー切り替え */
+.dashboard-view {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.dashboard-view.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 統計カード用カラーパレット */
+.analytics-card-blue { border-color: #007bff; }
+.analytics-card-purple { border-color: #6f42c1; }
+.analytics-card-green { border-color: #28a745; }
+.analytics-card-yellow { border-color: #ffc107; }
+.analytics-card-red { border-color: #dc3545; }
+.analytics-card-teal { border-color: #17a2b8; }
+.analytics-card-orange { border-color: #fd7e14; }
+
+/* プログレスバー */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 5px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    transition: width 0.8s ease;
+    border-radius: 4px;
+}
+
+.progress-success { background: linear-gradient(90deg, #28a745, #34ce57); }
+.progress-warning { background: linear-gradient(90deg, #ffc107, #ffcd39); }
+.progress-danger { background: linear-gradient(90deg, #dc3545, #e4606d); }
+
+/* ハイライト効果 */
+.highlight-positive {
+    background: linear-gradient(90deg, #d4edda 0%, transparent 100%);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.highlight-negative {
+    background: linear-gradient(90deg, #f8d7da 0%, transparent 100%);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.highlight-neutral {
+    background: linear-gradient(90deg, #e2e6ea 0%, transparent 100%);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .weekly-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .dashboard-tab-switcher {
+        padding: 5px;
+    }
+    
+    .dashboard-tab-switcher button {
+        padding: 6px 10px;
+        font-size: 11px;
+        margin: 1px;
+    }
+    
+    .summary-card {
+        padding: 12px;
+    }
+    
+    .detail-card {
+        padding: 15px;
+    }
+    
+    .overall-progress {
+        padding: 15px;
+    }
+    
+    #improvementScore {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .weekly-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-container {
+        padding: 5px;
+    }
+    
+    .metric-item {
+        font-size: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+    
+    .dashboard-tab-switcher button {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+}
+
+/* 特殊状態表示 */
+.no-data {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 20px;
+}
+
+.loading {
+    text-align: center;
+    color: #007bff;
+    font-weight: 500;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    border: 1px solid #f5c6cb;
+}
+
+/* ツールチップ風効果 */
+.metric-item:hover {
+    background: rgba(0,123,255,0.05);
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin: 2px -4px;
+}
+
+/* アニメーション効果 */
+.summary-card {
+    animation: slideInUp 0.4s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* スコア表示用カラーコード */
+.score-excellent { color: #28a745; }
+.score-good { color: #17a2b8; }
+.score-average { color: #ffc107; }
+.score-poor { color: #fd7e14; }
+.score-bad { color: #dc3545; }

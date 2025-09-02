@@ -29,14 +29,17 @@ function initializePedometerManagement() {
         btn.style.opacity = '0.7';
     });
     
-    // 必須・オプション項目の表示設定
-    if (typeof window.markRequiredFields === 'function') {
-        const pedometerFieldConfig = {
-            required: ['pedometerDateInput', 'stepsInput', 'selectedExerciseType'],
-            optional: ['pedometerTimeInput', 'distanceInput', 'caloriesInput', 'pedometerMemoInput']
-        };
-        window.markRequiredFields(pedometerFieldConfig);
-    }
+    // 必須・オプション項目の表示設定（HTML読み込み後に実行）
+    setTimeout(() => {
+        if (typeof window.markRequiredFields === 'function') {
+            const pedometerFieldConfig = {
+                required: ['pedometerDateInput', 'stepsInput', 'selectedExerciseType'],
+                optional: ['pedometerTimeInput', 'distanceInput', 'caloriesInput', 'pedometerMemoInput']
+            };
+            window.markRequiredFields(pedometerFieldConfig, 0); // 即座実行
+            log('🏷️ 万歩計タブ: バッジ適用完了');
+        }
+    }, 500);
     
     log('🚶 万歩計管理初期化完了');
     

@@ -36,14 +36,17 @@ function initRoomManagement() {
     // カスタム場所を復元
     loadCustomRooms();
     
-    // 必須・オプション項目の表示設定
-    if (typeof window.markRequiredFields === 'function') {
-        const roomFieldConfig = {
-            required: ['roomDateInput', 'selectedRoom'],
-            optional: ['roomTimeInput', 'roomMemoInput', 'roomUnifiedAddText']
-        };
-        window.markRequiredFields(roomFieldConfig);
-    }
+    // 必須・オプション項目の表示設定（HTML読み込み後に実行）
+    setTimeout(() => {
+        if (typeof window.markRequiredFields === 'function') {
+            const roomFieldConfig = {
+                required: ['roomDateInput', 'selectedRoom'],
+                optional: ['roomTimeInput', 'roomMemoInput', 'roomUnifiedAddText']
+            };
+            window.markRequiredFields(roomFieldConfig, 0);
+            log('🏷️ 部屋片付けタブ: バッジ適用完了');
+        }
+    }, 500);
     
     log('🧹 部屋片付け管理初期化完了');
 }

@@ -1,8 +1,16 @@
 // 必須・オプション項目表示システム
 // 全タブ統一の入力フィールド管理
 
-// 必須・オプション項目のバッジ表示
-window.markRequiredFields = function(config) {
+// 必須・オプション項目のバッジ表示（遅延対応版）
+window.markRequiredFields = function(config, delay = 300) {
+    // HTML読み込み完了を待つ
+    setTimeout(() => {
+        markRequiredFieldsImmediate(config);
+    }, delay);
+};
+
+// 即座実行版（内部関数）
+function markRequiredFieldsImmediate(config) {
     if (!config || (!config.required && !config.optional)) {
         log('⚠️ フィールド設定が無効です');
         return;
@@ -33,6 +41,12 @@ window.markRequiredFields = function(config) {
                 
                 // フィールドにも必須クラス追加
                 field.classList.add('required-field');
+                
+                console.log(`✅ 必須バッジ追加: ${fieldId}`);
+            } else if (!label) {
+                console.log(`⚠️ ラベルが見つかりません: ${fieldId}`);
+            } else {
+                console.log(`ℹ️ 必須バッジ既存: ${fieldId}`);
             }
         });
     }
@@ -62,6 +76,12 @@ window.markRequiredFields = function(config) {
                 
                 // フィールドにもオプションクラス追加
                 field.classList.add('optional-field');
+                
+                console.log(`✅ 任意バッジ追加: ${fieldId}`);
+            } else if (!label) {
+                console.log(`⚠️ ラベルが見つかりません: ${fieldId}`);
+            } else {
+                console.log(`ℹ️ 任意バッジ既存: ${fieldId}`);
             }
         });
     }
