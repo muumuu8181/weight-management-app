@@ -26,10 +26,28 @@ let allWeightData = [];
 window.editingEntryId = null;
 
 // アプリバージョン（一元管理）
-const APP_VERSION = 'v2.28';
+const APP_VERSION = 'v2.29';
 
-// グローバルに公開
+// グローバルに公開（安全な参照用）
 window.auth = auth;
 window.database = database;
+window.APP_VERSION = APP_VERSION;  // バージョン一元管理
+
+// バージョン表示の統一関数
+window.updateVersionDisplay = function() {
+    try {
+        // ページタイトル更新
+        document.title = `体重管理アプリ ${APP_VERSION}`;
+        
+        // メインタイトル更新
+        const appTitle = document.getElementById('appTitle');
+        if (appTitle) {
+            appTitle.textContent = `📊 体重管理アプリ ${APP_VERSION}`;
+        }
+        
+        console.log(`🚀 バージョン表示統一完了: ${APP_VERSION}`);
+    } catch (error) {
+        console.error('バージョン表示エラー:', error);
+    }
+};
 window.currentUser = currentUser;
-window.APP_VERSION = APP_VERSION;

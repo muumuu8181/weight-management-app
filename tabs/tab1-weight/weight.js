@@ -24,8 +24,10 @@ const STORAGE_KEYS = {
 
 // 体重管理初期化
 function initializeWeightManager() {
-    // アプリタイトル更新
-    document.getElementById('appTitle').textContent = `📊 体重管理アプリ ${APP_VERSION}`;
+    // アプリタイトル更新（統一関数使用）
+    if (typeof window.updateVersionDisplay === 'function') {
+        window.updateVersionDisplay();
+    }
     
     // 今日の日付と体重デフォルト値を設定
     const today = new Date();

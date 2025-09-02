@@ -164,7 +164,8 @@ async function switchTab(tabNumber) {
     const titleElement = document.getElementById('appTitle');
     if (titleElement && window.TAB_CONFIG) {
         const tabTitle = window.TAB_CONFIG.getTabTitle(tabNumber);
-        titleElement.textContent = `${tabTitle} ${APP_VERSION}`;
+        const version = window.APP_VERSION || 'unknown';
+        titleElement.textContent = `${tabTitle} ${version}`;
     }
     
     // 体重管理要素は常に表示（tabContent1内にあるため自動制御される）

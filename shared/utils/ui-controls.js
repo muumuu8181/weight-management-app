@@ -68,11 +68,13 @@ function showLoginInterface() {
 
 // アプリ初期化
 function initializeApp() {
-    // バージョン表示の動的設定
-    document.title = `体重管理アプリ ${APP_VERSION}`;
-    document.getElementById('appTitle').textContent = `📊 体重管理アプリ ${APP_VERSION}`;
+    // バージョン表示の統一処理
+    if (typeof window.updateVersionDisplay === 'function') {
+        window.updateVersionDisplay();
+    }
     
-    log(`🚀 体重管理アプリ起動完了 ${APP_VERSION}`);
+    const version = window.APP_VERSION || 'unknown';
+    log(`🚀 体重管理アプリ起動完了 ${version}`);
     log('🔐 認証システム準備完了');
 }
 
