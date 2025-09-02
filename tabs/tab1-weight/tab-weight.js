@@ -71,8 +71,8 @@ window.initWeightTab = () => {
     setTimeout(() => {
         if (typeof window.markRequiredFields === 'function') {
             const weightFieldConfig = {
-                required: ['dateInput', 'weightValue', 'selectedTiming'],
-                optional: ['timeInput', 'selectedTop', 'selectedBottom', 'memoInput']
+                required: ['dateInput', 'weightValue'],
+                optional: ['memoInput']
             };
             window.markRequiredFields(weightFieldConfig, 0); // 即座実行
             log('🏷️ 体重管理タブ: バッジ適用完了');

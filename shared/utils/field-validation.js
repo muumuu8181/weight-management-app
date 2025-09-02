@@ -62,7 +62,10 @@ function markRequiredFieldsImmediate(config) {
                 
                 if (typeof log === 'function') log(`✅ 必須バッジ追加: ${fieldId}`);
             } else if (!label) {
-                if (typeof log === 'function') log(`⚠️ ラベルが見つかりません: ${fieldId}`);
+                // hidden要素やボタン要素はスキップ
+                if (field.type !== 'hidden' && field.tagName !== 'BUTTON') {
+                    if (typeof log === 'function') log(`⚠️ ラベルが見つかりません: ${fieldId}`);
+                }
             } else {
                 if (typeof log === 'function') log(`ℹ️ 必須バッジ既存: ${fieldId}`);
             }
@@ -97,7 +100,10 @@ function markRequiredFieldsImmediate(config) {
                 
                 if (typeof log === 'function') log(`✅ 任意バッジ追加: ${fieldId}`);
             } else if (!label) {
-                if (typeof log === 'function') log(`⚠️ ラベルが見つかりません: ${fieldId}`);
+                // hidden要素やボタン要素はスキップ
+                if (field.type !== 'hidden' && field.tagName !== 'BUTTON') {
+                    if (typeof log === 'function') log(`⚠️ ラベルが見つかりません: ${fieldId}`);
+                }
             } else {
                 if (typeof log === 'function') log(`ℹ️ 任意バッジ既存: ${fieldId}`);
             }
@@ -121,7 +127,7 @@ window.clearFieldBadges = function() {
         field.classList.remove('required-field', 'optional-field');
     });
     
-    log('🧹 フィールドバッジクリア完了');
+    if (typeof log === 'function') log('🧹 フィールドバッジクリア完了');
 };
 
 // 必須項目の検証（バリデーション強化）
@@ -156,7 +162,7 @@ window.validateRequiredFields = function(config) {
     });
     
     if (missingFields.length > 0) {
-        log(`❌ 必須項目が未入力です: ${missingFields.join(', ')}`);
+        if (typeof log === 'function') log(`❌ 必須項目が未入力です: ${missingFields.join(', ')}`);
         return false;
     }
     
@@ -179,4 +185,4 @@ window.FIELD_CONFIG_TEMPLATES = {
     }
 };
 
-log('🏷️ フィールドバッジシステム初期化完了');
+if (typeof log === 'function') log('🏷️ フィールドバッジシステム初期化完了');

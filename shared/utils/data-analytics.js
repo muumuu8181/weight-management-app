@@ -221,4 +221,4 @@ window.DataAnalytics = {
 // グローバル公開
 window.DATA_ANALYTICS = window.DataAnalytics;
 
-log('✅ データ分析ユーティリティ読み込み完了');
+if (typeof log === "function") log('✅ データ分析ユーティリティ読み込み完了');

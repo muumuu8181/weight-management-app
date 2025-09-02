@@ -7,7 +7,7 @@ window.DashboardBuilder = {
     buildDashboard: function(containerId, tabConfigs, options = {}) {
         const container = document.getElementById(containerId);
         if (!container) {
-            log('❌ ダッシュボードコンテナが見つかりません');
+            if (typeof log === "function") log('❌ ダッシュボードコンテナが見つかりません');
             return;
         }
         
@@ -57,7 +57,7 @@ window.DashboardBuilder = {
         html += this.generateControlButtons();
         
         container.innerHTML = html;
-        log('✅ ダッシュボードUI生成完了');
+        if (typeof log === "function") log('✅ ダッシュボードUI生成完了');
     },
     
     // タブ切り替えボタン生成
@@ -193,7 +193,7 @@ window.DashboardBuilder = {
         // 週次データ更新
         this.updateAllWeeklyData(tabConfigs, dashboardData);
         
-        log('✅ ダッシュボードデータ更新完了');
+        if (typeof log === "function") log('✅ ダッシュボードデータ更新完了');
     },
     
     // 週次データ一括更新
@@ -212,7 +212,7 @@ window.DashboardBuilder = {
             if (elements.lastWeek) elements.lastWeek.textContent = weeklyStats.lastWeek;
             if (elements.thisMonth) elements.thisMonth.textContent = weeklyStats.thisMonth;
             
-            log(`📊 ${config.name}週次統計: 今週${weeklyStats.thisWeek}件, 先週${weeklyStats.lastWeek}件, 今月${weeklyStats.thisMonth}件`);
+            if (typeof log === "function") log(`📊 ${config.name}週次統計: 今週${weeklyStats.thisWeek}件, 先週${weeklyStats.lastWeek}件, 今月${weeklyStats.thisMonth}件`);
         });
     },
     
@@ -250,7 +250,7 @@ window.DashboardBuilder = {
             targetBtn.style.color = 'white';
         }
         
-        log(`📑 ダッシュボードビュー切り替え: ${viewType}`);
+        if (typeof log === "function") log(`📑 ダッシュボードビュー切り替え: ${viewType}`);
     }
 };
 
@@ -436,4 +436,4 @@ window.DashboardBuilder.calculateSleepDuration = function(bedtime, wakeupTime) {
 // グローバル公開
 window.DASHBOARD_BUILDER = window.DashboardBuilder;
 
-log('✅ ダッシュボードビルダー読み込み完了');
+if (typeof log === "function") log('✅ ダッシュボードビルダー読み込み完了');

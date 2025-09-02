@@ -235,4 +235,4 @@ window.ImprovementAdvisor = {
 // グローバル公開
 window.IMPROVEMENT_ADVISOR = window.ImprovementAdvisor;
 
-log('✅ 改善アドバイスシステム読み込み完了');
+if (typeof log === "function") log('✅ 改善アドバイスシステム読み込み完了');

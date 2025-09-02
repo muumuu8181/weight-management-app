@@ -16,14 +16,14 @@ window.FirebaseMultiLoader = {
             let pathChecked = 0;
             
             if (debugMode) {
-                log(`${logPrefix} データパス確認開始 (${pathConfigs.length}パス)`);
+                if (typeof log === "function") log(`${logPrefix} データパス確認開始 (${pathConfigs.length}パス)`);
             }
             
             pathConfigs.forEach((config, index) => {
                 const path = `/users/${userId}/${config.path}`;
                 
                 if (debugMode) {
-                    log(`🔍 パス確認[${index + 1}/${pathConfigs.length}]: ${path}`);
+                    if (typeof log === "function") log(`🔍 パス確認[${index + 1}/${pathConfigs.length}]: ${path}`);
                 }
                 
                 database.ref(path).once('value', (snapshot) => {
@@ -47,16 +47,16 @@ window.FirebaseMultiLoader = {
                         totalData = totalData.concat(dataArray);
                         
                         if (debugMode) {
-                            log(`${logPrefix} データ発見(${config.name || path}): ${dataArray.length}件`);
+                            if (typeof log === "function") log(`${logPrefix} データ発見(${config.name || path}): ${dataArray.length}件`);
                             
                             // サンプルデータ表示（デバッグ用）
                             if (dataArray.length > 0 && config.showSample) {
-                                log(`${logPrefix} サンプル: ${JSON.stringify(dataArray[0])}`);
+                                if (typeof log === "function") log(`${logPrefix} サンプル: ${JSON.stringify(dataArray[0])}`);
                             }
                         }
                     } else {
                         if (debugMode) {
-                            log(`${logPrefix} データなし(${config.name || path})`);
+                            if (typeof log === "function") log(`${logPrefix} データなし(${config.name || path})`);
                         }
                     }
                     
@@ -68,14 +68,14 @@ window.FirebaseMultiLoader = {
                         }
                         
                         if (debugMode) {
-                            log(`${logPrefix} データ統合完了: ${totalData.length}件`);
+                            if (typeof log === "function") log(`${logPrefix} データ統合完了: ${totalData.length}件`);
                         }
                         
                         resolve(totalData);
                     }
                 }).catch((error) => {
                     if (debugMode) {
-                        log(`❌ 読み込みエラー(${config.name || path}): ${error.message}`);
+                        if (typeof log === "function") log(`❌ 読み込みエラー(${config.name || path}): ${error.message}`);
                     }
                     
                     pathChecked++;
@@ -173,4 +173,4 @@ window.FirebaseMultiLoader = {
 // グローバル公開
 window.FIREBASE_MULTI_LOADER = window.FirebaseMultiLoader;
 
-log('✅ Firebase複数パス読み込みユーティリティ読み込み完了');
+if (typeof log === "function") log('✅ Firebase複数パス読み込みユーティリティ読み込み完了');
