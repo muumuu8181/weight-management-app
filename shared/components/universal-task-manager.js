@@ -22,6 +22,7 @@ class UniversalTaskManager {
         this.filteredTaskData = [];
         this.selectedTaskIds = [];
         this.isIntegrationMode = false;
+        this.editingTaskId = null;
         
         // コールバック
         this.onSave = options.onSave || null;
@@ -86,8 +87,15 @@ class UniversalTaskManager {
                     <input type="hidden" id="${this.containerId}_taskTimeframe" value="">
                 </div>
 
+                <!-- 締切日設定 -->
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">📅 締切日（任意）:</label>
+                    <input type="date" id="${this.containerId}_taskDeadline" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                </div>
+
                 <!-- 保存ボタン -->
                 <button class="save-button" onclick="${this.containerId}_saveTask()">💾 タスク保存</button>
+                <button id="${this.containerId}_cancelEditBtn" onclick="${this.containerId}_cancelEdit()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-left: 10px; display: none;">❌ 編集キャンセル</button>
             </div>
 
             <!-- タスク管理エリア -->
@@ -102,12 +110,25 @@ class UniversalTaskManager {
                     <span id="${this.containerId}_filterCount" style="font-size: 12px; color: #666;"></span>
                 </div>
                 
+                <!-- ソート機能 -->
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: bold; margin-right: 10px;">📊 並び順:</label>
+                    <select id="${this.containerId}_sortOption" onchange="${this.containerId}_applySorting()" style="padding: 5px; border: 1px solid #ddd; border-radius: 3px; margin-right: 10px;">
+                        <option value="default">⏰ 作成日時順</option>
+                        <option value="priority">🎯 重要度順</option>
+                        <option value="deadline">📅 締切順</option>
+                        <option value="category">🏷️ カテゴリ順</option>
+                    </select>
+                </div>
+                
                 <!-- 統合モード切り替え -->
                 <div style="margin-bottom: 15px;">
                     <button id="${this.containerId}_integrationBtn" onclick="${this.containerId}_toggleIntegrationMode()" 
                         style="background: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px;">🔗 統合モード</button>
                     <button id="${this.containerId}_integrateBtn" onclick="${this.containerId}_integrateTasks()" 
                         style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-left: 10px; display: none;">✨ 選択したタスクを統合</button>
+                    <button id="${this.containerId}_cancelIntegrationBtn" onclick="${this.containerId}_cancelIntegration()" 
+                        style="background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-left: 10px; display: none;">❌ キャンセル</button>
                 </div>
                 
                 <!-- タスクリスト表示エリア -->
@@ -125,11 +146,15 @@ class UniversalTaskManager {
         window[`${this.containerId}_selectTimeframe`] = (timeframe) => this.selectTimeframe(timeframe);
         window[`${this.containerId}_saveTask`] = () => this.saveTask();
         window[`${this.containerId}_filterTasks`] = () => this.filterTasks();
+        window[`${this.containerId}_applySorting`] = () => this.applySorting();
         window[`${this.containerId}_toggleIntegrationMode`] = () => this.toggleIntegrationMode();
         window[`${this.containerId}_integrateTasks`] = () => this.integrateTasks();
+        window[`${this.containerId}_cancelIntegration`] = () => this.cancelIntegration();
         window[`${this.containerId}_subdivideTask`] = (taskId) => this.subdivideTask(taskId);
         window[`${this.containerId}_deleteTask`] = (taskId) => this.deleteTask(taskId);
         window[`${this.containerId}_toggleTaskSelection`] = (taskId) => this.toggleTaskSelection(taskId);
+        window[`${this.containerId}_editTask`] = (taskId) => this.editTask(taskId);
+        window[`${this.containerId}_cancelEdit`] = () => this.cancelEdit();
     }
     
     // 優先度選択
@@ -210,23 +235,29 @@ class UniversalTaskManager {
         const category = document.getElementById(`${this.containerId}_taskCategory`).value;
         const priority = document.getElementById(`${this.containerId}_taskPriority`).value;
         const timeframe = document.getElementById(`${this.containerId}_taskTimeframe`).value;
+        const deadline = document.getElementById(`${this.containerId}_taskDeadline`).value;
         
         if (!taskText) {
             alert('タスク内容を入力してください');
             return;
         }
         
+        const isEdit = this.editingTaskId !== null;
+        const taskId = isEdit ? this.editingTaskId : parseInt(Date.now().toString() + Math.floor(Math.random() * 100).toString());
+        
         const task = {
-            id: parseInt(Date.now().toString() + Math.floor(Math.random() * 100).toString()),
+            id: taskId,
             text: taskText,
             category: category,
             priority: priority,
             timeframe: timeframe,
-            parentId: null,
-            level: 0,
-            date: new Date().toLocaleDateString('ja-JP'),
-            time: new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
-            createdAt: new Date().toISOString()
+            deadline: deadline || null,
+            parentId: isEdit ? this.findTaskById(taskId)?.parentId || null : null,
+            level: isEdit ? this.findTaskById(taskId)?.level || 0 : 0,
+            date: isEdit ? this.findTaskById(taskId)?.date : new Date().toLocaleDateString('ja-JP'),
+            time: isEdit ? this.findTaskById(taskId)?.time : new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
+            createdAt: isEdit ? this.findTaskById(taskId)?.createdAt : new Date().toISOString(),
+            updatedAt: isEdit ? new Date().toISOString() : null
         };
         
         try {
@@ -267,8 +298,14 @@ class UniversalTaskManager {
     resetForm() {
         document.getElementById(`${this.containerId}_newTaskText`).value = '';
         document.getElementById(`${this.containerId}_taskCategory`).value = '';
+        document.getElementById(`${this.containerId}_taskDeadline`).value = '';
         this.selectPriority('');
         this.selectTimeframe('');
+        
+        // 編集モード終了
+        this.editingTaskId = null;
+        document.getElementById(`${this.containerId}_cancelEditBtn`).style.display = 'none';
+        document.querySelector(`#${this.containerId} .save-button`).textContent = '💾 タスク保存';
     }
     
     // タスク読み込み
@@ -392,6 +429,7 @@ class UniversalTaskManager {
                             <small class="task-date">${task.date} ${task.time}</small>
                         </div>
                         <div style="display: flex; gap: 3px;">
+                            <button onclick="${this.containerId}_editTask(${task.id})" style="background: #007bff; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">✏️</button>
                             ${(task.level || 0) < 3 ? `<button onclick="${this.containerId}_subdivideTask(${task.id})" style="background: #28a745; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">🔀</button>` : ''}
                             <button onclick="${this.containerId}_deleteTask(${task.id})" style="background: #dc3545; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">🗑️</button>
                         </div>
@@ -399,10 +437,11 @@ class UniversalTaskManager {
                     <div class="task-text" style="margin: 8px 0; font-weight: bold; cursor: pointer;" onclick="${this.containerId}_showFullText(${task.id})">
                         ${indent}${displayText}
                     </div>
-                    <div style="display: flex; gap: 5px; margin-top: 5px;">
+                    <div style="display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap;">
                         ${task.category ? `<span style="background: #17a2b8; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${task.category}</span>` : ''}
                         ${task.priority ? `<span style="background: ${this.getPriorityColor(task.priority)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${this.getPriorityIcon(task.priority)} ${task.priority}</span>` : ''}
                         ${task.timeframe ? `<span style="background: ${this.getTimeframeColor(task.timeframe)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${this.getTimeframeIcon(task.timeframe)} ${task.timeframe}</span>` : ''}
+                        ${task.deadline ? `<span style="background: #e83e8c; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">📅 ${this.formatDeadline(task.deadline)}</span>` : ''}
                     </div>
                 </div>
             `;
@@ -452,16 +491,19 @@ class UniversalTaskManager {
         this.isIntegrationMode = !this.isIntegrationMode;
         const integrationBtn = document.getElementById(`${this.containerId}_integrationBtn`);
         const integrateBtn = document.getElementById(`${this.containerId}_integrateBtn`);
+        const cancelBtn = document.getElementById(`${this.containerId}_cancelIntegrationBtn`);
         
         if (this.isIntegrationMode) {
             integrationBtn.textContent = '🔗 統合モード ON';
             integrationBtn.style.background = '#dc3545';
             integrateBtn.style.display = 'inline-block';
+            cancelBtn.style.display = 'inline-block';
             console.log('🔗 統合モード開始');
         } else {
             integrationBtn.textContent = '🔗 統合モード';
             integrationBtn.style.background = '#6c757d';
             integrateBtn.style.display = 'none';
+            cancelBtn.style.display = 'none';
             this.selectedTaskIds = [];
             console.log('🔗 統合モード終了');
         }
@@ -471,13 +513,24 @@ class UniversalTaskManager {
     
     // タスク選択切り替え
     toggleTaskSelection(taskId) {
-        const index = this.selectedTaskIds.indexOf(taskId);
+        // 数値IDを文字列として統一して比較
+        const taskIdStr = String(taskId);
+        const index = this.selectedTaskIds.findIndex(id => String(id) === taskIdStr);
+        
         if (index > -1) {
             this.selectedTaskIds.splice(index, 1);
         } else {
-            this.selectedTaskIds.push(taskId);
+            this.selectedTaskIds.push(taskIdStr);
         }
+        
         console.log('選択中のタスク:', this.selectedTaskIds);
+        
+        // チェックボックス状態の即座更新
+        const checkbox = document.querySelector(`input[onchange*="toggleTaskSelection(${taskId})"]`);
+        if (checkbox) {
+            checkbox.checked = this.selectedTaskIds.includes(taskIdStr);
+        }
+        
         this.displayTasks();
     }
     
@@ -625,6 +678,167 @@ class UniversalTaskManager {
         
         await firebase.database().ref(path).remove();
         console.log('🗑️ Firebaseから削除:', path);
+    }
+    
+    // タスク編集
+    editTask(taskId) {
+        const task = this.findTaskById(taskId);
+        if (!task) return;
+        
+        // フォームに値を設定
+        document.getElementById(`${this.containerId}_newTaskText`).value = task.text;
+        document.getElementById(`${this.containerId}_taskCategory`).value = task.category || '';
+        document.getElementById(`${this.containerId}_taskDeadline`).value = task.deadline || '';
+        this.selectPriority(task.priority || '');
+        this.selectTimeframe(task.timeframe || '');
+        
+        // 編集モードに切り替え
+        this.editingTaskId = taskId;
+        document.getElementById(`${this.containerId}_cancelEditBtn`).style.display = 'inline-block';
+        document.querySelector(`#${this.containerId} .save-button`).textContent = '✏️ 更新';
+        
+        // フォームまでスクロール
+        document.getElementById(this.containerId).scrollIntoView({ behavior: 'smooth' });
+        
+        console.log('✏️ タスク編集モード:', task);
+    }
+    
+    // 編集キャンセル
+    cancelEdit() {
+        this.resetForm();
+        console.log('❌ 編集キャンセル');
+    }
+    
+    // 統合キャンセル
+    cancelIntegration() {
+        this.isIntegrationMode = false;
+        this.selectedTaskIds = [];
+        
+        const integrationBtn = document.getElementById(`${this.containerId}_integrationBtn`);
+        const integrateBtn = document.getElementById(`${this.containerId}_integrateBtn`);
+        const cancelBtn = document.getElementById(`${this.containerId}_cancelIntegrationBtn`);
+        
+        integrationBtn.textContent = '🔗 統合モード';
+        integrationBtn.style.background = '#6c757d';
+        integrateBtn.style.display = 'none';
+        cancelBtn.style.display = 'none';
+        
+        this.displayTasks();
+        console.log('❌ 統合モードキャンセル');
+    }
+    
+    // ソート機能
+    applySorting() {
+        const sortOption = document.getElementById(`${this.containerId}_sortOption`).value;
+        let sortedTasks = [...this.taskData];
+        
+        switch (sortOption) {
+            case 'priority':
+                // 重要度順 (S > A > B > C > D > なし)
+                const priorityOrder = { 'S': 0, 'A': 1, 'B': 2, 'C': 3, 'D': 4, '': 5 };
+                sortedTasks.sort((a, b) => {
+                    const aOrder = priorityOrder[a.priority || ''] || 5;
+                    const bOrder = priorityOrder[b.priority || ''] || 5;
+                    return aOrder - bOrder;
+                });
+                break;
+                
+            case 'deadline':
+                // 締切順（近い順、未設定は最後）
+                sortedTasks.sort((a, b) => {
+                    if (!a.deadline && !b.deadline) return 0;
+                    if (!a.deadline) return 1;
+                    if (!b.deadline) return -1;
+                    return new Date(a.deadline) - new Date(b.deadline);
+                });
+                break;
+                
+            case 'category':
+                // カテゴリ順（アルファベット順）
+                sortedTasks.sort((a, b) => {
+                    const aCategory = a.category || '';
+                    const bCategory = b.category || '';
+                    return aCategory.localeCompare(bCategory);
+                });
+                break;
+                
+            default:
+                // デフォルト（作成日時順）- 元の階層ソートを維持
+                sortedTasks = this.sortByHierarchy();
+                break;
+        }
+        
+        // 階層構造を維持しつつソート（デフォルト以外の場合）
+        if (sortOption !== 'default') {
+            sortedTasks = this.maintainHierarchyInSort(sortedTasks);
+        }
+        
+        this.displayTasks(sortedTasks);
+        console.log('📊 ソート適用:', sortOption);
+    }
+    
+    // 階層構造を維持しながらソート
+    maintainHierarchyInSort(sortedTasks) {
+        const result = [];
+        const processed = new Set();
+        
+        // レベル0のタスクから処理
+        const parents = sortedTasks.filter(task => (task.level || 0) === 0);
+        
+        const addWithChildren = (parent) => {
+            if (processed.has(parent.id)) return;
+            
+            result.push(parent);
+            processed.add(parent.id);
+            
+            // 子タスクを再帰的に追加
+            const addChildren = (parentId, level) => {
+                const children = sortedTasks.filter(task => 
+                    task.parentId == parentId && (task.level || 0) === level
+                );
+                
+                children.forEach(child => {
+                    if (!processed.has(child.id)) {
+                        result.push(child);
+                        processed.add(child.id);
+                        if (level < 3) {
+                            addChildren(child.id, level + 1);
+                        }
+                    }
+                });
+            };
+            
+            addChildren(parent.id, 1);
+        };
+        
+        parents.forEach(addWithChildren);
+        return result;
+    }
+    
+    // 締切日フォーマット
+    formatDeadline(deadline) {
+        if (!deadline) return '';
+        
+        const deadlineDate = new Date(deadline);
+        const today = new Date();
+        const diffDays = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays < 0) {
+            return `${deadline} (期限切れ)`;
+        } else if (diffDays === 0) {
+            return `${deadline} (今日!)`;
+        } else if (diffDays === 1) {
+            return `${deadline} (明日)`;
+        } else if (diffDays <= 7) {
+            return `${deadline} (${diffDays}日後)`;
+        } else {
+            return deadline;
+        }
+    }
+    
+    // タスク検索ヘルパー
+    findTaskById(taskId) {
+        return this.taskData.find(task => String(task.id) === String(taskId));
     }
 }
 
