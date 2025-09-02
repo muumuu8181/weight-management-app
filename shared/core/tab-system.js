@@ -143,6 +143,8 @@ async function switchTab(tabNumber) {
                     await loadTabContent(4, 'stretch');
                 } else if (i === 5) {
                     await loadTabContent(5, 'dashboard');
+                } else if (i === 6) {
+                    await loadTabContent(6, 'job-dc');
                 } else if (i === 8) {
                     await loadTabContent(8, 'memo-list');
                 }
