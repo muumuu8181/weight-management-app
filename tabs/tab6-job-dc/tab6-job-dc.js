@@ -6,13 +6,15 @@ let selectedSkillType = '';
 let selectedTaskPriority = '';
 let selectedEstimatedTime = '';
 let selectedAutomationGoal = '';
+let timeTracker = null;
+let workTimeRecords = [];
 
 // 初期化
 function initJobDCTab() {
     console.log('JOB_DC タブを初期化中...');
     
-    // 今日の日付を設定
-    const today = new Date().toISOString().split('T')[0];
+    // 作業時間トラッカー初期化
+    initTimeTracker();
     
     // Firebase接続確認
     if (typeof firebase !== 'undefined' && firebase.auth) {
@@ -20,6 +22,7 @@ function initJobDCTab() {
             if (user) {
                 console.log('JOB_DC: Firebase認証済み');
                 loadJobTasks();
+                loadWorkTimeRecords();
                 updateTodayStats();
                 updateAutomationProgress();
             } else {
@@ -28,6 +31,108 @@ function initJobDCTab() {
         });
     } else {
         console.log('JOB_DC: Firebase未初期化');
+    }
+}
+
+// 作業時間トラッカー初期化
+function initTimeTracker() {
+    // 作業カテゴリ定義
+    const workCategories = [
+        { name: 'コーディング', color: '#007bff' },
+        { name: 'フォルダ整理', color: '#28a745' },
+        { name: 'ミーティング', color: '#ffc107' },
+        { name: 'メール・連絡', color: '#17a2b8' },
+        { name: '学習・調査', color: '#6f42c1' },
+        { name: '設定・メンテナンス', color: '#fd7e14' },
+        { name: 'ドキュメント作成', color: '#e83e8c' },
+        { name: '打ち合わせ準備', color: '#20c997' }
+    ];
+    
+    // TimeTrackerインスタンス作成
+    timeTracker = new TimeTracker({
+        containerId: 'timeTrackerContainer',
+        categories: workCategories,
+        onSave: saveWorkTimeRecord,
+        onStart: (category, startTime) => {
+            addToOperationLog(`⏱️ 作業開始: ${category}`);
+        },
+        onStop: (category, endTime, durationSeconds) => {
+            addToOperationLog(`⏹️ 作業終了: ${category} - ${formatDuration(durationSeconds)}`);
+        }
+    });
+}
+
+// 作業時間記録保存
+async function saveWorkTimeRecord(data) {
+    try {
+        if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+            const user = firebase.auth().currentUser;
+            const recordRef = firebase.database().ref(`users/${user.uid}/workTimeRecords`).push();
+            await recordRef.set(data);
+            
+            console.log('作業時間記録をFirebaseに保存しました:', data);
+            addToOperationLog(`💾 作業時間記録保存: ${data.category} - ${data.duration}`);
+            
+            // データ再読み込み
+            loadWorkTimeRecords();
+            updateTodayStats();
+            
+        } else {
+            throw new Error('Firebase認証が必要です');
+        }
+    } catch (error) {
+        console.error('作業時間記録保存エラー:', error);
+        alert('作業時間記録の保存に失敗しました: ' + error.message);
+    }
+}
+
+// 作業時間記録読み込み
+async function loadWorkTimeRecords() {
+    try {
+        if (typeof firebase === 'undefined' || !firebase.auth || !firebase.auth().currentUser) {
+            console.log('JOB_DC: Firebase認証待機中');
+            return;
+        }
+        
+        const user = firebase.auth().currentUser;
+        const recordsRef = firebase.database().ref(`users/${user.uid}/workTimeRecords`);
+        
+        recordsRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            workTimeRecords = [];
+            
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    workTimeRecords.push({
+                        id: key,
+                        ...data[key]
+                    });
+                });
+            }
+            
+            // 日時で降順ソート
+            workTimeRecords.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            console.log('JOB_DC: 作業時間記録を読み込みました:', workTimeRecords.length, '件');
+        });
+        
+    } catch (error) {
+        console.error('作業時間記録読み込みエラー:', error);
+    }
+}
+
+// 時間フォーマット関数
+function formatDuration(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+        return `${hours}時間${minutes}分${secs}秒`;
+    } else if (minutes > 0) {
+        return `${minutes}分${secs}秒`;
+    } else {
+        return `${secs}秒`;
     }
 }
 
@@ -311,45 +416,94 @@ async function deleteTask(taskId) {
 // 今日の統計更新
 function updateTodayStats() {
     const today = new Date().toISOString().split('T')[0];
-    const todayTasks = jobTasks.filter(task => {
-        const taskDate = new Date(task.createdAt).toISOString().split('T')[0];
-        return taskDate === today && task.completed;
+    
+    // 作業時間記録から今日のデータを取得
+    const todayWorkRecords = workTimeRecords.filter(record => {
+        const recordDate = new Date(record.timestamp).toISOString().split('T')[0];
+        return recordDate === today;
     });
     
-    // スキル分類別の作業時間計算
-    let projectSpecificTime = 0;
-    let marketableTime = 0;
-    let automationTime = 0;
+    // カテゴリ別時間計算（秒単位）
+    let codingTime = 0;
+    let organizingTime = 0;
+    let meetingTime = 0;
+    let communicationTime = 0;
+    let learningTime = 0;
+    let maintenanceTime = 0;
+    let documentTime = 0;
+    let preparationTime = 0;
+    let otherTime = 0;
     
-    todayTasks.forEach(task => {
-        const time = parseEstimatedTime(task.estimatedTime);
-        switch (task.skillType) {
-            case '案件固有':
-                projectSpecificTime += time;
+    todayWorkRecords.forEach(record => {
+        const seconds = record.durationSeconds || 0;
+        switch (record.category) {
+            case 'コーディング':
+                codingTime += seconds;
                 break;
-            case '市場汎用':
-                marketableTime += time;
+            case 'フォルダ整理':
+                organizingTime += seconds;
                 break;
-            case '自動化推進':
-                automationTime += time;
+            case 'ミーティング':
+                meetingTime += seconds;
+                break;
+            case 'メール・連絡':
+                communicationTime += seconds;
+                break;
+            case '学習・調査':
+                learningTime += seconds;
+                break;
+            case '設定・メンテナンス':
+                maintenanceTime += seconds;
+                break;
+            case 'ドキュメント作成':
+                documentTime += seconds;
+                break;
+            case '打ち合わせ準備':
+                preparationTime += seconds;
+                break;
+            default:
+                otherTime += seconds;
                 break;
         }
     });
     
-    // 表示更新
-    document.getElementById('todayProjectSpecific').textContent = `${projectSpecificTime}分`;
-    document.getElementById('todayMarketable').textContent = `${marketableTime}分`;
-    document.getElementById('todayAutomation').textContent = `${automationTime}分`;
+    // 分類別に整理（案件固有 vs 市場汎用 vs 自動化推進）
+    const projectSpecificTime = organizingTime + maintenanceTime; // 案件固有（分単位）
+    const marketableTime = codingTime + learningTime + documentTime; // 市場汎用（分単位）
+    const automationTime = 0; // 自動化推進タスクがあれば追加
+    
+    // 表示更新（分秒表示）
+    const projectSpecificElement = document.getElementById('todayProjectSpecific');
+    const marketableElement = document.getElementById('todayMarketable');
+    const automationElement = document.getElementById('todayAutomation');
+    
+    if (projectSpecificElement) {
+        projectSpecificElement.textContent = formatDuration(projectSpecificTime);
+    }
+    if (marketableElement) {
+        marketableElement.textContent = formatDuration(marketableTime);
+    }
+    if (automationElement) {
+        automationElement.textContent = formatDuration(automationTime);
+    }
     
     // キャリア価値向上度計算
     const totalTime = projectSpecificTime + marketableTime + automationTime;
     const careerValue = totalTime > 0 ? 
         Math.round(((marketableTime + automationTime * 1.5) / totalTime) * 100) : 0;
     
-    document.getElementById('careerValueScore').textContent = `${careerValue}%`;
-    document.getElementById('careerValueScore').style.color = 
-        careerValue >= 80 ? '#28a745' : 
-        careerValue >= 60 ? '#ffc107' : '#dc3545';
+    const careerScoreElement = document.getElementById('careerValueScore');
+    if (careerScoreElement) {
+        careerScoreElement.textContent = `${careerValue}%`;
+        careerScoreElement.style.color = 
+            careerValue >= 80 ? '#28a745' : 
+            careerValue >= 60 ? '#ffc107' : '#dc3545';
+    }
+    
+    // 総作業時間表示
+    const totalWorkTime = codingTime + organizingTime + meetingTime + communicationTime + 
+                         learningTime + maintenanceTime + documentTime + preparationTime + otherTime;
+    console.log(`今日の総作業時間: ${formatDuration(totalWorkTime)}`);
 }
 
 // 自動化進捗更新

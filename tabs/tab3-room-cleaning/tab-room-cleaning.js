@@ -8,6 +8,21 @@ let roomEndTime = null;
 let currentRoomMode = 'normal';
 let allRoomData = [];
 
+// 時間フォーマット関数
+function formatDuration(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+        return `${hours}時間${minutes}分${secs}秒`;
+    } else if (minutes > 0) {
+        return `${minutes}分${secs}秒`;
+    } else {
+        return `${secs}秒`;
+    }
+}
+
 // 部屋片付け管理初期化
 function initRoomManagement() {
     // 現在の日付・時刻を設定
@@ -116,7 +131,7 @@ window.endRoomCleaning = () => {
     }
     
     roomEndTime = new Date();
-    const duration = Math.round((roomEndTime - roomStartTime) / (1000 * 60)); // 分単位
+    const durationSeconds = Math.round((roomEndTime - roomStartTime) / 1000); // 秒単位で正確に計測
     
     // ボタン表示を戻す
     const startBtn = document.getElementById('startRoomBtn');
@@ -126,13 +141,15 @@ window.endRoomCleaning = () => {
         endBtn.style.display = 'none';
     }
     
-    // 時間表示を更新
+    // 時間表示を更新（分秒表示）
     const durationInput = document.getElementById('roomDuration');
     if (durationInput) {
-        durationInput.value = `${duration}分`;
+        durationInput.value = formatDuration(durationSeconds);
+        // 実際の秒数も内部的に保持
+        durationInput.setAttribute('data-seconds', durationSeconds);
     }
     
-    log(`⏹️ 片付け終了: ${selectedRoomValue} - ${duration}分間`);
+    log(`⏹️ 片付け終了: ${selectedRoomValue} - ${formatDuration(durationSeconds)}`);
 };
 
 // 達成度選択
@@ -261,6 +278,7 @@ window.saveRoomData = async () => {
             time: document.getElementById('roomTimeInput').value,
             room: selectedRoomValue,
             duration: document.getElementById('roomDuration').value,
+            durationSeconds: parseInt(document.getElementById('roomDuration').getAttribute('data-seconds')) || 0,
             achievement: selectedRoomAchievement,
             memo: document.getElementById('roomMemoText') ? document.getElementById('roomMemoText').value : '',
             timestamp: new Date().toISOString()
