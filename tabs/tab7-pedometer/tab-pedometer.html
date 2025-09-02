@@ -1,0 +1,95 @@
+<div id="tab7Content">
+    <!-- 万歩計入力エリア -->
+    <div class="input-card" id="pedometerInput">
+        <h3>🚶 万歩計記録</h3>
+        
+        <!-- 日付入力 -->
+        <div class="input-row">
+            <label>📅 日付:</label>
+            <input type="date" id="pedometerDateInput">
+        </div>
+        
+        <!-- 時刻入力 -->
+        <div class="input-row">
+            <label>🕐 時刻:</label>
+            <input type="time" id="pedometerTimeInput">
+        </div>
+        
+        <!-- 歩数入力 -->
+        <div class="input-row">
+            <label>👟 歩数:</label>
+            <input type="number" id="stepsInput" placeholder="例: 8500" min="0" step="1">
+            <span>歩</span>
+        </div>
+        
+        <!-- 距離入力（オプション） -->
+        <div class="input-row">
+            <label>📏 距離:</label>
+            <input type="number" id="distanceInput" placeholder="例: 6.5" min="0" step="0.1">
+            <span>km</span>
+        </div>
+        
+        <!-- 消費カロリー入力（オプション） -->
+        <div class="input-row">
+            <label>🔥 消費カロリー:</label>
+            <input type="number" id="caloriesInput" placeholder="例: 320" min="0" step="1">
+            <span>kcal</span>
+        </div>
+        
+        <!-- 運動種別選択 -->
+        <div class="input-row">
+            <label>🏃 運動種別:</label>
+            <div class="exercise-type-buttons">
+                <button type="button" class="exercise-btn" data-type="ウォーキング" onclick="selectExerciseType('ウォーキング')">🚶 ウォーキング</button>
+                <button type="button" class="exercise-btn" data-type="ジョギング" onclick="selectExerciseType('ジョギング')">🏃 ジョギング</button>
+                <button type="button" class="exercise-btn" data-type="階段昇降" onclick="selectExerciseType('階段昇降')">🪜 階段昇降</button>
+                <button type="button" class="exercise-btn" data-type="散歩" onclick="selectExerciseType('散歩')">🐕 散歩</button>
+                <button type="button" class="exercise-btn" data-type="通勤" onclick="selectExerciseType('通勤')">🚃 通勤</button>
+                <button type="button" class="exercise-btn" data-type="その他" onclick="selectExerciseType('その他')">🔄 その他</button>
+            </div>
+            <input type="hidden" id="selectedExerciseType">
+        </div>
+        
+        <!-- メモ入力 -->
+        <div class="input-row">
+            <label>📝 メモ:</label>
+            <textarea id="pedometerMemoInput" placeholder="例: 公園を2周、天気が良かった" rows="3"></textarea>
+        </div>
+        
+        <!-- 保存ボタン -->
+        <button class="save-button" onclick="savePedometerData()">💾 記録を保存</button>
+    </div>
+
+    <!-- 万歩計履歴表示 -->
+    <div class="input-card" id="pedometerHistory">
+        <h3>📊 万歩計履歴</h3>
+        <div class="data-area" id="pedometerHistoryArea">
+            まだ万歩計記録がありません
+        </div>
+    </div>
+
+    <!-- 万歩計統計 -->
+    <div class="input-card" id="pedometerStats">
+        <h3>📈 万歩計統計</h3>
+        <div id="pedometerStatsArea">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">今日の歩数</span>
+                    <span class="stat-value" id="todaySteps">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">週間平均</span>
+                    <span class="stat-value" id="weeklyAverage">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">月間合計</span>
+                    <span class="stat-value" id="monthlyTotal">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">目標達成率</span>
+                    <span class="stat-value" id="goalAchievement">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

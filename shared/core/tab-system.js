@@ -68,6 +68,16 @@ async function loadTabContent(tabNumber, tabType) {
                         log('❌ initJobDCTab関数が見つかりません');
                     }
                 }, 200);
+            } else if (tabNumber === 7 && currentUser) {
+                log('🔄 万歩計タブ: JS読み込み完了後の初期化開始');
+                setTimeout(() => {
+                    if (typeof window.initializePedometerManagement === 'function') {
+                        window.initializePedometerManagement();
+                        log('✅ 万歩計初期化完了');
+                    } else {
+                        log('❌ initializePedometerManagement関数が見つかりません');
+                    }
+                }, 200);
             } else if (tabNumber === 8 && currentUser) {
                 log('🔄 メモリストタブ: JS読み込み完了後のデータ読み込み開始');
                 setTimeout(() => {
@@ -145,6 +155,8 @@ async function switchTab(tabNumber) {
                     await loadTabContent(5, 'dashboard');
                 } else if (i === 6) {
                     await loadTabContent(6, 'job-dc');
+                } else if (i === 7) {
+                    await loadTabContent(7, 'pedometer');
                 } else if (i === 8) {
                     await loadTabContent(8, 'memo-list');
                 }

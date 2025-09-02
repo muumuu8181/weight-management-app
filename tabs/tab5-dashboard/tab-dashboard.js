@@ -110,16 +110,58 @@ window.refreshDashboardData = async function() {
 // 体重データ読み込み
 async function loadWeightData() {
     return new Promise((resolve) => {
-        const weightRef = database.ref('/users/' + currentUser.uid + '/weightData/');
+        // 体重データは複数のデータパスを確認
+        const weightDataPaths = [
+            '/users/' + currentUser.uid + '/weightData/',
+            '/users/' + currentUser.uid + '/weights/',
+            '/users/' + currentUser.uid + '/weightRecords/',
+            '/users/' + currentUser.uid + '/bodyWeight/'
+        ];
         
-        weightRef.once('value', (snapshot) => {
-            const data = snapshot.val();
-            dashboardData.weight = data ? Object.values(data).sort((a, b) => 
-                new Date(a.date + ' ' + (a.time || '00:00')) - new Date(b.date + ' ' + (b.time || '00:00'))
-            ) : [];
+        let totalWeightData = [];
+        let pathChecked = 0;
+        
+        log('🔍 体重データパス確認開始...');
+        
+        weightDataPaths.forEach((path, index) => {
+            log(`🔍 体重データパス確認[${index + 1}/4]: ${path}`);
             
-            log(`📊 体重データ読み込み: ${dashboardData.weight.length}件`);
-            resolve();
+            database.ref(path).once('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const dataArray = Object.values(data);
+                    totalWeightData = totalWeightData.concat(dataArray);
+                    log(`📊 体重データ発見(${path}): ${dataArray.length}件`);
+                    
+                    // デバッグ用：最初の1件のデータ構造確認
+                    if (dataArray.length > 0) {
+                        log(`📊 体重データサンプル: ${JSON.stringify(dataArray[0])}`);
+                    }
+                } else {
+                    log(`📊 体重データなし(${path}): データなし`);
+                }
+                
+                pathChecked++;
+                if (pathChecked === weightDataPaths.length) {
+                    // 日付順にソート
+                    dashboardData.weight = totalWeightData.sort((a, b) => 
+                        new Date(a.date + ' ' + (a.time || '00:00')) - new Date(b.date + ' ' + (b.time || '00:00'))
+                    );
+                    
+                    log(`📊 体重データ統合完了: ${totalWeightData.length}件`);
+                    if (totalWeightData.length === 0) {
+                        log('⚠️ 体重データが全く見つかりませんでした - Firebaseパス確認が必要です');
+                    }
+                    resolve();
+                }
+            }).catch((error) => {
+                log(`❌ 体重データ読み込みエラー(${path}): ${error.message}`);
+                pathChecked++;
+                if (pathChecked === weightDataPaths.length) {
+                    dashboardData.weight = totalWeightData;
+                    resolve();
+                }
+            });
         });
     });
 }

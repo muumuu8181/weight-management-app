@@ -105,6 +105,11 @@
       "exercise_complete": "level2",
       "routine_complete": "level3",
       "edit": "level4"
+    },
+    "pedometer": {
+      "record": "level2",
+      "goal_achieved": "level3",
+      "excellent_walk": "level6"
     }
   },
   
@@ -137,11 +142,14 @@
     "stretch": {
       "exercise_complete": ".exercise-btn",
       "routine_complete": ".routine-btn"
+    },
+    "pedometer": {
+      "record": ".save-button"
     }
   },
   
   "settings": {
-    "enabledTabs": ["weight", "sleep", "room-cleaning", "memo-list", "job-dc", "stretch"],
+    "enabledTabs": ["weight", "sleep", "room-cleaning", "memo-list", "job-dc", "stretch", "pedometer"],
     "globalDisable": false,
     "debugMode": true,
     "performanceMode": false,
