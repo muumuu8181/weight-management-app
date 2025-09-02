@@ -648,10 +648,13 @@ function parseEstimatedTime(timeStr) {
 
 // 共通ログ出力関数（既存のシステムと連携）
 function addToOperationLog(message) {
-    if (typeof window.addToOperationLog === 'function') {
+    // 無限再帰を防ぐため、グローバル関数の存在確認を厳密に
+    if (typeof window.addToOperationLog === 'function' && window.addToOperationLog !== addToOperationLog) {
         window.addToOperationLog(message);
+    } else if (typeof log === 'function') {
+        log(message);
     } else {
-        console.log('操作ログ:', message);
+        console.log('JOB_DC ログ:', message);
     }
 }
 
