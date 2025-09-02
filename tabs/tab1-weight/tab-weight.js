@@ -67,17 +67,17 @@ window.initWeightTab = () => {
         loadCustomItems();
     }
     
-    // 必須・オプション項目の表示設定（HTML読み込み後に実行）
-    setTimeout(() => {
-        if (typeof window.markRequiredFields === 'function') {
-            const weightFieldConfig = {
-                required: ['dateInput', 'weightValue'],
-                optional: ['memoInput']
-            };
-            window.markRequiredFields(weightFieldConfig, 0); // 即座実行
-            log('🏷️ 体重管理タブ: バッジ適用完了');
-        }
-    }, 500);
+    // 必須・オプション項目の表示設定（一旦無効化 - HTML構造要調整）
+    // setTimeout(() => {
+    //     if (typeof window.markRequiredFields === 'function') {
+    //         const weightFieldConfig = {
+    //             required: ['dateInput', 'weightValue'],
+    //             optional: ['memoInput']
+    //         };
+    //         window.markRequiredFields(weightFieldConfig, 0);
+    //         log('🏷️ 体重管理タブ: バッジ適用完了');
+    //     }
+    // }, 500);
     
     // デフォルト服装選択: 上=なし, 下=トランクス
     if (typeof window.selectClothingTop === 'function') {
