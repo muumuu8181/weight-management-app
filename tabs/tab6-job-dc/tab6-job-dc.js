@@ -10,6 +10,7 @@ let selectedTags = [];
 let tagSelector = null;
 let timeTracker = null;
 let workTimeRecords = [];
+let memoTaskManager = null;
 
 // 初期化
 function initJobDCTab() {
@@ -20,6 +21,9 @@ function initJobDCTab() {
     
     // 作業時間トラッカー初期化
     initTimeTracker();
+    
+    // メモリスト式タスクマネージャー初期化
+    initMemoTaskManager();
     
     // Firebase接続確認
     if (typeof firebase !== 'undefined' && firebase.auth) {
@@ -60,6 +64,47 @@ function initTimeTracker() {
             addToOperationLog(`⏹️ 作業終了: ${category} - ${formatDuration(durationSeconds)}`);
         }
     });
+}
+
+// メモリスト式タスクマネージャー初期化
+function initMemoTaskManager() {
+    if (typeof UniversalTaskManager === 'undefined') {
+        console.error('UniversalTaskManager が読み込まれていません');
+        return;
+    }
+    
+    // JOB専用カテゴリ設定
+    const jobCategories = [
+        { value: '', label: '選択なし' },
+        { value: '案件作業', label: '🔴 案件作業' },
+        { value: '市場性向上', label: '🟢 市場性向上' },
+        { value: '自動化', label: '🟡 自動化' },
+        { value: '学習', label: '📚 学習' },
+        { value: '改善', label: '🔧 改善' },
+        { value: 'アイデア', label: '💡 アイデア' },
+        { value: 'その他', label: '📋 その他' }
+    ];
+    
+    // メモリスト式タスクマネージャー作成
+    memoTaskManager = new UniversalTaskManager({
+        containerId: 'jobMemoTaskManager',
+        dataPath: 'jobMemoTasks',
+        title: '🎯 メモリスト式タスク',
+        categories: jobCategories,
+        onSave: (task) => {
+            addToOperationLog(`💾 メモリストタスク保存: ${task.text.substring(0, 20)}...`);
+        },
+        onLoad: (tasks) => {
+            console.log('📋 メモリストタスク読み込み完了:', tasks.length, '件');
+        },
+        onDelete: (taskId) => {
+            addToOperationLog(`🗑️ メモリストタスク削除: ID ${taskId}`);
+        }
+    });
+    
+    // 初期化
+    memoTaskManager.init();
+    console.log('🎯 メモリスト式タスクマネージャー初期化完了');
 }
 
 // タグセレクター初期化
