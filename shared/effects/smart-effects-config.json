@@ -1,0 +1,151 @@
+{
+  "systemInfo": {
+    "version": "1.0.0",
+    "description": "JSON設定ベース・統合エフェクトシステム",
+    "lastUpdated": "2025-09-02"
+  },
+  
+  "effectLevels": {
+    "level1": {
+      "name": "軽微操作",
+      "effect": "gentle",
+      "color": "#28a745",
+      "sparkleCount": 3,
+      "pulseIntensity": "light",
+      "message": "完了！",
+      "duration": 600,
+      "description": "メモ保存、小さなタスク完了など"
+    },
+    "level2": {
+      "name": "標準記録", 
+      "effect": "standard",
+      "color": "#007bff",
+      "sparkleCount": 6,
+      "pulseIntensity": "normal",
+      "message": "記録完了！",
+      "duration": 800,
+      "description": "体重記録、睡眠記録など"
+    },
+    "level3": {
+      "name": "達成・完了",
+      "effect": "celebration", 
+      "color": "#ffd700",
+      "sparkleCount": 12,
+      "pulseIntensity": "strong",
+      "message": "素晴らしい！",
+      "duration": 1200,
+      "description": "全タスク完了、目標達成など"
+    },
+    "level4": {
+      "name": "編集・更新",
+      "effect": "update",
+      "color": "#17a2b8", 
+      "sparkleCount": 4,
+      "pulseIntensity": "light",
+      "message": "更新完了！",
+      "duration": 600,
+      "description": "データ編集、設定更新など"
+    },
+    "level5": {
+      "name": "重要操作",
+      "effect": "important",
+      "color": "#dc3545",
+      "sparkleCount": 8,
+      "pulseIntensity": "strong",
+      "message": "重要操作完了！", 
+      "duration": 1000,
+      "description": "削除、重要な変更など"
+    },
+    "level6": {
+      "name": "特別達成",
+      "effect": "special",
+      "color": "#6f42c1",
+      "sparkleCount": 16,
+      "pulseIntensity": "epic",
+      "message": "🎉 最高です！",
+      "duration": 1500,
+      "description": "完璧達成、特別な記録など"
+    }
+  },
+  
+  "tabMappings": {
+    "weight": {
+      "save": "level2",
+      "edit": "level4",
+      "target_achieved": "level6",
+      "record_broken": "level3"
+    },
+    "sleep": {
+      "record": "level2", 
+      "good_sleep": "level3",
+      "perfect_sleep": "level6",
+      "edit": "level4"
+    },
+    "room-cleaning": {
+      "task_complete": "level1",
+      "all_complete": "level3",
+      "edit": "level4"
+    },
+    "memo-list": {
+      "save": "level1",
+      "edit": "level4",
+      "bulk_complete": "level3"
+    },
+    "dashboard": {
+      "view_update": "level1",
+      "report_generate": "level2"
+    },
+    "job-dc": {
+      "task_add": "level1",
+      "task_complete": "level2",
+      "all_complete": "level3",
+      "edit": "level4"
+    },
+    "stretch": {
+      "exercise_complete": "level2",
+      "routine_complete": "level3",
+      "edit": "level4"
+    }
+  },
+  
+  "buttonSelectors": {
+    "weight": {
+      "save": ".save-button",
+      "edit": ".edit-button"
+    },
+    "sleep": {
+      "record": ".sleep-save-btn",
+      "edit": ".sleep-edit-btn"  
+    },
+    "room-cleaning": {
+      "task_complete": ".task-complete-btn",
+      "all_complete": ".all-complete-btn"
+    },
+    "memo-list": {
+      "save": ".memo-save-btn",
+      "edit": ".memo-edit-btn"
+    },
+    "dashboard": {
+      "view_update": ".view-update-btn",
+      "report_generate": ".report-btn"
+    },
+    "job-dc": {
+      "task_add": ".add-task-btn",
+      "task_complete": ".complete-task-btn",
+      "all_complete": ".all-tasks-complete-btn"
+    },
+    "stretch": {
+      "exercise_complete": ".exercise-btn",
+      "routine_complete": ".routine-btn"
+    }
+  },
+  
+  "settings": {
+    "enabledTabs": ["weight", "sleep", "room-cleaning", "memo-list", "job-dc", "stretch"],
+    "globalDisable": false,
+    "debugMode": true,
+    "performanceMode": false,
+    "soundEnabled": false,
+    "vibrationEnabled": true
+  }
+}

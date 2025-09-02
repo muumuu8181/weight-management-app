@@ -201,17 +201,13 @@ window.saveWeightData = async () => {
             loadUserWeightData(currentUser.uid);
         }
         
-        // 🎉 保存完了エフェクト実行
+        // 🎯 スマートエフェクト実行（JSON設定ベース）
         const saveButton = document.querySelector('.save-button');
-        if (window.simpleEffects && saveButton) {
+        if (window.smartEffects && saveButton) {
             const isEdit = WeightTab.editingEntryId !== null;
-            const message = isEdit ? '更新完了！' : '記録完了！';
-            window.simpleEffects.recordSaved(saveButton, {
-                tabType: 'weight',
-                message: message,
-                sparkleCount: isEdit ? 4 : 6
-            });
-            log('✨ 体重記録エフェクト実行完了');
+            const actionName = isEdit ? 'edit' : 'save';
+            window.smartEffects.trigger('weight', actionName, saveButton);
+            log(`✨ スマートエフェクト実行完了: weight.${actionName}`);
         }
         
     } catch (error) {

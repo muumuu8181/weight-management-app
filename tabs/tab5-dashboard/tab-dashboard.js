@@ -16,14 +16,23 @@ window.initDashboard = function() {
     log('🔄 ダッシュボード初期化開始');
     
     if (!currentUser) {
-        log('❌ ログインが必要です');
+        log('❌ ログインが必要です - ダッシュボード初期化をスキップ');
         return;
     }
+    
+    log(`👤 ユーザー: ${currentUser.displayName} (${currentUser.uid})`);
     
     // 初期ビュー設定
     switchDashboardView('overview');
     
-    // 全データの読み込み
+    // Firebase接続確認
+    if (typeof database === 'undefined') {
+        log('❌ Firebase database未初期化');
+        return;
+    }
+    
+    // 全データの読み込み（詳細ログ出力）
+    log('🔍 Firebase データ読み込み開始...');
     refreshDashboardData();
     
     log('✅ ダッシュボード初期化完了');
@@ -135,14 +144,32 @@ async function loadSleepData() {
 // 部屋片付けデータ読み込み
 async function loadRoomData() {
     return new Promise((resolve) => {
-        const roomRef = database.ref('/users/' + currentUser.uid + '/roomData/');
+        // 部屋片付けデータは複数のデータパスを確認
+        const roomDataPaths = [
+            '/users/' + currentUser.uid + '/roomData/',
+            '/users/' + currentUser.uid + '/roomManagement/',
+            '/users/' + currentUser.uid + '/cleaningTasks/'
+        ];
         
-        roomRef.once('value', (snapshot) => {
-            const data = snapshot.val();
-            dashboardData.room = data ? Object.values(data) : [];
-            
-            log(`🏠 部屋片付けデータ読み込み: ${dashboardData.room.length}件`);
-            resolve();
+        let totalRoomData = [];
+        let pathChecked = 0;
+        
+        roomDataPaths.forEach((path, index) => {
+            database.ref(path).once('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const dataArray = Object.values(data);
+                    totalRoomData = totalRoomData.concat(dataArray);
+                    log(`🏠 部屋片付けデータ(${path}): ${dataArray.length}件`);
+                }
+                
+                pathChecked++;
+                if (pathChecked === roomDataPaths.length) {
+                    dashboardData.room = totalRoomData;
+                    log(`🏠 部屋片付けデータ統合: ${totalRoomData.length}件`);
+                    resolve();
+                }
+            });
         });
     });
 }
@@ -150,14 +177,33 @@ async function loadRoomData() {
 // メモデータ読み込み
 async function loadMemoData() {
     return new Promise((resolve) => {
-        const memoRef = database.ref('/users/' + currentUser.uid + '/memoData/');
+        // メモデータは複数のデータパスを確認（タブ8とJOB_DC両方対応）
+        const memoDataPaths = [
+            '/users/' + currentUser.uid + '/memoData/',
+            '/users/' + currentUser.uid + '/memos/',
+            '/users/' + currentUser.uid + '/taskData/',
+            '/users/' + currentUser.uid + '/jobdcData/'
+        ];
         
-        memoRef.once('value', (snapshot) => {
-            const data = snapshot.val();
-            dashboardData.memo = data ? Object.values(data) : [];
-            
-            log(`📝 メモデータ読み込み: ${dashboardData.memo.length}件`);
-            resolve();
+        let totalMemoData = [];
+        let pathChecked = 0;
+        
+        memoDataPaths.forEach((path, index) => {
+            database.ref(path).once('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const dataArray = Object.values(data);
+                    totalMemoData = totalMemoData.concat(dataArray);
+                    log(`📝 メモデータ(${path}): ${dataArray.length}件`);
+                }
+                
+                pathChecked++;
+                if (pathChecked === memoDataPaths.length) {
+                    dashboardData.memo = totalMemoData;
+                    log(`📝 メモデータ統合: ${totalMemoData.length}件`);
+                    resolve();
+                }
+            });
         });
     });
 }
@@ -173,6 +219,9 @@ function updateAllSummaries() {
 // 体重サマリー更新
 function updateWeightSummary() {
     const weights = dashboardData.weight;
+    
+    // 総記録数表示
+    document.getElementById('weightDataCount').textContent = weights.length;
     
     if (weights.length === 0) {
         document.getElementById('latestWeight').textContent = '--';
@@ -217,6 +266,9 @@ function updateWeightSummary() {
 // 睡眠サマリー更新
 function updateSleepSummary() {
     const sleeps = dashboardData.sleep;
+    
+    // 総記録数表示
+    document.getElementById('sleepDataCount').textContent = sleeps.length;
     
     if (sleeps.length === 0) {
         document.getElementById('avgSleepTime').textContent = '--';
@@ -272,6 +324,9 @@ function updateSleepSummary() {
 function updateRoomSummary() {
     const rooms = dashboardData.room;
     
+    // 総記録数表示
+    document.getElementById('roomDataCount').textContent = rooms.length;
+    
     if (rooms.length === 0) {
         document.getElementById('completedTasks').textContent = '--';
         document.getElementById('totalTasks').textContent = '--';
@@ -308,6 +363,9 @@ function updateRoomSummary() {
 // メモサマリー更新
 function updateMemoSummary() {
     const memos = dashboardData.memo;
+    
+    // 総記録数表示（メモの場合は総記録数と総メモ数は同じ）
+    document.getElementById('memoDataCount').textContent = memos.length;
     
     if (memos.length === 0) {
         document.getElementById('totalMemos').textContent = '--';
@@ -639,24 +697,28 @@ window.copyDashboardData = function() {
 生成日時: ${new Date().toLocaleString()}
 
 【体重管理】
+・総記録数: ${document.getElementById('weightDataCount').textContent}件
 ・最新体重: ${document.getElementById('latestWeight').textContent}kg
 ・前回差: ${document.getElementById('weightDiff').textContent}kg
 ・月間変化: ${document.getElementById('monthlyChange').textContent}kg
 ・${document.getElementById('weightTrend').textContent}
 
 【睡眠管理】
+・総記録数: ${document.getElementById('sleepDataCount').textContent}件
 ・平均睡眠時間: ${document.getElementById('avgSleepTime').textContent}時間
 ・平均睡眠質: ${document.getElementById('avgSleepQuality').textContent}/5
 ・今月記録数: ${document.getElementById('sleepRecords').textContent}回
 ・${document.getElementById('sleepTrend').textContent}
 
 【部屋片付け】
+・総記録数: ${document.getElementById('roomDataCount').textContent}件
 ・完了タスク: ${document.getElementById('completedTasks').textContent}/${document.getElementById('totalTasks').textContent}
 ・完了率: ${document.getElementById('completionRate').textContent}%
 ・今月活動: ${document.getElementById('monthlyActivity').textContent}回
 ・${document.getElementById('roomTrend').textContent}
 
 【メモリスト】
+・総記録数: ${document.getElementById('memoDataCount').textContent}件
 ・総メモ数: ${document.getElementById('totalMemos').textContent}
 ・重要メモ: ${document.getElementById('importantMemos').textContent}
 ・今月追加: ${document.getElementById('monthlyMemos').textContent}

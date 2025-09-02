@@ -146,6 +146,19 @@ async function saveSleepData() {
         
         log(`💾 睡眠記録保存完了: ${sleepDate} ${sleepTime}`);
         
+        // 🎯 スマートエフェクト実行（質で判定）
+        const saveButton = document.querySelector('.sleep-save-btn') || document.querySelector('button[onclick*="saveSleepData"]');
+        if (window.smartEffects && saveButton) {
+            let actionName = 'record';
+            if (selectedSleepQuality >= 8) {
+                actionName = 'perfect_sleep';  // 8点以上は完璧睡眠
+            } else if (selectedSleepQuality >= 6) {
+                actionName = 'good_sleep';     // 6-7点は良質睡眠
+            }
+            window.smartEffects.trigger('sleep', actionName, saveButton);
+            log(`✨ 睡眠エフェクト実行完了: sleep.${actionName} (質:${selectedSleepQuality}点)`);
+        }
+        
         // 入力フィールドリセット
         document.getElementById('sleepMemoInput').value = '';
         selectedSleepType = '';

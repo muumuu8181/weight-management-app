@@ -289,6 +289,14 @@ window.saveRoomData = async () => {
         await userRoomRef.push(roomData);
         
         log('✅ 部屋片付けデータ保存完了');
+        
+        // 🎯 スマートエフェクト実行
+        const saveButton = document.querySelector('.room-save-btn') || document.querySelector('button[onclick*="saveRoomData"]');
+        if (window.smartEffects && saveButton) {
+            window.smartEffects.trigger('room-cleaning', 'task_complete', saveButton);
+            log('✨ 部屋片付けエフェクト実行完了');
+        }
+        
         resetRoomForm();
         window.loadRoomData();
         

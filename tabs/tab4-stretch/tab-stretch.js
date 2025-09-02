@@ -223,6 +223,12 @@ async function saveStretchData() {
         
         log(`💾 ストレッチデータ保存: ${stretchType} ${duration}分 (強度:${intensity}, 部位:${bodyParts.join(',')})`);
         
+        // 🎯 スマートエフェクト実行
+        if (window.smartEffects) {
+            window.smartEffects.trigger('stretch', 'exercise_complete', saveButton);
+            log('✨ ストレッチエフェクト実行完了');
+        }
+        
         // データ再読み込み
         loadUserStretchData(currentUser.uid);
         

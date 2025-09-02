@@ -403,6 +403,13 @@ async function saveJobTask() {
             // UI更新
             addToOperationLog(`JOB_DC: タスク「${taskText}」を保存しました`);
             
+            // 🎯 スマートエフェクト実行
+            const saveButton = document.querySelector('.add-task-btn') || document.querySelector('button[onclick*="saveJobTask"]');
+            if (window.smartEffects && saveButton) {
+                window.smartEffects.trigger('job-dc', 'task_add', saveButton);
+                log('✨ JOB-DCタスク追加エフェクト実行完了');
+            }
+            
             // フォームリセット
             resetTaskForm();
             
@@ -554,6 +561,14 @@ async function completeTask(taskId) {
         });
         
         addToOperationLog(`JOB_DC: タスクを完了しました`);
+        
+        // 🎯 スマートエフェクト実行
+        const completeButton = document.querySelector(`button[onclick*="completeTask('${taskId}')"]`);
+        if (window.smartEffects && completeButton) {
+            window.smartEffects.trigger('job-dc', 'task_complete', completeButton);
+            log('✨ JOB-DCタスク完了エフェクト実行完了');
+        }
+        
         updateTodayStats();
         
     } catch (error) {

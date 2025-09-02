@@ -132,6 +132,13 @@ window.addMemo = () => {
         localStorage.setItem('memos', JSON.stringify(memoData));
     }
     
+    // 🎯 スマートエフェクト実行
+    const addButton = document.querySelector('[onclick="addMemo()"]') || document.querySelector('.memo-save-btn');
+    if (window.smartEffects && addButton) {
+        window.smartEffects.trigger('memo-list', 'save', addButton);
+        log('✨ メモ追加エフェクト実行完了');
+    }
+    
     // 表示を更新
     updateMemoDisplay();
     updateMemoStats();
