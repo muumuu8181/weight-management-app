@@ -21,6 +21,7 @@ class UniversalTaskManager {
         this.taskData = [];
         this.filteredTaskData = [];
         this.selectedTaskIds = [];
+        this.selectedTags = [];
         this.isIntegrationMode = false;
         this.editingTaskId = null;
         
@@ -72,6 +73,7 @@ class UniversalTaskManager {
                         <button type="button" class="priority-btn" data-priority="S" onclick="${this.containerId}_selectPriority('S')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🔥 S</button>
                         <button type="button" class="priority-btn" data-priority="A" onclick="${this.containerId}_selectPriority('A')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⚡ A</button>
                         <button type="button" class="priority-btn" data-priority="B" onclick="${this.containerId}_selectPriority('B')" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📋 B</button>
+                        <button type="button" class="priority-btn" data-priority="C" onclick="${this.containerId}_selectPriority('C')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📝 C</button>
                     </div>
                     <input type="hidden" id="${this.containerId}_taskPriority" value="">
                 </div>
@@ -81,6 +83,15 @@ class UniversalTaskManager {
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">⏰ 対応時間:</label>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                         <button type="button" class="timeframe-btn" data-timeframe="" onclick="${this.containerId}_selectTimeframe('')" style="background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 1;">なし</button>
+                        <button type="button" class="timeframe-btn" data-timeframe="30分" onclick="${this.containerId}_selectTimeframe('30分')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⚡ 30分</button>
+                        <button type="button" class="timeframe-btn" data-timeframe="2時間" onclick="${this.containerId}_selectTimeframe('2時間')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🕐 2時間</button>
+                        <button type="button" class="timeframe-btn" data-timeframe="半日" onclick="${this.containerId}_selectTimeframe('半日')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🌅 半日</button>
+                        <button type="button" class="timeframe-btn" data-timeframe="1日" onclick="${this.containerId}_selectTimeframe('1日')" style="background: #6f42c1; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📅 1日</button>
+                        <button type="button" class="timeframe-btn" data-timeframe="2日" onclick="${this.containerId}_selectTimeframe('2日')" style="background: #e83e8c; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📆 2日</button>
+                        <button type="button" class="timeframe-btn" data-timeframe="3日" onclick="${this.containerId}_selectTimeframe('3日')" style="background: #20c997; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🗓️ 3日</button>
+                        <button type="button" class="timeframe-btn" data-timeframe="5日" onclick="${this.containerId}_selectTimeframe('5日')" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📋 5日</button>
+                        <button type="button" class="timeframe-btn" data-timeframe="2週間" onclick="${this.containerId}_selectTimeframe('2週間')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📊 2週間</button>
+                        <button type="button" class="timeframe-btn" data-timeframe="4週間" onclick="${this.containerId}_selectTimeframe('4週間')" style="background: #343a40; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📈 4週間</button>
                         <button type="button" class="timeframe-btn" data-timeframe="短期" onclick="${this.containerId}_selectTimeframe('短期')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">⚡ 短期</button>
                         <button type="button" class="timeframe-btn" data-timeframe="中長期" onclick="${this.containerId}_selectTimeframe('中長期')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📅 中長期</button>
                     </div>
@@ -91,6 +102,36 @@ class UniversalTaskManager {
                 <div style="margin-bottom: 15px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">📅 締切日（任意）:</label>
                     <input type="date" id="${this.containerId}_taskDeadline" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                </div>
+
+                <!-- タグ選択（複数選択可・最大8個） -->
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">🏷️ タグ（複数選択可・最大8個）:</label>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 8px;">
+                        <div id="${this.containerId}_tagButtons" style="display: flex; gap: 4px; flex-wrap: wrap;">
+                            <button type="button" class="tag-btn" data-tag="緊急" onclick="${this.containerId}_toggleTag('緊急')" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">🚨 緊急</button>
+                            <button type="button" class="tag-btn" data-tag="重要" onclick="${this.containerId}_toggleTag('重要')" style="background: #fd7e14; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">⭐ 重要</button>
+                            <button type="button" class="tag-btn" data-tag="定期" onclick="${this.containerId}_toggleTag('定期')" style="background: #17a2b8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">🔄 定期</button>
+                            <button type="button" class="tag-btn" data-tag="新規" onclick="${this.containerId}_toggleTag('新規')" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">✨ 新規</button>
+                            <button type="button" class="tag-btn" data-tag="改善" onclick="${this.containerId}_toggleTag('改善')" style="background: #6f42c1; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">🔧 改善</button>
+                            <button type="button" class="tag-btn" data-tag="学習" onclick="${this.containerId}_toggleTag('学習')" style="background: #20c997; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">📚 学習</button>
+                        </div>
+                        <button type="button" onclick="${this.containerId}_showAddTagInput()" style="background: #ffc107; color: #212529; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;">➕ 追加</button>
+                    </div>
+                    
+                    <!-- 選択中タグ表示 -->
+                    <div id="${this.containerId}_selectedTagsDisplay" style="font-size: 11px; color: #666; margin-bottom: 8px;">選択中: なし</div>
+                    
+                    <!-- タグ追加入力エリア -->
+                    <div id="${this.containerId}_tagAddInput" style="display: none; padding: 8px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="text" id="${this.containerId}_newTagName" placeholder="新しいタグ名" style="flex: 1; padding: 6px; border: 1px solid #ffc107; border-radius: 3px; font-size: 11px;">
+                            <button onclick="${this.containerId}_addNewTag()" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 11px;">✓ 追加</button>
+                            <button onclick="${this.containerId}_cancelAddTag()" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 11px;">✗ キャンセル</button>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="${this.containerId}_selectedTags" value="">
                 </div>
 
                 <!-- 保存ボタン -->
@@ -155,6 +196,10 @@ class UniversalTaskManager {
         window[`${this.containerId}_toggleTaskSelection`] = (taskId) => this.toggleTaskSelection(taskId);
         window[`${this.containerId}_editTask`] = (taskId) => this.editTask(taskId);
         window[`${this.containerId}_cancelEdit`] = () => this.cancelEdit();
+        window[`${this.containerId}_toggleTag`] = (tagName) => this.toggleTag(tagName);
+        window[`${this.containerId}_showAddTagInput`] = () => this.showAddTagInput();
+        window[`${this.containerId}_addNewTag`] = () => this.addNewTag();
+        window[`${this.containerId}_cancelAddTag`] = () => this.cancelAddTag();
     }
     
     // 優先度選択
@@ -252,6 +297,7 @@ class UniversalTaskManager {
             priority: priority,
             timeframe: timeframe,
             deadline: deadline || null,
+            tags: this.selectedTags.slice(), // 選択中のタグをコピー
             parentId: isEdit ? this.findTaskById(taskId)?.parentId || null : null,
             level: isEdit ? this.findTaskById(taskId)?.level || 0 : 0,
             date: isEdit ? this.findTaskById(taskId)?.date : new Date().toLocaleDateString('ja-JP'),
@@ -301,6 +347,11 @@ class UniversalTaskManager {
         document.getElementById(`${this.containerId}_taskDeadline`).value = '';
         this.selectPriority('');
         this.selectTimeframe('');
+        
+        // タグ選択リセット
+        this.selectedTags = [];
+        this.updateTagsDisplay();
+        this.updateTagButtons();
         
         // 編集モード終了
         this.editingTaskId = null;
@@ -409,7 +460,10 @@ class UniversalTaskManager {
         tasks.forEach(task => {
             const levelLimits = { 0: 20, 1: 17, 2: 14, 3: 11 };
             const charLimit = levelLimits[task.level || 0] || 20;
-            const displayText = task.text.length > charLimit ? task.text.substring(0, charLimit) + '...' : task.text;
+            
+            // 統合タスクの場合はdisplayNameを使用、それ以外は通常のtext
+            const baseText = task.isIntegrated && task.displayName ? task.displayName : task.text;
+            const displayText = baseText.length > charLimit ? baseText.substring(0, charLimit) + '...' : baseText;
             
             // 階層表示用のインデントと境界線
             const indent = task.level ? '　'.repeat(task.level) + '└ ' : '';
@@ -442,6 +496,8 @@ class UniversalTaskManager {
                         ${task.priority ? `<span style="background: ${this.getPriorityColor(task.priority)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${this.getPriorityIcon(task.priority)} ${task.priority}</span>` : ''}
                         ${task.timeframe ? `<span style="background: ${this.getTimeframeColor(task.timeframe)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${this.getTimeframeIcon(task.timeframe)} ${task.timeframe}</span>` : ''}
                         ${task.deadline ? `<span style="background: #e83e8c; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">📅 ${this.formatDeadline(task.deadline)}</span>` : ''}
+                        ${task.tags && task.tags.length > 0 ? task.tags.map(tag => `<span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">🏷️ ${tag}</span>`).join('') : ''}
+                        ${task.isIntegrated ? `<span style="background: #20c997; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">🔗 統合(${task.originalCount})</span>` : ''}
                     </div>
                 </div>
             `;
@@ -543,7 +599,7 @@ class UniversalTaskManager {
         
         try {
             // 選択されたタスクを取得
-            const tasksToIntegrate = this.taskData.filter(task => this.selectedTaskIds.includes(task.id));
+            const tasksToIntegrate = this.taskData.filter(task => this.selectedTaskIds.includes(String(task.id)));
             
             // レベル3のタスクが含まれているかチェック
             if (tasksToIntegrate.some(task => (task.level || 0) >= 3)) {
@@ -551,18 +607,38 @@ class UniversalTaskManager {
                 return;
             }
             
-            // 統合タスク作成
-            const integrationText = tasksToIntegrate.map(task => task.text).join('\n\n');
+            // 統合タスクの新しい名前を入力
+            const taskNames = tasksToIntegrate.map(task => `• ${task.text.substring(0, 30)}${task.text.length > 30 ? '...' : ''}`).join('\n');
+            const newTaskName = prompt(`🔗 統合後の新しいタスク名を入力してください:\n\n【統合対象】\n${taskNames}\n\n例：「開発作業」「設計書作業」→「プロジェクト作業」`, '統合タスク');
+            
+            if (!newTaskName || !newTaskName.trim()) {
+                alert('統合タスク名が入力されませんでした');
+                return;
+            }
+            
+            // 統合詳細テキスト（元のタスク内容も保持）
+            const detailText = `【統合タスク: ${newTaskName.trim()}】\n\n` +
+                `【統合日時: ${new Date().toLocaleString('ja-JP')}】\n\n` +
+                `【元タスク内容】\n` +
+                tasksToIntegrate.map((task, index) => 
+                    `${index + 1}. ${task.text}`
+                ).join('\n\n');
+            
             const maxPriority = this.getMaxPriority(tasksToIntegrate.map(task => task.priority));
             
             const integrationTask = {
                 id: parseInt(Date.now().toString() + Math.floor(Math.random() * 100).toString()),
-                text: integrationText,
+                text: detailText,
+                displayName: newTaskName.trim(), // 表示用の短縮名
                 category: tasksToIntegrate[0].category || '',
                 priority: maxPriority,
                 timeframe: tasksToIntegrate[0].timeframe || '',
+                deadline: this.findEarliestDeadline(tasksToIntegrate),
+                tags: this.mergeUniqueTags(tasksToIntegrate),
                 parentId: null,
                 level: 0,
+                isIntegrated: true, // 統合タスクフラグ
+                originalCount: tasksToIntegrate.length,
                 date: new Date().toLocaleDateString('ja-JP'),
                 time: new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
                 createdAt: new Date().toISOString()
@@ -579,8 +655,8 @@ class UniversalTaskManager {
             // 統合モード終了
             this.toggleIntegrationMode();
             
-            alert(`${tasksToIntegrate.length}個のタスクを統合しました`);
-            console.log('✨ タスク統合完了');
+            alert(`✨ ${tasksToIntegrate.length}個のタスクを「${newTaskName.trim()}」として統合しました`);
+            console.log('✨ タスク統合完了:', integrationTask);
             
         } catch (error) {
             console.error('タスク統合エラー:', error);
@@ -691,6 +767,9 @@ class UniversalTaskManager {
         document.getElementById(`${this.containerId}_taskDeadline`).value = task.deadline || '';
         this.selectPriority(task.priority || '');
         this.selectTimeframe(task.timeframe || '');
+        
+        // タグを復元
+        this.loadTagsForEdit(task);
         
         // 編集モードに切り替え
         this.editingTaskId = taskId;
@@ -839,6 +918,166 @@ class UniversalTaskManager {
     // タスク検索ヘルパー
     findTaskById(taskId) {
         return this.taskData.find(task => String(task.id) === String(taskId));
+    }
+    
+    // === タグ機能 ===
+    
+    // タグ選択切り替え
+    toggleTag(tagName) {
+        const index = this.selectedTags.indexOf(tagName);
+        
+        if (index > -1) {
+            // 既に選択されている場合は削除
+            this.selectedTags.splice(index, 1);
+        } else {
+            // 最大8個まで選択可能
+            if (this.selectedTags.length >= 8) {
+                alert('タグは最大8個まで選択できます');
+                return;
+            }
+            this.selectedTags.push(tagName);
+        }
+        
+        this.updateTagsDisplay();
+        this.updateTagButtons();
+        
+        console.log('🏷️ タグ選択:', this.selectedTags);
+    }
+    
+    // タグ表示更新
+    updateTagsDisplay() {
+        const displayElement = document.getElementById(`${this.containerId}_selectedTagsDisplay`);
+        if (!displayElement) return;
+        
+        if (this.selectedTags.length > 0) {
+            displayElement.textContent = `選択中: ${this.selectedTags.join(', ')}`;
+            displayElement.style.color = '#28a745';
+            displayElement.style.fontWeight = 'bold';
+        } else {
+            displayElement.textContent = '選択中: なし';
+            displayElement.style.color = '#666';
+            displayElement.style.fontWeight = 'normal';
+        }
+        
+        // hidden inputにも反映
+        const hiddenInput = document.getElementById(`${this.containerId}_selectedTags`);
+        if (hiddenInput) {
+            hiddenInput.value = this.selectedTags.join(',');
+        }
+    }
+    
+    // タグボタンの表示更新
+    updateTagButtons() {
+        const container = document.getElementById(`${this.containerId}_tagButtons`);
+        if (!container) return;
+        
+        container.querySelectorAll('.tag-btn').forEach(btn => {
+            const tagName = btn.getAttribute('data-tag');
+            if (this.selectedTags.includes(tagName)) {
+                btn.style.opacity = '1';
+                btn.style.transform = 'scale(1.05)';
+            } else {
+                btn.style.opacity = '0.7';
+                btn.style.transform = 'scale(1)';
+            }
+        });
+    }
+    
+    // タグ追加入力表示
+    showAddTagInput() {
+        const inputArea = document.getElementById(`${this.containerId}_tagAddInput`);
+        const inputField = document.getElementById(`${this.containerId}_newTagName`);
+        
+        inputArea.style.display = 'block';
+        inputField.value = '';
+        inputField.focus();
+        
+        console.log('➕ タグ追加入力表示');
+    }
+    
+    // 新しいタグを追加
+    addNewTag() {
+        const inputField = document.getElementById(`${this.containerId}_newTagName`);
+        const newTagName = inputField.value.trim();
+        
+        if (!newTagName) {
+            alert('タグ名を入力してください');
+            return;
+        }
+        
+        // 既存チェック
+        const tagButtons = document.getElementById(`${this.containerId}_tagButtons`);
+        const existingTags = Array.from(tagButtons.querySelectorAll('.tag-btn')).map(btn => btn.getAttribute('data-tag'));
+        
+        if (existingTags.includes(newTagName)) {
+            alert('同じ名前のタグが既に存在します');
+            return;
+        }
+        
+        // 新しいタグボタンを作成
+        const newButton = document.createElement('button');
+        newButton.type = 'button';
+        newButton.className = 'tag-btn';
+        newButton.setAttribute('data-tag', newTagName);
+        newButton.setAttribute('onclick', `${this.containerId}_toggleTag('${newTagName}')`);
+        newButton.style.cssText = 'background: #e83e8c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;';
+        newButton.textContent = `🏷️ ${newTagName}`;
+        
+        tagButtons.appendChild(newButton);
+        
+        // すぐに選択状態にする
+        this.toggleTag(newTagName);
+        
+        // 入力エリアを非表示
+        this.cancelAddTag();
+        
+        console.log('✅ 新タグ追加:', newTagName);
+    }
+    
+    // タグ追加キャンセル
+    cancelAddTag() {
+        const inputArea = document.getElementById(`${this.containerId}_tagAddInput`);
+        const inputField = document.getElementById(`${this.containerId}_newTagName`);
+        
+        inputArea.style.display = 'none';
+        inputField.value = '';
+        
+        console.log('❌ タグ追加キャンセル');
+    }
+    
+    // === 統合機能ヘルパー ===
+    
+    // 最も早い締切日を取得
+    findEarliestDeadline(tasks) {
+        const deadlines = tasks
+            .filter(task => task.deadline)
+            .map(task => task.deadline)
+            .sort((a, b) => new Date(a) - new Date(b));
+        
+        return deadlines.length > 0 ? deadlines[0] : null;
+    }
+    
+    // タグをユニークに統合
+    mergeUniqueTags(tasks) {
+        const allTags = [];
+        tasks.forEach(task => {
+            if (task.tags && Array.isArray(task.tags)) {
+                allTags.push(...task.tags);
+            }
+        });
+        
+        // 重複削除して最大8個まで
+        const uniqueTags = [...new Set(allTags)];
+        return uniqueTags.slice(0, 8);
+    }
+    
+    // === 編集機能 ===
+    
+    // 編集時のタグ復元
+    loadTagsForEdit(task) {
+        this.selectedTags = task.tags ? [...task.tags] : [];
+        this.updateTagsDisplay();
+        this.updateTagButtons();
     }
 }
 
