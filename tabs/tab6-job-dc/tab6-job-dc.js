@@ -6,8 +6,8 @@ let selectedSkillType = '';
 let selectedTaskPriority = '';
 let selectedEstimatedTime = '';
 let selectedAutomationGoal = '';
-let selectedTaskCategory = '';
-let categorySelector = null;
+let selectedTags = [];
+let tagSelector = null;
 let timeTracker = null;
 let workTimeRecords = [];
 
@@ -15,8 +15,8 @@ let workTimeRecords = [];
 function initJobDCTab() {
     console.log('JOB_DC タブを初期化中...');
     
-    // カテゴリセレクター初期化
-    initCategorySelector();
+    // タグセレクター初期化
+    initTagSelector();
     
     // 作業時間トラッカー初期化
     initTimeTracker();
@@ -41,16 +41,11 @@ function initJobDCTab() {
 
 // 作業時間トラッカー初期化
 function initTimeTracker() {
-    // 作業カテゴリ定義
+    // スキル分類ベースの3カテゴリに統一
     const workCategories = [
-        { name: 'コーディング', color: '#007bff' },
-        { name: 'フォルダ整理', color: '#28a745' },
-        { name: 'ミーティング', color: '#ffc107' },
-        { name: 'メール・連絡', color: '#17a2b8' },
-        { name: '学習・調査', color: '#6f42c1' },
-        { name: '設定・メンテナンス', color: '#fd7e14' },
-        { name: 'ドキュメント作成', color: '#e83e8c' },
-        { name: '打ち合わせ準備', color: '#20c997' }
+        { name: '案件固有', color: '#dc3545' },
+        { name: '市場汎用', color: '#28a745' },
+        { name: '自動化推進', color: '#ffc107' }
     ];
     
     // TimeTrackerインスタンス作成
@@ -67,109 +62,126 @@ function initTimeTracker() {
     });
 }
 
-// カテゴリセレクター初期化
-function initCategorySelector() {
+// タグセレクター初期化
+function initTagSelector() {
     if (typeof UnifiedSelector === 'undefined') {
         console.error('UnifiedSelector が読み込まれていません');
         return;
     }
     
-    categorySelector = new UnifiedSelector({
-        containerId: 'categoryButtons',
-        hiddenInputId: 'taskCategory',
-        multiple: false,
-        items: ['', '開発', '会議', '学習', '調査'],
-        prefix: 'カテゴリ',
+    tagSelector = new UnifiedSelector({
+        containerId: 'tagButtons',
+        hiddenInputId: 'selectedTags',
+        multiple: true, // 複数選択有効
+        items: ['緊急', '重要', '定期', '新規', '改善'],
+        prefix: 'タグ',
         onSelectionChange: (selection) => {
-            selectedTaskCategory = selection;
-            console.log('カテゴリ選択:', selection);
+            selectedTags = selection;
+            updateTagDisplay();
+            console.log('タグ選択:', selection);
         }
     });
     
-    categorySelector.initialize();
-    console.log('カテゴリセレクター初期化完了');
+    tagSelector.initialize();
+    console.log('タグセレクター初期化完了');
 }
 
-// カテゴリ追加入力を表示
-function showCategoryAddInput() {
-    const inputArea = document.getElementById('categoryAddInput');
-    const inputField = document.getElementById('newCategoryName');
+// タグ表示を更新
+function updateTagDisplay() {
+    const displayArea = document.getElementById('selectedTagsDisplay');
+    if (!displayArea) return;
+    
+    if (selectedTags && selectedTags.length > 0) {
+        displayArea.textContent = `選択中: ${selectedTags.join(', ')}`;
+        displayArea.style.color = '#28a745';
+        displayArea.style.fontWeight = 'bold';
+    } else {
+        displayArea.textContent = '選択中: なし';
+        displayArea.style.color = '#666';
+        displayArea.style.fontWeight = 'normal';
+    }
+}
+
+// タグ追加入力を表示
+function showTagAddInput() {
+    const inputArea = document.getElementById('tagAddInput');
+    const inputField = document.getElementById('newTagName');
     
     inputArea.style.display = 'block';
     inputField.value = '';
     inputField.focus();
     
-    log('✨ カテゴリ追加入力表示');
+    log('✨ タグ追加入力表示');
 }
 
-// 新しいカテゴリを追加
-function addNewCategory() {
-    const inputField = document.getElementById('newCategoryName');
-    const newCategoryName = inputField.value.trim();
+// 新しいタグを追加
+function addNewTag() {
+    const inputField = document.getElementById('newTagName');
+    const newTagName = inputField.value.trim();
     
-    if (!newCategoryName) {
-        alert('カテゴリ名を入力してください');
+    if (!newTagName) {
+        alert('タグ名を入力してください');
         return;
     }
     
-    if (!categorySelector) {
-        console.error('categorySelector が初期化されていません');
+    if (!tagSelector) {
+        console.error('tagSelector が初期化されていません');
         return;
     }
     
-    // カスタム項目追加（アイコンは📂を使用）
-    const success = categorySelector.addCustomItem(newCategoryName, '📂');
+    // カスタム項目追加（アイコンは🏷️を使用）
+    const success = tagSelector.addCustomItem(newTagName, '🏷️');
     
     if (success) {
         // 追加後すぐに選択
-        categorySelector.selectSingle(newCategoryName);
+        tagSelector.toggleMultiple(newTagName);
         
         // 入力エリアを非表示
-        cancelCategoryAdd();
+        cancelTagAdd();
         
         // ログ出力
-        log(`✅ カテゴリ追加成功: ${newCategoryName}`);
+        log(`✅ タグ追加成功: ${newTagName}`);
         
         // 永続化（将来的にFirebaseに保存）
-        saveCategorySettings();
+        saveTagSettings();
         
     } else {
-        log(`❌ カテゴリ追加失敗: ${newCategoryName}`);
+        log(`❌ タグ追加失敗: ${newTagName}`);
     }
 }
 
-// カテゴリ追加をキャンセル
-function cancelCategoryAdd() {
-    const inputArea = document.getElementById('categoryAddInput');
-    const inputField = document.getElementById('newCategoryName');
+// タグ追加をキャンセル
+function cancelTagAdd() {
+    const inputArea = document.getElementById('tagAddInput');
+    const inputField = document.getElementById('newTagName');
     
     inputArea.style.display = 'none';
     inputField.value = '';
     
-    log('✗ カテゴリ追加キャンセル');
+    log('✗ タグ追加キャンセル');
 }
 
-// カテゴリ設定保存（将来的にFirebase対応）
-async function saveCategorySettings() {
+// タグ設定保存（将来的にFirebase対応）
+async function saveTagSettings() {
     try {
-        // 現在のカスタムカテゴリを取得
-        const customCategories = [];
-        const categoryButtons = document.querySelectorAll('#categoryButtons button[data-original-color]');
-        categoryButtons.forEach(button => {
+        // 現在のカスタムタグを取得
+        const customTags = [];
+        const tagButtons = document.querySelectorAll('#tagButtons button[data-original-color]');
+        tagButtons.forEach(button => {
             const value = button.getAttribute('data-value');
             if (value) {
-                customCategories.push(value);
+                customTags.push(value);
             }
         });
         
-        console.log('カスタムカテゴリ保存:', customCategories);
+        console.log('カスタムタグ保存:', customTags);
         
         // 将来的にFirebaseに保存
         // const user = firebase.auth().currentUser;
-        // await firebase.database().ref(`users/${user.uid}/customCategories`).set(customCategories);
+        // await firebase.database().ref(`users/${user.uid}/customTags`).set(customTags);
         
     } catch (error) {
-        console.error('カテゴリ設定保存エラー:', error);
+        console.error('タグ設定保存エラー:', error);
     }
 }
 
@@ -323,7 +335,7 @@ async function saveJobTask() {
     const taskData = {
         text: taskText,
         skillType: selectedSkillType || '未分類',
-        category: selectedTaskCategory || '未分類',
+        tags: selectedTags || [],
         priority: selectedTaskPriority || '',
         estimatedTime: selectedEstimatedTime || '',
         automationGoal: selectedAutomationGoal || '',
@@ -535,54 +547,29 @@ function updateTodayStats() {
         return recordDate === today;
     });
     
-    // カテゴリ別時間計算（秒単位）
-    let codingTime = 0;
-    let organizingTime = 0;
-    let meetingTime = 0;
-    let communicationTime = 0;
-    let learningTime = 0;
-    let maintenanceTime = 0;
-    let documentTime = 0;
-    let preparationTime = 0;
-    let otherTime = 0;
+    // スキル分類ベースでの直接計算（秒単位）
+    let projectSpecificTime = 0;
+    let marketableTime = 0;
+    let automationTime = 0;
     
     todayWorkRecords.forEach(record => {
         const seconds = record.durationSeconds || 0;
         switch (record.category) {
-            case 'コーディング':
-                codingTime += seconds;
+            case '案件固有':
+                projectSpecificTime += seconds;
                 break;
-            case 'フォルダ整理':
-                organizingTime += seconds;
+            case '市場汎用':
+                marketableTime += seconds;
                 break;
-            case 'ミーティング':
-                meetingTime += seconds;
-                break;
-            case 'メール・連絡':
-                communicationTime += seconds;
-                break;
-            case '学習・調査':
-                learningTime += seconds;
-                break;
-            case '設定・メンテナンス':
-                maintenanceTime += seconds;
-                break;
-            case 'ドキュメント作成':
-                documentTime += seconds;
-                break;
-            case '打ち合わせ準備':
-                preparationTime += seconds;
+            case '自動化推進':
+                automationTime += seconds;
                 break;
             default:
-                otherTime += seconds;
+                // 古いカテゴリ名の場合は案件固有として扱う
+                projectSpecificTime += seconds;
                 break;
         }
     });
-    
-    // 分類別に整理（案件固有 vs 市場汎用 vs 自動化推進）
-    const projectSpecificTime = organizingTime + maintenanceTime; // 案件固有（分単位）
-    const marketableTime = codingTime + learningTime + documentTime; // 市場汎用（分単位）
-    const automationTime = 0; // 自動化推進タスクがあれば追加
     
     // 表示更新（分秒表示）
     const projectSpecificElement = document.getElementById('todayProjectSpecific');
@@ -613,8 +600,7 @@ function updateTodayStats() {
     }
     
     // 総作業時間表示
-    const totalWorkTime = codingTime + organizingTime + meetingTime + communicationTime + 
-                         learningTime + maintenanceTime + documentTime + preparationTime + otherTime;
+    const totalWorkTime = projectSpecificTime + marketableTime + automationTime;
     console.log(`今日の総作業時間: ${formatDuration(totalWorkTime)}`);
 }
 

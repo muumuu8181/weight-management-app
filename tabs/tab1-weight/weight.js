@@ -1,7 +1,7 @@
 // タブ1: 体重管理JavaScript
 
 // アプリバージョン
-const APP_VERSION = 'v0.60';
+const APP_VERSION = 'v0.61';
 
 // 体重管理用変数
 let allWeightData = [];

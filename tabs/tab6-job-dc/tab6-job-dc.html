@@ -22,27 +22,30 @@
         <input type="hidden" id="taskSkillType" value="">
     </div>
 
-    <!-- 作業カテゴリ選択 -->
+    <!-- タグ選択（複数選択可） -->
     <div style="margin-bottom: 15px;">
-        <label style="font-weight: bold; display: block; margin-bottom: 8px;">📂 作業カテゴリ:</label>
+        <label style="font-weight: bold; display: block; margin-bottom: 8px;">🏷️ タグ (複数選択可):</label>
         <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-            <div id="categoryButtons" style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button type="button" class="category-btn" data-value="" onclick="categorySelector.selectSingle('')" style="background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 1;">未分類</button>
-                <button type="button" class="category-btn" data-value="開発" onclick="categorySelector.selectSingle('開発')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">💻 開発</button>
-                <button type="button" class="category-btn" data-value="会議" onclick="categorySelector.selectSingle('会議')" style="background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🤝 会議</button>
-                <button type="button" class="category-btn" data-value="学習" onclick="categorySelector.selectSingle('学習')" style="background: #6f42c1; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">📚 学習</button>
-                <button type="button" class="category-btn" data-value="調査" onclick="categorySelector.selectSingle('調査')" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; opacity: 0.7;">🔍 調査</button>
+            <div id="tagButtons" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button type="button" class="tag-btn" data-value="緊急" onclick="tagSelector.toggleMultiple('緊急')" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">🚨 緊急</button>
+                <button type="button" class="tag-btn" data-value="重要" onclick="tagSelector.toggleMultiple('重要')" style="background: #fd7e14; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">⭐ 重要</button>
+                <button type="button" class="tag-btn" data-value="定期" onclick="tagSelector.toggleMultiple('定期')" style="background: #17a2b8; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">🔄 定期</button>
+                <button type="button" class="tag-btn" data-value="新規" onclick="tagSelector.toggleMultiple('新規')" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">✨ 新規</button>
+                <button type="button" class="tag-btn" data-value="改善" onclick="tagSelector.toggleMultiple('改善')" style="background: #6f42c1; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; opacity: 0.7;">🔧 改善</button>
             </div>
-            <button type="button" onclick="showCategoryAddInput()" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px;">➕ 追加</button>
+            <button type="button" onclick="showTagAddInput()" style="background: #ffc107; color: #212529; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;">➕ 追加</button>
         </div>
-        <input type="hidden" id="taskCategory" value="">
+        <input type="hidden" id="selectedTags" value="">
         
-        <!-- カテゴリ追加入力エリア -->
-        <div id="categoryAddInput" style="display: none; margin-top: 8px; padding: 8px; background: #e8f5e8; border: 1px solid #28a745; border-radius: 5px;">
+        <!-- 選択中タグ表示 -->
+        <div id="selectedTagsDisplay" style="font-size: 11px; color: #666; margin-top: 5px;">選択中: なし</div>
+        
+        <!-- タグ追加入力エリア -->
+        <div id="tagAddInput" style="display: none; margin-top: 8px; padding: 8px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px;">
             <div style="display: flex; gap: 8px; align-items: center;">
-                <input type="text" id="newCategoryName" placeholder="新しいカテゴリ名を入力" style="flex: 1; padding: 6px; border: 1px solid #28a745; border-radius: 3px; font-size: 12px;">
-                <button onclick="addNewCategory()" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 12px;">✓ 追加</button>
-                <button onclick="cancelCategoryAdd()" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 12px;">✗ キャンセル</button>
+                <input type="text" id="newTagName" placeholder="新しいタグ名を入力" style="flex: 1; padding: 6px; border: 1px solid #ffc107; border-radius: 3px; font-size: 11px;">
+                <button onclick="addNewTag()" style="background: #ffc107; color: #212529; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 11px;">✓ 追加</button>
+                <button onclick="cancelTagAdd()" style="background: #6c757d; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 11px;">✗ キャンセル</button>
             </div>
         </div>
     </div>
