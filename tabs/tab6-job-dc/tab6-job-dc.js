@@ -6,12 +6,17 @@ let selectedSkillType = '';
 let selectedTaskPriority = '';
 let selectedEstimatedTime = '';
 let selectedAutomationGoal = '';
+let selectedTaskCategory = '';
+let categorySelector = null;
 let timeTracker = null;
 let workTimeRecords = [];
 
 // 初期化
 function initJobDCTab() {
     console.log('JOB_DC タブを初期化中...');
+    
+    // カテゴリセレクター初期化
+    initCategorySelector();
     
     // 作業時間トラッカー初期化
     initTimeTracker();
@@ -60,6 +65,112 @@ function initTimeTracker() {
             addToOperationLog(`⏹️ 作業終了: ${category} - ${formatDuration(durationSeconds)}`);
         }
     });
+}
+
+// カテゴリセレクター初期化
+function initCategorySelector() {
+    if (typeof UnifiedSelector === 'undefined') {
+        console.error('UnifiedSelector が読み込まれていません');
+        return;
+    }
+    
+    categorySelector = new UnifiedSelector({
+        containerId: 'categoryButtons',
+        hiddenInputId: 'taskCategory',
+        multiple: false,
+        items: ['', '開発', '会議', '学習', '調査'],
+        prefix: 'カテゴリ',
+        onSelectionChange: (selection) => {
+            selectedTaskCategory = selection;
+            console.log('カテゴリ選択:', selection);
+        }
+    });
+    
+    categorySelector.initialize();
+    console.log('カテゴリセレクター初期化完了');
+}
+
+// カテゴリ追加入力を表示
+function showCategoryAddInput() {
+    const inputArea = document.getElementById('categoryAddInput');
+    const inputField = document.getElementById('newCategoryName');
+    
+    inputArea.style.display = 'block';
+    inputField.value = '';
+    inputField.focus();
+    
+    log('✨ カテゴリ追加入力表示');
+}
+
+// 新しいカテゴリを追加
+function addNewCategory() {
+    const inputField = document.getElementById('newCategoryName');
+    const newCategoryName = inputField.value.trim();
+    
+    if (!newCategoryName) {
+        alert('カテゴリ名を入力してください');
+        return;
+    }
+    
+    if (!categorySelector) {
+        console.error('categorySelector が初期化されていません');
+        return;
+    }
+    
+    // カスタム項目追加（アイコンは📂を使用）
+    const success = categorySelector.addCustomItem(newCategoryName, '📂');
+    
+    if (success) {
+        // 追加後すぐに選択
+        categorySelector.selectSingle(newCategoryName);
+        
+        // 入力エリアを非表示
+        cancelCategoryAdd();
+        
+        // ログ出力
+        log(`✅ カテゴリ追加成功: ${newCategoryName}`);
+        
+        // 永続化（将来的にFirebaseに保存）
+        saveCategorySettings();
+        
+    } else {
+        log(`❌ カテゴリ追加失敗: ${newCategoryName}`);
+    }
+}
+
+// カテゴリ追加をキャンセル
+function cancelCategoryAdd() {
+    const inputArea = document.getElementById('categoryAddInput');
+    const inputField = document.getElementById('newCategoryName');
+    
+    inputArea.style.display = 'none';
+    inputField.value = '';
+    
+    log('✗ カテゴリ追加キャンセル');
+}
+
+// カテゴリ設定保存（将来的にFirebase対応）
+async function saveCategorySettings() {
+    try {
+        // 現在のカスタムカテゴリを取得
+        const customCategories = [];
+        const categoryButtons = document.querySelectorAll('#categoryButtons button[data-original-color]');
+        categoryButtons.forEach(button => {
+            const value = button.getAttribute('data-value');
+            if (value) {
+                customCategories.push(value);
+            }
+        });
+        
+        console.log('カスタムカテゴリ保存:', customCategories);
+        
+        // 将来的にFirebaseに保存
+        // const user = firebase.auth().currentUser;
+        // await firebase.database().ref(`users/${user.uid}/customCategories`).set(customCategories);
+        
+    } catch (error) {
+        console.error('カテゴリ設定保存エラー:', error);
+    }
 }
 
 // 作業時間記録保存
@@ -212,6 +323,7 @@ async function saveJobTask() {
     const taskData = {
         text: taskText,
         skillType: selectedSkillType || '未分類',
+        category: selectedTaskCategory || '未分類',
         priority: selectedTaskPriority || '',
         estimatedTime: selectedEstimatedTime || '',
         automationGoal: selectedAutomationGoal || '',
