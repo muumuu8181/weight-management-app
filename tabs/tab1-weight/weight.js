@@ -102,9 +102,8 @@ async function saveWeightData() {
             throw new Error('ログインが必要です');
         }
         
-        // データ保存
-        const dataRef = database.ref(`users/${currentUser.uid}/weightData`).push();
-        await dataRef.set({
+        // データ保存 - Firebase CRUD統一クラス使用
+        await FirebaseCRUD.save('weightData', currentUser.uid, {
             date: date,
             time: time,
             weight: weight,

@@ -76,6 +76,7 @@ window.FunctionAnalyzer = {
     analyzeAllFunctions() {
         let sharedCount = 0;
         let customCount = 0;
+        let dynamicCount = 0;
         let errorCount = 0;
         
         // onclick属性を持つ要素をスキャン
@@ -86,7 +87,7 @@ window.FunctionAnalyzer = {
             if (!onclickValue) return;
             
             // 既にバッジがある場合はスキップ
-            if (element.querySelector('.shared-function-badge, .custom-function-badge, .error-function-badge')) {
+            if (element.querySelector('.shared-function-badge, .custom-function-badge, .dynamic-function-badge, .error-function-badge')) {
                 return;
             }
             
@@ -96,16 +97,17 @@ window.FunctionAnalyzer = {
                 
                 if (badge.classList.contains('shared-function-badge')) sharedCount++;
                 else if (badge.classList.contains('custom-function-badge')) customCount++;
+                else if (badge.classList.contains('dynamic-function-badge')) dynamicCount++;
                 else errorCount++;
             }
         });
         
         if (typeof log === 'function') {
-            log(`📊 機能解析結果: 共通${sharedCount}個 / 独自${customCount}個 / エラー${errorCount}個`);
+            log(`📊 機能解析結果: 共通${sharedCount}個 / 独自${customCount}個 / 動的${dynamicCount}個 / エラー${errorCount}個`);
         }
     },
     
-    // 関数種別解析
+    // 関数種別解析（改善版: 4分類対応）
     analyzeFunctionType(onclickCode) {
         const badge = document.createElement('span');
         
@@ -115,7 +117,7 @@ window.FunctionAnalyzer = {
         
         const functionName = functionMatch[1];
         
-        // 共通機能チェック
+        // 1. 共通機能チェック
         if (this.sharedFunctions.has(functionName)) {
             badge.className = 'shared-function-badge';
             badge.textContent = '共通';
@@ -123,7 +125,15 @@ window.FunctionAnalyzer = {
             return badge;
         }
         
-        // window オブジェクトに存在チェック
+        // 2. 動的関数パターンチェック
+        if (this.isLikelyDynamicFunction(functionName, onclickCode)) {
+            badge.className = 'dynamic-function-badge';
+            badge.textContent = '動的';
+            badge.title = `動的機能: ${functionName}() - 動的読み込み/名前空間内関数`;
+            return badge;
+        }
+        
+        // 3. 存在確認（独自機能）
         if (typeof window[functionName] === 'function') {
             badge.className = 'custom-function-badge';
             badge.textContent = '独自';
@@ -131,11 +141,29 @@ window.FunctionAnalyzer = {
             return badge;
         }
         
-        // 存在しない関数（エラー）
+        // 4. 本当のエラー（最後の手段）
         badge.className = 'error-function-badge';
         badge.textContent = 'エラー';
         badge.title = `未実装: ${functionName}() - 関数が見つかりません`;
         return badge;
+    },
+    
+    // 動的関数パターン判定
+    isLikelyDynamicFunction(functionName, onclickCode) {
+        // よくある動的関数パターン
+        const dynamicPatterns = [
+            // 名前空間付き
+            /\w+\./,                    // WeightTab.xxx, StretchTab.xxx
+            // タブ固有プレフィックス
+            /^(init|load|update|save|edit|delete|select|start|end|toggle)/,
+            // Chart.js関連
+            /Chart|chart|graph/i,
+            // 動的生成関数
+            /Entry|Data|Modal|Panel/
+        ];
+        
+        return dynamicPatterns.some(pattern => pattern.test(functionName)) ||
+               dynamicPatterns.some(pattern => pattern.test(onclickCode));
     },
     
     // DOM変更監視（新要素への自動適用）
@@ -190,20 +218,23 @@ window.FunctionAnalyzer = {
         }
     },
     
-    // 統計情報取得
+    // 統計情報取得（4分類対応）
     getAnalysisStats() {
         const shared = document.querySelectorAll('.shared-function-badge').length;
         const custom = document.querySelectorAll('.custom-function-badge').length;
+        const dynamic = document.querySelectorAll('.dynamic-function-badge').length;
         const errors = document.querySelectorAll('.error-function-badge').length;
-        const total = shared + custom + errors;
+        const total = shared + custom + dynamic + errors;
         
         return {
             shared: shared,
             custom: custom,
+            dynamic: dynamic,
             errors: errors,
             total: total,
             sharedPercentage: total > 0 ? Math.round((shared / total) * 100) : 0,
-            customPercentage: total > 0 ? Math.round((custom / total) * 100) : 0
+            customPercentage: total > 0 ? Math.round((custom / total) * 100) : 0,
+            dynamicPercentage: total > 0 ? Math.round((dynamic / total) * 100) : 0
         };
     },
     
@@ -212,19 +243,22 @@ window.FunctionAnalyzer = {
         const stats = this.getAnalysisStats();
         
         const report = `
-=== 機能実装状況レポート ===
+=== 機能実装状況レポート（4分類版） ===
 
 📊 統計:
-- 共通機能: ${stats.shared}個 (${stats.sharedPercentage}%)
-- 独自機能: ${stats.custom}個 (${stats.customPercentage}%)
-- エラー機能: ${stats.errors}個
-- 総機能数: ${stats.total}個
+- 🔗 共通機能: ${stats.shared}個 (${stats.sharedPercentage}%)
+- ⚙️ 独自機能: ${stats.custom}個 (${stats.customPercentage}%)
+- ⚠️ 動的機能: ${stats.dynamic}個 (${stats.dynamicPercentage}%)
+- ❌ エラー機能: ${stats.errors}個
+- 📋 総機能数: ${stats.total}個
 
 🎯 共通化率: ${stats.sharedPercentage}%
+🔧 改善候補: ${stats.customPercentage}% (独自機能)
 
 💡 改善提案:
-${stats.customPercentage > 50 ? '❌ 独自機能が多すぎます - 共通化を検討してください' : 
-  stats.sharedPercentage > 70 ? '✅ 良好な共通化率です' : '⚠️ 共通化を進めることを推奨します'}
+${stats.errors > 0 ? `🚨 ${stats.errors}個の未実装機能があります` : '✅ 全機能が正常に実装されています'}
+${stats.customPercentage > 30 ? '⚠️ 独自機能が多めです - 共通化を検討してください' : ''}
+${stats.sharedPercentage > 50 ? '✅ 良好な共通化率です' : '📈 共通化率向上の余地があります'}
 
 生成日時: ${new Date().toLocaleString('ja-JP')}
         `.trim();

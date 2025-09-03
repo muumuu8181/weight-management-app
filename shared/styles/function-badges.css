@@ -66,7 +66,28 @@
     cursor: help;
 }
 
-/* 未実装・エラー機能用 */
+/* 動的機能用 */
+.dynamic-function-badge {
+    background: #17a2b8;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(23, 162, 184, 0.3);
+    opacity: 0.9;
+}
+
+.dynamic-function-badge::before {
+    content: "⚠️ ";
+    font-size: 8px;
+}
+
+/* 本当のエラー機能用（縮小） */
 .error-function-badge {
     background: #dc3545;
     color: white;
@@ -85,6 +106,12 @@
 .error-function-badge::before {
     content: "❌ ";
     font-size: 8px;
+}
+
+.dynamic-function-badge:hover {
+    background: #138496;
+    transform: scale(1.1);
+    cursor: help;
 }
 
 @keyframes blink-error {

@@ -212,9 +212,8 @@ async function saveStretchData() {
             throw new Error('ログインが必要です');
         }
         
-        // データ保存
-        const dataRef = database.ref(`users/${currentUser.uid}/stretchData`).push();
-        await dataRef.set({
+        // データ保存 - Firebase CRUD統一クラス使用
+        await FirebaseCRUD.save('stretchData', currentUser.uid, {
             date: date,
             stretchType: stretchType,
             startTime: startTime,
