@@ -12,8 +12,19 @@ let dashboardData = {
 let currentDashboardView = 'overview';
 let dashboardCharts = {};
 
-// タブ設定（共通コンポーネント用）
-const DASHBOARD_TAB_CONFIGS = window.DASHBOARD_BUILDER.getStandardTabConfigs();
+// タブ設定（共通コンポーネント用）- エラーハンドリング追加
+let DASHBOARD_TAB_CONFIGS = {};
+try {
+    DASHBOARD_TAB_CONFIGS = window.DASHBOARD_BUILDER?.getStandardTabConfigs() || {};
+} catch (error) {
+    log('⚠️ DASHBOARD_BUILDER未初期化 - フォールバック設定使用');
+    DASHBOARD_TAB_CONFIGS = {
+        weight: { label: '体重', icon: '⚖️' },
+        sleep: { label: '睡眠', icon: '😴' },
+        room: { label: '部屋', icon: '🏠' },
+        memo: { label: 'メモ', icon: '📝' }
+    };
+}
 
 // ダッシュボード初期化（共通コンポーネント使用）
 window.initDashboard = function() {

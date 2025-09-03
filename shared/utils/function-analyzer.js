@@ -240,19 +240,35 @@ ${stats.customPercentage > 50 ? '❌ 独自機能が多すぎます - 共通化�
     }
 };
 
-// 初期化実行（ページ読み込み完了後）
-document.addEventListener('DOMContentLoaded', () => {
-    // 少し遅延させてタブコンテンツ読み込み完了を待つ
-    setTimeout(() => {
-        if (typeof window.FunctionAnalyzer === 'object') {
-            window.FunctionAnalyzer.initAutoAnalysis();
-        }
-    }, 1000);
-});
+// 動的読み込み対応の初期化実行
+function initFunctionAnalyzer() {
+    if (typeof window.FunctionAnalyzer === 'object') {
+        window.FunctionAnalyzer.initAutoAnalysis();
+    }
+}
 
-// ログ関数が利用可能になったら追加ログ
+// 即座に実行を試行
 setTimeout(() => {
+    initFunctionAnalyzer();
     if (typeof log === 'function') {
         log('🔍 機能解析システム初期化完了');
     }
-}, 500);
+}, 2000); // タブ読み込み完了を待つ
+
+// DOMContentLoaded対応（既に発生済みの場合のフォールバック）
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initFunctionAnalyzer, 1000);
+    });
+} else {
+    // 既にDOMContentLoaded済みの場合
+    setTimeout(initFunctionAnalyzer, 1500);
+}
+
+// タブ切り替え時にも再実行
+window.addEventListener('tabSwitched', () => {
+    setTimeout(initFunctionAnalyzer, 500);
+});
+
+// 手動実行関数も提供
+window.runFunctionAnalysis = initFunctionAnalyzer;

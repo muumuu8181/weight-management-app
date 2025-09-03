@@ -137,12 +137,12 @@ window.saveWeightData = async () => {
             document.querySelector('.save-button').textContent = '💾 保存';
             
             // 🔄 共通機能活用: 保存ボタンの状態変更
-            const saveButton = document.querySelector('.save-button');
-            if (saveButton && window.DOMUtils && typeof window.DOMUtils.setButtonState === 'function') {
-                if (!saveButton.id) saveButton.id = 'weightSaveButton';
+            let saveBtn = document.querySelector('.save-button');
+            if (saveBtn && window.DOMUtils && typeof window.DOMUtils.setButtonState === 'function') {
+                if (!saveBtn.id) saveBtn.id = 'weightSaveButton';
                 window.DOMUtils.setButtonState('weightSaveButton', 'success');
-            } else if (saveButton) {
-                saveButton.style.background = '#28a745';
+            } else if (saveBtn) {
+                saveBtn.style.background = '#28a745';
             }
             
         } else {
@@ -153,17 +153,17 @@ window.saveWeightData = async () => {
         }
 
         // 🎯 スマートエフェクト実行
-        const saveButton = document.querySelector('.save-button');
-        if (window.smartEffects && saveButton) {
-            window.smartEffects.trigger('weight-management', 'data_save', saveButton);
+        let saveBtn = document.querySelector('.save-button');
+        if (window.smartEffects && saveBtn) {
+            window.smartEffects.trigger('weight-management', 'data_save', saveBtn);
             log('✨ 体重保存エフェクト実行完了');
         }
 
         // フォームリセット
         document.getElementById('memoInput').value = '';
         setTimeout(() => {
-            const saveButton = document.querySelector('.save-button');
-            if (saveButton) saveButton.disabled = false;
+            let saveBtn = document.querySelector('.save-button');
+            if (saveBtn) saveBtn.disabled = false;
         }, 2000);
         
     } catch (error) {
@@ -202,7 +202,11 @@ window.selectTiming = (timing) => {
 window.selectClothingTop = (clothing) => {
     WeightTab.selectedTopValue = clothing;
     const topInput = document.getElementById('selectedClothingTop');
-    if (topInput) topInput.value = clothing;
+    if (topInput) {
+        topInput.value = clothing;
+    } else {
+        log('⚠️ selectedClothingTop要素が見つかりません');
+    }
     
     // 🔄 共通機能活用: ボタン選択状態管理
     if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
@@ -228,7 +232,11 @@ window.selectClothingTop = (clothing) => {
 window.selectClothingBottom = (clothing) => {
     WeightTab.selectedBottomValue = clothing;
     const bottomInput = document.getElementById('selectedClothingBottom');
-    if (bottomInput) bottomInput.value = clothing;
+    if (bottomInput) {
+        bottomInput.value = clothing;
+    } else {
+        log('⚠️ selectedClothingBottom要素が見つかりません');
+    }
     
     // 🔄 共通機能活用: ボタン選択状態管理
     if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
@@ -282,12 +290,12 @@ window.editWeightEntry = async (entryId) => {
             document.querySelector('.save-button').textContent = '✏️ 更新';
             
             // 🔄 共通機能活用: 編集モード保存ボタンの状態変更
-            const saveButton = document.querySelector('.save-button');
-            if (saveButton && window.DOMUtils && typeof window.DOMUtils.setButtonState === 'function') {
-                if (!saveButton.id) saveButton.id = 'weightSaveButton';
+            let saveBtn = document.querySelector('.save-button');
+            if (saveBtn && window.DOMUtils && typeof window.DOMUtils.setButtonState === 'function') {
+                if (!saveBtn.id) saveBtn.id = 'weightSaveButton';
                 window.DOMUtils.setButtonState('weightSaveButton', 'warning');
-            } else if (saveButton) {
-                saveButton.style.background = '#ffc107';
+            } else if (saveBtn) {
+                saveBtn.style.background = '#ffc107';
             }
             
             log(`✏️ 編集モード開始: ${entry.date} ${entry.value}kg`);
@@ -304,12 +312,12 @@ window.cancelEdit = () => {
     document.querySelector('.save-button').textContent = '💾 保存';
     
     // 🔄 共通機能活用: キャンセル後の保存ボタン状態復元
-    const saveButton = document.querySelector('.save-button');
-    if (saveButton && window.DOMUtils && typeof window.DOMUtils.setButtonState === 'function') {
-        if (!saveButton.id) saveButton.id = 'weightSaveButton';
+    let saveBtn = document.querySelector('.save-button');
+    if (saveBtn && window.DOMUtils && typeof window.DOMUtils.setButtonState === 'function') {
+        if (!saveBtn.id) saveBtn.id = 'weightSaveButton';
         window.DOMUtils.setButtonState('weightSaveButton', 'success');
-    } else if (saveButton) {
-        saveButton.style.background = '#28a745';
+    } else if (saveBtn) {
+        saveBtn.style.background = '#28a745';
     }
     
     log('🚫 編集キャンセル');
@@ -437,26 +445,66 @@ function loadUserWeightData(userId) {
 function updateChart() {
     log('📊 updateChart() 実行開始...');
     
-    // 🔧 緊急修正: weight.jsの関数を直接呼び出し
-    if (typeof updateChartWithDate === 'function') {
-        log('🔄 weight.js のupdateChartWithDate関数を使用');
-        updateChartWithDate(30, new Date());
-        log('✅ Chart.js描画完了');
-    } else if (typeof window.updateWeightChart === 'function') {
-        log('🔄 共通のupdateWeightChart関数を使用');
-        window.updateWeightChart(WeightTab.allWeightData);
-    } else {
-        log('❌ Chart.js更新関数が見つかりません - weight.jsを確認してください');
-        // 最低限のデバッグ表示
-        const canvas = document.getElementById('weightChart');
-        if (canvas) {
-            log(`📊 Canvas要素発見: ${canvas.width}x${canvas.height}`);
-            const ctx = canvas.getContext('2d');
-            ctx.fillText(`データ${WeightTab.allWeightData.length}件読み込み済み`, 10, 30);
-            ctx.fillText('Chart.js関数が見つかりません', 10, 50);
+    // 🔧 修復完了: weight.jsのupdateChart関数が存在する場合は名前衝突回避
+    try {
+        // weight.jsのupdateChart関数を直接呼び出し（30日表示）
+        if (typeof window.updateChart !== 'undefined' && window.updateChart !== updateChart) {
+            log('🔄 weight.jsのupdateChart関数（グローバル版）を使用');
+            window.updateChart(30);
+            log('✅ Chart.js描画完了（グローバル版）');
         } else {
-            log('❌ weightChart要素も見つかりません');
+            // グローバル関数が同名の場合、直接weight.jsの内容を実行
+            log('🔄 weight.jsのChart.js機能を直接実行');
+            
+            // weight.jsのupdateChart相当の処理を実行
+            const canvas = document.getElementById('weightChart');
+            if (canvas && typeof Chart !== 'undefined' && WeightTab.allWeightData.length > 0) {
+                // 直近30日のデータを取得
+                const endDate = new Date();
+                const startDate = new Date();
+                startDate.setDate(endDate.getDate() - 30);
+                
+                const filteredData = WeightTab.allWeightData.filter(entry => {
+                    const entryDate = new Date(entry.date);
+                    return entryDate >= startDate && entryDate <= endDate;
+                });
+                
+                // Chart.js描画
+                if (WeightTab.weightChart) {
+                    WeightTab.weightChart.destroy();
+                }
+                
+                const ctx = canvas.getContext('2d');
+                WeightTab.weightChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: '体重',
+                            data: filteredData.map(entry => ({
+                                x: entry.date,
+                                y: parseFloat(entry.value || entry.weight)
+                            })),
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { type: 'time', time: { unit: 'day' } },
+                            y: { title: { display: true, text: '体重 (kg)' } }
+                        }
+                    }
+                });
+                log('✅ Chart.js直接描画完了');
+            } else {
+                log('❌ Chart.jsまたはCanvas要素が見つかりません');
+            }
         }
+    } catch (error) {
+        log(`❌ Chart.js描画エラー: ${error.message}`);
     }
 }
 

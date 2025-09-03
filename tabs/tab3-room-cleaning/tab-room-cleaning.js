@@ -318,7 +318,8 @@ window.saveRoomData = async () => {
             duration: durationValue,
             durationSeconds: parseInt(document.getElementById('roomDuration').getAttribute('data-seconds')) || 0,
             achievement: selectedRoomAchievement || 0, // undefined回避
-            memo: document.getElementById('roomMemoText') ? document.getElementById('roomMemoText').value : '',
+            memo: document.getElementById('roomMemoText') ? document.getElementById('roomMemoText').value : 
+                  (document.getElementById('roomMemoInput') ? document.getElementById('roomMemoInput').value : ''),
             timestamp: new Date().toISOString()
         };
         
@@ -353,7 +354,7 @@ function resetRoomForm() {
     const selectedRoomInput = document.getElementById('selectedRoom');
     if (selectedRoomInput) selectedRoomInput.value = '';
     
-    const memoInput = document.getElementById('roomMemoText');
+    const memoInput = document.getElementById('roomMemoText') || document.getElementById('roomMemoInput');
     if (memoInput) memoInput.value = '';
     
     // ボタンスタイルをリセット

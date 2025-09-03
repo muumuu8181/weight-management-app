@@ -1,5 +1,14 @@
 // メモリスト機能のJavaScript
 
+// 🔧 統合テスト対応: saveMemoData関数エイリアス追加
+window.saveMemoData = function() {
+    if (typeof addMemo === 'function') {
+        return addMemo();
+    } else {
+        log('❌ addMemo関数が見つかりません');
+    }
+};
+
 // メモリスト関連のグローバル変数
 if (typeof window.memoData === 'undefined') {
     window.memoData = [];
