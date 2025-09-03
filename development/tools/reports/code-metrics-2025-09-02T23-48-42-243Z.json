@@ -1,0 +1,217 @@
+{
+  "timestamp": "2025-09-02T23:48:42.168Z",
+  "tabs": {
+    "tab1-weight": {
+      "total": 2850,
+      "files": {
+        "tab-weight.html": 147,
+        "tab-weight.js": 1830,
+        "weight.css": 184,
+        "weight.html": 123,
+        "weight.js": 566
+      },
+      "subdirs": {}
+    },
+    "tab2-sleep": {
+      "total": 799,
+      "files": {
+        "sleep.css": 187,
+        "tab-sleep.html": 109,
+        "tab-sleep.js": 357,
+        "xxx2.css": 65,
+        "xxx2.html": 25,
+        "xxx2.js": 56
+      },
+      "subdirs": {}
+    },
+    "tab3-room-cleaning": {
+      "total": 664,
+      "files": {
+        "room-cleaning.css": 67,
+        "tab-room-cleaning.html": 119,
+        "tab-room-cleaning.js": 478
+      },
+      "subdirs": {}
+    },
+    "tab4-stretch": {
+      "total": 627,
+      "files": {
+        "tab-stretch.css": 88,
+        "tab-stretch.html": 110,
+        "tab-stretch.js": 429
+      },
+      "subdirs": {}
+    },
+    "tab5-dashboard": {
+      "total": 324,
+      "files": {
+        "dashboard.css": 7,
+        "tab-dashboard.html": 11,
+        "tab-dashboard.js": 306
+      },
+      "subdirs": {}
+    },
+    "tab6-job-dc": {
+      "total": 1137,
+      "files": {
+        "tab6-job-dc.css": 232,
+        "tab6-job-dc.html": 179,
+        "tab6-job-dc.js": 726
+      },
+      "subdirs": {}
+    },
+    "tab7-pedometer": {
+      "total": 567,
+      "files": {
+        "tab-pedometer.css": 205,
+        "tab-pedometer.html": 95,
+        "tab-pedometer.js": 267
+      },
+      "subdirs": {}
+    },
+    "tab8-memo-list": {
+      "total": 1507,
+      "files": {
+        "memo-list.css": 94,
+        "tab-memo-list.html": 105,
+        "tab-memo-list.js": 1308
+      },
+      "subdirs": {}
+    }
+  },
+  "shared": {
+    "components": {
+      "total": 2817,
+      "files": {
+        "dashboard-builder.js": 439,
+        "dom-utils.js": 295,
+        "mode-control.js": 302,
+        "time-tracker.js": 338,
+        "unified-selection.js": 202,
+        "universal-task-manager.js": 1241
+      },
+      "subdirs": {}
+    },
+    "configs": {
+      "total": 307,
+      "files": {
+        "constants.js": 162,
+        "firebase-config.js": 13,
+        "tab-config.js": 132
+      },
+      "subdirs": {}
+    },
+    "core": {
+      "total": 925,
+      "files": {
+        "auth-system.js": 49,
+        "auth.js": 147,
+        "firebase-init.js": 53,
+        "firebase.js": 127,
+        "tab-system.js": 216,
+        "tabs.js": 138,
+        "utils.js": 195
+      },
+      "subdirs": {}
+    },
+    "effects": {
+      "total": 2846,
+      "files": {
+        "celebration-demo.html": 347,
+        "celebration-effects.js": 769,
+        "simple-effects.js": 255,
+        "smart-effects-config.json": 159,
+        "smart-effects-manager.js": 315,
+        "ultimate-effects-collection.js": 744,
+        "ultimate-effects-demo.html": 257
+      },
+      "subdirs": {}
+    },
+    "styles": {
+      "total": 1086,
+      "files": {
+        "analytics-cards.css": 380,
+        "app-layout.css": 32,
+        "base.css": 168,
+        "components.css": 307,
+        "field-badges.css": 116,
+        "timing-clothing-buttons.css": 83
+      },
+      "subdirs": {}
+    },
+    "utils": {
+      "total": 2241,
+      "files": {
+        "custom-items.js": 385,
+        "data-analytics.js": 224,
+        "data-operations.js": 395,
+        "debug.js": 248,
+        "field-validation.js": 188,
+        "firebase-multi-loader.js": 176,
+        "improvement-advisor.js": 238,
+        "logging.js": 71,
+        "ui-controls.js": 84,
+        "validation.js": 232
+      },
+      "subdirs": {}
+    }
+  },
+  "core": {
+    "total": 875,
+    "files": {},
+    "subdirs": {
+      ".github": {
+        "total": 0,
+        "files": {},
+        "subdirs": {
+          "workflows": {
+            "total": 0,
+            "files": {},
+            "subdirs": {}
+          }
+        }
+      },
+      "src": {
+        "total": 223,
+        "files": {
+          "copy-system.js": 155,
+          "firebase-config.js": 68
+        },
+        "subdirs": {}
+      },
+      "universal-system": {
+        "total": 652,
+        "files": {},
+        "subdirs": {
+          "auto-detection": {
+            "total": 0,
+            "files": {},
+            "subdirs": {}
+          },
+          "copy-buttons": {
+            "total": 0,
+            "files": {},
+            "subdirs": {}
+          },
+          "core": {
+            "total": 652,
+            "files": {
+              "universal-template.js": 652
+            },
+            "subdirs": {}
+          },
+          "firebase": {
+            "total": 0,
+            "files": {},
+            "subdirs": {}
+          }
+        }
+      }
+    }
+  },
+  "other": {
+    "index.html": 206,
+    "package.json": 68,
+    "README.md": 186
+  }
+}

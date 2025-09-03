@@ -1,0 +1,126 @@
+{
+  "fromTimestamp": "2025-09-02T23:48:34.788Z",
+  "toTimestamp": "2025-09-02T23:48:42.168Z",
+  "tabChanges": [
+    {
+      "name": "tab1-weight",
+      "from": 2850,
+      "to": 2850,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "tab2-sleep",
+      "from": 799,
+      "to": 799,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "tab3-room-cleaning",
+      "from": 664,
+      "to": 664,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "tab4-stretch",
+      "from": 627,
+      "to": 627,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "tab5-dashboard",
+      "from": 324,
+      "to": 324,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "tab6-job-dc",
+      "from": 1137,
+      "to": 1137,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "tab7-pedometer",
+      "from": 567,
+      "to": 567,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "tab8-memo-list",
+      "from": 1507,
+      "to": 1507,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    }
+  ],
+  "sharedChanges": [
+    {
+      "name": "shared/components",
+      "from": 2817,
+      "to": 2817,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "shared/configs",
+      "from": 307,
+      "to": 307,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "shared/core",
+      "from": 925,
+      "to": 925,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "shared/effects",
+      "from": 2846,
+      "to": 2846,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "shared/styles",
+      "from": 1086,
+      "to": 1086,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    },
+    {
+      "name": "shared/utils",
+      "from": 2241,
+      "to": 2241,
+      "change": 0,
+      "changePercent": "0.0",
+      "status": "変更なし"
+    }
+  ],
+  "summary": {
+    "fromTotal": 20032,
+    "toTotal": 20032,
+    "totalChange": 0,
+    "changePercent": "0.0"
+  }
+}

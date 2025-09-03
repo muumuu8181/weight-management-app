@@ -1582,10 +1582,10 @@ function renderChartWithData(days, filteredData, startDate, endDate) {
                         display: true,
                         text: axisLabel
                     },
-                    // 1日表示の場合は24時間表示
-                    ...(days === 1 && filteredData.length > 0 ? {
-                        min: new Date(`${filteredData[0].date}T00:00:00`),
-                        max: new Date(`${filteredData[0].date}T23:59:59`)
+                    // 1日表示の場合は24時間表示（今日の日付基準）
+                    ...(days === 1 ? {
+                        min: new Date(`${endDate.toISOString().split('T')[0]}T00:00:00`),
+                        max: new Date(`${endDate.toISOString().split('T')[0]}T23:59:59`)
                     } : {})
                 },
                 y: {

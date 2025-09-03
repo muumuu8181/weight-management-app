@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コードメトリクス分析レポート</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; background: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #007bff, #0056b3); color: white; border-radius: 8px; }
+        .section { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #007bff; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }
+        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .metric { display: flex; justify-content: space-between; margin: 8px 0; padding: 5px 0; border-bottom: 1px solid #eee; }
+        .metric:last-child { border-bottom: none; }
+        .chart-container { height: 400px; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; font-weight: 600; }
+        .increase { color: #dc3545; }
+        .decrease { color: #28a745; }
+        .stable { color: #6c757d; }
+        .highlight { background: #fff3cd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 体重管理アプリ コードメトリクス分析レポート</h1>
+            <p>生成日時: 2025/9/3 8:48:34</p>
+        </div>
+        
+        
+        <div class="section">
+            <h3>📈 現在のコード構成</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>🎯 総合統計</h4>
+                    <div class="metric"><span>総行数</span><span><strong>0行</strong></span></div>
+                    <div class="metric"><span>タブ数</span><span>8個</span></div>
+                    <div class="metric"><span>共通機能数</span><span>6個</span></div>
+                </div>
+                
+                <div class="card">
+                    <h4>📊 タブ機能</h4>
+                    <div class="metric"><span>tab1-weight</span><span>2850行</span></div><div class="metric"><span>tab2-sleep</span><span>799行</span></div><div class="metric"><span>tab3-room-cleaning</span><span>664行</span></div><div class="metric"><span>tab4-stretch</span><span>627行</span></div><div class="metric"><span>tab5-dashboard</span><span>324行</span></div><div class="metric"><span>tab6-job-dc</span><span>1137行</span></div><div class="metric"><span>tab7-pedometer</span><span>567行</span></div><div class="metric"><span>tab8-memo-list</span><span>1507行</span></div>
+                </div>
+                
+                <div class="card">
+                    <h4>🔗 共通機能</h4>
+                    <div class="metric"><span>shared/components</span><span>2817行</span></div><div class="metric"><span>shared/configs</span><span>307行</span></div><div class="metric"><span>shared/core</span><span>925行</span></div><div class="metric"><span>shared/effects</span><span>2846行</span></div><div class="metric"><span>shared/styles</span><span>1086行</span></div><div class="metric"><span>shared/utils</span><span>2241行</span></div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+        <div class="section">
+            <h3>📊 コード構成チャート</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>タブ別行数分布</h4>
+                    <div class="chart-container">
+                        <canvas id="tabDistributionChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h4>機能分類別構成</h4>
+                    <div class="chart-container">
+                        <canvas id="categoryPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="section">
+            <h3>📋 詳細ファイル一覧</h3>
+            
+                <div class="card">
+                    <h4>tab1-weight (2850行)</h4>
+                    <table>
+                        <thead><tr><th>ファイル</th><th>行数</th><th>種類</th></tr></thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td>tab-weight.html</td>
+                                    <td>147行</td>
+                                    <td>HTML</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-weight.js</td>
+                                    <td>1830行</td>
+                                    <td>JS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>weight.css</td>
+                                    <td>184行</td>
+                                    <td>CSS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>weight.html</td>
+                                    <td>123行</td>
+                                    <td>HTML</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>weight.js</td>
+                                    <td>566行</td>
+                                    <td>JS</td>
+                                </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div class="card">
+                    <h4>tab2-sleep (799行)</h4>
+                    <table>
+                        <thead><tr><th>ファイル</th><th>行数</th><th>種類</th></tr></thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td>sleep.css</td>
+                                    <td>187行</td>
+                                    <td>CSS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-sleep.html</td>
+                                    <td>109行</td>
+                                    <td>HTML</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-sleep.js</td>
+                                    <td>357行</td>
+                                    <td>JS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>xxx2.css</td>
+                                    <td>65行</td>
+                                    <td>CSS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>xxx2.html</td>
+                                    <td>25行</td>
+                                    <td>HTML</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>xxx2.js</td>
+                                    <td>56行</td>
+                                    <td>JS</td>
+                                </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div class="card">
+                    <h4>tab3-room-cleaning (664行)</h4>
+                    <table>
+                        <thead><tr><th>ファイル</th><th>行数</th><th>種類</th></tr></thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td>room-cleaning.css</td>
+                                    <td>67行</td>
+                                    <td>CSS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-room-cleaning.html</td>
+                                    <td>119行</td>
+                                    <td>HTML</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-room-cleaning.js</td>
+                                    <td>478行</td>
+                                    <td>JS</td>
+                                </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div class="card">
+                    <h4>tab4-stretch (627行)</h4>
+                    <table>
+                        <thead><tr><th>ファイル</th><th>行数</th><th>種類</th></tr></thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td>tab-stretch.css</td>
+                                    <td>88行</td>
+                                    <td>CSS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-stretch.html</td>
+                                    <td>110行</td>
+                                    <td>HTML</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-stretch.js</td>
+                                    <td>429行</td>
+                                    <td>JS</td>
+                                </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div class="card">
+                    <h4>tab5-dashboard (324行)</h4>
+                    <table>
+                        <thead><tr><th>ファイル</th><th>行数</th><th>種類</th></tr></thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td>dashboard.css</td>
+                                    <td>7行</td>
+                                    <td>CSS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-dashboard.html</td>
+                                    <td>11行</td>
+                                    <td>HTML</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-dashboard.js</td>
+                                    <td>306行</td>
+                                    <td>JS</td>
+                                </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div class="card">
+                    <h4>tab6-job-dc (1137行)</h4>
+                    <table>
+                        <thead><tr><th>ファイル</th><th>行数</th><th>種類</th></tr></thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td>tab6-job-dc.css</td>
+                                    <td>232行</td>
+                                    <td>CSS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab6-job-dc.html</td>
+                                    <td>179行</td>
+                                    <td>HTML</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab6-job-dc.js</td>
+                                    <td>726行</td>
+                                    <td>JS</td>
+                                </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div class="card">
+                    <h4>tab7-pedometer (567行)</h4>
+                    <table>
+                        <thead><tr><th>ファイル</th><th>行数</th><th>種類</th></tr></thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td>tab-pedometer.css</td>
+                                    <td>205行</td>
+                                    <td>CSS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-pedometer.html</td>
+                                    <td>95行</td>
+                                    <td>HTML</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-pedometer.js</td>
+                                    <td>267行</td>
+                                    <td>JS</td>
+                                </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div class="card">
+                    <h4>tab8-memo-list (1507行)</h4>
+                    <table>
+                        <thead><tr><th>ファイル</th><th>行数</th><th>種類</th></tr></thead>
+                        <tbody>
+                            
+                                <tr>
+                                    <td>memo-list.css</td>
+                                    <td>94行</td>
+                                    <td>CSS</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-memo-list.html</td>
+                                    <td>105行</td>
+                                    <td>HTML</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td>tab-memo-list.js</td>
+                                    <td>1308行</td>
+                                    <td>JS</td>
+                                </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            
+        </div>
+        
+        <div class="section">
+            <h3>📋 分析結果サマリー</h3>
+            <div class="card">
+                
+            <div class="metric"><span>🎯 共通化効率</span><span><strong>52.2%</strong></span></div>
+            <div class="metric"><span>📱 タブ固有率</span><span>43.3%</span></div>
+            <div class="metric"><span>🔒 Core率</span><span>4.5%</span></div>
+        
+            </div>
+        </div>
+        
+        <script>
+            
+        // タブ別分布チャート
+        const tabCtx = document.getElementById('tabDistributionChart').getContext('2d');
+        new Chart(tabCtx, {
+            type: 'bar',
+            data: {
+                labels: ["tab1-weight","tab2-sleep","tab3-room-cleaning","tab4-stretch","tab5-dashboard","tab6-job-dc","tab7-pedometer","tab8-memo-list"],
+                datasets: [{
+                    label: '行数',
+                    data: [2850,799,664,627,324,1137,567,1507],
+                    backgroundColor: [
+                        '#007bff', '#6f42c1', '#28a745', '#ffc107', 
+                        '#dc3545', '#17a2b8', '#fd7e14', '#6c757d'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+        
+        // 機能分類円グラフ
+        const categoryCtx = document.getElementById('categoryPieChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'pie',
+            data: {
+                labels: ["タブ機能","共通機能","Core機能","その他"],
+                datasets: [{
+                    data: [8475,10222,875,460],
+                    backgroundColor: ['#007bff', '#28a745', '#dc3545', '#ffc107']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+        
+        </script>
+    </div>
+</body>
+</html>
