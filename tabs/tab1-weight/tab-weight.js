@@ -511,4 +511,15 @@ function updateChart() {
 // WeightTab名前空間終了
 }
 
+// 🔧 最終修正: updateChartRange関数追加（HTMLのonclick用）
+window.updateChartRange = function(days) {
+    log(`📊 グラフ期間変更: ${days}日`);
+    updateChart(days);
+};
+
+// その他のHTML onclick関数も追加
+window.togglePreviousPeriod = function() {
+    log('🔄 前期間表示切り替え（未実装機能）');
+};
+
 log('🏋️ 体重管理タブ (最小化版) 読み込み完了');
