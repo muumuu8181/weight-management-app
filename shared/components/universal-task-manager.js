@@ -204,6 +204,39 @@ class UniversalTaskManager {
                     データを読み込み中...<br>
                 </div>
             </div>
+            
+            <!-- アコーディオン用CSS -->
+            <style>
+                .accordion-icon {
+                    font-size: 12px;
+                    transition: transform 0.3s ease;
+                    margin-right: 5px;
+                    cursor: pointer;
+                    user-select: none;
+                }
+                .accordion-icon.expanded {
+                    transform: rotate(90deg);
+                }
+                .task-children {
+                    overflow: hidden;
+                    transition: max-height 0.3s ease-out;
+                }
+                .task-children.collapsed {
+                    max-height: 0;
+                }
+                .task-children.expanded {
+                    max-height: 1000px;
+                }
+                .task-item.parent-task {
+                    border-left: 3px solid #007bff;
+                    background: linear-gradient(90deg, #f8f9ff 0%, #ffffff 100%);
+                }
+                .child-count {
+                    font-size: 10px;
+                    color: #666;
+                    margin-left: 5px;
+                }
+            </style>
         `;
     }
     
@@ -218,6 +251,7 @@ class UniversalTaskManager {
         window[`${this.containerId}_setPriorityFilter`] = (filter) => this.setPriorityFilter(filter);
         window[`${this.containerId}_setDeadlineFilter`] = (filter) => this.setDeadlineFilter(filter);
         window[`${this.containerId}_toggleCollapse`] = (taskId) => this.toggleCollapse(taskId);
+        window[`${this.containerId}_toggleAccordion`] = (taskId) => this.toggleAccordion(taskId);
         window[`${this.containerId}_toggleIntegrationMode`] = () => this.toggleIntegrationMode();
         window[`${this.containerId}_integrateTasks`] = () => this.integrateTasks();
         window[`${this.containerId}_cancelIntegration`] = () => this.cancelIntegration();
@@ -477,7 +511,7 @@ class UniversalTaskManager {
         return result;
     }
     
-    // タスク表示
+    // アコーディオン形式タスク表示
     displayTasks(tasksToShow = null) {
         const tasks = tasksToShow || this.taskData;
         const listElement = document.getElementById(`${this.containerId}_taskList`);
@@ -489,71 +523,27 @@ class UniversalTaskManager {
             return;
         }
         
+        // 親タスクのみを表示し、子タスクはアコーディオンで管理
+        const allParentTasks = this.taskData.filter(task => (task.level || 0) === 0);
         let html = '';
         
-        tasks.forEach(task => {
-            // 折りたたみ判定（親タスクが折りたたまれていたら子は非表示）
-            if (task.level > 0) {
-                const parentTask = this.findParentTask(task);
-                if (parentTask && this.collapsedTasks.has(String(parentTask.id))) {
-                    return; // 親が折りたたまれているので表示しない
-                }
+        allParentTasks.forEach(parentTask => {
+            // 全ての子孫タスクを取得（フィルタリング関係なし）
+            const allChildren = this.getAllDescendants(parentTask.id);
+            const hasChildren = allChildren.length > 0;
+            const isExpanded = !this.collapsedTasks.has(String(parentTask.id));
+            
+            // 親タスク表示
+            html += this.renderParentTask(parentTask, allChildren.length, isExpanded, hasChildren);
+            
+            // 子タスクアコーディオン表示
+            if (hasChildren) {
+                html += `<div class="task-children ${isExpanded ? 'expanded' : 'collapsed'}" id="${this.containerId}_children_${parentTask.id}">`;
+                allChildren.forEach(childTask => {
+                    html += this.renderChildTask(childTask);
+                });
+                html += `</div>`;
             }
-            
-            const levelLimits = { 0: 20, 1: 17, 2: 14, 3: 11 };
-            const charLimit = levelLimits[task.level || 0] || 20;
-            
-            // 統合タスクの場合はdisplayNameを使用、それ以外は通常のtext
-            const baseText = task.isIntegrated && task.displayName ? task.displayName : task.text;
-            const displayText = baseText.length > charLimit ? baseText.substring(0, charLimit) + '...' : baseText;
-            
-            // 階層表示用のインデントと境界線
-            const indent = task.level ? '　'.repeat(task.level) + '└ ' : '';
-            const borderLeft = task.level > 0 ? `border-left: 3px solid ${this.getPriorityColor(task.priority || 'C')}; margin-left: ${task.level * 15}px; padding-left: 8px;` : '';
-            
-            // 統合モード時の選択チェックボックス
-            const integrationCheckbox = this.isIntegrationMode ? 
-                `<input type="checkbox" onchange="${this.containerId}_toggleTaskSelection(${task.id})" 
-                 ${this.selectedTaskIds.includes(String(task.id)) ? 'checked' : ''} 
-                 style="margin-right: 8px;">` : '';
-            
-            // 子タスクがあるかチェック
-            const hasChildren = this.taskData.some(t => t.parentId == task.id);
-            const isCollapsed = this.collapsedTasks.has(String(task.id));
-            
-            // 折りたたみボタン（子タスクがある親タスクのみ）
-            const collapseButton = hasChildren ? 
-                `<button onclick="${this.containerId}_toggleCollapse(${task.id})" style="background: #ffc107; color: #212529; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px; margin-right: 3px;">
-                    ${isCollapsed ? '📂' : '📁'}
-                </button>` : '';
-            
-            html += `
-                <div class="task-item" style="${borderLeft} ${this.selectedTaskIds.includes(String(task.id)) ? 'background-color: #e3f2fd; border: 2px solid #2196f3;' : ''}">
-                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div style="flex: 1;">
-                            ${integrationCheckbox}
-                            <small class="task-date">${task.date} ${task.time}</small>
-                        </div>
-                        <div style="display: flex; gap: 3px;">
-                            ${collapseButton}
-                            <button onclick="${this.containerId}_editTask(${task.id})" style="background: #007bff; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">✏️</button>
-                            ${(task.level || 0) < 3 ? `<button onclick="${this.containerId}_subdivideTask(${task.id})" style="background: #28a745; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">🔀</button>` : ''}
-                            <button onclick="${this.containerId}_deleteTask(${task.id})" style="background: #dc3545; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="task-text" style="margin: 8px 0; font-weight: bold; cursor: pointer;" onclick="${this.containerId}_showFullText(${task.id})">
-                        ${indent}${displayText}
-                    </div>
-                    <div style="display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap;">
-                        ${task.category ? `<span style="background: #17a2b8; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${task.category}</span>` : ''}
-                        ${task.priority ? `<span style="background: ${this.getPriorityColor(task.priority)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${this.getPriorityIcon(task.priority)} ${task.priority}</span>` : ''}
-                        ${task.timeframe ? `<span style="background: ${this.getTimeframeColor(task.timeframe)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${this.getTimeframeIcon(task.timeframe)} ${task.timeframe}</span>` : ''}
-                        ${task.deadline ? `<span style="background: #e83e8c; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">📅 ${this.formatDeadline(task.deadline)}</span>` : ''}
-                        ${task.tags && task.tags.length > 0 ? task.tags.map(tag => `<span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">🏷️ ${tag}</span>`).join('') : ''}
-                        ${task.isIntegrated ? `<span style="background: #20c997; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">🔗 統合(${task.originalCount})</span>` : ''}
-                    </div>
-                </div>
-            `;
         });
         
         listElement.innerHTML = html;
@@ -565,6 +555,102 @@ class UniversalTaskManager {
                 alert(`【完全版】\n${task.text}`);
             }
         };
+    }
+    
+    // 親タスクの描画
+    renderParentTask(task, childrenCount, isExpanded, hasChildren) {
+        const levelLimits = { 0: 20, 1: 17, 2: 14, 3: 11 };
+        const charLimit = levelLimits[task.level || 0] || 20;
+        
+        const baseText = task.isIntegrated && task.displayName ? task.displayName : task.text;
+        const displayText = baseText.length > charLimit ? baseText.substring(0, charLimit) + '...' : baseText;
+        
+        // アコーディオンアイコンと子件数
+        const accordionIcon = hasChildren ? 
+            `<span class="accordion-icon ${isExpanded ? 'expanded' : ''}" onclick="${this.containerId}_toggleAccordion(${task.id})" id="${this.containerId}_icon_${task.id}">▶</span>` : 
+            `<span style="width: 17px; display: inline-block;"></span>`;
+        
+        const childrenCountText = hasChildren ? 
+            `<span class="child-count">(子${childrenCount}件)</span>` : '';
+        
+        // 統合モード時の選択チェックボックス
+        const integrationCheckbox = this.isIntegrationMode ? 
+            `<input type="checkbox" onchange="${this.containerId}_toggleTaskSelection(${task.id})" 
+             ${this.selectedTaskIds.includes(String(task.id)) ? 'checked' : ''} 
+             style="margin-right: 8px;">` : '';
+        
+        return `
+            <div class="task-item parent-task" style="${this.selectedTaskIds.includes(String(task.id)) ? 'background-color: #e3f2fd; border: 2px solid #2196f3;' : ''}">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div style="flex: 1;">
+                        ${integrationCheckbox}
+                        <small class="task-date">${task.date} ${task.time}</small>
+                    </div>
+                    <div style="display: flex; gap: 3px;">
+                        <button onclick="${this.containerId}_editTask(${task.id})" style="background: #007bff; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">✏️</button>
+                        ${(task.level || 0) < 3 ? `<button onclick="${this.containerId}_subdivideTask(${task.id})" style="background: #28a745; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">🔀</button>` : ''}
+                        <button onclick="${this.containerId}_deleteTask(${task.id})" style="background: #dc3545; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">🗑️</button>
+                    </div>
+                </div>
+                <div class="task-text" style="margin: 8px 0; font-weight: bold; cursor: pointer; display: flex; align-items: center;" onclick="${this.containerId}_showFullText(${task.id})">
+                    ${accordionIcon}${displayText}${childrenCountText}
+                </div>
+                <div style="display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap;">
+                    ${task.category ? `<span style="background: #17a2b8; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${task.category}</span>` : ''}
+                    ${task.priority ? `<span style="background: ${this.getPriorityColor(task.priority)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${this.getPriorityIcon(task.priority)} ${task.priority}</span>` : ''}
+                    ${task.timeframe ? `<span style="background: ${this.getTimeframeColor(task.timeframe)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${this.getTimeframeIcon(task.timeframe)} ${task.timeframe}</span>` : ''}
+                    ${task.deadline ? `<span style="background: #e83e8c; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">📅 ${this.formatDeadline(task.deadline)}</span>` : ''}
+                    ${task.tags && task.tags.length > 0 ? task.tags.map(tag => `<span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">🏷️ ${tag}</span>`).join('') : ''}
+                    ${task.isIntegrated ? `<span style="background: #20c997; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">🔗 統合(${task.originalCount})</span>` : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    // 子タスクの描画
+    renderChildTask(task) {
+        const levelLimits = { 0: 20, 1: 17, 2: 14, 3: 11 };
+        const charLimit = levelLimits[task.level || 0] || 20;
+        
+        const baseText = task.isIntegrated && task.displayName ? task.displayName : task.text;
+        const displayText = baseText.length > charLimit ? baseText.substring(0, charLimit) + '...' : baseText;
+        
+        // 階層表示用のインデント
+        const indent = '　'.repeat(task.level) + '└ ';
+        const borderLeft = `border-left: 3px solid ${this.getPriorityColor(task.priority || 'C')}; margin-left: ${(task.level - 1) * 15}px; padding-left: 8px;`;
+        
+        // 統合モード時の選択チェックボックス
+        const integrationCheckbox = this.isIntegrationMode ? 
+            `<input type="checkbox" onchange="${this.containerId}_toggleTaskSelection(${task.id})" 
+             ${this.selectedTaskIds.includes(String(task.id)) ? 'checked' : ''} 
+             style="margin-right: 8px;">` : '';
+        
+        return `
+            <div class="task-item" style="${borderLeft} ${this.selectedTaskIds.includes(String(task.id)) ? 'background-color: #e3f2fd; border: 2px solid #2196f3;' : ''} margin-top: 5px;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div style="flex: 1;">
+                        ${integrationCheckbox}
+                        <small class="task-date">${task.date} ${task.time}</small>
+                    </div>
+                    <div style="display: flex; gap: 3px;">
+                        <button onclick="${this.containerId}_editTask(${task.id})" style="background: #007bff; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">✏️</button>
+                        ${(task.level || 0) < 3 ? `<button onclick="${this.containerId}_subdivideTask(${task.id})" style="background: #28a745; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">🔀</button>` : ''}
+                        <button onclick="${this.containerId}_deleteTask(${task.id})" style="background: #dc3545; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 9px;">🗑️</button>
+                    </div>
+                </div>
+                <div class="task-text" style="margin: 8px 0; font-weight: bold; cursor: pointer;" onclick="${this.containerId}_showFullText(${task.id})">
+                    ${indent}${displayText}
+                </div>
+                <div style="display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap;">
+                    ${task.category ? `<span style="background: #17a2b8; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${task.category}</span>` : ''}
+                    ${task.priority ? `<span style="background: ${this.getPriorityColor(task.priority)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${this.getPriorityIcon(task.priority)} ${task.priority}</span>` : ''}
+                    ${task.timeframe ? `<span style="background: ${this.getTimeframeColor(task.timeframe)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${this.getTimeframeIcon(task.timeframe)} ${task.timeframe}</span>` : ''}
+                    ${task.deadline ? `<span style="background: #e83e8c; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">📅 ${this.formatDeadline(task.deadline)}</span>` : ''}
+                    ${task.tags && task.tags.length > 0 ? task.tags.map(tag => `<span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">🏷️ ${tag}</span>`).join('') : ''}
+                    ${task.isIntegrated ? `<span style="background: #20c997; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">🔗 統合(${task.originalCount})</span>` : ''}
+                </div>
+            </div>
+        `;
     }
     
     // タスクフィルタリング（統合フィルターシステム使用）
@@ -745,6 +831,14 @@ class UniversalTaskManager {
         
         try {
             await this.saveTaskToFirebase(childTask);
+            
+            // 親タスクを自動展開（子が見えるように）
+            this.collapsedTasks.delete(String(task.id));
+            console.log('📂 親タスク自動展開:', task.id);
+            
+            // データ再読み込みで表示更新
+            this.loadTasks();
+            
             console.log('🔀 タスク細分化完了:', childTask);
         } catch (error) {
             console.error('タスク細分化エラー:', error);
@@ -1235,6 +1329,69 @@ class UniversalTaskManager {
         });
         
         console.log('📁 初期折りたたみ完了:', this.collapsedTasks.size, '件');
+    }
+    
+    // === アコーディオン機能 ===
+    
+    // 全ての子孫タスクを取得（再帰的）
+    getAllDescendants(parentId) {
+        const descendants = [];
+        
+        const findChildren = (pid, level) => {
+            const children = this.taskData.filter(task => 
+                task.parentId == pid && (task.level || 0) === level
+            );
+            
+            children.forEach(child => {
+                descendants.push(child);
+                // さらに子がいる場合は再帰的に取得（最大4階層）
+                if (level < 3) {
+                    findChildren(child.id, level + 1);
+                }
+            });
+        };
+        
+        findChildren(parentId, 1);
+        return descendants;
+    }
+    
+    // アコーディオントグル（親の開閉で全子孫を一括制御）
+    toggleAccordion(taskId) {
+        const taskIdStr = String(taskId);
+        const isCurrentlyExpanded = !this.collapsedTasks.has(taskIdStr);
+        
+        if (isCurrentlyExpanded) {
+            // 折りたたみ: 親を折りたたみ状態に
+            this.collapsedTasks.add(taskIdStr);
+            console.log('📁 アコーディオン折りたたみ:', taskId);
+        } else {
+            // 展開: 親を展開状態に
+            this.collapsedTasks.delete(taskIdStr);
+            console.log('📂 アコーディオン展開:', taskId);
+        }
+        
+        // アイコンの即座更新
+        const iconElement = document.getElementById(`${this.containerId}_icon_${taskId}`);
+        const childrenElement = document.getElementById(`${this.containerId}_children_${taskId}`);
+        
+        if (iconElement && childrenElement) {
+            if (isCurrentlyExpanded) {
+                // 折りたたみ
+                iconElement.classList.remove('expanded');
+                iconElement.textContent = '▶';
+                childrenElement.classList.remove('expanded');
+                childrenElement.classList.add('collapsed');
+            } else {
+                // 展開
+                iconElement.classList.add('expanded');
+                iconElement.textContent = '▼';
+                childrenElement.classList.remove('collapsed');
+                childrenElement.classList.add('expanded');
+            }
+        }
+        
+        // 表示更新は不要（CSSアニメーションで処理）
+        console.log('🎭 アコーディオンアニメーション実行完了');
     }
 }
 
