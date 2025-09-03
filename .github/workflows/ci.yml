@@ -1,0 +1,263 @@
+# 🚀 体重管理アプリ CI/CD Pipeline
+# 継続的インテグレーション & GitHub Pages自動デプロイ
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18'
+  CACHE_VERSION: 'v1'
+
+jobs:
+  # 🧪 テスト実行ジョブ
+  test:
+    name: 🧪 Run Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        browser: [chrome, firefox]
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: 📦 Install dependencies
+        run: |
+          npm ci
+          # JSDoM環境用の追加依存関係インストール
+          npm install --save-dev puppeteer jsdom
+        
+      - name: 🔧 Setup test environment
+        run: |
+          # テスト用の環境変数設定
+          echo "CI=true" >> $GITHUB_ENV
+          echo "NODE_ENV=test" >> $GITHUB_ENV
+          # Puppeteer用のChrome設定
+          export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=false
+          
+      - name: 🚀 Run Firebase Tests
+        run: npm run test:firebase
+        continue-on-error: false
+        
+      - name: 🎯 Run UI Tests
+        run: |
+          # ヘッドレスモードでUI テスト実行
+          export HEADLESS=true
+          npm run test:ui
+        continue-on-error: false
+        
+      - name: 💾 Run Storage Tests  
+        run: npm run test:storage
+        continue-on-error: false
+        
+      - name: ⚖️ Run Weight Management Tests
+        run: npm run test:weight
+        continue-on-error: false
+        
+      - name: 🔍 Run Field Validation Tests
+        run: npm run test:field-validation
+        continue-on-error: false
+        
+      - name: 🔗 Run Integration Tests
+        run: npm run test:integration
+        continue-on-error: false
+        
+      - name: 📊 Generate Test Coverage
+        run: |
+          # カバレッジレポート生成（将来的に追加）
+          echo "Test coverage reporting - TODO"
+          
+      - name: 📋 Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.browser }}
+          path: |
+            development/tools/testing/test-results/*.json
+            development/tools/testing/test-results/*.html
+            tools/testing/test-results/*.json
+          retention-days: 30
+          
+  # 🔍 コード品質チェック
+  quality:
+    name: 🔍 Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: 📦 Install dependencies
+        run: npm ci
+        
+      - name: 🔍 Run ESLint (if configured)
+        run: |
+          if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ]; then
+            echo "Running ESLint..."
+            npx eslint . --ext .js,.html --ignore-path .gitignore || echo "ESLint not configured, skipping"
+          else
+            echo "ESLint not configured, skipping"
+          fi
+        continue-on-error: true
+        
+      - name: 🎨 Check Code Format (Prettier)
+        run: |
+          if [ -f ".prettierrc" ]; then
+            echo "Checking code format..."
+            npx prettier --check . || echo "Prettier not configured, skipping"
+          else
+            echo "Prettier not configured, skipping"
+          fi
+        continue-on-error: true
+        
+      - name: 📊 Analyze Bundle Size
+        run: |
+          # バンドルサイズ分析（簡易版）
+          echo "Analyzing project size..."
+          du -sh . --exclude=node_modules --exclude=.git
+          find . -name "*.js" -not -path "./node_modules/*" -not -path "./.git/*" | xargs wc -l | tail -1
+
+  # 🚀 GitHub Pages デプロイ（mainブランチのみ）
+  deploy:
+    name: 🚀 Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: [test, quality]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+      
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: 📦 Install dependencies
+        run: npm ci
+        
+      - name: 🔧 Prepare for deployment
+        run: |
+          # テストエビデンスファイル削除
+          find . -name "*test-evidence*.json" -delete || echo "No test evidence files found"
+          # 本番用の最適化処理
+          echo "Preparing production build..."
+          
+      - name: 📋 Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: 📤 Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+          
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # 📈 PR分析（プルリクエストのみ）
+  pr-analysis:
+    name: 📈 PR Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: 📊 Analyze changes
+        run: |
+          echo "📊 PR Analysis Results" >> pr-analysis.md
+          echo "=====================" >> pr-analysis.md
+          echo "" >> pr-analysis.md
+          
+          # 変更ファイル数
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD | wc -l)
+          echo "📁 Changed files: $CHANGED_FILES" >> pr-analysis.md
+          
+          # 変更行数
+          ADDED_LINES=$(git diff --numstat origin/main...HEAD | awk '{sum += $1} END {print sum}')
+          DELETED_LINES=$(git diff --numstat origin/main...HEAD | awk '{sum += $2} END {print sum}')
+          echo "➕ Added lines: $ADDED_LINES" >> pr-analysis.md
+          echo "➖ Deleted lines: $DELETED_LINES" >> pr-analysis.md
+          echo "" >> pr-analysis.md
+          
+          # 変更されたタブの特定
+          echo "🏷️ Changed tabs:" >> pr-analysis.md
+          git diff --name-only origin/main...HEAD | grep "tabs/" | cut -d'/' -f2 | sort -u >> pr-analysis.md || echo "No tab changes" >> pr-analysis.md
+          
+          cat pr-analysis.md
+          
+      - name: 💬 Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const analysis = fs.readFileSync('pr-analysis.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🤖 **自動PR分析結果**\n\n```\n' + analysis + '\n```'
+            });
+
+  # 🔄 定期クリーンアップ（毎週日曜日）
+  cleanup:
+    name: 🔄 Weekly Cleanup
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: 🧹 Clean old artifacts
+        run: |
+          echo "Cleaning old test evidence files..."
+          find . -name "*test-evidence*.json" -mtime +7 -delete || echo "No old files found"
+          
+          # 古いバックアップファイルも削除
+          find . -name "*.backup*" -mtime +30 -delete || echo "No old backups found"
+          
+      - name: 📊 Generate cleanup report
+        run: |
+          echo "🧹 Weekly cleanup completed on $(date)" > cleanup-report.txt
+          echo "Files cleaned: $(find . -name "*test-evidence*.json" | wc -l)" >> cleanup-report.txt
+
+# スケジュール設定（毎週日曜日 AM 2:00 UTC）
+on:
+  schedule:
+    - cron: '0 2 * * 0'

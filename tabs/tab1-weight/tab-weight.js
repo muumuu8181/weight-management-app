@@ -437,21 +437,25 @@ function loadUserWeightData(userId) {
 function updateChart() {
     log('📊 updateChart() 実行開始...');
     
-    if (typeof window.updateWeightChart === 'function') {
+    // 🔧 緊急修正: weight.jsの関数を直接呼び出し
+    if (typeof updateChartWithDate === 'function') {
+        log('🔄 weight.js のupdateChartWithDate関数を使用');
+        updateChartWithDate(30, new Date());
+        log('✅ Chart.js描画完了');
+    } else if (typeof window.updateWeightChart === 'function') {
         log('🔄 共通のupdateWeightChart関数を使用');
         window.updateWeightChart(WeightTab.allWeightData);
-    } else if (typeof updateChartWithDate === 'function') {
-        log('🔄 weight.js のupdateChartWithDate関数にフォールバック');
-        updateChartWithDate(30, new Date());
     } else {
-        log('❌ Chart.js更新関数が見つかりません - グラフ表示不可');
-        // 最低限のグラフ初期化を試行
+        log('❌ Chart.js更新関数が見つかりません - weight.jsを確認してください');
+        // 最低限のデバッグ表示
         const canvas = document.getElementById('weightChart');
         if (canvas) {
+            log(`📊 Canvas要素発見: ${canvas.width}x${canvas.height}`);
             const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillText('グラフ表示中...', 10, 50);
-            log('📊 基本グラフ初期化実行');
+            ctx.fillText(`データ${WeightTab.allWeightData.length}件読み込み済み`, 10, 30);
+            ctx.fillText('Chart.js関数が見つかりません', 10, 50);
+        } else {
+            log('❌ weightChart要素も見つかりません');
         }
     }
 }

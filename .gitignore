@@ -43,12 +43,34 @@ yarn.lock
 # Temporary files
 *.tmp
 *.temp
-EOF < /dev/null
+# Backup files
+*.backup*
+index.html.backup*
+*.bak
 
-# テストエビデンス自動除外
-tools/testing/test-results/*.json
-tools/testing/test-results/*.html
-tools/testing/test-results/*.csv
-tools/testing/test-results/*.txt
-development/tools/testing/test-results/*.json
-development/tools/testing/test-results/*.html
+# Coverage reports
+coverage/
+*.lcov
+.nyc_output/
+
+# テストエビデンス（自動生成ファイル）
+**/test-evidence-*.json
+**/test-evidence-*.csv  
+**/test-evidence-*.txt
+**/test-evidence-*.html
+tools/testing/test-results/
+development/tools/testing/test-results/
+development/tools/testing/test-reports/
+
+# JSDoM関連
+jsdom-test-report-*.html
+jsdom-storage/
+
+# 監査・分析レポート（一時ファイル）
+audit-report-*.html
+audit-report-*.json
+
+# CI/CD artifacts
+.github/workflows/artifacts/
+build/
+dist/

@@ -1,0 +1,137 @@
+/* 共通・独自機能表示バッジシステム */
+/* 全機能の実装状況を視覚化 */
+
+.shared-function-badge {
+    background: #28a745;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(40, 167, 69, 0.3);
+    animation: pulse-shared 3s infinite;
+}
+
+.shared-function-badge::before {
+    content: "🔗 ";
+    font-size: 8px;
+}
+
+.custom-function-badge {
+    background: #ffc107;
+    color: #212529;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(255, 193, 7, 0.3);
+    opacity: 0.9;
+}
+
+.custom-function-badge::before {
+    content: "⚙️ ";
+    font-size: 8px;
+}
+
+/* 共通機能の軽微なアニメーション（優位性表現） */
+@keyframes pulse-shared {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.8; 
+        transform: scale(1.02);
+    }
+}
+
+/* ホバー効果 */
+.shared-function-badge:hover {
+    background: #218838;
+    transform: scale(1.1);
+    cursor: help;
+}
+
+.custom-function-badge:hover {
+    background: #e0a800;
+    transform: scale(1.1);
+    cursor: help;
+}
+
+/* 未実装・エラー機能用 */
+.error-function-badge {
+    background: #dc3545;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(220, 53, 69, 0.3);
+    animation: blink-error 1s infinite;
+}
+
+.error-function-badge::before {
+    content: "❌ ";
+    font-size: 8px;
+}
+
+@keyframes blink-error {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* パフォーマンスモード（軽量版） */
+.perf-mode .shared-function-badge,
+.perf-mode .custom-function-badge,
+.perf-mode .error-function-badge {
+    animation: none;
+    transform: none;
+}
+
+.perf-mode .shared-function-badge:hover,
+.perf-mode .custom-function-badge:hover,
+.perf-mode .error-function-badge:hover {
+    transform: none;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .shared-function-badge,
+    .custom-function-badge,
+    .error-function-badge {
+        font-size: 9px;
+        padding: 1px 4px;
+        margin-left: 2px;
+    }
+}
+
+/* ツールチップ風説明（将来拡張用） */
+.function-badge-tooltip {
+    position: absolute;
+    background: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.function-badge-tooltip.show {
+    opacity: 1;
+}
