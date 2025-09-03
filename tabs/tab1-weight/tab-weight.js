@@ -197,7 +197,8 @@ window.selectTiming = (timing) => {
 // 服装選択（上）- 共通機能DOMUtilsを活用
 window.selectClothingTop = (clothing) => {
     WeightTab.selectedTopValue = clothing;
-    document.getElementById('selectedClothingTop').value = clothing;
+    const topInput = document.getElementById('selectedClothingTop');
+    if (topInput) topInput.value = clothing;
     
     // 🔄 共通機能活用: ボタン選択状態管理
     if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
@@ -222,7 +223,8 @@ window.selectClothingTop = (clothing) => {
 // 服装選択（下）- 共通機能DOMUtilsを活用
 window.selectClothingBottom = (clothing) => {
     WeightTab.selectedBottomValue = clothing;
-    document.getElementById('selectedClothingBottom').value = clothing;
+    const bottomInput = document.getElementById('selectedClothingBottom');
+    if (bottomInput) bottomInput.value = clothing;
     
     // 🔄 共通機能活用: ボタン選択状態管理
     if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
