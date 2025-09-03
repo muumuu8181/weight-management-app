@@ -52,6 +52,7 @@ class VisualReportGenerator {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>コードメトリクス分析レポート</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; background: #f8f9fa; }
         .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -84,6 +85,8 @@ class VisualReportGenerator {
         
         ${this.generateChartsSection(metrics)}
         
+        ${this.generateMermaidSection(metrics)}
+        
         ${this.generateDetailTablesSection(metrics)}
         
         <div class="section">
@@ -94,6 +97,9 @@ class VisualReportGenerator {
         </div>
         
         <script>
+            // Mermaid初期化
+            mermaid.initialize({ startOnLoad: true });
+            
             ${this.generateChartScripts(metrics, comparisonData)}
         </script>
     </div>
@@ -189,7 +195,7 @@ class VisualReportGenerator {
         </div>`;
     }
     
-    // チャートセクション
+    // チャートセクション（拡張版）
     generateChartsSection(metrics) {
         return `
         <div class="section">
@@ -206,6 +212,50 @@ class VisualReportGenerator {
                     <h4>機能分類別構成</h4>
                     <div class="chart-container">
                         <canvas id="categoryPieChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h4>ファイル種別分布</h4>
+                    <div class="chart-container">
+                        <canvas id="fileTypeChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h4>共通化効率トレンド</h4>
+                    <div class="chart-container">
+                        <canvas id="efficiencyTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }
+    
+    // Mermaidセクション追加
+    generateMermaidSection(metrics) {
+        return `
+        <div class="section">
+            <h3>🌳 プロジェクト構造マップ</h3>
+            <div class="grid">
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h4>📂 フォルダ構造（物理的配置）</h4>
+                    <div class="mermaid">
+                        ${this.generateFolderStructureMermaid(metrics)}
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h4>🔗 タブ・共通機能関係</h4>
+                    <div class="mermaid">
+                        ${this.generateTabRelationMermaid(metrics)}
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h4>📊 行数分布マップ</h4>
+                    <div class="mermaid">
+                        ${this.generateSizeDistributionMermaid(metrics)}
                     </div>
                 </div>
             </div>

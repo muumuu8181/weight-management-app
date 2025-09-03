@@ -40,8 +40,8 @@ function initRoomManagement() {
     setTimeout(() => {
         if (typeof window.markRequiredFields === 'function') {
             const roomFieldConfig = {
-                required: ['roomDateInput', 'selectedRoom'],
-                optional: ['roomTimeInput', 'roomMemoInput', 'roomUnifiedAddText']
+                required: ['roomDateInput', 'selectedRoom', 'roomDuration'],
+                optional: ['roomTimeInput', 'roomMemoInput', 'roomUnifiedAddText', 'selectedAchievement']
             };
             window.markRequiredFields(roomFieldConfig, 0);
             log('🏷️ 部屋片付けタブ: バッジ適用完了');
@@ -132,6 +132,9 @@ window.startRoomCleaning = () => {
         durationInput.value = '計測中...';
     }
     
+    // 🔒 計測中は保存ボタンを無効化
+    updateSaveButtonState();
+    
     log(`▶️ 片付け開始: ${selectedRoomValue} - ${timeString}`);
 };
 
@@ -160,6 +163,9 @@ window.endRoomCleaning = () => {
         // 実際の秒数も内部的に保持
         durationInput.setAttribute('data-seconds', durationSeconds);
     }
+    
+    // 🔓 計測終了後は保存ボタンを有効化
+    updateSaveButtonState();
     
     log(`⏹️ 片付け終了: ${selectedRoomValue} - ${formatDuration(durationSeconds)}`);
 };
@@ -277,6 +283,26 @@ window.saveRoomData = async () => {
         return;
     }
     
+    // 📋 共通機能による必須項目検証
+    const roomFieldConfig = {
+        required: ['roomDateInput', 'selectedRoom', 'roomDuration'],
+        optional: ['roomTimeInput', 'roomMemoInput', 'selectedAchievement']
+    };
+    
+    if (typeof window.validateRequiredFields === 'function') {
+        if (!window.validateRequiredFields(roomFieldConfig)) {
+            log('❌ 必須項目を入力してください');
+            return;
+        }
+    }
+    
+    // 🔒 計測中チェック
+    const durationValue = document.getElementById('roomDuration').value;
+    if (durationValue === '計測中...' || durationValue === '') {
+        log('❌ 計測が完了していません。先に片付け終了ボタンを押してください');
+        return;
+    }
+    
     if (!selectedRoomValue) {
         log('❌ 片付け場所を選択してください');
         return;
@@ -289,9 +315,9 @@ window.saveRoomData = async () => {
             date: document.getElementById('roomDateInput').value,
             time: document.getElementById('roomTimeInput').value,
             room: selectedRoomValue,
-            duration: document.getElementById('roomDuration').value,
+            duration: durationValue,
             durationSeconds: parseInt(document.getElementById('roomDuration').getAttribute('data-seconds')) || 0,
-            achievement: selectedRoomAchievement,
+            achievement: selectedRoomAchievement || 0, // undefined回避
             memo: document.getElementById('roomMemoText') ? document.getElementById('roomMemoText').value : '',
             timestamp: new Date().toISOString()
         };
@@ -375,6 +401,44 @@ window.loadRoomData = async () => {
     }
 };
 
+// 🔒 保存ボタン状態管理（共通機能活用）
+function updateSaveButtonState() {
+    const saveButton = document.querySelector('.room-save-btn') || document.querySelector('button[onclick*="saveRoomData"]');
+    if (!saveButton) return;
+    
+    const durationValue = document.getElementById('roomDuration')?.value || '';
+    const isInProgress = durationValue === '計測中...' || durationValue === '';
+    
+    if (window.DOMUtils && typeof window.DOMUtils.setButtonState === 'function') {
+        // 共通機能でボタン状態設定
+        const buttonId = saveButton.id || 'roomSaveButton';
+        if (!saveButton.id) saveButton.id = buttonId;
+        
+        if (isInProgress) {
+            window.DOMUtils.setButtonState(buttonId, 'disabled');
+            saveButton.title = '計測完了後に保存できます';
+            log('🔒 保存ボタン無効化: 計測中');
+        } else {
+            window.DOMUtils.setButtonState(buttonId, 'success');
+            saveButton.title = '記録を保存';
+            log('🔓 保存ボタン有効化: 計測完了');
+        }
+    } else {
+        // フォールバック：直接スタイル操作
+        if (isInProgress) {
+            saveButton.disabled = true;
+            saveButton.style.opacity = '0.5';
+            saveButton.style.background = '#6c757d';
+            saveButton.title = '計測完了後に保存できます';
+        } else {
+            saveButton.disabled = false;
+            saveButton.style.opacity = '1';
+            saveButton.style.background = '#28a745';
+            saveButton.title = '記録を保存';
+        }
+    }
+}
+
 // 部屋片付け記録削除
 window.deleteRoomEntry = async (entryKey) => {
     if (!currentUser) return;
@@ -420,7 +484,10 @@ function updateRoomHistory() {
         let content = `<strong>${data.date}</strong> ${data.time} `;
         content += `📍 ${data.room} `;
         content += `⏱️ ${data.duration} `;
-        content += `📊 ${data.achievement}/5`;
+        // 📊 undefined表示改善
+        const achievementDisplay = (data.achievement === null || data.achievement === undefined) 
+            ? '未選択' : `${data.achievement}/5`;
+        content += `📊 ${achievementDisplay}`;
         if (data.memo) {
             content += `<br>📝 ${data.memo}`;
         }
@@ -466,9 +533,12 @@ window.copyRoomHistory = () => {
         return;
     }
     
-    const copyText = allRoomData.slice(0, 7).map(data => 
-        `${data.date} ${data.time} ${data.room} ${data.duration} 達成度${data.achievement}/5${data.memo ? ` ${data.memo}` : ''}`
-    ).join('\n');
+    const copyText = allRoomData.slice(0, 7).map(data => {
+        // 📊 undefined表示改善（コピー用）
+        const achievementDisplay = (data.achievement === null || data.achievement === undefined) 
+            ? '未選択' : `達成度${data.achievement}/5`;
+        return `${data.date} ${data.time} ${data.room} ${data.duration} ${achievementDisplay}${data.memo ? ` ${data.memo}` : ''}`;
+    }).join('\n');
     
     navigator.clipboard.writeText(copyText).then(() => {
         log('📋 片付け履歴をクリップボードにコピーしました');

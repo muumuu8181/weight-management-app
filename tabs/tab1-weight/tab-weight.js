@@ -1691,6 +1691,9 @@ window.updateChartRange = (days) => {
                     days === 90 ? '3ヶ月' : 
                     days === 365 ? '1年' : '全期間';
     log(`📊 グラフ表示期間変更: ${rangeName}`);
+    
+    // ナビゲーションボタンの表示も更新
+    updateNavigationButtonLabels();
 }
 
 // チャートナビゲーション機能
@@ -1820,6 +1823,41 @@ function getPreviousPeriodData(days, currentEndDate) {
     
     log(`🔍 前期間データ件数: ${filteredData.length}件`);
     return filteredData;
+}
+
+// ナビゲーション関数（週固定名から汎用化）
+window.goToPreviousWeek = () => {
+    navigateChart('prev');
+};
+
+window.goToNextWeek = () => {
+    navigateChart('next');
+};
+
+window.goToThisWeek = () => {
+    currentChartDate = new Date();
+    updateChartWithDate(currentChartDays, currentChartDate);
+    updateChartPeriodInfo();
+    log('📊 現在期間に戻りました');
+};
+
+// ナビゲーションボタンの表示を動的更新
+function updateNavigationButtonLabels() {
+    const prevBtn = document.querySelector('button[onclick="goToPreviousWeek()"]');
+    const nextBtn = document.querySelector('button[onclick="goToNextWeek()"]');
+    const currentBtn = document.querySelector('button[onclick="goToThisWeek()"]');
+    
+    if (prevBtn && nextBtn && currentBtn) {
+        const unit = currentChartDays === 1 ? '日' :
+                    currentChartDays === 7 ? '週' :
+                    currentChartDays === 30 ? '月' :
+                    currentChartDays === 90 ? '3ヶ月' :
+                    currentChartDays === 365 ? '年' : '期間';
+        
+        prevBtn.innerHTML = `← 前${unit}`;
+        nextBtn.innerHTML = `次${unit} →`;
+        currentBtn.innerHTML = `今${unit}`;
+    }
 }
 
 // テスト環境でのアクセス用（本番環境に影響なし）
