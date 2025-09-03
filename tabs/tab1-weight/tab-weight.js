@@ -370,7 +370,7 @@ function loadUserWeightData(userId) {
             return;
         }
         
-        const historyDiv = document.getElementById('weightHistory');
+        const historyDiv = document.getElementById('historyArea');
         
         if (data) {
             const entries = Object.entries(data)
