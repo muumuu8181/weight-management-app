@@ -374,6 +374,11 @@ function loadUserWeightData(userId) {
         
         const historyDiv = document.getElementById('historyArea');
         
+        if (!historyDiv) {
+            log('⚠️ historyArea要素が見つかりません - DOM読み込み待機中');
+            return;
+        }
+        
         if (data) {
             const entries = Object.entries(data)
                 .map(([key, value]) => ({ id: key, ...value }))
