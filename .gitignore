@@ -44,3 +44,11 @@ yarn.lock
 *.tmp
 *.temp
 EOF < /dev/null
+
+# テストエビデンス自動除外
+tools/testing/test-results/*.json
+tools/testing/test-results/*.html
+tools/testing/test-results/*.csv
+tools/testing/test-results/*.txt
+development/tools/testing/test-results/*.json
+development/tools/testing/test-results/*.html
