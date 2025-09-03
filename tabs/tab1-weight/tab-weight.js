@@ -37,6 +37,9 @@ window.initWeightTab = () => {
     }
     
     // 🔄 共通機能活用: 必須・オプション項目の表示設定
+    // ⚠️ HTML構造問題のため一旦無効化
+    // 体重管理タブにはlabelタグが存在しないため、markRequiredFields()が動作しない
+    // 今後の改善案: labelタグ追加 または カスタムバッジシステム導入
     setTimeout(() => {
         if (typeof window.markRequiredFields === 'function') {
             const weightFieldConfig = {
@@ -47,7 +50,8 @@ window.initWeightTab = () => {
                 window.markRequiredFields(weightFieldConfig, 0);
                 log('🏷️ 体重管理タブ: バッジ適用完了');
             } catch (error) {
-                log(`⚠️ バッジ適用でエラー (HTML構造要調整): ${error.message}`);
+                log(`⚠️ バッジ適用スキップ - HTML構造にlabelタグなし: ${error.message}`);
+                // エラーでも処理継続（動作に支障なし）
             }
         }
     }, 500);
@@ -372,12 +376,15 @@ function loadUserWeightData(userId) {
             return;
         }
         
-        const historyDiv = document.getElementById('historyArea');
+        // 🔧 HTML構造対応: 複数のID候補を確認
+        const historyDiv = document.getElementById('weightHistory') || document.getElementById('historyArea');
         
         if (!historyDiv) {
-            log('⚠️ historyArea要素が見つかりません - DOM読み込み待機中');
+            log('⚠️ データ表示要素が見つかりません (weightHistory/historyArea) - DOM読み込み待機中');
             return;
         }
+        
+        log(`✅ データ表示要素発見: ${historyDiv.id}`);
         
         if (data) {
             const entries = Object.entries(data)
@@ -428,13 +435,23 @@ function loadUserWeightData(userId) {
 
 // updateChart関数の呼び出し先を共通機能に委譲
 function updateChart() {
+    log('📊 updateChart() 実行開始...');
+    
     if (typeof window.updateWeightChart === 'function') {
+        log('🔄 共通のupdateWeightChart関数を使用');
         window.updateWeightChart(WeightTab.allWeightData);
+    } else if (typeof updateChartWithDate === 'function') {
+        log('🔄 weight.js のupdateChartWithDate関数にフォールバック');
+        updateChartWithDate(30, new Date());
     } else {
-        log('⚠️ 共通のupdateWeightChart関数が見つかりません - 既存Chart.js継続');
-        // weight.js のupdateChart関数にフォールバック
-        if (typeof updateChartWithDate === 'function') {
-            updateChartWithDate(30, new Date());
+        log('❌ Chart.js更新関数が見つかりません - グラフ表示不可');
+        // 最低限のグラフ初期化を試行
+        const canvas = document.getElementById('weightChart');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillText('グラフ表示中...', 10, 50);
+            log('📊 基本グラフ初期化実行');
         }
     }
 }

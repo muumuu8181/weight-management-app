@@ -62,9 +62,17 @@ function markRequiredFieldsImmediate(config) {
                 
                 if (typeof log === 'function') log(`✅ 必須バッジ追加: ${fieldId}`);
             } else if (!label) {
-                // hidden要素やボタン要素はスキップ
+                // 🔧 柔軟性向上: labelがない場合の代替手段
                 if (field.type !== 'hidden' && field.tagName !== 'BUTTON') {
-                    if (typeof log === 'function') log(`⚠️ ラベルが見つかりません: ${fieldId}`);
+                    // フィールドに直接バッジを追加する代替手段
+                    if (!field.hasAttribute('data-required-badge')) {
+                        field.setAttribute('data-required-badge', 'true');
+                        field.style.borderLeft = '4px solid #dc3545';
+                        field.title = field.title ? `${field.title} (必須)` : 'この項目は必須です';
+                        if (typeof log === 'function') log(`✅ 代替バッジ追加: ${fieldId} (border)`);
+                    }
+                } else {
+                    if (typeof log === 'function') log(`⚠️ スキップ: ${fieldId} (${field.type || field.tagName})`);
                 }
             } else {
                 if (typeof log === 'function') log(`ℹ️ 必須バッジ既存: ${fieldId}`);
@@ -100,9 +108,17 @@ function markRequiredFieldsImmediate(config) {
                 
                 if (typeof log === 'function') log(`✅ 任意バッジ追加: ${fieldId}`);
             } else if (!label) {
-                // hidden要素やボタン要素はスキップ
+                // 🔧 柔軟性向上: labelがない場合の代替手段（オプション用）
                 if (field.type !== 'hidden' && field.tagName !== 'BUTTON') {
-                    if (typeof log === 'function') log(`⚠️ ラベルが見つかりません: ${fieldId}`);
+                    // フィールドに直接オプションバッジを追加
+                    if (!field.hasAttribute('data-optional-badge')) {
+                        field.setAttribute('data-optional-badge', 'true');
+                        field.style.borderLeft = '4px solid #28a745';
+                        field.title = field.title ? `${field.title} (任意)` : 'この項目は任意です';
+                        if (typeof log === 'function') log(`✅ 代替任意バッジ追加: ${fieldId} (border)`);
+                    }
+                } else {
+                    if (typeof log === 'function') log(`⚠️ スキップ: ${fieldId} (${field.type || field.tagName})`);
                 }
             } else {
                 if (typeof log === 'function') log(`ℹ️ 任意バッジ既存: ${fieldId}`);
