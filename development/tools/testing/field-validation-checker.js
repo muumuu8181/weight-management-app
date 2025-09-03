@@ -24,8 +24,8 @@ const TAB_CONFIGS = {
     'tab3-room-cleaning': {
         jsPath: 'tabs/tab3-room-cleaning/tab-room-cleaning.js',
         htmlPath: 'tabs/tab3-room-cleaning/tab-room-cleaning.html',
-        expectedRequired: ['roomDateInput', 'selectedRoom'],
-        expectedOptional: ['roomTimeInput', 'roomMemoInput', 'roomUnifiedAddText']
+        expectedRequired: ['roomDateInput', 'selectedRoom', 'roomDuration'],
+        expectedOptional: ['roomTimeInput', 'roomMemoInput', 'roomUnifiedAddText', 'selectedAchievement']
     },
     'tab4-stretch': {
         jsPath: 'tabs/tab4-stretch/tab-stretch.js',

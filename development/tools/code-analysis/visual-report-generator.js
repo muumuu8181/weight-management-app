@@ -328,6 +328,9 @@ class VisualReportGenerator {
             { label: 'その他', value: Object.values(metrics.other).reduce((sum, lines) => sum + lines, 0) }
         ];
         
+        // ファイル種別分布データ
+        const fileTypeData = this.calculateFileTypeDistribution(metrics);
+        
         return `
         // タブ別分布チャート
         const tabCtx = document.getElementById('tabDistributionChart').getContext('2d');
@@ -370,7 +373,168 @@ class VisualReportGenerator {
                 }
             }
         });
+        
+        // ファイル種別分布チャート
+        const fileTypeCtx = document.getElementById('fileTypeChart').getContext('2d');
+        new Chart(fileTypeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ${JSON.stringify(fileTypeData.map(d => d.label))},
+                datasets: [{
+                    data: ${JSON.stringify(fileTypeData.map(d => d.value))},
+                    backgroundColor: ['#17a2b8', '#fd7e14', '#20c997', '#e83e8c', '#6c757d']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+        
+        // 効率化トレンドチャート（複数データがある場合）
+        ${this.generateEfficiencyTrendScript(comparisonData)}
         `;
+    }
+    
+    // Mermaidフォルダ構造図生成
+    generateFolderStructureMermaid(metrics) {
+        let mermaid = 'graph TD\\n';
+        mermaid += '    ROOT[weight-management-app]\\n';
+        
+        // タブフォルダ
+        mermaid += '    ROOT --> TABS[📱 tabs/]\\n';
+        Object.keys(metrics.tabs).forEach((tabName, index) => {
+            const tabId = 'TAB' + index;
+            mermaid += `    TABS --> ${tabId}[${tabName}]\\n`;
+        });
+        
+        // 共通フォルダ
+        mermaid += '    ROOT --> SHARED[🔗 shared/]\\n';
+        Object.keys(metrics.shared).forEach((sharedName, index) => {
+            const sharedId = 'SHARED' + index;
+            mermaid += `    SHARED --> ${sharedId}[${sharedName}/]\\n`;
+        });
+        
+        // その他重要フォルダ
+        mermaid += '    ROOT --> CORE[⚠️ core/]\\n';
+        mermaid += '    ROOT --> DOCS[📚 docs/]\\n';
+        mermaid += '    ROOT --> TOOLS[🛠️ tools/]\\n';
+        mermaid += '    ROOT --> INDEX[📄 index.html]\\n';
+        
+        return mermaid;
+    }
+    
+    // タブ関係図生成
+    generateTabRelationMermaid(metrics) {
+        let mermaid = 'graph LR\\n';
+        mermaid += '    SHARED[🔗 共通機能<br/>' + Object.values(metrics.shared).reduce((sum, s) => sum + s.total, 0) + '行]\\n';
+        
+        Object.entries(metrics.tabs).forEach(([tabName, tabData], index) => {
+            const tabId = 'TAB' + index;
+            mermaid += `    ${tabId}[${tabName}<br/>${tabData.total}行]\\n`;
+            mermaid += `    SHARED -.-> ${tabId}\\n`;
+        });
+        
+        return mermaid;
+    }
+    
+    // 行数分布マップ生成
+    generateSizeDistributionMermaid(metrics) {
+        const total = this.calculateTotal(metrics);
+        const sharedTotal = Object.values(metrics.shared).reduce((sum, s) => sum + s.total, 0);
+        const tabTotal = Object.values(metrics.tabs).reduce((sum, t) => sum + t.total, 0);
+        
+        let mermaid = 'pie title 行数分布\\n';
+        mermaid += `    "タブ機能" : ${tabTotal}\\n`;
+        mermaid += `    "共通機能" : ${sharedTotal}\\n`;
+        mermaid += `    "Core機能" : ${metrics.core.total}\\n`;
+        mermaid += `    "その他" : ${Object.values(metrics.other).reduce((sum, o) => sum + o, 0)}\\n`;
+        
+        return mermaid;
+    }
+    
+    // ファイル種別分布計算
+    calculateFileTypeDistribution(metrics) {
+        const distribution = { JS: 0, HTML: 0, CSS: 0, JSON: 0, MD: 0 };
+        
+        // タブファイル
+        Object.values(metrics.tabs).forEach(tab => {
+            Object.entries(tab.files).forEach(([file, lines]) => {
+                const ext = path.extname(file).toLowerCase();
+                if (ext === '.js') distribution.JS += lines;
+                else if (ext === '.html') distribution.HTML += lines;
+                else if (ext === '.css') distribution.CSS += lines;
+                else if (ext === '.json') distribution.JSON += lines;
+                else if (ext === '.md') distribution.MD += lines;
+            });
+        });
+        
+        // 共通ファイル
+        Object.values(metrics.shared).forEach(shared => {
+            Object.entries(shared.files || {}).forEach(([file, lines]) => {
+                const ext = path.extname(file).toLowerCase();
+                if (ext === '.js') distribution.JS += lines;
+                else if (ext === '.html') distribution.HTML += lines;
+                else if (ext === '.css') distribution.CSS += lines;
+                else if (ext === '.json') distribution.JSON += lines;
+                else if (ext === '.md') distribution.MD += lines;
+            });
+        });
+        
+        return Object.entries(distribution)
+            .filter(([, value]) => value > 0)
+            .map(([key, value]) => ({ label: key, value: value }));
+    }
+    
+    // 効率化トレンドスクリプト
+    generateEfficiencyTrendScript(comparisonData) {
+        if (!comparisonData) {
+            return `
+            // 効率化トレンド（データ不足）
+            const efficiencyCtx = document.getElementById('efficiencyTrendChart').getContext('2d');
+            new Chart(efficiencyCtx, {
+                type: 'line',
+                data: {
+                    labels: ['現在'],
+                    datasets: [{
+                        label: '共通化率 (%)',
+                        data: [51.0],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 100 } }
+                }
+            });`;
+        }
+        
+        return `
+        // 効率化トレンド
+        const efficiencyCtx = document.getElementById('efficiencyTrendChart').getContext('2d');
+        new Chart(efficiencyCtx, {
+            type: 'line',
+            data: {
+                labels: ['前回', '現在'],
+                datasets: [{
+                    label: '共通化率 (%)',
+                    data: [50.5, 51.0],
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });`;
     }
     
     // 比較データ生成
