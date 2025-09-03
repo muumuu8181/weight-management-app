@@ -148,22 +148,20 @@ window.FunctionAnalyzer = {
         return badge;
     },
     
-    // 動的関数パターン判定
+    // 動的関数パターン判定（厳密化）
     isLikelyDynamicFunction(functionName, onclickCode) {
-        // よくある動的関数パターン
+        // 明確な動的パターンのみ
         const dynamicPatterns = [
-            // 名前空間付き
+            // 名前空間付き（確実に動的）
             /\w+\./,                    // WeightTab.xxx, StretchTab.xxx
-            // タブ固有プレフィックス
-            /^(init|load|update|save|edit|delete|select|start|end|toggle)/,
-            // Chart.js関連
-            /Chart|chart|graph/i,
-            // 動的生成関数
-            /Entry|Data|Modal|Panel/
+            // 引数付き関数呼び出し（動的生成される可能性高）
+            /\('\w+'\)|Entry\('|Data\('/,
+            // Chart.js固有
+            /^(updateChart|navigateChart|getPreviousPeriod)/
         ];
         
-        return dynamicPatterns.some(pattern => pattern.test(functionName)) ||
-               dynamicPatterns.some(pattern => pattern.test(onclickCode));
+        // onclickCode全体をチェック
+        return dynamicPatterns.some(pattern => pattern.test(onclickCode));
     },
     
     // DOM変更監視（新要素への自動適用）

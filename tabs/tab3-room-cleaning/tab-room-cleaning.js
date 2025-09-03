@@ -323,9 +323,8 @@ window.saveRoomData = async () => {
             timestamp: new Date().toISOString()
         };
         
-        // Firebaseに保存
-        const userRoomRef = firebase.database().ref(`users/${currentUser.uid}/roomData`);
-        await userRoomRef.push(roomData);
+        // Firebaseに保存 - Firebase CRUD統一クラス使用
+        await FirebaseCRUD.save('roomData', currentUser.uid, roomData);
         
         log('✅ 部屋片付けデータ保存完了');
         

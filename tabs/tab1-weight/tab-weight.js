@@ -146,9 +146,8 @@ window.saveWeightData = async () => {
             }
             
         } else {
-            // 新規保存
-            const userWeightsRef = database.ref(`users/${currentUser.uid}/weights`);
-            await userWeightsRef.push(weightData);
+            // 新規保存 - Firebase CRUD統一クラス使用
+            await FirebaseCRUD.save('weights', currentUser.uid, weightData);
             log('✅ 体重データ保存完了');
         }
 
@@ -441,85 +440,14 @@ function loadUserWeightData(userId) {
 // updateChart関数等は shared/components/chart-wrapper.js を活用
 // loadUserWeightData も共通のdata-loader.js パターンを適用
 
-// updateChart関数の呼び出し先を共通機能に委譲
-function updateChart() {
-    log('📊 updateChart() 実行開始...');
-    
-    // 🔧 修復完了: weight.jsのupdateChart関数が存在する場合は名前衝突回避
-    try {
-        // weight.jsのupdateChart関数を直接呼び出し（30日表示）
-        if (typeof window.updateChart !== 'undefined' && window.updateChart !== updateChart) {
-            log('🔄 weight.jsのupdateChart関数（グローバル版）を使用');
-            window.updateChart(30);
-            log('✅ Chart.js描画完了（グローバル版）');
-        } else {
-            // グローバル関数が同名の場合、直接weight.jsの内容を実行
-            log('🔄 weight.jsのChart.js機能を直接実行');
-            
-            // weight.jsのupdateChart相当の処理を実行
-            const canvas = document.getElementById('weightChart');
-            if (canvas && typeof Chart !== 'undefined' && WeightTab.allWeightData.length > 0) {
-                // 直近30日のデータを取得
-                const endDate = new Date();
-                const startDate = new Date();
-                startDate.setDate(endDate.getDate() - 30);
-                
-                const filteredData = WeightTab.allWeightData.filter(entry => {
-                    const entryDate = new Date(entry.date);
-                    return entryDate >= startDate && entryDate <= endDate;
-                });
-                
-                // Chart.js描画
-                if (WeightTab.weightChart) {
-                    WeightTab.weightChart.destroy();
-                }
-                
-                const ctx = canvas.getContext('2d');
-                WeightTab.weightChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        datasets: [{
-                            label: '体重',
-                            data: filteredData.map(entry => ({
-                                x: entry.date,
-                                y: parseFloat(entry.value || entry.weight)
-                            })),
-                            borderColor: 'rgb(75, 192, 192)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            tension: 0.1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            x: { type: 'time', time: { unit: 'day' } },
-                            y: { title: { display: true, text: '体重 (kg)' } }
-                        }
-                    }
-                });
-                log('✅ Chart.js直接描画完了');
-            } else {
-                log('❌ Chart.jsまたはCanvas要素が見つかりません');
-            }
-        }
-    } catch (error) {
-        log(`❌ Chart.js描画エラー: ${error.message}`);
-    }
-}
+// updateChart関数を削除 - weight.jsの共通機能版を使用
+// 🔧 共通機能統合: Chart.js関連処理はweight.jsに統一
 
 // WeightTab名前空間終了
 }
 
-// 🔧 最終修正: updateChartRange関数追加（HTMLのonclick用）
-window.updateChartRange = function(days) {
-    log(`📊 グラフ期間変更: ${days}日`);
-    updateChart(days);
-};
+// 🔧 共通機能統合: updateChartRange関数も削除 - weight.jsに統一
 
-// その他のHTML onclick関数も追加
-window.togglePreviousPeriod = function() {
-    log('🔄 前期間表示切り替え（未実装機能）');
-};
+// 🔧 共通機能統合: togglePreviousPeriod関数も削除 - weight.jsに統一
 
 log('🏋️ 体重管理タブ (最小化版) 読み込み完了');

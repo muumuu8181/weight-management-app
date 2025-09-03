@@ -443,6 +443,40 @@ function updateChart(days = 30) {
             });
         }
         
+        // 前期間データセットを追加
+        if (showPreviousPeriod && days > 0) {
+            const previousData = getPreviousPeriodData(days);
+            if (previousData.length > 0) {
+                // 前期間データを現在期間の日付にオフセット
+                const previousDataset = previousData.map(entry => {
+                    const originalDate = new Date(entry.date);
+                    const offsetDate = new Date(originalDate);
+                    offsetDate.setDate(offsetDate.getDate() + days);
+                    
+                    return {
+                        x: days === 1 ? 
+                            (entry.time ? `${offsetDate.toISOString().split('T')[0]}T${entry.time}:00` : 
+                             `${offsetDate.toISOString().split('T')[0]}T12:00:00`) :
+                            offsetDate.toISOString().split('T')[0],
+                        y: parseFloat(entry.value || entry.weight)
+                    };
+                });
+                
+                datasets.push({
+                    label: '前期間',
+                    data: previousDataset,
+                    borderColor: 'rgba(128, 128, 128, 0.8)',
+                    backgroundColor: 'rgba(128, 128, 128, 0.1)',
+                    tension: 0.1,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    borderDash: [10, 5]
+                });
+                
+                log(`📊 前期間データを追加: ${previousData.length}件`);
+            }
+        }
+        
         if (avgData.length > 0) {
             const startStr = new Date(avgData[0].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
             const endStr = new Date(avgData[avgData.length - 1].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
@@ -559,6 +593,7 @@ function updateDateRangeDisplay(rangeText) {
 
 // グラフの表示期間を変更
 window.updateChartRange = (days) => {
+    currentDisplayDays = days; // 現在の表示期間を記録
     updateChart(days);
     const rangeName = days === 1 ? '1日' :
                     days === 7 ? '1週間' : 
@@ -568,8 +603,57 @@ window.updateChartRange = (days) => {
     log(`📊 グラフ表示期間変更: ${rangeName}`);
 }
 
-// モード管理とカスタム項目機能は省略（長すぎるため）
-// 必要に応じて個別に実装
+// 前期間比較機能（共通機能として実装）
+let showPreviousPeriod = false;
+let currentDisplayDays = 30; // 現在の表示期間
+
+window.togglePreviousPeriod = function() {
+    showPreviousPeriod = !showPreviousPeriod;
+    const btn = document.getElementById('previousPeriodBtn') || document.getElementById('togglePreviousPeriodBtn');
+    
+    if (showPreviousPeriod) {
+        if (btn) {
+            btn.style.background = '#dc3545';
+            btn.textContent = '前期間OFF';
+        }
+        log('📊 前期間比較: ON');
+    } else {
+        if (btn) {
+            btn.style.background = '#28a745';
+            btn.textContent = '前期間の記録';
+        }
+        log('📊 前期間比較: OFF');
+    }
+    
+    // グラフを再描画
+    updateChart(currentDisplayDays);
+}
+
+// 前期間データ取得関数
+function getPreviousPeriodData(days) {
+    if (days <= 0) return []; // 全期間表示の場合は前期間なし
+    
+    const now = new Date();
+    let previousStartDate, previousEndDate;
+    
+    if (days === 1) {
+        // 1日表示の場合：前日のみ
+        previousEndDate = new Date(now);
+        previousEndDate.setDate(now.getDate() - 1);
+        previousStartDate = new Date(previousEndDate);
+    } else {
+        // 複数日表示の場合：前期間（同じ日数分）
+        previousEndDate = new Date(now);
+        previousEndDate.setDate(now.getDate() - days);
+        previousStartDate = new Date(previousEndDate);
+        previousStartDate.setDate(previousEndDate.getDate() - days);
+    }
+    
+    return allWeightData.filter(entry => {
+        const entryDate = new Date(entry.date);
+        return entryDate >= previousStartDate && entryDate <= previousEndDate;
+    });
+}
 
 // 初期化実行
 if (typeof currentUser !== 'undefined' && currentUser) {
