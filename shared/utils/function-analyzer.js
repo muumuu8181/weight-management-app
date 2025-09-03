@@ -3,7 +3,7 @@
 
 window.FunctionAnalyzer = {
     
-    // 共通機能リスト（shared/ フォルダの関数）
+    // 共通機能リスト（shared/ フォルダの関数）- 拡張版
     sharedFunctions: new Set([
         // Firebase・認証関連
         'handleGoogleLogin', 'handleLogout', 'showUserInterface', 'showLoginInterface',
@@ -13,9 +13,10 @@ window.FunctionAnalyzer = {
         
         // データ操作
         'saveWeightData', 'editWeightEntry', 'deleteWeightEntry', 'copyLogs', 'copyDebugInfo',
+        'savePedometerData', 'loadPedometerData', 'deletePedometerEntry',
         
         // 選択機能（DOMUtils）
-        'selectTiming', 'selectClothingTop', 'selectClothingBottom',
+        'selectTiming', 'selectClothingTop', 'selectClothingBottom', 'selectExerciseType',
         
         // バリデーション
         'markRequiredFields', 'validateRequiredFields', 'clearFieldBadges',
@@ -24,23 +25,43 @@ window.FunctionAnalyzer = {
         'loadCustomItems', 'saveCustomItems', 'addTopCustomItem', 'addBottomCustomItem',
         
         // エフェクト
-        'smartEffects.trigger', 'simpleEffects.celebrate',
+        'smartEffects', 'simpleEffects',
         
         // モード制御
         'setMode', 'selectTarget', 'executeAdd', 'cancelAdd',
         
         // 時間トラッキング（TimeTracker）
-        'TimeTracker', 'start', 'stop', 'formatDuration',
+        'TimeTracker', 'formatDuration',
+        
+        // タスク管理（UniversalTaskManager）
+        'UniversalTaskManager',
         
         // データ分析
-        'DataAnalytics.calculateWeeklyStats', 'DataAnalytics.analyzeValueTrend',
+        'DataAnalytics', 'DashboardBuilder',
         
-        // ダッシュボード
-        'DashboardBuilder.buildDashboard', 'DashboardBuilder.generateSummaryCard',
+        // Firebase CRUD統一
+        'FirebaseCRUD',
         
         // ユーティリティ
-        'log', 'debugFirebaseConnection', 'checkLoginIssues'
+        'log', 'debugFirebaseConnection', 'checkLoginIssues', 'copyDebugInfo'
     ]),
+    
+    // 共通機能パターンも追加
+    isSharedFunction(functionName, onclickCode) {
+        // 直接的な共通機能チェック
+        if (this.sharedFunctions.has(functionName)) return true;
+        
+        // パターンベースの共通機能チェック
+        const sharedPatterns = [
+            /window\.smartEffects/,           // window.smartEffects.trigger()
+            /new (TimeTracker|UniversalTaskManager)/, // new 共通クラス()
+            /FirebaseCRUD\./,                 // FirebaseCRUD.save()
+            /DataAnalytics\./,                // DataAnalytics.xxx()
+            /DashboardBuilder\./              // DashboardBuilder.xxx()
+        ];
+        
+        return sharedPatterns.some(pattern => pattern.test(onclickCode));
+    },
     
     // 初期化（全要素スキャン）
     initAutoAnalysis() {
@@ -117,8 +138,8 @@ window.FunctionAnalyzer = {
         
         const functionName = functionMatch[1];
         
-        // 1. 共通機能チェック
-        if (this.sharedFunctions.has(functionName)) {
+        // 1. 共通機能チェック（拡張版）
+        if (this.isSharedFunction(functionName, onclickCode)) {
             badge.className = 'shared-function-badge';
             badge.textContent = '共通';
             badge.title = `共通機能: ${functionName}() - shared/ で実装済み`;

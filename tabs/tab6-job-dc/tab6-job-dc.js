@@ -235,8 +235,7 @@ async function saveWorkTimeRecord(data) {
     try {
         if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
             const user = firebase.auth().currentUser;
-            const recordRef = firebase.database().ref(`users/${user.uid}/workTimeRecords`).push();
-            await recordRef.set(data);
+            await FirebaseCRUD.save('workTimeRecords', user.uid, data);
             
             console.log('作業時間記録をFirebaseに保存しました:', data);
             addToOperationLog(`💾 作業時間記録保存: ${data.category} - ${data.duration}`);
@@ -395,8 +394,7 @@ async function saveJobTask() {
         // Firebase保存処理
         if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
             const user = firebase.auth().currentUser;
-            const taskRef = firebase.database().ref(`users/${user.uid}/jobTasks`).push();
-            await taskRef.set(taskData);
+            await FirebaseCRUD.save('jobTasks', user.uid, taskData);
             
             console.log('タスクをFirebaseに保存しました');
             

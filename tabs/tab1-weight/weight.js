@@ -51,8 +51,10 @@ function initializeWeightManager() {
     });
     
     // デフォルト服装選択: 上=なし, 下=トランクス
-    selectClothingTop('なし');
-    selectClothingBottom('トランクス');
+    setTimeout(() => {
+        selectClothingTop('なし');
+        selectClothingBottom('トランクス');
+    }, 100); // DOM読み込み完了を待機
     
     // カスタム項目を復元
     loadCustomItems();
@@ -116,22 +118,24 @@ async function saveWeightData() {
             timestamp: firebase.database.ServerValue.TIMESTAMP
         });
         
-        // 成功エフェクト
+        // 成功エフェクト - より目立つフィードバック
         saveButton.innerHTML = '✅ 保存完了!';
         saveButton.style.background = '#28a745';
         saveButton.style.transform = 'scale(1.05)';
+        saveButton.style.boxShadow = '0 4px 12px rgba(40, 167, 69, 0.4)';
         
         log(`💾 体重データ保存: ${weight}kg (${timing})`);
         
         // データ再読み込み
         loadUserWeightData(currentUser.uid);
         
-        // 1.5秒後に元に戻す
+        // 成功通知をより長く表示
         setTimeout(() => {
             saveButton.innerHTML = originalText;
             saveButton.style.cssText = originalStyle;
             saveButton.disabled = false;
-        }, 1500);
+            log('📱 保存完了フィードバック終了');
+        }, 2000);
         
     } catch (error) {
         // エラーエフェクト
@@ -181,7 +185,12 @@ window.selectTiming = (timing) => {
 // 服装選択（上）- 共通機能DOMUtilsを活用
 window.selectClothingTop = (clothing) => {
     selectedClothingTopValue = clothing;
-    document.getElementById('selectedClothingTop').value = clothing;
+    
+    // HTMLのIDに対応: selectedTop または selectedClothingTop
+    const topInput = document.getElementById('selectedTop') || document.getElementById('selectedClothingTop');
+    if (topInput) {
+        topInput.value = clothing;
+    }
     
     // 🔄 共通機能活用: ボタン選択状態管理
     if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
@@ -206,7 +215,12 @@ window.selectClothingTop = (clothing) => {
 // 服装選択（下）- 共通機能DOMUtilsを活用
 window.selectClothingBottom = (clothing) => {
     selectedClothingBottomValue = clothing;
-    document.getElementById('selectedClothingBottom').value = clothing;
+    
+    // HTMLのIDに対応: selectedBottom または selectedClothingBottom
+    const bottomInput = document.getElementById('selectedBottom') || document.getElementById('selectedClothingBottom');
+    if (bottomInput) {
+        bottomInput.value = clothing;
+    }
     
     // 🔄 共通機能活用: ボタン選択状態管理
     if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
