@@ -152,66 +152,78 @@ async function saveWeightData() {
     }
 }
 
-// タイミング選択
+// タイミング選択 - 共通機能DOMUtilsを活用
 window.selectTiming = (timing) => {
     selectedTimingValue = timing;
     document.getElementById('selectedTiming').value = timing;
     
-    // 全てのタイミングボタンをリセット
-    document.querySelectorAll('.timing-btn').forEach(btn => {
-        btn.style.opacity = '0.7';
-        btn.style.transform = 'scale(1)';
-        btn.classList.remove('selected');
-    });
-    
-    // 選択されたボタンを強調
-    const selectedBtn = document.querySelector(`[data-timing="${timing}"]`);
-    if (selectedBtn) {
-        selectedBtn.style.opacity = '1';
-        selectedBtn.style.transform = 'scale(1.1)';
-        selectedBtn.classList.add('selected');
+    // 🔄 共通機能活用: ボタン選択状態管理
+    if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
+        window.DOMUtils.setSelectedState('.timing-btn', timing, 'data-timing');
+    } else {
+        // フォールバック: 既存の独自実装
+        document.querySelectorAll('.timing-btn').forEach(btn => {
+            btn.style.opacity = '0.7';
+            btn.style.transform = 'scale(1)';
+            btn.classList.remove('selected');
+        });
+        
+        const selectedBtn = document.querySelector(`[data-timing="${timing}"]`);
+        if (selectedBtn) {
+            selectedBtn.style.opacity = '1';
+            selectedBtn.style.transform = 'scale(1.1)';
+            selectedBtn.classList.add('selected');
+        }
     }
     
     log(`⏰ 測定タイミング選択: ${timing}`);
 };
 
-// 服装選択（上）
+// 服装選択（上）- 共通機能DOMUtilsを活用
 window.selectClothingTop = (clothing) => {
     selectedClothingTopValue = clothing;
     document.getElementById('selectedClothingTop').value = clothing;
     
-    // 全ての上半身ボタンをリセット
-    document.querySelectorAll('[data-clothing-top]').forEach(btn => {
-        btn.style.opacity = '0.7';
-        btn.style.transform = 'scale(1)';
-    });
-    
-    // 選択されたボタンを強調
-    const selectedBtn = document.querySelector(`[data-clothing-top="${clothing}"]`);
-    if (selectedBtn) {
-        selectedBtn.style.opacity = '1';
-        selectedBtn.style.transform = 'scale(1.1)';
+    // 🔄 共通機能活用: ボタン選択状態管理
+    if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
+        window.DOMUtils.setSelectedState('[data-clothing-top]', clothing, 'data-clothing-top');
+    } else {
+        // フォールバック: 既存の独自実装
+        document.querySelectorAll('[data-clothing-top]').forEach(btn => {
+            btn.style.opacity = '0.7';
+            btn.style.transform = 'scale(1)';
+        });
+        
+        const selectedBtn = document.querySelector(`[data-clothing-top="${clothing}"]`);
+        if (selectedBtn) {
+            selectedBtn.style.opacity = '1';
+            selectedBtn.style.transform = 'scale(1.1)';
+        }
     }
     
     log(`👕 上半身選択: ${clothing}`);
 };
 
-// 服装選択（下）
+// 服装選択（下）- 共通機能DOMUtilsを活用
 window.selectClothingBottom = (clothing) => {
     selectedClothingBottomValue = clothing;
     document.getElementById('selectedClothingBottom').value = clothing;
     
-    // 全ての下半身ボタンをリセット
-    document.querySelectorAll('[data-clothing-bottom]').forEach(btn => {
-        btn.style.opacity = '0.7';
-        btn.style.transform = 'scale(1)';
-    });
-    
-    // 選択されたボタンを強調
-    const selectedBtn = document.querySelector(`[data-clothing-bottom="${clothing}"]`);
-    if (selectedBtn) {
-        selectedBtn.style.opacity = '1';
-        selectedBtn.style.transform = 'scale(1.1)';
+    // 🔄 共通機能活用: ボタン選択状態管理
+    if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
+        window.DOMUtils.setSelectedState('[data-clothing-bottom]', clothing, 'data-clothing-bottom');
+    } else {
+        // フォールバック: 既存の独自実装
+        document.querySelectorAll('[data-clothing-bottom]').forEach(btn => {
+            btn.style.opacity = '0.7';
+            btn.style.transform = 'scale(1)';
+        });
+        
+        const selectedBtn = document.querySelector(`[data-clothing-bottom="${clothing}"]`);
+        if (selectedBtn) {
+            selectedBtn.style.opacity = '1';
+            selectedBtn.style.transform = 'scale(1.1)';
+        }
     }
     
     log(`🩲 下半身選択: ${clothing}`);

@@ -67,17 +67,22 @@ window.initWeightTab = () => {
         loadCustomItems();
     }
     
-    // 必須・オプション項目の表示設定（一旦無効化 - HTML構造要調整）
-    // setTimeout(() => {
-    //     if (typeof window.markRequiredFields === 'function') {
-    //         const weightFieldConfig = {
-    //             required: ['dateInput', 'weightValue'],
-    //             optional: ['memoInput']
-    //         };
-    //         window.markRequiredFields(weightFieldConfig, 0);
-    //         log('🏷️ 体重管理タブ: バッジ適用完了');
-    //     }
-    // }, 500);
+    // 🔄 共通機能活用: 必須・オプション項目の表示設定
+    setTimeout(() => {
+        if (typeof window.markRequiredFields === 'function') {
+            const weightFieldConfig = {
+                required: ['dateInput', 'weightValue'],
+                optional: ['memoInput', 'selectedTiming', 'selectedClothingTop', 'selectedClothingBottom']
+            };
+            try {
+                window.markRequiredFields(weightFieldConfig, 0);
+                log('🏷️ 体重管理タブ: バッジ適用完了');
+            } catch (error) {
+                log(`⚠️ バッジ適用でエラー (HTML構造要調整): ${error.message}`);
+                // HTML構造問題でも動作継続
+            }
+        }
+    }, 500);
     
     // デフォルト服装選択: 上=なし, 下=トランクス
     if (typeof window.selectClothingTop === 'function') {
@@ -95,17 +100,32 @@ window.initWeightTab = () => {
     log('✅ 体重管理タブ初期化完了');
 };
 
-// 体重データ保存
+// 体重データ保存 - 共通バリデーション強化
 window.saveWeightData = async () => {
     if (!currentUser) {
         log('❌ ログインが必要です');
         return;
     }
 
+    // 🔄 共通機能活用: 必須項目バリデーション
+    const weightFieldConfig = {
+        required: ['dateInput', 'weightValue'],
+        optional: ['memoInput']
+    };
+    
+    if (typeof window.validateRequiredFields === 'function') {
+        if (!window.validateRequiredFields(weightFieldConfig)) {
+            log('❌ 必須項目を入力してください');
+            return;
+        }
+    }
+
     const date = document.getElementById('dateInput').value;
     const weight = document.getElementById('weightValue').value;
     const memo = document.getElementById('memoInput').value;
 
+    // 🔧 従来のバリデーションは共通機能で代替済み（上記で実行）
+    // フォールバック用の基本チェック
     if (!date || !weight) {
         log('❌ 日付と値を入力してください');
         return;
@@ -184,7 +204,15 @@ window.saveWeightData = async () => {
         // 編集モードをリセット
         WeightTab.editingEntryId = null;
         document.querySelector('.save-button').textContent = '💾 保存';
-        document.querySelector('.save-button').style.background = '#28a745';
+        // 🔄 共通機能活用: 保存ボタンの状態変更
+        const saveButton = document.querySelector('.save-button');
+        if (saveButton && window.DOMUtils && typeof window.DOMUtils.setButtonState === 'function') {
+            if (!saveButton.id) saveButton.id = 'weightSaveButton';
+            window.DOMUtils.setButtonState('weightSaveButton', 'success');
+        } else if (saveButton) {
+            // フォールバック: 既存実装
+            saveButton.style.background = '#28a745';
+        }
         
         // 編集モードインジケーターを削除
         const editModeIndicator = document.getElementById('editModeIndicator');
@@ -265,7 +293,15 @@ window.editWeightEntry = async (entryId) => {
         // 編集モードに切り替え
         WeightTab.editingEntryId = entryId;
         document.querySelector('.save-button').textContent = '✏️ 更新';
-        document.querySelector('.save-button').style.background = '#ffc107';
+        // 🔄 共通機能活用: 編集モード保存ボタンの状態変更
+        const saveButton = document.querySelector('.save-button');
+        if (saveButton && window.DOMUtils && typeof window.DOMUtils.setButtonState === 'function') {
+            if (!saveButton.id) saveButton.id = 'weightSaveButton';
+            window.DOMUtils.setButtonState('weightSaveButton', 'warning');
+        } else if (saveButton) {
+            // フォールバック: 既存実装
+            saveButton.style.background = '#ffc107';
+        }
         
         // 編集モードであることを明確に表示
         const editModeIndicator = document.getElementById('editModeIndicator');
@@ -315,7 +351,15 @@ window.cancelEdit = () => {
     // 編集モードをリセット
     WeightTab.editingEntryId = null;
     document.querySelector('.save-button').textContent = '💾 保存';
-    document.querySelector('.save-button').style.background = '#28a745';
+    // 🔄 共通機能活用: キャンセル後の保存ボタン状態復元
+    const saveButton = document.querySelector('.save-button');
+    if (saveButton && window.DOMUtils && typeof window.DOMUtils.setButtonState === 'function') {
+        if (!saveButton.id) saveButton.id = 'weightSaveButton';
+        window.DOMUtils.setButtonState('weightSaveButton', 'success');
+    } else if (saveButton) {
+        // フォールバック: 既存実装
+        saveButton.style.background = '#28a745';
+    }
     
     // 編集モードインジケーターを削除
     const editModeIndicator = document.getElementById('editModeIndicator');
