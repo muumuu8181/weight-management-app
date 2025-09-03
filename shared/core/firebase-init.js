@@ -26,7 +26,7 @@ let allWeightData = [];
 window.editingEntryId = null;
 
 // アプリバージョン（一元管理）
-const APP_VERSION = 'v2.49';
+const APP_VERSION = 'v2.50';
 
 // グローバルに公開（安全な参照用）
 window.auth = auth;
