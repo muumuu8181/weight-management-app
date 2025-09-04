@@ -9,7 +9,14 @@ function initializeAuthStateListener() {
             log(`✅ 認証状態確認: ${user.displayName} でログイン中`);
             log(`📧 メール: ${user.email}`);
             showUserInterface(user);
-            log('🔄 体重データ読み込み（外部JSで実行）');
+            
+            // 🔥 体重データ読み込み実行（緊急修正）
+            if (typeof window.loadAndDisplayWeightData === 'function') {
+                setTimeout(() => window.loadAndDisplayWeightData(), 1000);
+                log('🔄 体重データ読み込み開始');
+            } else {
+                log('⚠️ loadAndDisplayWeightData関数が見つかりません - タブ切り替え後に実行');
+            }
         } else {
             // リダイレクト結果をチェック（iPhone対応）
             try {

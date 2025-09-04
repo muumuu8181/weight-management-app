@@ -61,8 +61,8 @@ window.initWeightTab = () => {
     if (typeof window.selectClothingBottom === 'function') window.selectClothingBottom('トランクス');
     
     // 初期データ読み込み
-    if (currentUser && typeof loadUserWeightData === 'function') {
-        loadUserWeightData(currentUser.uid);
+    if (currentUser) {
+        loadAndDisplayWeightData();
     }
     
     log('✅ 体重管理タブ初期化完了');
@@ -726,5 +726,153 @@ function getPreviousPeriodData(days) {
 
 // WeightTab名前空間終了
 }
+
+// 🔥 体重データ読み込み・表示機能（緊急実装）
+async function loadAndDisplayWeightData() {
+    if (!currentUser) {
+        log('⚠️ データ読み込み: ログインが必要です');
+        return;
+    }
+    
+    try {
+        log('📊 体重データ読み込み開始...');
+        
+        // Firebase multi loader を使用してデータ取得
+        if (typeof window.FIREBASE_MULTI_LOADER === 'object' && window.FIREBASE_MULTI_LOADER.loadWeightData) {
+            const weightData = await window.FIREBASE_MULTI_LOADER.loadWeightData(currentUser.uid);
+            WeightTab.allWeightData = weightData || [];
+            log(`✅ データ読み込み完了: ${WeightTab.allWeightData.length}件`);
+        } else {
+            // フォールバック: 直接Firebase読み込み
+            const weightRef = database.ref(`users/${currentUser.uid}/weightData`);
+            const snapshot = await weightRef.once('value');
+            const data = snapshot.val();
+            
+            if (data) {
+                WeightTab.allWeightData = Object.values(data).sort((a, b) => 
+                    new Date(a.date + ' ' + (a.time || '00:00')) - new Date(b.date + ' ' + (b.time || '00:00'))
+                );
+                log(`✅ フォールバックデータ読み込み完了: ${WeightTab.allWeightData.length}件`);
+            } else {
+                WeightTab.allWeightData = [];
+                log('📊 データなし - 新規ユーザーです');
+            }
+        }
+        
+        // データ表示更新
+        displayWeightHistory(WeightTab.allWeightData);
+        updateWeightChart();
+        
+    } catch (error) {
+        log(`❌ データ読み込みエラー: ${error.message}`);
+        WeightTab.allWeightData = [];
+    }
+}
+
+// 🔥 履歴表示機能（緊急実装）
+function displayWeightHistory(data) {
+    const historyDiv = document.getElementById('weightHistory') || document.getElementById('historyArea');
+    
+    if (!historyDiv) {
+        log('⚠️ データ表示要素が見つかりません (weightHistory/historyArea) - DOM読み込み待機中');
+        return;
+    }
+    
+    if (!data || data.length === 0) {
+        historyDiv.innerHTML = '<p style="color: #666; text-align: center;">データなし</p>';
+        return;
+    }
+    
+    // 最新10件を表示
+    const recentData = data.slice(-10).reverse();
+    const historyHTML = recentData.map(entry => {
+        const timing = entry.timing || '未設定';
+        const clothing = entry.clothing ? `${entry.clothing.top || ''}/${entry.clothing.bottom || ''}` : '';
+        const memo = entry.memo ? ` - ${entry.memo}` : '';
+        
+        return `
+            <div style="background: #f8f9fa; padding: 8px; margin: 4px 0; border-radius: 4px; font-size: 12px;">
+                <strong style="color: #007bff;">${entry.date} ${entry.time || ''}</strong> 
+                <span style="color: #28a745; font-weight: bold;">${entry.value || entry.weight}kg</span>
+                <br><small style="color: #666;">⏰${timing} 👕${clothing}${memo}</small>
+            </div>
+        `;
+    }).join('');
+    
+    historyDiv.innerHTML = historyHTML;
+    log(`✅ 履歴表示更新: ${recentData.length}件表示`);
+}
+
+// 🔥 グラフ更新機能（緊急実装）
+function updateWeightChart() {
+    if (!WeightTab.allWeightData || WeightTab.allWeightData.length === 0) {
+        log('⚠️ グラフ更新: データがありません');
+        return;
+    }
+    
+    // Chart.jsが利用可能かチェック
+    if (typeof Chart === 'undefined') {
+        log('⚠️ Chart.jsが読み込まれていません');
+        return;
+    }
+    
+    const canvas = document.getElementById('weightChart');
+    if (!canvas) {
+        log('⚠️ グラフキャンバスが見つかりません');
+        return;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    
+    // 既存チャートを破棄
+    if (weightChart) {
+        weightChart.destroy();
+    }
+    
+    // データ準備（最新30日）
+    const chartData = WeightTab.allWeightData.slice(-30).map(entry => ({
+        x: entry.date,
+        y: parseFloat(entry.value || entry.weight)
+    }));
+    
+    // チャート作成
+    weightChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: '体重 (kg)',
+                data: chartData,
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        parser: 'YYYY-MM-DD',
+                        displayFormats: {
+                            day: 'MM/DD'
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+    
+    log(`✅ グラフ更新完了: ${chartData.length}件表示`);
+}
+
+// グローバル公開
+window.loadAndDisplayWeightData = loadAndDisplayWeightData;
+window.displayWeightHistory = displayWeightHistory;
+window.updateWeightChart = updateWeightChart;
 
 log('🏋️ 体重管理タブ (最小化版) 読み込み完了');
