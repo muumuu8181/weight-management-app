@@ -3,25 +3,26 @@
 
 class FirebaseCRUD {
     
-    // データ保存（新規作成）
+    // データ保存（新規作成）- 統一エラーハンドリング使用
     static async save(collection, userId, data) {
-        if (!firebase || !firebase.database) {
-            throw new Error('Firebase database not initialized');
-        }
-        
-        if (!userId) {
-            throw new Error('User ID is required');
-        }
-        
-        try {
-            const ref = firebase.database().ref(`users/${userId}/${collection}`);
-            const result = await ref.push(data);
-            console.log(`✅ FirebaseCRUD.save: ${collection} saved with ID ${result.key}`);
-            return result;
-        } catch (error) {
-            console.error(`❌ FirebaseCRUD.save error (${collection}):`, error);
-            throw error;
-        }
+        return await UniversalErrorHandler.handleFirebase(
+            async () => {
+                if (!firebase || !firebase.database) {
+                    throw new Error('Firebase database not initialized');
+                }
+                
+                if (!userId) {
+                    throw new Error('User ID is required');
+                }
+                
+                const ref = firebase.database().ref(`users/${userId}/${collection}`);
+                const result = await ref.push(data);
+                return result;
+            },
+            'save',
+            collection,
+            'データ保存'
+        );
     }
     
     // データ読み込み（リアルタイムリスナー）
