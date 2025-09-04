@@ -1,0 +1,40 @@
+=== 体重管理アプリ コードメトリクス ===
+分析日時: 2025/9/4 15:58:56
+
+【タブ別詳細】
+├─ tab1-weight: HTML(270) + CSS(184) + JS(1470) = 1924行
+├─ tab2-sleep: HTML(134) + CSS(252) + JS(413) = 799行
+├─ tab3-room-cleaning: HTML(119) + CSS(67) + JS(548) = 734行
+├─ tab4-stretch: HTML(110) + CSS(88) + JS(427) = 625行
+├─ tab5-dashboard: HTML(11) + CSS(7) + JS(317) = 335行
+├─ tab6-job-dc: HTML(179) + CSS(232) + JS(724) = 1135行
+├─ tab7-pedometer: HTML(95) + CSS(205) + JS(267) = 567行
+├─ tab8-memo-list: HTML(105) + CSS(94) + JS(1316) = 1515行
+└─ タブ合計: 7634行
+
+【共通機能詳細】
+├─ shared/components: 3225行
+├─ shared/configs: 307行
+├─ shared/core: 1165行
+├─ shared/effects: 2846行
+├─ shared/styles: 1250行
+├─ shared/utils: 2796行
+└─ 共通合計: 11589行
+
+【その他ファイル】
+├─ index.html: 211行
+├─ package.json: 71行
+├─ README.md: 209行
+└─ その他合計: 491行
+
+【総合統計】
+├─ タブ機能: 7634行 (37.1%)
+├─ 共通機能: 11589行 (56.3%)
+├─ Core機能: 875行 (4.2%)
+├─ その他: 491行 (2.4%)
+└─ 総計: 20589行
+
+【効率化指標】
+共通化率: 56.3% (目標: >50%)
+タブ固有率: 37.1%
+✅ 共通化良好 - 効率的なコード構成
