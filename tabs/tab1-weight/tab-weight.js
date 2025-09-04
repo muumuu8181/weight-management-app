@@ -172,6 +172,7 @@ window.saveWeightData = async () => {
 
 // タイミング選択 - 共通機能DOMUtilsを活用
 window.selectTiming = (timing) => {
+    console.log('🔍 selectTiming called:', timing);  // デバッグログ
     WeightTab.selectedTimingValue = timing;
     document.getElementById('selectedTiming').value = timing;
     
@@ -199,6 +200,7 @@ window.selectTiming = (timing) => {
 
 // 服装選択（上）- 共通機能DOMUtilsを活用
 window.selectClothingTop = (clothing) => {
+    console.log('🔍 selectClothingTop called:', clothing);  // デバッグログ
     WeightTab.selectedTopValue = clothing;
     const topInput = document.getElementById('selectedClothingTop');
     if (topInput) {
@@ -229,6 +231,7 @@ window.selectClothingTop = (clothing) => {
 
 // 服装選択（下）- 共通機能DOMUtilsを活用
 window.selectClothingBottom = (clothing) => {
+    console.log('🔍 selectClothingBottom called:', clothing);  // デバッグログ
     WeightTab.selectedBottomValue = clothing;
     const bottomInput = document.getElementById('selectedClothingBottom');
     if (bottomInput) {
@@ -489,8 +492,8 @@ function updateChart(days = 30) {
         // 1日表示：時間軸を使用（24時間表示）
         chartData = filteredData.map(entry => {
             const dateTime = entry.time ? 
-                new Date(\`\${entry.date}T\${entry.time}:00\`) : 
-                new Date(\`\${entry.date}T12:00:00\`);
+                new Date(`${entry.date}T${entry.time}:00`) : 
+                new Date(`${entry.date}T12:00:00`);
             
             return {
                 x: dateTime,

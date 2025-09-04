@@ -155,92 +155,11 @@ async function saveWeightData() {
     }
 }
 
-// タイミング選択 - 共通機能DOMUtilsを活用
-window.selectTiming = (timing) => {
-    selectedTimingValue = timing;
-    document.getElementById('selectedTiming').value = timing;
-    
-    // 🔄 共通機能活用: ボタン選択状態管理
-    if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
-        window.DOMUtils.setSelectedState('.timing-btn', timing, 'data-timing');
-    } else {
-        // フォールバック: 既存の独自実装
-        document.querySelectorAll('.timing-btn').forEach(btn => {
-            btn.style.opacity = '0.7';
-            btn.style.transform = 'scale(1)';
-            btn.classList.remove('selected');
-        });
-        
-        const selectedBtn = document.querySelector(`[data-timing="${timing}"]`);
-        if (selectedBtn) {
-            selectedBtn.style.opacity = '1';
-            selectedBtn.style.transform = 'scale(1.1)';
-            selectedBtn.classList.add('selected');
-        }
-    }
-    
-    log(`⏰ 測定タイミング選択: ${timing}`);
-};
+// 🔧 selectTiming関数は tab-weight.js で定義済み（重複削除）
 
-// 服装選択（上）- 共通機能DOMUtilsを活用
-window.selectClothingTop = (clothing) => {
-    selectedClothingTopValue = clothing;
-    
-    // HTMLのIDに対応: selectedTop または selectedClothingTop
-    const topInput = document.getElementById('selectedTop') || document.getElementById('selectedClothingTop');
-    if (topInput) {
-        topInput.value = clothing;
-    }
-    
-    // 🔄 共通機能活用: ボタン選択状態管理
-    if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
-        window.DOMUtils.setSelectedState('[data-clothing-top]', clothing, 'data-clothing-top');
-    } else {
-        // フォールバック: 既存の独自実装
-        document.querySelectorAll('[data-clothing-top]').forEach(btn => {
-            btn.style.opacity = '0.7';
-            btn.style.transform = 'scale(1)';
-        });
-        
-        const selectedBtn = document.querySelector(`[data-clothing-top="${clothing}"]`);
-        if (selectedBtn) {
-            selectedBtn.style.opacity = '1';
-            selectedBtn.style.transform = 'scale(1.1)';
-        }
-    }
-    
-    log(`👕 上半身選択: ${clothing}`);
-};
+// 🔧 selectClothingTop関数は tab-weight.js で定義済み（重複削除）
 
-// 服装選択（下）- 共通機能DOMUtilsを活用
-window.selectClothingBottom = (clothing) => {
-    selectedClothingBottomValue = clothing;
-    
-    // HTMLのIDに対応: selectedBottom または selectedClothingBottom
-    const bottomInput = document.getElementById('selectedBottom') || document.getElementById('selectedClothingBottom');
-    if (bottomInput) {
-        bottomInput.value = clothing;
-    }
-    
-    // 🔄 共通機能活用: ボタン選択状態管理
-    if (window.DOMUtils && typeof window.DOMUtils.setSelectedState === 'function') {
-        window.DOMUtils.setSelectedState('[data-clothing-bottom]', clothing, 'data-clothing-bottom');
-    } else {
-        // フォールバック: 既存の独自実装
-        document.querySelectorAll('[data-clothing-bottom]').forEach(btn => {
-            btn.style.opacity = '0.7';
-            btn.style.transform = 'scale(1)';
-        });
-        
-        const selectedBtn = document.querySelector(`[data-clothing-bottom="${clothing}"]`);
-        if (selectedBtn) {
-            selectedBtn.style.opacity = '1';
-            selectedBtn.style.transform = 'scale(1.1)';
-        }
-    }
-    
-    log(`🩲 下半身選択: ${clothing}`);
-};
+// 🔧 selectClothingBottom関数は tab-weight.js で定義済み（重複削除）
 
 // キーボード入力処理
 window.handleWeightKeypress = (event) => {

@@ -26,7 +26,7 @@ let allWeightData = [];
 window.editingEntryId = null;
 
 // アプリバージョン（一元管理）
-const APP_VERSION = 'v2.53';
+const APP_VERSION = 'v2.55';
 
 // グローバルに公開（安全な参照用）
 window.auth = auth;
@@ -51,42 +51,5 @@ window.updateVersionDisplay = function() {
     }
 };
 
-// 🔧 緊急修正: グローバル関数のフォールバック実装
-window.updateChartRange = window.updateChartRange || function(days) {
-    console.log(`⏳ updateChartRange(${days}) 実行待機中 - weight.js読み込み中...`);
-    
-    // weight.jsが読み込まれるまで待機
-    const checkInterval = setInterval(() => {
-        if (window.updateChartRange !== this && typeof window.updateChartRange === 'function') {
-            clearInterval(checkInterval);
-            console.log(`✅ weight.js読み込み完了 - updateChartRange(${days})を再実行`);
-            window.updateChartRange(days);
-        }
-    }, 100);
-    
-    // 10秒後にタイムアウト
-    setTimeout(() => {
-        clearInterval(checkInterval);
-        console.error(`❌ updateChartRange読み込みタイムアウト - weight.jsの読み込みに失敗`);
-    }, 10000);
-};
-
-window.togglePreviousPeriod = window.togglePreviousPeriod || function() {
-    console.log(`⏳ togglePreviousPeriod() 実行待機中 - weight.js読み込み中...`);
-    
-    // weight.jsが読み込まれるまで待機
-    const checkInterval = setInterval(() => {
-        if (window.togglePreviousPeriod !== this && typeof window.togglePreviousPeriod === 'function') {
-            clearInterval(checkInterval);
-            console.log(`✅ weight.js読み込み完了 - togglePreviousPeriod()を再実行`);
-            window.togglePreviousPeriod();
-        }
-    }, 100);
-    
-    // 10秒後にタイムアウト
-    setTimeout(() => {
-        clearInterval(checkInterval);
-        console.error(`❌ togglePreviousPeriod読み込みタイムアウト - weight.jsの読み込みに失敗`);
-    }, 10000);
-};
+// 🔧 フォールバック機能を削除 - weight.jsの正常機能を使用
 window.currentUser = currentUser;
