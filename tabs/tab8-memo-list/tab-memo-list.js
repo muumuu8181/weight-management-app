@@ -704,8 +704,8 @@ function loadMemoData() {
     }
     
     if (currentUser) {
-        // Firebaseから読み込み
-        firebase.database().ref(`users/${currentUser.uid}/memos`).on('value', (snapshot) => {
+        // Firebaseから読み込み - Firebase CRUD統一クラス使用
+        FirebaseCRUD.load('memos', currentUser.uid, (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 // 階層表示対応のソート：親→子の順序を保持しつつ、時系列順

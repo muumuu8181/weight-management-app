@@ -375,8 +375,8 @@ window.handleWeightKeypress = (event) => {
 // データ読み込み - 共通機能活用版
 function loadUserWeightData(userId) {
     log(`🔍 体重データ読み込み実行: ユーザーID=${userId}`);
-    const userRef = database.ref(`users/${userId}/weights`);
-    userRef.on('value', (snapshot) => {
+    // データ読み込み - Firebase CRUD統一クラス使用
+    FirebaseCRUD.load('weights', userId, (snapshot) => {
         const data = snapshot.val();
         log(`🔍 Firebase応答: データ=${data ? 'あり' : 'なし'}`);
         

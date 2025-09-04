@@ -309,8 +309,8 @@ function resetStretchForm() {
 
 // ストレッチデータ読み込み
 function loadUserStretchData(userId) {
-    const dataRef = database.ref(`users/${userId}/stretchData`);
-    dataRef.on('value', (snapshot) => {
+    // データ読み込み - Firebase CRUD統一クラス使用
+    FirebaseCRUD.load('stretchData', userId, (snapshot) => {
         const historyDiv = document.getElementById('stretchHistoryArea');
         if (snapshot.exists()) {
             const data = snapshot.val();

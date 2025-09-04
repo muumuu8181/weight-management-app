@@ -1,18 +1,5 @@
 {
-  "syntax": [
-    {
-      "file": "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
-      "type": "syntax-error",
-      "error": "Command failed: node -c \"C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js\"\nC:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js:200\r\n    await FirebaseCRUD.setWithId('memos', currentUser.uid, cleanId, {\r\n    ^^^^^\r\n\r\nSyntaxError: await is only valid in async functions and the top level bodies of modules\r\n    at wrapSafe (node:internal/modules/cjs/loader:1624:18)\r\n    at checkSyntax (node:internal/main/check_syntax:76:3)\r\n\r\nNode.js v24.3.0\r\n",
-      "severity": "error"
-    },
-    {
-      "file": "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\universal-system\\core\\universal-template.js",
-      "type": "syntax-error",
-      "error": "Command failed: node -c \"C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\universal-system\\core\\universal-template.js\"",
-      "severity": "error"
-    }
-  ],
+  "syntax": [],
   "dependencies": [
     {
       "function": "if",
@@ -1163,6 +1150,7 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab7-pedometer\\tab-pedometer.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab7-pedometer\\tab-pedometer.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab7-pedometer\\tab-pedometer.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
@@ -2998,7 +2986,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab4-stretch\\tab-stretch.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab4-stretch\\tab-stretch.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab5-dashboard\\tab-dashboard.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-operations.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-operations.js",

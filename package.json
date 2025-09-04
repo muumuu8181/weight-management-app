@@ -1,6 +1,6 @@
 {
   "name": "universal-template-system",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "description": "よっぽどの馬鹿でも使えるUniversalテンプレートシステム - カップラーメン方式",
   "main": "universal-system/core/universal-template.js",
   "scripts": {

@@ -264,7 +264,8 @@ async function loadWorkTimeRecords() {
         const user = firebase.auth().currentUser;
         const recordsRef = firebase.database().ref(`users/${user.uid}/workTimeRecords`);
         
-        recordsRef.on('value', (snapshot) => {
+        // 作業時間読み込み - Firebase CRUD統一クラス使用
+        FirebaseCRUD.load('workTimeRecords', user.uid, (snapshot) => {
             const data = snapshot.val();
             workTimeRecords = [];
             
@@ -457,7 +458,8 @@ async function loadJobTasks() {
         const user = firebase.auth().currentUser;
         const tasksRef = firebase.database().ref(`users/${user.uid}/jobTasks`);
         
-        tasksRef.on('value', (snapshot) => {
+        // タスク読み込み - Firebase CRUD統一クラス使用
+        FirebaseCRUD.load('jobTasks', user.uid, (snapshot) => {
             const data = snapshot.val();
             jobTasks = [];
             

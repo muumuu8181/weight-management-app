@@ -177,8 +177,8 @@ window.handleWeightKeypress = (event) => {
 
 // データ読み込み
 function loadUserWeightData(userId) {
-    const dataRef = database.ref(`users/${userId}/weightData`);
-    dataRef.on('value', (snapshot) => {
+    // データ読み込み - Firebase CRUD統一クラス使用
+    FirebaseCRUD.load('weightData', userId, (snapshot) => {
         const historyDiv = document.getElementById('historyArea');
         if (snapshot.exists()) {
             const data = snapshot.val();
