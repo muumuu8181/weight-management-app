@@ -345,8 +345,8 @@ window.deleteSleepEntry = async (entryId) => {
     }
     
     try {
-        const entryRef = database.ref(`users/${currentUser.uid}/sleepData/${entryId}`);
-        await entryRef.remove();
+        // 削除処理 - Firebase CRUD統一クラス使用
+        await FirebaseCRUD.delete('sleepData', currentUser.uid, entryId);
         
         log('🗑️ 睡眠記録を削除しました');
         await loadSleepData(); // データ再読み込み

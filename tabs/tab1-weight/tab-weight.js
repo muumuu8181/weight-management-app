@@ -117,9 +117,8 @@ window.saveWeightData = async () => {
         };
 
         if (WeightTab.editingEntryId) {
-            // 編集モード
-            const entryRef = database.ref(`users/${currentUser.uid}/weights/${WeightTab.editingEntryId}`);
-            await entryRef.update({
+            // 編集モード - Firebase CRUD統一クラス使用
+            await FirebaseCRUD.update('weights', currentUser.uid, WeightTab.editingEntryId, {
                 date: date,
                 time: weightData.time,
                 value: parseFloat(weight),
@@ -331,8 +330,8 @@ window.deleteWeightEntry = async (entryId) => {
     if (!confirm('この記録を削除しますか？')) return;
     
     try {
-        const entryRef = database.ref(`users/${currentUser.uid}/weights/${entryId}`);
-        await entryRef.remove();
+        // 削除処理 - Firebase CRUD統一クラス使用
+        await FirebaseCRUD.delete('weights', currentUser.uid, entryId);
         
         log('🗑️ 体重記録を削除しました');
         

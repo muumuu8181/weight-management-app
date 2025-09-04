@@ -446,8 +446,8 @@ window.deleteRoomEntry = async (entryKey) => {
     if (!confirm('この記録を削除しますか？')) return;
     
     try {
-        const entryRef = firebase.database().ref(`users/${currentUser.uid}/roomData/${entryKey}`);
-        await entryRef.remove();
+        // 削除処理 - Firebase CRUD統一クラス使用
+        await FirebaseCRUD.delete('roomData', currentUser.uid, entryKey);
         
         log('🗑️ 部屋片付け記録を削除しました');
         window.loadRoomData();

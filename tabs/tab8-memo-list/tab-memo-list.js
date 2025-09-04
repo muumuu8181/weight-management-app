@@ -578,7 +578,7 @@ function cancelEdit() {
 }
 
 // メモを削除
-window.deleteMemo = (memoId) => {
+window.deleteMemo = async (memoId) => {
     console.log('🗑️ 削除対象ID:', memoId, 'type:', typeof memoId);
     
     // IDの型変換を試行（数値と文字列の両方でマッチ）
@@ -599,9 +599,9 @@ window.deleteMemo = (memoId) => {
     // IDの型を考慮してフィルタリング
     memoData = memoData.filter(m => m.id != memoId && String(m.id) !== String(memoId));
     
-    // Firebaseから削除
+    // Firebaseから削除 - Firebase CRUD統一クラス使用
     if (currentUser) {
-        firebase.database().ref(`users/${currentUser.uid}/memos/${memoId}`).remove();
+        await FirebaseCRUD.delete('memos', currentUser.uid, memoId);
     } else {
         // ローカルストレージを更新
         localStorage.setItem('memos', JSON.stringify(memoData));

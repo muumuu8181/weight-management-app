@@ -553,9 +553,8 @@ function filterTasks(skillType) {
 async function completeTask(taskId) {
     try {
         const user = firebase.auth().currentUser;
-        const taskRef = firebase.database().ref(`users/${user.uid}/jobTasks/${taskId}`);
-        
-        await taskRef.update({
+        // タスク更新 - Firebase CRUD統一クラス使用
+        await FirebaseCRUD.update('jobTasks', user.uid, taskId, {
             completed: true,
             completedAt: new Date().toISOString()
         });
@@ -585,9 +584,8 @@ async function deleteTask(taskId) {
     
     try {
         const user = firebase.auth().currentUser;
-        const taskRef = firebase.database().ref(`users/${user.uid}/jobTasks/${taskId}`);
-        
-        await taskRef.remove();
+        // タスク削除 - Firebase CRUD統一クラス使用
+        await FirebaseCRUD.delete('jobTasks', user.uid, taskId);
         
         addToOperationLog(`JOB_DC: タスクを削除しました`);
         

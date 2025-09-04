@@ -412,8 +412,7 @@ function deleteStretchEntry(entryId) {
     if (!currentUser) return;
     
     if (confirm('このストレッチ記録を削除しますか？')) {
-        database.ref(`users/${currentUser.uid}/stretchData/${entryId}`).remove()
-            .then(() => {
+        await FirebaseCRUD.delete('stretchData', currentUser.uid, entryId);
                 log('🗑️ ストレッチ記録を削除しました');
             })
             .catch(error => {

@@ -1,6 +1,6 @@
 {
   "name": "universal-template-system",
-  "version": "0.22.0",
+  "version": "0.23.0",
   "description": "よっぽどの馬鹿でも使えるUniversalテンプレートシステム - カップラーメン方式",
   "main": "universal-system/core/universal-template.js",
   "scripts": {
@@ -24,6 +24,7 @@
     "storage:demo": "node -e \"console.log('Open development/tools/data-storage/examples/basic-demo.html in a browser to see the demo')\"",
     "analyze": "node development/tools/code-analysis/code-metrics-analyzer.js",
     "analyze:visual": "node development/tools/code-analysis/visual-report-generator.js",
+    "analyze:functions": "node development/tools/code-analysis/function-analysis-generator.js",
     "compare": "node development/tools/code-analysis/version-comparator.js",
     "compare:versions": "node development/tools/code-analysis/version-comparator.js --from=%npm_config_from% --to=%npm_config_to%",
     "setup": "npm install && bash development/scripts/setup.sh",
