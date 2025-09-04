@@ -408,7 +408,7 @@ function copyStretchHistory() {
 }
 
 // ストレッチ記録削除
-function deleteStretchEntry(entryId) {
+async function deleteStretchEntry(entryId) {
     if (!currentUser) return;
     
     if (confirm('このストレッチ記録を削除しますか？')) {
