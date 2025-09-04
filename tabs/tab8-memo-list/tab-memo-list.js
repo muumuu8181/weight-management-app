@@ -105,7 +105,7 @@ window.selectTimeframe = (timeframe) => {
 };
 
 // メモを追加
-window.addMemo = () => {
+window.addMemo = async () => {
     const memoText = document.getElementById('newMemoText').value.trim();
     const category = document.getElementById('memoCategory').value;
     const priority = document.getElementById('memoPriority').value;
@@ -135,7 +135,7 @@ window.addMemo = () => {
     
     // Firebaseに保存
     if (currentUser) {
-        saveMemoToFirebase(memo);
+        await saveMemoToFirebase(memo);
     } else {
         // ローカルストレージに保存
         localStorage.setItem('memos', JSON.stringify(memoData));
@@ -172,7 +172,7 @@ window.addMemo = () => {
 };
 
 // Firebaseにメモを保存
-function saveMemoToFirebase(memo) {
+async function saveMemoToFirebase(memo) {
     if (!currentUser || !firebase.database) return;
     
     // 実際の値を詳細確認
@@ -196,18 +196,17 @@ function saveMemoToFirebase(memo) {
         path: `users/${currentUser.uid}/memos/${cleanId}`
     });
     
-    // 清浄化されたIDを使用してFirebaseに保存
-    firebase.database().ref(`users/${currentUser.uid}/memos/${cleanId}`).set({
-        ...memo,
-        id: cleanId // IDも整数文字列に更新
-    })
-    .then(() => {
+    try {
+        // 清浄化されたIDを使用してFirebaseに保存 - Firebase CRUD統一クラス使用
+        await FirebaseCRUD.setWithId('memos', currentUser.uid, cleanId, {
+            ...memo,
+            id: cleanId // IDも整数文字列に更新
+        });
         console.log('メモをFirebaseに保存しました');
-    })
-    .catch((error) => {
+    } catch (error) {
         console.error('Firebaseへの保存に失敗:', error);
         log('❌ メモの保存に失敗しました');
-    });
+    }
 }
 
 // フィルタークリア機能

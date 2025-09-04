@@ -111,6 +111,48 @@ class FirebaseCRUD {
             throw error;
         }
     }
+    
+    // カスタムIDでのデータ保存（メモリスト用）
+    static async setWithId(collection, userId, entryId, data) {
+        if (!firebase || !firebase.database) {
+            throw new Error('Firebase database not initialized');
+        }
+        
+        if (!userId || !entryId) {
+            throw new Error('User ID and entry ID are required');
+        }
+        
+        try {
+            const ref = firebase.database().ref(`users/${userId}/${collection}/${entryId}`);
+            await ref.set(data);
+            console.log(`✅ FirebaseCRUD.setWithId: ${collection}/${entryId} saved`);
+            return true;
+        } catch (error) {
+            console.error(`❌ FirebaseCRUD.setWithId error (${collection}/${entryId}):`, error);
+            throw error;
+        }
+    }
+    
+    // 特定IDの一度だけ読み込み（編集用）
+    static async getById(collection, userId, entryId) {
+        if (!firebase || !firebase.database) {
+            throw new Error('Firebase database not initialized');
+        }
+        
+        if (!userId || !entryId) {
+            throw new Error('User ID and entry ID are required');
+        }
+        
+        try {
+            const ref = firebase.database().ref(`users/${userId}/${collection}/${entryId}`);
+            const snapshot = await ref.once('value');
+            console.log(`✅ FirebaseCRUD.getById: ${collection}/${entryId} retrieved`);
+            return snapshot;
+        } catch (error) {
+            console.error(`❌ FirebaseCRUD.getById error (${collection}/${entryId}):`, error);
+            throw error;
+        }
+    }
 }
 
 // グローバルに公開

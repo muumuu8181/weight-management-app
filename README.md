@@ -164,6 +164,21 @@ npm run test:weight
 node jsdom_display_checker.js
 ```
 
+#### 5. **🔍 包括的品質チェックツール** (汎用性: ★★★★★) **【NEW!】**
+```bash
+# 構文エラー・関数依存性・データフロー・ブラウザ互換性の統合チェック
+npm run test:quality
+```
+
+**検出項目:**
+- ✅ **構文エラー**: テンプレートリテラル、async/await問題
+- ✅ **関数依存性**: 未定義関数の呼び出し検出
+- ✅ **スクリプト読み込み順序**: 依存関係の確認
+- ✅ **データフロー**: 認証後のデータ読み込み漏れ
+- 📝 **詳細レポート**: `quality-report.json` 自動生成
+
+📖 **詳細マニュアル**: [docs/QUALITY_CHECK_MANUAL.md](docs/QUALITY_CHECK_MANUAL.md)
+
 ### 🎯 **テスト実行方法**
 
 ```bash
@@ -175,6 +190,7 @@ npm run test:ui          # UIボタンテスト
 npm run test:weight      # 体重管理テスト  
 npm run test:storage     # データストレージテスト
 npm run test:firebase    # Firebase接続テスト
+npm run test:quality     # 🔍 包括的品質チェック（推奨）
 ```
 
 ## 📝 ライセンス

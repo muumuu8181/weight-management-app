@@ -265,8 +265,7 @@ window.editWeightEntry = async (entryId) => {
     if (!currentUser) return;
     
     try {
-        const entryRef = database.ref(`users/${currentUser.uid}/weights/${entryId}`);
-        const snapshot = await entryRef.once('value');
+        const snapshot = await FirebaseCRUD.getById('weights', currentUser.uid, entryId);
         
         if (snapshot.exists()) {
             const entry = snapshot.val();
@@ -514,7 +513,7 @@ function updateChart(days = 30) {
         timeUnit = 'hour';
         displayFormat = 'HH:mm';
         axisLabel = '時間';
-        dateRangeText = \`\${now.getMonth() + 1}/\${now.getDate()} (1日表示)\`;
+        dateRangeText = `${now.getMonth() + 1}/${now.getDate()} (1日表示)`;
     } else {
         // 複数日表示：日付軸を使用
         const groupedData = {};
@@ -587,7 +586,7 @@ function updateChart(days = 30) {
         if (avgData.length > 0) {
             const startStr = new Date(avgData[0].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
             const endStr = new Date(avgData[avgData.length - 1].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
-            dateRangeText = \`\${startStr}～\${endStr}\`;
+            dateRangeText = `${startStr}～${endStr}`;
         }
     }
 
@@ -626,7 +625,7 @@ function updateChart(days = 30) {
                             }
                         },
                         label: function(context) {
-                            return \`\${context.dataset.label}: \${context.parsed.y}kg\`;
+                            return `${context.dataset.label}: ${context.parsed.y}kg`;
                         }
                     }
                 }
@@ -657,7 +656,7 @@ function updateChart(days = 30) {
         }
     });
 
-    log(\`📊 グラフ更新完了: \${datasets[0].data.length}件のデータ (期間: \${dateRangeText})\`);
+    log(`📊 グラフ更新完了: ${datasets[0].data.length}件のデータ (期間: ${dateRangeText})`);
 }
 
 // グラフの表示期間を変更（weight.jsから移植）

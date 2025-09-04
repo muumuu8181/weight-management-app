@@ -152,9 +152,9 @@ async function saveSleepData() {
     };
 
     try {
-        // Firebase保存
-        const sleepRef = database.ref(`users/${currentUser.uid}/sleepData/${sleepDate}_${Date.now()}`);
-        await sleepRef.set(sleepData);
+        // Firebase保存 - Firebase CRUD統一クラス使用
+        const sleepEntryId = `${sleepDate}_${Date.now()}`;
+        await FirebaseCRUD.setWithId('sleepData', currentUser.uid, sleepEntryId, sleepData);
         
         log(`💾 睡眠記録保存完了: ${sleepDate} ${sleepTime}`);
         

@@ -257,39 +257,90 @@ window.FunctionAnalyzer = {
         };
     },
     
+    // 詳細解析レポート生成
+    generateDetailedReport() {
+        const tabAnalysis = this.analyzeByTab();
+        let report = '=== 機能解析詳細レポート ===\n\n';
+        
+        tabAnalysis.forEach(tab => {
+            report += `📂 ${tab.name}\n`;
+            report += `  HTML行数: ${tab.htmlLines}行\n`;
+            report += `  関数数: ${tab.totalFunctions}個\n`;
+            report += `  🔗 共通: ${tab.shared}個 (${tab.sharedPercentage}%)\n`;
+            report += `  ⚙️ 独自: ${tab.custom}個 (${tab.customPercentage}%)\n`;
+            report += `  ⚠️ 動的: ${tab.dynamic}個 (${tab.dynamicPercentage}%)\n`;
+            report += `  ❌ エラー: ${tab.errors}個\n\n`;
+        });
+        
+        const totalStats = this.getAnalysisStats();
+        report += `📊 全体統計:\n`;
+        report += `  総機能数: ${totalStats.total}個\n`;
+        report += `  共通化率: ${totalStats.sharedPercentage}%\n`;
+        report += `  改善候補: ${totalStats.customPercentage}% (独自機能)\n\n`;
+        
+        report += `生成日時: ${new Date().toLocaleString('ja-JP')}\n`;
+        
+        return report;
+    },
+    
+    // タブ別解析
+    analyzeByTab() {
+        const tabs = ['tab1-weight', 'tab2-sleep', 'tab3-room-cleaning', 'tab4-stretch', 'tab5-dashboard', 'tab6-job-dc', 'tab7-pedometer', 'tab8-memo-list'];
+        
+        return tabs.map(tabName => {
+            // 各タブのHTML要素から機能を抽出
+            const tabContent = document.getElementById(`${tabName.replace('tab', 'tabContent').replace('-', '').replace(/\d/, '$&')}`);
+            let htmlLines = 0;
+            let functions = { shared: 0, custom: 0, dynamic: 0, errors: 0 };
+            
+            if (tabContent) {
+                // HTML行数概算（innerHTML文字数 / 50）
+                htmlLines = Math.round(tabContent.innerHTML.length / 50);
+                
+                // タブ内の機能解析
+                const tabClickables = tabContent.querySelectorAll('[onclick]');
+                tabClickables.forEach(element => {
+                    const badge = element.querySelector('.shared-function-badge, .custom-function-badge, .dynamic-function-badge, .error-function-badge');
+                    if (badge) {
+                        if (badge.classList.contains('shared-function-badge')) functions.shared++;
+                        else if (badge.classList.contains('custom-function-badge')) functions.custom++;
+                        else if (badge.classList.contains('dynamic-function-badge')) functions.dynamic++;
+                        else functions.errors++;
+                    }
+                });
+            }
+            
+            const total = functions.shared + functions.custom + functions.dynamic + functions.errors;
+            
+            return {
+                name: tabName,
+                htmlLines: htmlLines,
+                totalFunctions: total,
+                shared: functions.shared,
+                custom: functions.custom,
+                dynamic: functions.dynamic,
+                errors: functions.errors,
+                sharedPercentage: total > 0 ? Math.round((functions.shared / total) * 100) : 0,
+                customPercentage: total > 0 ? Math.round((functions.custom / total) * 100) : 0,
+                dynamicPercentage: total > 0 ? Math.round((functions.dynamic / total) * 100) : 0
+            };
+        });
+    },
+    
     // 統計レポート表示
     showAnalysisReport() {
-        const stats = this.getAnalysisStats();
-        
-        const report = `
-=== 機能実装状況レポート（4分類版） ===
-
-📊 統計:
-- 🔗 共通機能: ${stats.shared}個 (${stats.sharedPercentage}%)
-- ⚙️ 独自機能: ${stats.custom}個 (${stats.customPercentage}%)
-- ⚠️ 動的機能: ${stats.dynamic}個 (${stats.dynamicPercentage}%)
-- ❌ エラー機能: ${stats.errors}個
-- 📋 総機能数: ${stats.total}個
-
-🎯 共通化率: ${stats.sharedPercentage}%
-🔧 改善候補: ${stats.customPercentage}% (独自機能)
-
-💡 改善提案:
-${stats.errors > 0 ? `🚨 ${stats.errors}個の未実装機能があります` : '✅ 全機能が正常に実装されています'}
-${stats.customPercentage > 30 ? '⚠️ 独自機能が多めです - 共通化を検討してください' : ''}
-${stats.sharedPercentage > 50 ? '✅ 良好な共通化率です' : '📈 共通化率向上の余地があります'}
-
-生成日時: ${new Date().toLocaleString('ja-JP')}
-        `.trim();
+        const report = this.generateDetailedReport();
         
         if (typeof log === 'function') log(report);
         
         // クリップボードにもコピー
         navigator.clipboard.writeText(report).then(() => {
-            alert('📊 機能解析レポートをクリップボードにコピーしました');
+            alert('📊 詳細機能解析レポートをクリップボードにコピーしました');
         }).catch(() => {
             alert('📊 機能解析レポート:\n' + report);
         });
+        
+        return report;
     }
 };
 

@@ -8,7 +8,7 @@
     "start": "npm run init && echo '🎉 Universal Template v0.01 起動完了'",
     "dev": "npm run init",
     "test": "npm run test:all",
-    "test:all": "npm run test:firebase && npm run test:ui && npm run test:storage && npm run test:weight && npm run test:field-validation && npm run test:integration",
+    "test:all": "npm run test:firebase && npm run test:ui && npm run test:storage && npm run test:weight && npm run test:field-validation && npm run test:integration && npm run test:quality",
     "test:field-validation": "node development/tools/testing/field-validation-checker.js",
     "test:integration": "node development/tools/testing/html-js-integration-tester.js",
     "test:firebase": "echo '🔥 Firebase動作テスト実行中...' && node -e \"console.log('✅ Firebase設定確認完了')\"",
@@ -27,6 +27,7 @@
     "compare": "node development/tools/code-analysis/version-comparator.js",
     "compare:versions": "node development/tools/code-analysis/version-comparator.js --from=%npm_config_from% --to=%npm_config_to%",
     "setup": "npm install && bash development/scripts/setup.sh",
+    "test:quality": "node development/tools/testing/comprehensive-quality-checker.js",
     "help": "echo '🚀 Universal Template v0.01 - カップラーメン方式\\n\\n🚨 開発前必読: documentation/project/MANDATORY_REQUIREMENTS.md\\n\\n基本コマンド:\\n  npm start     # お湯を注ぐだけ - 全自動セットアップ\\n  npm test      # 全機能テスト (報告前必須)\\n  npm run dev   # 開発モード\\n\\n📋 必須要件:\\n  1. Firebase Database 必須使用\\n  2. Google認証 必須実装\\n  3. テスト実行 必須確認\\n  4. ログ・コピー機能 除去禁止\\n  5. Core部分 変更禁止\\n\\n詳細ヘルプ:\\n  node development/tools/testing/ui-test-runner.js --help'"
   },
   "keywords": [
