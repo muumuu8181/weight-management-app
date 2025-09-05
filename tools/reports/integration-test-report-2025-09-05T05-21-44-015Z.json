@@ -1,0 +1,688 @@
+{
+  "timestamp": "2025-09-05T05:21:44.015Z",
+  "testResults": [
+    {
+      "tabName": "tab1-weight",
+      "tests": {
+        "domConsistency": {
+          "status": "FAIL",
+          "details": {
+            "jsReferences": 15,
+            "htmlElements": 36,
+            "missingInHTML": [
+              "chartDateRange"
+            ],
+            "unusedInHTML": [
+              "modeControl",
+              "normalModeBtn",
+              "addModeBtn",
+              "deleteModeBtn",
+              "timingTargetBtn",
+              "topTargetBtn",
+              "bottomTargetBtn",
+              "unifiedAddInput",
+              "unifiedAddText",
+              "weightInput",
+              "timingButtons",
+              "topClothingButtons",
+              "selectedTop",
+              "bottomClothingButtons",
+              "selectedBottom",
+              "previousPeriodArea",
+              "previousPeriodData",
+              "logPanel",
+              "logArea",
+              "tab1Content",
+              "targetSelection",
+              "modeGuidance"
+            ]
+          },
+          "issues": [
+            "HTML不在要素: chartDateRange"
+          ]
+        },
+        "functionDependency": {
+          "status": "PASS",
+          "details": {
+            "typeofChecks": 18,
+            "definedFunctions": 27,
+            "missingFunctions": []
+          },
+          "issues": []
+        },
+        "htmlJsIntegration": {
+          "status": "FAIL",
+          "details": {
+            "htmlFile": "tab-weight.html",
+            "jsFiles": [
+              "tab-weight.js",
+              "weight.js"
+            ],
+            "elementResults": [
+              {
+                "id": "dateInput",
+                "exists": true,
+                "type": "INPUT"
+              },
+              {
+                "id": "weightValue",
+                "exists": true,
+                "type": "INPUT"
+              },
+              {
+                "id": "weightHistory",
+                "exists": true,
+                "type": "DIV"
+              },
+              {
+                "id": "historyArea",
+                "exists": false,
+                "type": "NOT_FOUND"
+              },
+              {
+                "id": "weightChart",
+                "exists": true,
+                "type": "CANVAS"
+              }
+            ],
+            "domReady": true
+          },
+          "issues": [
+            "要素未発見: historyArea"
+          ]
+        },
+        "criticalFunctions": {
+          "status": "PASS",
+          "details": {
+            "criticalFunctions": 5,
+            "functionResults": [
+              {
+                "name": "saveWeightData",
+                "defined": true
+              },
+              {
+                "name": "selectTiming",
+                "defined": true
+              },
+              {
+                "name": "selectClothingTop",
+                "defined": true
+              },
+              {
+                "name": "updateChart",
+                "defined": true
+              },
+              {
+                "name": "loadUserWeightData",
+                "defined": true
+              }
+            ]
+          },
+          "issues": []
+        }
+      },
+      "issues": [
+        "2個のテストが失敗"
+      ],
+      "overallStatus": "FAIL"
+    },
+    {
+      "tabName": "tab2-sleep",
+      "tests": {
+        "domConsistency": {
+          "status": "PASS",
+          "details": {
+            "jsReferences": 10,
+            "htmlElements": 14,
+            "missingInHTML": [],
+            "unusedInHTML": [
+              "tab2Content",
+              "sleepInput",
+              "sleepHistory",
+              "sleepStats"
+            ]
+          },
+          "issues": []
+        },
+        "functionDependency": {
+          "status": "PASS",
+          "details": {
+            "typeofChecks": 2,
+            "definedFunctions": 15,
+            "missingFunctions": []
+          },
+          "issues": []
+        },
+        "htmlJsIntegration": {
+          "status": "PASS",
+          "details": {
+            "htmlFile": "tab-sleep.html",
+            "jsFiles": [
+              "tab-sleep.js",
+              "xxx2.js"
+            ],
+            "elementResults": [
+              {
+                "id": "sleepDateInput",
+                "exists": true,
+                "type": "INPUT"
+              },
+              {
+                "id": "sleepTimeInput",
+                "exists": true,
+                "type": "INPUT"
+              },
+              {
+                "id": "sleepHistoryArea",
+                "exists": true,
+                "type": "DIV"
+              }
+            ],
+            "domReady": true
+          },
+          "issues": []
+        },
+        "criticalFunctions": {
+          "status": "PASS",
+          "details": {
+            "criticalFunctions": 2,
+            "functionResults": [
+              {
+                "name": "saveSleepData",
+                "defined": true
+              },
+              {
+                "name": "loadSleepData",
+                "defined": true
+              }
+            ]
+          },
+          "issues": []
+        }
+      },
+      "issues": [],
+      "overallStatus": "PASS"
+    },
+    {
+      "tabName": "tab3-room-cleaning",
+      "tests": {
+        "domConsistency": {
+          "status": "FAIL",
+          "details": {
+            "jsReferences": 20,
+            "htmlElements": 24,
+            "missingInHTML": [
+              "roomMemoText"
+            ],
+            "unusedInHTML": [
+              "tab3Content",
+              "roomInput",
+              "roomHistory",
+              "roomStats",
+              "roomStatsArea"
+            ]
+          },
+          "issues": [
+            "HTML不在要素: roomMemoText"
+          ]
+        },
+        "functionDependency": {
+          "status": "PASS",
+          "details": {
+            "typeofChecks": 3,
+            "definedFunctions": 24,
+            "missingFunctions": []
+          },
+          "issues": []
+        },
+        "htmlJsIntegration": {
+          "status": "PASS",
+          "details": {
+            "htmlFile": "tab-room-cleaning.html",
+            "jsFiles": [
+              "tab-room-cleaning.js"
+            ],
+            "elementResults": [
+              {
+                "id": "roomDateInput",
+                "exists": true,
+                "type": "INPUT"
+              },
+              {
+                "id": "roomDuration",
+                "exists": true,
+                "type": "INPUT"
+              },
+              {
+                "id": "roomHistoryArea",
+                "exists": true,
+                "type": "DIV"
+              },
+              {
+                "id": "selectedRoom",
+                "exists": true,
+                "type": "INPUT"
+              }
+            ],
+            "domReady": true
+          },
+          "issues": []
+        },
+        "criticalFunctions": {
+          "status": "PASS",
+          "details": {
+            "criticalFunctions": 4,
+            "functionResults": [
+              {
+                "name": "saveRoomData",
+                "defined": true
+              },
+              {
+                "name": "startRoomCleaning",
+                "defined": true
+              },
+              {
+                "name": "endRoomCleaning",
+                "defined": true
+              },
+              {
+                "name": "selectRoom",
+                "defined": true
+              }
+            ]
+          },
+          "issues": []
+        }
+      },
+      "issues": [
+        "1個のテストが失敗"
+      ],
+      "overallStatus": "FAIL"
+    },
+    {
+      "tabName": "tab4-stretch",
+      "tests": {
+        "domConsistency": {
+          "status": "PASS",
+          "details": {
+            "jsReferences": 12,
+            "htmlElements": 16,
+            "missingInHTML": [],
+            "unusedInHTML": [
+              "tab4Content",
+              "stretchInput",
+              "stretchHistory",
+              "stretchStats"
+            ]
+          },
+          "issues": []
+        },
+        "functionDependency": {
+          "status": "PASS",
+          "details": {
+            "typeofChecks": 1,
+            "definedFunctions": 15,
+            "missingFunctions": []
+          },
+          "issues": []
+        },
+        "htmlJsIntegration": {
+          "status": "PASS",
+          "details": {
+            "htmlFile": "tab-stretch.html",
+            "jsFiles": [
+              "tab-stretch.js"
+            ],
+            "elementResults": [
+              {
+                "id": "stretchDateInput",
+                "exists": true,
+                "type": "INPUT"
+              },
+              {
+                "id": "stretchTimeInput",
+                "exists": true,
+                "type": "INPUT"
+              }
+            ],
+            "domReady": true
+          },
+          "issues": []
+        },
+        "criticalFunctions": {
+          "status": "PASS",
+          "details": {
+            "criticalFunctions": 1,
+            "functionResults": [
+              {
+                "name": "saveStretchData",
+                "defined": true
+              }
+            ]
+          },
+          "issues": []
+        }
+      },
+      "issues": [],
+      "overallStatus": "PASS"
+    },
+    {
+      "tabName": "tab5-dashboard",
+      "tests": {
+        "domConsistency": {
+          "status": "FAIL",
+          "details": {
+            "jsReferences": 28,
+            "htmlElements": 1,
+            "missingInHTML": [
+              "tabContent5",
+              "improvementScore",
+              "improvementDetails",
+              "weightTrendChart",
+              "weightAnalysisText",
+              "sleepTrendChart",
+              "sleepAnalysisText",
+              "weightDataCount",
+              "latestWeight",
+              "weightDiff",
+              "monthlyChange",
+              "weightTrend",
+              "sleepDataCount",
+              "avgSleepTime",
+              "avgSleepQuality",
+              "sleepRecords",
+              "sleepTrend",
+              "roomDataCount",
+              "completedTasks",
+              "totalTasks",
+              "completionRate",
+              "monthlyActivity",
+              "roomTrend",
+              "memoDataCount",
+              "totalMemos",
+              "importantMemos",
+              "monthlyMemos",
+              "memoTrend"
+            ],
+            "unusedInHTML": [
+              "dashboardContainer"
+            ]
+          },
+          "issues": [
+            "HTML不在要素: tabContent5, improvementScore, improvementDetails, weightTrendChart, weightAnalysisText, sleepTrendChart, sleepAnalysisText, weightDataCount, latestWeight, weightDiff, monthlyChange, weightTrend, sleepDataCount, avgSleepTime, avgSleepQuality, sleepRecords, sleepTrend, roomDataCount, completedTasks, totalTasks, completionRate, monthlyActivity, roomTrend, memoDataCount, totalMemos, importantMemos, monthlyMemos, memoTrend"
+          ]
+        },
+        "functionDependency": {
+          "status": "PASS",
+          "details": {
+            "typeofChecks": 0,
+            "definedFunctions": 8,
+            "missingFunctions": []
+          },
+          "issues": []
+        },
+        "htmlJsIntegration": {
+          "status": "FAIL",
+          "details": {
+            "htmlFile": "tab-dashboard.html",
+            "jsFiles": [
+              "tab-dashboard.js"
+            ],
+            "elementResults": [
+              {
+                "id": "dashboardContent",
+                "exists": false,
+                "type": "NOT_FOUND"
+              }
+            ],
+            "domReady": true
+          },
+          "issues": [
+            "要素未発見: dashboardContent"
+          ]
+        },
+        "criticalFunctions": {
+          "status": "PASS",
+          "details": {
+            "criticalFunctions": 0,
+            "functionResults": []
+          },
+          "issues": []
+        }
+      },
+      "issues": [
+        "2個のテストが失敗"
+      ],
+      "overallStatus": "FAIL"
+    },
+    {
+      "tabName": "tab6-job-dc",
+      "tests": {
+        "domConsistency": {
+          "status": "PASS",
+          "details": {
+            "jsReferences": 15,
+            "htmlElements": 24,
+            "missingInHTML": [],
+            "unusedInHTML": [
+              "jobMemoTaskManager",
+              "tagButtons",
+              "selectedTags",
+              "workTimeTracker",
+              "timeTrackerContainer",
+              "careerAnalysisPanel",
+              "todayStats",
+              "automationProgress",
+              "jobTaskList"
+            ]
+          },
+          "issues": []
+        },
+        "functionDependency": {
+          "status": "PASS",
+          "details": {
+            "typeofChecks": 2,
+            "definedFunctions": 28,
+            "missingFunctions": []
+          },
+          "issues": []
+        },
+        "htmlJsIntegration": {
+          "status": "FAIL",
+          "details": {
+            "htmlFile": "tab6-job-dc.html",
+            "jsFiles": [
+              "tab6-job-dc.js"
+            ],
+            "elementResults": [
+              {
+                "id": "jobDateInput",
+                "exists": false,
+                "type": "NOT_FOUND"
+              },
+              {
+                "id": "jobTimeInput",
+                "exists": false,
+                "type": "NOT_FOUND"
+              }
+            ],
+            "domReady": true
+          },
+          "issues": [
+            "要素未発見: jobDateInput, jobTimeInput"
+          ]
+        },
+        "criticalFunctions": {
+          "status": "PASS",
+          "details": {
+            "criticalFunctions": 0,
+            "functionResults": []
+          },
+          "issues": []
+        }
+      },
+      "issues": [
+        "1個のテストが失敗"
+      ],
+      "overallStatus": "FAIL"
+    },
+    {
+      "tabName": "tab7-pedometer",
+      "tests": {
+        "domConsistency": {
+          "status": "PASS",
+          "details": {
+            "jsReferences": 12,
+            "htmlElements": 17,
+            "missingInHTML": [],
+            "unusedInHTML": [
+              "tab7Content",
+              "pedometerInput",
+              "pedometerHistory",
+              "pedometerStats",
+              "pedometerStatsArea"
+            ]
+          },
+          "issues": []
+        },
+        "functionDependency": {
+          "status": "PASS",
+          "details": {
+            "typeofChecks": 2,
+            "definedFunctions": 8,
+            "missingFunctions": []
+          },
+          "issues": []
+        },
+        "htmlJsIntegration": {
+          "status": "PASS",
+          "details": {
+            "htmlFile": "tab-pedometer.html",
+            "jsFiles": [
+              "tab-pedometer.js"
+            ],
+            "elementResults": [
+              {
+                "id": "pedometerDateInput",
+                "exists": true,
+                "type": "INPUT"
+              },
+              {
+                "id": "stepsInput",
+                "exists": true,
+                "type": "INPUT"
+              }
+            ],
+            "domReady": true
+          },
+          "issues": []
+        },
+        "criticalFunctions": {
+          "status": "PASS",
+          "details": {
+            "criticalFunctions": 1,
+            "functionResults": [
+              {
+                "name": "savePedometerData",
+                "defined": true
+              }
+            ]
+          },
+          "issues": []
+        }
+      },
+      "issues": [],
+      "overallStatus": "PASS"
+    },
+    {
+      "tabName": "tab8-memo-list",
+      "tests": {
+        "domConsistency": {
+          "status": "FAIL",
+          "details": {
+            "jsReferences": 22,
+            "htmlElements": 18,
+            "missingInHTML": [
+              "memo-text-${memoId}",
+              "select-${memoId}",
+              "sortOption",
+              "keywordInput${index}",
+              "keywordFilters",
+              "keywordFilter${index}",
+              "keywordInput1",
+              "keywordFilter${i}",
+              "filterStatus"
+            ],
+            "unusedInHTML": [
+              "tab8ContentContainer",
+              "memoInput",
+              "memoList",
+              "memoStats",
+              "memoStatsArea"
+            ]
+          },
+          "issues": [
+            "HTML不在要素: memo-text-${memoId}, select-${memoId}, sortOption, keywordInput${index}, keywordFilters, keywordFilter${index}, keywordInput1, keywordFilter${i}, filterStatus"
+          ]
+        },
+        "functionDependency": {
+          "status": "PASS",
+          "details": {
+            "typeofChecks": 2,
+            "definedFunctions": 48,
+            "missingFunctions": []
+          },
+          "issues": []
+        },
+        "htmlJsIntegration": {
+          "status": "FAIL",
+          "details": {
+            "htmlFile": "tab-memo-list.html",
+            "jsFiles": [
+              "tab-memo-list.js"
+            ],
+            "elementResults": [
+              {
+                "id": "newMemoText",
+                "exists": true,
+                "type": "TEXTAREA"
+              },
+              {
+                "id": "memoListContainer",
+                "exists": false,
+                "type": "NOT_FOUND"
+              }
+            ],
+            "domReady": true
+          },
+          "issues": [
+            "要素未発見: memoListContainer"
+          ]
+        },
+        "criticalFunctions": {
+          "status": "PASS",
+          "details": {
+            "criticalFunctions": 1,
+            "functionResults": [
+              {
+                "name": "saveMemoData",
+                "defined": true
+              }
+            ]
+          },
+          "issues": []
+        }
+      },
+      "issues": [
+        "2個のテストが失敗"
+      ],
+      "overallStatus": "FAIL"
+    }
+  ],
+  "summary": {
+    "totalTabs": 8,
+    "passed": 3,
+    "failed": 5,
+    "errors": 0
+  }
+}

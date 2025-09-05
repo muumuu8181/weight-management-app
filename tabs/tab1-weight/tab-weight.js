@@ -646,6 +646,8 @@ function updateChart(days = 30) {
                 },
                 y: {
                     beginAtZero: false,
+                    min: 70,
+                    max: 75,
                     title: {
                         display: true,
                         text: '体重 (kg)'
