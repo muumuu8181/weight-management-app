@@ -35,6 +35,7 @@
         <h3 style="margin-top: 0; margin-bottom: 8px;">📝 データを記録</h3>
         <div style="display: flex; align-items: center; gap: 8px;">
             <input type="date" class="input-field" id="dateInput" style="flex: 1; min-width: 140px;">
+            <input type="time" class="input-field" id="timeInput" style="flex: 1; min-width: 100px;">
             <input type="number" class="input-field" id="weightValue" placeholder="値" step="0.1" min="0" max="300" value="72.0" style="flex: 1; min-width: 100px;" onkeydown="handleWeightKeypress(event)">
             <span style="font-size: 11px; color: #666; white-space: nowrap;">↑↓で調整</span>
         </div>
@@ -144,5 +145,27 @@
     <h3>📈 データ履歴</h3>
     <div class="data-area" id="weightHistory">
         データを読み込み中...<br>
+    </div>
+</div>
+
+<!-- アプリログエリア -->
+<div class="input-card" id="logPanel">
+    <h3>📋 アプリログ <button class="universal-copy-btn" onclick="copyLogs()" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋 ログをコピー</button></h3>
+    <div class="data-area" id="logArea">
+        アプリテンプレート起動完了...<br>
+        🔥 Firebase設定完了<br>
+        🔐 Google認証準備完了<br>
+    </div>
+    
+    <!-- デバッグボタンエリア -->
+    <div style="margin-top: 8px; text-align: center;">
+        <button class="universal-copy-btn" onclick="debugFirebaseConnection()" style="background: #ff6b6b; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔍 Firebase Debug</button>
+        <button class="universal-copy-btn" onclick="checkLoginIssues()" style="background: #ffc107; color: #212529; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">⚠️ ログイン問題診断</button>
+        <button class="universal-copy-btn" onclick="copyDebugInfo()" style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📋 デバッグ情報をコピー</button>
+        <button class="universal-copy-btn" onclick="checkDatabaseStructure()" style="background: #6f42c1; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🏗️ DB構造確認</button>
+        <button class="universal-copy-btn" onclick="checkMobileSupport()" style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">📱 モバイル診断</button>
+        <button class="universal-copy-btn" onclick="forceAuthCheck()" style="background: #fd7e14; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🔄 認証状態確認</button>
+        <button class="universal-copy-btn" onclick="checkFirebaseConfig()" style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px;">🔧 Firebase設定</button>
+        <button class="universal-copy-btn" onclick="testPopup()" style="background: #20c997; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px;">🧪 ポップアップテスト</button>
     </div>
 </div>

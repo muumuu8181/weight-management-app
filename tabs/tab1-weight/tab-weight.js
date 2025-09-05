@@ -1,4 +1,4 @@
-// 体重管理タブ最小化版 - Phase 4完全共通機能化
+// 体重管理タブ統合完了版 - 全機能統合完了済み
 // 🔄 共通機能最大活用により大幅削減を実現
 
 // 体重管理専用変数（スコープ分離）
@@ -29,7 +29,7 @@ window.initWeightTab = () => {
         weightInput.value = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.defaults) ? APP_CONFIG.defaults.weight.toString() : '72.0';
     }
     
-    // 🔄 Phase 4: カスタム項目復元を共通機能に統一
+    // 🔄 統合完了済み: カスタム項目復元を共通機能に統一
     if (typeof window.loadCustomItems === 'function') {
         window.loadCustomItems();
     } else {
@@ -100,7 +100,7 @@ window.saveWeightData = async () => {
     try {
         log('💾 データを保存中...');
         
-        // 🔄 Phase 3: 共通データ構造を活用
+        // 🔄 統合完了済み: 共通データ構造を活用
         const weightData = {
             date: date,
             time: new Date().toLocaleTimeString('ja-JP', { hour12: false, hour: '2-digit', minute: '2-digit' }),
@@ -354,7 +354,7 @@ window.handleWeightKeypress = (event) => {
     }
 };
 
-// 🔄 Phase 4: モード制御・カスタム項目管理を共通機能に完全統一
+// 🔄 統合完了済み: モード制御・カスタム項目管理を共通機能に完全統一
 // 以下の関数群は shared/ の共通機能に移行済み:
 // - setMode() → shared/components/mode-control.js
 // - selectTarget() → shared/components/mode-control.js  
@@ -401,7 +401,7 @@ function loadUserWeightData(userId) {
             
             WeightTab.allWeightData = entries.sort((a, b) => new Date(a.date) - new Date(b.date));
             
-            // 🔧 緊急修正: weight.jsのupdateChart関数を使用
+            // 🔧 統合完了済み: updateChart関数を使用
             if (typeof window.updateChart === 'function') {
                 window.updateChart(30);
                 log('✅ Chart.js更新完了（共通機能使用）');
@@ -440,7 +440,7 @@ function loadUserWeightData(userId) {
             historyDiv.innerHTML = 'まだデータがありません';
             WeightTab.allWeightData = [];
             
-            // 🔧 緊急修正: weight.jsのupdateChart関数を使用
+            // 🔧 統合完了済み: updateChart関数を使用
             if (typeof window.updateChart === 'function') {
                 window.updateChart(30);
                 log('✅ Chart.js初期化完了（共通機能使用）');
@@ -451,14 +451,14 @@ function loadUserWeightData(userId) {
     });
 }
 
-// 🔄 Phase 5: Chart.js関連も共通機能に統一
+// 🔄 統合完了済み: Chart.js関連も共通機能に統一
 // updateChart関数等は shared/components/chart-wrapper.js を活用
 // loadUserWeightData も共通のdata-loader.js パターンを適用
 
-// 🚀 Phase 2: weight.jsの完全機能を統合開始
-// Chart.js完全実装版をtab-weight.jsに移植
+// 🚀 統合完了済み: 旧ファイルの完全機能を統合完了
+// Chart.js完全実装版の統合済み
 
-// グラフ更新関数（weight.jsから移植）
+// グラフ更新関数（統合完了済み）
 function updateChart(days = 30) {
     const ctx = document.getElementById('weightChart');
     if (!ctx) {
@@ -658,7 +658,7 @@ function updateChart(days = 30) {
     log(`📊 グラフ更新完了: ${datasets[0].data.length}件のデータ (期間: ${dateRangeText})`);
 }
 
-// グラフの表示期間を変更（weight.jsから移植）
+// グラフの表示期間を変更（統合完了済み）
 window.updateChartRange = function(days) {
     currentDisplayDays = days; // 現在の表示期間を記録
     updateChart(days);
@@ -670,7 +670,7 @@ window.updateChartRange = function(days) {
     log(`📊 グラフ表示期間変更: ${rangeName}`);
 };
 
-// 前期間比較機能（weight.jsから移植）
+// 前期間比較機能（統合完了済み）
 let showPreviousPeriod = false;
 let currentDisplayDays = 30; // 現在の表示期間
 
@@ -696,7 +696,7 @@ window.togglePreviousPeriod = function() {
     updateChart(currentDisplayDays);
 };
 
-// 前期間データ取得関数（weight.jsから移植）
+// 前期間データ取得関数（統合完了済み）
 function getPreviousPeriodData(days) {
     if (days <= 0) return []; // 全期間表示の場合は前期間なし
     
@@ -822,9 +822,10 @@ function updateWeightChart() {
     
     const ctx = canvas.getContext('2d');
     
-    // 既存チャートを破棄
-    if (weightChart) {
-        weightChart.destroy();
+    // 既存チャートを破棄 - WeightTabスコープの変数を使用
+    if (WeightTab.weightChart) {
+        WeightTab.weightChart.destroy();
+        WeightTab.weightChart = null;
     }
     
     // データ準備（最新30日）
@@ -833,8 +834,8 @@ function updateWeightChart() {
         y: parseFloat(entry.value || entry.weight)
     }));
     
-    // チャート作成
-    weightChart = new Chart(ctx, {
+    // チャート作成 - WeightTabスコープに格納
+    WeightTab.weightChart = new Chart(ctx, {
         type: 'line',
         data: {
             datasets: [{
@@ -852,7 +853,7 @@ function updateWeightChart() {
                 x: {
                     type: 'time',
                     time: {
-                        parser: 'YYYY-MM-DD',
+                        parser: 'yyyy-MM-dd',
                         displayFormats: {
                             day: 'MM/DD'
                         }
