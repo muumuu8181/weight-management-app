@@ -21,10 +21,10 @@
 
 新規開発者の方は **`docs/`フォルダ** を番号順に読んでください：
 
-1. 📄 **[01_QUICK_START.md](docs/01_QUICK_START.md)** - 5秒で理解する必須ルール
-2. 📄 **[02_DEVELOPER_WORKFLOW.md](docs/02_DEVELOPER_WORKFLOW.md)** - 開発ワークフロー
-3. 📄 **[03_MANDATORY_REQUIREMENTS.md](docs/03_MANDATORY_REQUIREMENTS.md)** - 絶対遵守事項
-4. 📄 **[04_PROJECT_OVERVIEW.md](docs/04_PROJECT_OVERVIEW.md)** - プロジェクト全体像
+1. 📄 **[01_QUICK_START.md](documentation/project/01_QUICK_START.md)** - 5秒で理解する必須ルール
+2. 📄 **[02_DEVELOPER_WORKFLOW.md](documentation/project/02_DEVELOPER_WORKFLOW.md)** - 開発ワークフロー
+3. 📄 **[03_MANDATORY_REQUIREMENTS.md](documentation/project/03_MANDATORY_REQUIREMENTS.md)** - 絶対遵守事項
+4. 📄 **[04_PROJECT_OVERVIEW.md](documentation/project/04_PROJECT_OVERVIEW.md)** - プロジェクト全体像
 
 ## 📋 開発引継ぎ文書
 
@@ -34,19 +34,19 @@
 最新の機能開発内容は **`issues/`フォルダ** と **`handover/`フォルダ** の引継ぎ文書を参照：
 
 ### **🎉 v2.00 メジャーリリース - JavaScript完全分離達成**
-- 📄 **[handover/TAB_BUNRI_SAKUGYO_LESSONS_LEARNED_v2.00.md](handover/TAB_BUNRI_SAKUGYO_LESSONS_LEARNED_v2.00.md)** - **タブ分離作業の完全記録**
+- 📄 **[handover/TAB_BUNRI_SAKUGYO_LESSONS_LEARNED_v2.00.md](documentation/handover/TAB_BUNRI_SAKUGYO_LESSONS_LEARNED_v2.00.md)** - **タブ分離作業の完全記録**
 - 🏆 **劇的成果**: index.html 4,127行 → 1,971行 (52%削減)
 - 🧪 **汎用ツール**: 全タブ対応のテストツール群整備
 - 🔧 **分離完了**: 体重・睡眠・部屋片付け・メモリストの完全外部化
 
 ### **🎯 v2.32 メモリスト機能共通化達成**
-- 📄 **[handover/CODE_METRICS_PRE_CLEANUP_20250902.md](handover/CODE_METRICS_PRE_CLEANUP_20250902.md)** - **共通化前のコードメトリクス記録**
+- 📄 **[handover/CODE_METRICS_PRE_CLEANUP_20250902.md](documentation/handover/CODE_METRICS_PRE_CLEANUP_20250902.md)** - **共通化前のコードメトリクス記録**
 - 🏆 **効率化成果**: 16行追加でメモリスト機能をJOB_DCに統合
 - 🧩 **共通コンポーネント**: 631行で複数タブに同機能提供
 - 📈 **コード効率**: 約50%の削減効果達成
 
 ### **📋 過去の開発記録**
-- 📄 **[issues/TASK_INTEGRATION_HANDOVER_20250830.md](issues/TASK_INTEGRATION_HANDOVER_20250830.md)** - タスク統合機能開発の完全引継ぎ
+- 📄 **[issues/TASK_INTEGRATION_HANDOVER_20250830.md](documentation/issues/TASK_INTEGRATION_HANDOVER_20250830.md)** - タスク統合機能開発の完全引継ぎ
 - 🔧 **技術仕様**: v1.10〜v1.21の全変更履歴と実装詳細
 - ⚠️ **重要制約**: セキュリティ制限と4階層制限の詳細
 - 🚀 **拡張可能性**: 今後の改善案とトラブルシューティング
@@ -119,13 +119,13 @@ weight-management-app/
 ### Safari（iPhone）でのログイン問題
 - iOS Safariではポップアップブロッカーが厳格なため、ログインできない場合があります
 - **解決策**: Chrome for iOSを使用するか、v0.80のリダイレクト方式を有効化
-- 詳細: [docs/troubleshooting/mobile-login-safari-issue.md](docs/troubleshooting/mobile-login-safari-issue.md)
+- 詳細: [docs/troubleshooting/mobile-login-safari-issue.md](documentation/project/troubleshooting/mobile-login-safari-issue.md)
 
 ### 開発時の必須ルール
 1. **core/フォルダは絶対に変更しない**
 2. **バージョン番号は0.01刻みで更新**
 3. **変更後は必ずgit push**
-4. **タブ管理ルール** - 詳細は [TAB_MANAGEMENT_RULES.md](docs/TAB_MANAGEMENT_RULES.md)
+4. **タブ管理ルール** - 詳細は [TAB_MANAGEMENT_RULES.md](documentation/project/TAB_MANAGEMENT_RULES.md)
    - 一つのタブにつき一つのフォルダ（HTML/CSS/JS 3ファイル構成）
    - 共通HTMLに直接記述禁止
    - `tabs/tab{番号}-{機能名}/` 形式でフォルダ命名
