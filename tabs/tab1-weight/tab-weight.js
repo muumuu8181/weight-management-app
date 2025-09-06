@@ -501,7 +501,7 @@ function updateChart(days = 30) {
         return entryDate >= startDate && entryDate <= now; // 修正: nowを使用
     });
     
-    log(`🔍 デバッグ: offset=${offset}, days=${days}, startDate=${startDate.toDateString()}, endDate=${now.toDateString()}, データ件数=${filteredData.length}`);
+    log(`🔍 デバッグ: offset=${window.periodOffset || 0}, days=${days}, startDate=${startDate.toDateString()}, endDate=${now.toDateString()}, データ件数=${filteredData.length}`);
 
     let chartData, datasets = [];
     let timeUnit, displayFormat, axisLabel;
@@ -533,7 +533,8 @@ function updateChart(days = 30) {
         timeUnit = 'hour';
         displayFormat = 'HH:mm';
         axisLabel = '時間';
-        dateRangeText = `${now.getMonth() + 1}/${now.getDate()} (1日表示)`;
+        const displayDate = new Date();
+        dateRangeText = `${displayDate.getMonth() + 1}/${displayDate.getDate()} (1日表示)`;
     } else {
         // 複数日表示：日付軸を使用
         const groupedData = {};
@@ -928,9 +929,13 @@ window.copyWeightHistory = function() {
 
 // 時刻表示は不要なため削除（該当HTML要素が存在しない）
 
-// グローバル変数の初期化
-window.currentDisplayDays = 30;
-window.periodOffset = 0;
+// グローバル変数の初期化（WeightTabスコープ内で管理）
+if (typeof window.currentDisplayDays === 'undefined') {
+    window.currentDisplayDays = 30;
+}
+if (typeof window.periodOffset === 'undefined') {
+    window.periodOffset = 0;
+}
 
 // updateChartWithOffset関数の追加（期間オフセット対応版）
 window.updateChartWithOffset = function(days = 30, offset = 0) {
@@ -991,7 +996,8 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
         timeUnit = 'hour';
         displayFormat = 'HH:mm';
         axisLabel = '時間';
-        dateRangeText = `${now.getMonth() + 1}/${now.getDate()} (1日表示)`;
+        const displayDateOffset = new Date();
+        dateRangeText = `${displayDateOffset.getMonth() + 1}/${displayDateOffset.getDate()} (1日表示)`;
     } else {
         // 複数日表示：日付軸を使用
         const groupedData = {};
