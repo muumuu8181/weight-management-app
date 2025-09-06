@@ -498,10 +498,10 @@ function updateChart(days = 30) {
     // 期間内のデータをフィルタリング
     const filteredData = (WeightTab.allWeightData || []).filter(entry => {
         const entryDate = new Date(entry.date);
-        return entryDate >= startDate && entryDate <= endDate; // 修正: nowではなくendDateを使用
+        return entryDate >= startDate && entryDate <= now; // 修正: nowを使用
     });
     
-    log(`🔍 デバッグ: offset=${offset}, days=${days}, startDate=${startDate.toDateString()}, endDate=${endDate.toDateString()}, データ件数=${filteredData.length}`);
+    log(`🔍 デバッグ: offset=${offset}, days=${days}, startDate=${startDate.toDateString()}, endDate=${now.toDateString()}, データ件数=${filteredData.length}`);
 
     let chartData, datasets = [];
     let timeUnit, displayFormat, axisLabel;
