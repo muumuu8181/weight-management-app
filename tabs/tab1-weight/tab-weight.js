@@ -18,15 +18,34 @@ window.WeightTab = {
 window.initWeightTab = () => {
     log('🏋️ 体重管理タブ初期化中...');
     
-    // 日付・体重デフォルト値設定
+    // 日付・体重・時刻デフォルト値設定
     const today = new Date();
     const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const currentTime = `${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
     
     const dateInput = document.getElementById('dateInput');
+    const timeInput = document.getElementById('timeInput');
     const weightInput = document.getElementById('weightValue');
-    if (dateInput) dateInput.value = todayString;
+    
+    if (dateInput) {
+        dateInput.value = todayString;
+        log(`✅ 日付設定完了: ${todayString}`);
+    } else {
+        log('⚠️ dateInput要素が見つかりません');
+    }
+    
+    if (timeInput) {
+        timeInput.value = currentTime;
+        log(`✅ 時刻設定完了: ${currentTime}`);
+    } else {
+        log('⚠️ timeInput要素が見つかりません');
+    }
+    
     if (weightInput) {
         weightInput.value = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.defaults) ? APP_CONFIG.defaults.weight.toString() : '72.0';
+        log(`✅ 体重設定完了: ${weightInput.value}kg`);
+    } else {
+        log('⚠️ weightInput要素が見つかりません');
     }
     
     // 🔄 統合完了済み: カスタム項目復元を共通機能に統一
@@ -479,8 +498,10 @@ function updateChart(days = 30) {
     // 期間内のデータをフィルタリング
     const filteredData = (WeightTab.allWeightData || []).filter(entry => {
         const entryDate = new Date(entry.date);
-        return entryDate >= startDate && entryDate <= now;
+        return entryDate >= startDate && entryDate <= endDate; // 修正: nowではなくendDateを使用
     });
+    
+    log(`🔍 デバッグ: offset=${offset}, days=${days}, startDate=${startDate.toDateString()}, endDate=${endDate.toDateString()}, データ件数=${filteredData.length}`);
 
     let chartData, datasets = [];
     let timeUnit, displayFormat, axisLabel;
@@ -919,10 +940,11 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
 
     const now = new Date();
     now.setDate(now.getDate() - offset); // オフセットを適用
-    const startDate = new Date(now);
+    const endDate = new Date(now); // 終了日をオフセット適用済みのnowに設定
+    const startDate = new Date(endDate);
     
     if (days > 0) {
-        startDate.setDate(now.getDate() - days);
+        startDate.setDate(endDate.getDate() - days); // 修正: endDateから期間を引く
     } else {
         if (WeightTab.allWeightData && WeightTab.allWeightData.length > 0) {
             startDate.setTime(new Date(WeightTab.allWeightData[0].date).getTime());
@@ -932,8 +954,10 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
     // 期間内のデータをフィルタリング
     const filteredData = (WeightTab.allWeightData || []).filter(entry => {
         const entryDate = new Date(entry.date);
-        return entryDate >= startDate && entryDate <= now;
+        return entryDate >= startDate && entryDate <= endDate; // 修正: nowではなくendDateを使用
     });
+    
+    log(`🔍 デバッグ: offset=${offset}, days=${days}, startDate=${startDate.toDateString()}, endDate=${endDate.toDateString()}, データ件数=${filteredData.length}`);
 
     let chartData, datasets = [];
     let timeUnit, displayFormat, axisLabel;

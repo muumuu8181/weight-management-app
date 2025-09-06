@@ -28,10 +28,14 @@
 
 ## 📋 開発引継ぎ文書
 
-**📂 開発経緯の記録場所**: **`handover/`フォルダ**  
-最新の機能開発内容、コードメトリクス、技術的な変更履歴は **`handover/`フォルダ** で管理しています。
+**📂 開発経緯の記録場所**: **`documentation/handover/`フォルダ**  
+最新の機能開発内容、コードメトリクス、技術的な変更履歴は **`documentation/handover/`フォルダ** で管理しています。
 
-最新の機能開発内容は **`issues/`フォルダ** と **`handover/`フォルダ** の引継ぎ文書を参照：
+**🚨 重要**: handoverと言ったら`documentation/handover/`に決まってんだろ、バカ！勝手に新しいフォルダやファイルを作るな。ちゃんと既存の文書構造を確認しろ。
+
+**📋 新規作成ルール**: フォルダ・ファイル作成前に必ず **`documentation/project/10_NAMING_CONVENTIONS.md`** を参照すること。
+
+最新の機能開発内容は **`documentation/issues/`フォルダ** と **`documentation/handover/`フォルダ** の引継ぎ文書を参照：
 
 ### **🎉 v2.00 メジャーリリース - JavaScript完全分離達成**
 - 📄 **[handover/TAB_BUNRI_SAKUGYO_LESSONS_LEARNED_v2.00.md](documentation/handover/TAB_BUNRI_SAKUGYO_LESSONS_LEARNED_v2.00.md)** - **タブ分離作業の完全記録**
@@ -74,8 +78,10 @@ weight-management-app/
 │   └── troubleshooting/        # トラブルシューティング
 ├── 📁 examples/                 # 🔬 サンプルコード・データ
 │   └── data/                   # サンプルデータ
-├── 📁 handover/                 # 📊 開発記録・技術的変更履歴（流動的）
-├── 📁 issues/                   # 🔴 未解決問題・現在進行中の課題
+├── 📁 documentation/            # 📚 文書管理
+│   ├── handover/               # 📊 開発記録・技術的変更履歴（流動的）
+│   ├── issues/                 # 🔴 未解決問題・現在進行中の課題
+│   └── project/                # 📚 教科書・マニュアル系（固定的な学習用文書）
 ├── 📁 jsdom-storage/            # 🧪 テスト用ストレージ
 ├── 📁 node_modules/             # 📦 npm依存関係
 ├── 📁 scripts/                  # 📜 スクリプトファイル
@@ -93,23 +99,25 @@ weight-management-app/
 - ✅ **特徴**: 01_-07_番号付き体系、変更頻度が低い
 - ❌ **不適切**: 調査結果、開発記録、日付付き分析文書
 
-### 📊 handover/ - 開発記録・技術的変更履歴  
+### 📊 documentation/handover/ - 開発記録・技術的変更履歴  
 **用途**: 流動的な開発経緯・分析結果
 - ✅ **適用例**: コードメトリクス、機能開発記録、調査分析結果
 - ✅ **特徴**: 日付付きファイル、技術的変更の詳細記録
 - ❌ **不適切**: 基本的なマニュアル、固定的な手順書
 
-### 🔴 issues/ - 未解決問題・現在進行中の課題
+### 🔴 documentation/issues/ - 未解決問題・現在進行中の課題
 **用途**: 現在対処中の問題
 - ✅ **適用例**: バグ報告、未解決の技術課題、対処待ち事項
 - ✅ **特徴**: 解決待ちのもの、進行中の問題
 - ❌ **不適切**: 完了済みの調査結果、過去の記録
 
 **判断基準**: 
-- 教科書的 → docs/
-- 開発記録・完了済み調査 → handover/  
-- 未解決・進行中 → issues/
-- 解決済み → issues/resolved/
+- 教科書的 → documentation/project/
+- 開発記録・完了済み調査 → documentation/handover/  
+- 未解決・進行中 → documentation/issues/
+- 解決済み → documentation/issues/resolved/
+
+**🚨 フォルダ二重構造厳禁**: ルート直下に`handover/`や`issues/`フォルダを作るな！全て`documentation/`配下に統一せよ。
 
 ## 🌐 デプロイ先
 
@@ -130,7 +138,7 @@ weight-management-app/
    - 一つのタブにつき一つのフォルダ（HTML/CSS/JS 3ファイル構成）
    - 共通HTMLに直接記述禁止
    - `tabs/tab{番号}-{機能名}/` 形式でフォルダ命名
-5. **問題解決後は issues/resolved/ に移動**
+5. **問題解決後は documentation/issues/resolved/ に移動**
    - 修正完了した問題文書は documentation/issues/resolved/ に移動
    - 移動時にバージョン番号を記録
 6. **🚫 ゴミコード・ファイル・フォルダの絶対禁止ルール**

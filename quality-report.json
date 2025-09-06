@@ -100,6 +100,7 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
@@ -367,12 +368,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common-functions.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\ai-weight-analyzer.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\ai-weight-analyzer.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\ai-weight-analyzer.js",
@@ -620,11 +615,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase-init.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\tab-system.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\tab-system.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\tab-system.js",
@@ -1024,7 +1014,6 @@
       "issue": "undefined",
       "callingSites": [
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab4-stretch\\tab-stretch.js",
@@ -1044,7 +1033,6 @@
       "function": "getMonth",
       "issue": "undefined",
       "callingSites": [
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
@@ -1070,8 +1058,6 @@
       "function": "padStart",
       "issue": "undefined",
       "callingSites": [
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
@@ -1106,7 +1092,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab4-stretch\\tab-stretch.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
@@ -1121,6 +1106,26 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-analytics.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-analytics.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\validation.js"
+      ],
+      "severity": "error"
+    },
+    {
+      "function": "getHours",
+      "issue": "undefined",
+      "callingSites": [
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\utils.js"
+      ],
+      "severity": "error"
+    },
+    {
+      "function": "getMinutes",
+      "issue": "undefined",
+      "callingSites": [
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\utils.js"
       ],
       "severity": "error"
     },
@@ -1154,6 +1159,7 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
@@ -1181,8 +1187,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\dom-utils.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\dom-utils.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-chart-manager.js",
@@ -1204,8 +1208,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase-init.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\tab-system.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\tab-system.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\universal-tab-initializer.js",
@@ -1301,7 +1303,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
@@ -1760,11 +1761,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common-functions.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\dashboard-builder.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\dom-utils.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\dom-utils.js",
@@ -1778,10 +1774,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-ui-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-ui-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-ui-manager.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\tab-system.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\tab-system.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\tabs.js",
@@ -1864,11 +1856,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab6-job-dc\\tab6-job-dc.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab6-job-dc\\tab6-job-dc.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab7-pedometer\\tab-pedometer.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\dashboard-builder.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\dom-utils.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\dom-utils.js",
@@ -1881,10 +1868,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-ui-manager.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\tab-system.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\tabs.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\utils.js",
@@ -2111,6 +2094,7 @@
       "function": "map",
       "issue": "undefined",
       "callingSites": [
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
@@ -2349,6 +2333,7 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
@@ -2460,6 +2445,17 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\validation.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\validation.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\validation.js"
+      ],
+      "severity": "error"
+    },
+    {
+      "function": "toDateString",
+      "issue": "undefined",
+      "callingSites": [
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js"
       ],
       "severity": "error"
     },
@@ -2799,6 +2795,7 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab5-dashboard\\ai-dashboard-extension.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab5-dashboard\\ai-dashboard-extension.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab5-dashboard\\ai-dashboard-extension.js",
@@ -2961,34 +2958,41 @@
       "severity": "error"
     },
     {
-      "function": "getHours",
+      "function": "writeText",
       "issue": "undefined",
       "callingSites": [
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\utils.js"
-      ],
-      "severity": "error"
-    },
-    {
-      "function": "getMinutes",
-      "issue": "undefined",
-      "callingSites": [
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\utils.js"
-      ],
-      "severity": "error"
-    },
-    {
-      "function": "getDay",
-      "issue": "undefined",
-      "callingSites": [
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab4-stretch\\tab-stretch.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab5-dashboard\\tab-dashboard.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\ai-weight-analyzer.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-analytics.js"
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\utils.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-operations.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-operations.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\function-analyzer.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\logging.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\src\\copy-system.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\universal-system\\core\\universal-template.js"
+      ],
+      "severity": "error"
+    },
+    {
+      "function": "then",
+      "issue": "undefined",
+      "callingSites": [
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab1-weight\\tab-weight.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab4-stretch\\tab-stretch.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab5-dashboard\\tab-dashboard.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-operations.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-operations.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\debug.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\debug.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\function-analyzer.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\universal-system\\core\\universal-template.js"
       ],
       "severity": "error"
     },
@@ -3049,43 +3053,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\firebase-crud.js"
-      ],
-      "severity": "error"
-    },
-    {
-      "function": "writeText",
-      "issue": "undefined",
-      "callingSites": [
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab4-stretch\\tab-stretch.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab5-dashboard\\tab-dashboard.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\utils.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-operations.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-operations.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\function-analyzer.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\logging.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\src\\copy-system.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\universal-system\\core\\universal-template.js"
-      ],
-      "severity": "error"
-    },
-    {
-      "function": "then",
-      "issue": "undefined",
-      "callingSites": [
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab2-sleep\\tab-sleep.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab3-room-cleaning\\tab-room-cleaning.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab4-stretch\\tab-stretch.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab5-dashboard\\tab-dashboard.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-operations.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-operations.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\debug.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\debug.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\function-analyzer.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\universal-system\\core\\universal-template.js"
       ],
       "severity": "error"
     },
@@ -3464,12 +3431,10 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab7-pedometer\\tab-pedometer.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab7-pedometer\\tab-pedometer.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab7-pedometer\\tab-pedometer.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase-init.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\firebase-crud.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\firebase-crud.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\firebase-crud.js",
@@ -3567,8 +3532,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\dom-utils.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\time-tracker.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
@@ -3583,8 +3546,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-ui-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-ui-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase-init.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\universal-tab-initializer.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\universal-tab-initializer.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\universal-tab-initializer.js",
@@ -3918,15 +3879,13 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab6-job-dc\\tab6-job-dc.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab6-job-dc\\tab6-job-dc.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab6-job-dc\\tab6-job-dc.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase-init.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js"
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase-init.js"
       ],
       "severity": "error"
     },
@@ -3935,9 +3894,7 @@
       "issue": "undefined",
       "callingSites": [
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab6-job-dc\\tab6-job-dc.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth-system.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\src\\firebase-config.js"
       ],
       "severity": "error"
@@ -4310,6 +4267,17 @@
       "severity": "error"
     },
     {
+      "function": "getDay",
+      "issue": "undefined",
+      "callingSites": [
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\ai-weight-analyzer.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\data-analytics.js"
+      ],
+      "severity": "error"
+    },
+    {
       "function": "setHours",
       "issue": "undefined",
       "callingSites": [
@@ -4336,12 +4304,10 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\debug.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\debug.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\utils\\debug.js",
@@ -4367,7 +4333,6 @@
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\components\\universal-task-manager.js",
@@ -4429,39 +4394,6 @@
       "issue": "undefined",
       "callingSites": [
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\tabs\\tab8-memo-list\\tab-memo-list.js"
-      ],
-      "severity": "error"
-    },
-    {
-      "function": "GoogleAuthProvider",
-      "issue": "undefined",
-      "callingSites": [
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\src\\firebase-config.js"
-      ],
-      "severity": "error"
-    },
-    {
-      "function": "signInWithPopup",
-      "issue": "undefined",
-      "callingSites": [
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\src\\firebase-config.js"
-      ],
-      "severity": "error"
-    },
-    {
-      "function": "signOut",
-      "issue": "undefined",
-      "callingSites": [
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\common.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\firebase.js",
-        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\src\\firebase-config.js"
       ],
       "severity": "error"
     },
@@ -5844,10 +5776,28 @@
       "severity": "error"
     },
     {
+      "function": "GoogleAuthProvider",
+      "issue": "undefined",
+      "callingSites": [
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\src\\firebase-config.js"
+      ],
+      "severity": "error"
+    },
+    {
       "function": "signInWithRedirect",
       "issue": "undefined",
       "callingSites": [
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js"
+      ],
+      "severity": "error"
+    },
+    {
+      "function": "signInWithPopup",
+      "issue": "undefined",
+      "callingSites": [
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\src\\firebase-config.js"
       ],
       "severity": "error"
     },
@@ -5881,6 +5831,15 @@
       "issue": "undefined",
       "callingSites": [
         "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js"
+      ],
+      "severity": "error"
+    },
+    {
+      "function": "signOut",
+      "issue": "undefined",
+      "callingSites": [
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\shared\\core\\auth.js",
+        "C:\\Users\\user\\Desktop\\work\\90_cc\\20250806\\weight-management-app\\core\\src\\firebase-config.js"
       ],
       "severity": "error"
     },
