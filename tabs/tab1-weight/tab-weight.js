@@ -880,26 +880,30 @@ window.loadAndDisplayWeightData = loadAndDisplayWeightData;
 window.displayWeightHistory = displayWeightHistory;
 window.updateWeightChart = updateWeightChart;
 
-// 現在時刻を表示する関数
-function updateCurrentDateTime() {
-    const display = document.getElementById('currentDateTimeDisplay');
-    if (display) {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const date = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-        const weekday = weekdays[now.getDay()];
-        
-        // 改行を含めた表示
-        display.innerHTML = `📅 ${year}年${month}月${date}日（${weekday}）<br>🕐 ${hours}:${minutes}`;
+// 体重データをCSV形式でコピーする関数（睡眠タブと統一）
+window.copyWeightHistory = function() {
+    if (!WeightTab.allWeightData || WeightTab.allWeightData.length === 0) {
+        log('❌ コピーする体重履歴がありません');
+        alert('❌ コピーするデータがありません');
+        return;
     }
-}
+    
+    // CSV形式でデータを出力（睡眠タブと同様）
+    const csvContent = 'date,time,value,timing,clothing_top,clothing_bottom,memo\n' +
+        WeightTab.allWeightData.map(entry => 
+            `${entry.date},${entry.time || ''},${entry.value || entry.weight},${entry.timing || ''},${entry.clothing?.top || ''},${entry.clothing?.bottom || ''},"${entry.memo || ''}"`
+        ).join('\n');
+    
+    navigator.clipboard.writeText(csvContent).then(() => {
+        log('📋 体重履歴をクリップボードにコピーしました');
+        alert('✅ 体重履歴をコピーしました');
+    }).catch(err => {
+        log('❌ コピーに失敗しました');
+        alert('❌ コピーに失敗しました');
+    });
+};
 
-// 初期化時に一度だけ実行
-setTimeout(updateCurrentDateTime, 100);
+// 時刻表示は不要なため削除（該当HTML要素が存在しない）
 
 // グローバル変数の初期化
 window.currentDisplayDays = 30;

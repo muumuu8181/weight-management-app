@@ -170,11 +170,11 @@ function switchMode(mode) {
 - **対策**: 要継続調査（Chart.js datasets配列処理）
 - **詳細**: `issues/previous-period-button-handover-20250829.md`参照
 
-#### 7. 睡眠タブ記録不具合（v0.72時点未解決）
-- **原因**: 要調査（Firebase保存処理の問題）
-- **現象**: 睡眠データが記録されない
-- **対策**: 要デバッグ・修正
-- **詳細**: `issues/sleep-tab-recording-issue-20250829.md`参照
+#### 7. 睡眠タブ記録不具合 → **✅ 2025年9月上旬解決済み**
+- **解決済み**: v0.63～v0.66で段階的修正完了
+- **現象**: 睡眠データの記録問題解消
+- **対策**: Firebase保存処理修正、バリデーション改善済み
+- **詳細**: `issues/resolved/sleep-tab-recording-issue-20250829.md`参照
 
 ### 開発時の注意点
 1. **既存機能の保護**: 新機能追加時は既存機能を破壊しない
