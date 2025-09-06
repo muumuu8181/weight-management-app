@@ -74,3 +74,5 @@ audit-report-*.json
 .github/workflows/artifacts/
 build/
 dist/
+tools/reports/integration-test-report-*.json
+quality-report.json

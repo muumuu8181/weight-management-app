@@ -876,4 +876,75 @@ window.loadAndDisplayWeightData = loadAndDisplayWeightData;
 window.displayWeightHistory = displayWeightHistory;
 window.updateWeightChart = updateWeightChart;
 
+// 現在時刻を表示する関数
+function updateCurrentDateTime() {
+    const display = document.getElementById('currentDateTimeDisplay');
+    if (display) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const date = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+        const weekday = weekdays[now.getDay()];
+        
+        // 改行を含めた表示
+        display.innerHTML = `📅 ${year}年${month}月${date}日（${weekday}）<br>🕐 ${hours}:${minutes}`;
+    }
+}
+
+// 初期化時に一度だけ実行
+setTimeout(updateCurrentDateTime, 100);
+
+// グローバル変数の初期化
+window.currentDisplayDays = 30;
+window.periodOffset = 0;
+
+// updateChartWithOffset関数の追加
+window.updateChartWithOffset = function(days = 30, offset = 0) {
+    const ctx = document.getElementById('weightChart');
+    if (!ctx) {
+        log('⚠️ weightChart要素が見つかりません');
+        return;
+    }
+
+    // updateChart関数を呼び出す（もし定義されていれば）
+    if (typeof updateChart === 'function') {
+        updateChart(days);
+    } else {
+        log('⚠️ updateChart関数が見つかりません');
+    }
+};
+
+// グローバルに期間移動関数を公開
+window.goToPreviousWeek = function() {
+    if (typeof window.currentDisplayDays === 'undefined' || window.currentDisplayDays === 0) return;
+    if (typeof window.periodOffset === 'undefined') window.periodOffset = 0;
+    
+    window.periodOffset += window.currentDisplayDays || 30;
+    if (typeof window.updateChartWithOffset === 'function') {
+        window.updateChartWithOffset(window.currentDisplayDays || 30, window.periodOffset);
+    }
+    log(`📊 ${window.currentDisplayDays || 30}日前の期間に移動`);
+};
+
+window.goToNextWeek = function() {
+    if (typeof window.periodOffset === 'undefined' || window.periodOffset <= 0) return;
+    
+    window.periodOffset = Math.max(0, window.periodOffset - (window.currentDisplayDays || 30));
+    if (typeof window.updateChartWithOffset === 'function') {
+        window.updateChartWithOffset(window.currentDisplayDays || 30, window.periodOffset);
+    }
+    log(`📊 ${window.currentDisplayDays || 30}日後の期間に移動`);
+};
+
+window.goToThisWeek = function() {
+    window.periodOffset = 0;
+    if (typeof window.updateChartWithOffset === 'function') {
+        window.updateChartWithOffset(window.currentDisplayDays || 30, window.periodOffset);
+    }
+    log('📊 現在の期間に移動');
+};
+
 log('🏋️ 体重管理タブ (最小化版) 読み込み完了');

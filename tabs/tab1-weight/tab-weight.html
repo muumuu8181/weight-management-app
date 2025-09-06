@@ -33,11 +33,15 @@
 <div class="weight-input" id="weightInput">
     <div class="input-card">
         <h3 style="margin-top: 0; margin-bottom: 8px;">📝 データを記録</h3>
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <input type="date" class="input-field" id="dateInput" style="flex: 1; min-width: 140px;">
-            <input type="time" class="input-field" id="timeInput" style="flex: 1; min-width: 100px;">
-            <input type="number" class="input-field" id="weightValue" placeholder="値" step="0.1" min="0" max="300" value="72.0" style="flex: 1; min-width: 100px;" onkeydown="handleWeightKeypress(event)">
-            <span style="font-size: 11px; color: #666; white-space: nowrap;">↑↓で調整</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; gap: 8px; width: 100%;">
+                <input type="date" class="input-field" id="dateInput" style="flex: 1;">
+                <input type="time" class="input-field" id="timeInput" style="flex: 1;">
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+                <input type="number" class="input-field" id="weightValue" placeholder="値" step="0.1" min="0" max="300" value="72.0" style="flex: 1;" onkeydown="handleWeightKeypress(event)">
+                <span style="font-size: 11px; color: #666; white-space: nowrap;">↑↓で調整</span>
+            </div>
         </div>
         
         <!-- タイミング選択パネル -->
