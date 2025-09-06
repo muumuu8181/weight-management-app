@@ -26,9 +26,9 @@ try {
     };
 }
 
-// ダッシュボード初期化（共通コンポーネント使用）
+// ダッシュボード初期化（AI分析統合版）
 window.initDashboard = function() {
-    log('🔄 ダッシュボード初期化開始（共通コンポーネント版）');
+    log('🔄 ダッシュボード初期化開始（AI分析統合版）');
     
     if (!currentUser) {
         log('❌ ログインが必要です - ダッシュボード初期化をスキップ');
@@ -36,6 +36,13 @@ window.initDashboard = function() {
     }
     
     log(`👤 ユーザー: ${currentUser.displayName} (${currentUser.uid})`);
+    
+    // AI分析機能追加
+    DASHBOARD_TAB_CONFIGS.ai = {
+        label: 'AI分析',
+        icon: '🤖',
+        builder: buildAIDashboard
+    };
     
     // 共通ダッシュボードビルダーを使用してUI構築
     const container = document.getElementById('tabContent5');
@@ -45,8 +52,12 @@ window.initDashboard = function() {
         
         window.DASHBOARD_BUILDER.buildDashboard('dashboardContainer', DASHBOARD_TAB_CONFIGS, {
             showWeeklyData: true,
-            showOverallProgress: true
+            showOverallProgress: true,
+            enableAI: true
         });
+        
+        // AI分析初期化
+        initAIAnalysis();
     }
     
     // 初期ビュー設定
