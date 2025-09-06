@@ -23,10 +23,10 @@ async function loadTabContent(tabNumber, tabType) {
             await loadTabScript(tabNumber, tabType);
             
             // タブ固有の初期化処理（JSファイル読み込み完了後）
-            if (tabNumber === 1 && currentUser) {
-                log(`🔄 tab1: 体重管理タブ初期化実行`);
+            if (tabNumber === 1) {
+                log(`🔄 tab1: 体重管理タブ初期化実行（ログイン状態: ${currentUser ? 'あり' : 'なし'}）`);
                 
-                // 外部JSファイルの初期化関数を呼び出し
+                // 外部JSファイルの初期化関数を呼び出し（ログイン状態に関係なく基本初期化）
                 setTimeout(() => {
                     if (typeof window.initWeightTab === 'function') {
                         window.initWeightTab();
@@ -34,7 +34,7 @@ async function loadTabContent(tabNumber, tabType) {
                     } else {
                         log('❌ initWeightTab関数が見つかりません');
                     }
-                }, 200);
+                }, 500); // 待機時間を500msに延長
             } else if (tabNumber === 3 && currentUser) {
                 log('🔄 部屋片付けタブ: JS読み込み完了後のデータ読み込み開始');
                 setTimeout(() => {
@@ -184,10 +184,12 @@ async function switchTab(tabNumber) {
     
     // タブ固有の初期化処理
     if (tabNumber === 1) {
-        // 体重管理タブの初期化（外部JSで処理）
-        if (currentUser && typeof window.initWeightTab === 'function') {
-            log('🔄 体重管理タブ: 外部JS初期化実行');
+        // 体重管理タブの初期化（外部JSで処理）- ログイン状態に関係なく初期化
+        if (typeof window.initWeightTab === 'function') {
+            log(`🔄 体重管理タブ: 外部JS初期化実行（ログイン: ${currentUser ? 'あり' : 'なし'}）`);
             window.initWeightTab();
+        } else {
+            log('⚠️ 体重管理タブ: initWeightTab関数が見つかりません（動的読み込み待機中？）');
         }
     } else if (tabNumber === 2) {
         // 睡眠管理タブの初期化（ログインに関係なく実行）
