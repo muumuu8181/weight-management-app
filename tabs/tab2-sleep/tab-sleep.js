@@ -1,7 +1,7 @@
 // ========== 睡眠管理機能 ==========
 
 // 睡眠管理用変数
-let allSleepData = [];
+window.allSleepData = window.allSleepData || [];  // グローバル変数の重複宣言を防ぐ
 let selectedSleepType = '';
 let selectedSleepQuality = '';
 let selectedSleepTags = [];
@@ -204,18 +204,18 @@ async function loadSleepData() {
         const sleepRef = database.ref(`users/${currentUser.uid}/sleepData`);
         const snapshot = await sleepRef.once('value');
         
-        allSleepData = [];
+        window.allSleepData = [];
         if (snapshot.val()) {
             Object.entries(snapshot.val()).forEach(([key, data]) => {
-                allSleepData.push({id: key, ...data});
+                window.allSleepData.push({id: key, ...data});
             });
-            log(`📊 睡眠データ読み込み完了: ${allSleepData.length}件`);
+            log(`📊 睡眠データ読み込み完了: ${window.allSleepData.length}件`);
         } else {
             log('📊 睡眠データなし');
         }
         
         // 日付順でソート
-        allSleepData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        window.allSleepData.sort((a, b) => new Date(b.date) - new Date(a.date));
         
         updateSleepHistory();
         updateSleepStats();
@@ -229,20 +229,20 @@ async function loadSleepData() {
 function updateSleepHistory() {
     const historyArea = document.getElementById('sleepHistoryArea');
     
-    if (allSleepData.length === 0) {
+    if (window.allSleepData.length === 0) {
         historyArea.innerHTML = 'まだ睡眠記録がありません';
         return;
     }
 
     // 直近7件表示
-    const recentData = allSleepData.slice(0, 7);
+    const recentData = window.allSleepData.slice(0, 7);
     
     historyArea.innerHTML = recentData.map(data => {
         let content = `<strong>${data.date}</strong> `;
         
         // 記録表示
         content += `<span style="color: #666;">${data.sleepType || '記録'}</span><br>`;
-        content += `⏰ ${data.time || data.bedTime || data.wakeTime || '--'}`;
+        content += `⏰ ${data.time || '--'}`;
         if (data.quality) content += `<br>⭐ ${data.quality}/5点`;
         
         if (data.tags && data.tags.length > 0) {
@@ -259,17 +259,17 @@ function updateSleepHistory() {
     }).join('');
 }
 
-// 睡眠統計更新
+// 睡眠統計更新（修正版）
 function updateSleepStats() {
-    if (allSleepData.length === 0) {
+    if (window.allSleepData.length === 0) {
         document.getElementById('sleepStatsArea').innerHTML = `
             <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
                 <div style="font-size: 24px; font-weight: bold; color: #007bff;">--</div>
-                <div style="font-size: 12px; color: #6c757d;">平均睡眠時間</div>
+                <div style="font-size: 12px; color: #6c757d;">平均睡眠の質</div>
             </div>
             <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
                 <div style="font-size: 24px; font-weight: bold; color: #28a745;">--</div>
-                <div style="font-size: 12px; color: #6c757d;">平均睡眠の質</div>
+                <div style="font-size: 12px; color: #6c757d;">総記録数</div>
             </div>
             <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
                 <div style="font-size: 24px; font-weight: bold; color: #ffc107;">--</div>
@@ -283,26 +283,28 @@ function updateSleepStats() {
         return;
     }
 
-    // 統計計算
-    const avgDuration = allSleepData.reduce((sum, data) => sum + data.duration, 0) / allSleepData.length;
-    const avgQuality = allSleepData.reduce((sum, data) => sum + parseInt(data.quality), 0) / allSleepData.length;
+    // 統計計算（修正版）
+    const validQualityData = window.allSleepData.filter(data => data.quality);
+    const avgQuality = validQualityData.length > 0 
+        ? validQualityData.reduce((sum, data) => sum + parseInt(data.quality), 0) / validQualityData.length 
+        : 0;
     
     // 今週・今月の記録数
     const now = new Date();
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const monthAgo = new Date(now.getFullYear(), now.getMonth(), 1);
     
-    const weekCount = allSleepData.filter(data => new Date(data.date) >= weekAgo).length;
-    const monthCount = allSleepData.filter(data => new Date(data.date) >= monthAgo).length;
+    const weekCount = window.allSleepData.filter(data => new Date(data.date) >= weekAgo).length;
+    const monthCount = window.allSleepData.filter(data => new Date(data.date) >= monthAgo).length;
 
     document.getElementById('sleepStatsArea').innerHTML = `
         <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-            <div style="font-size: 24px; font-weight: bold; color: #007bff;">${avgDuration.toFixed(1)}h</div>
-            <div style="font-size: 12px; color: #6c757d;">平均睡眠時間</div>
+            <div style="font-size: 24px; font-weight: bold; color: #007bff;">${avgQuality.toFixed(1)}</div>
+            <div style="font-size: 12px; color: #6c757d;">平均睡眠の質</div>
         </div>
         <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-            <div style="font-size: 24px; font-weight: bold; color: #28a745;">${avgQuality.toFixed(1)}</div>
-            <div style="font-size: 12px; color: #6c757d;">平均睡眠の質</div>
+            <div style="font-size: 24px; font-weight: bold; color: #28a745;">${window.allSleepData.length}</div>
+            <div style="font-size: 12px; color: #6c757d;">総記録数</div>
         </div>
         <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
             <div style="font-size: 24px; font-weight: bold; color: #ffc107;">${weekCount}</div>
@@ -315,16 +317,20 @@ function updateSleepStats() {
     `;
 }
 
-// 睡眠履歴コピー
+// 睡眠履歴コピー（修正版）
 function copySleepHistory() {
-    if (allSleepData.length === 0) {
+    if (window.allSleepData.length === 0) {
         log('📋 コピーする睡眠データがありません');
         return;
     }
 
-    const copyText = allSleepData.slice(0, 7).map(data => 
-        `${data.date} ${data.sleepType} ${data.bedTime}-${data.wakeTime} (${data.duration.toFixed(1)}h) ⭐${data.quality}/5${data.memo ? ` ${data.memo}` : ''}`
-    ).join('\n');
+    const copyText = window.allSleepData.slice(0, 7).map(data => {
+        let text = `${data.date} ${data.sleepType || '記録'} ${data.time || '--'}`;
+        if (data.quality) text += ` ⭐${data.quality}/5`;
+        if (data.tags && data.tags.length > 0) text += ` [${data.tags.join(', ')}]`;
+        if (data.memo) text += ` ${data.memo}`;
+        return text;
+    }).join('\n');
 
     navigator.clipboard.writeText(copyText).then(() => {
         log('📋 睡眠履歴をクリップボードにコピーしました');
