@@ -109,6 +109,7 @@ weight-management-app/
 - 教科書的 → docs/
 - 開発記録・完了済み調査 → handover/  
 - 未解決・進行中 → issues/
+- 解決済み → issues/resolved/
 
 ## 🌐 デプロイ先
 
@@ -129,6 +130,9 @@ weight-management-app/
    - 一つのタブにつき一つのフォルダ（HTML/CSS/JS 3ファイル構成）
    - 共通HTMLに直接記述禁止
    - `tabs/tab{番号}-{機能名}/` 形式でフォルダ命名
+5. **問題解決後は issues/resolved/ に移動**
+   - 修正完了した問題文書は documentation/issues/resolved/ に移動
+   - 移動時にバージョン番号を記録
 
 ## 🔧 ローカル開発
 
