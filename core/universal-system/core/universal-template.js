@@ -2,7 +2,7 @@
 
 /**
  * Universal Template v0.01 - カップラーメン方式
- * よっぽどの馬鹿でも使えるテンプレートシステム
+ * 誰でも簡単に使えるテンプレートシステム
  * 
  * 新人問題の完全防止:
  * ❌ Firebase回避 → 自動設定で回避不可能
@@ -36,7 +36,7 @@ class UniversalTemplate {
         };
         
         console.log(`🚀 Universal Template v${this.version} - カップラーメン方式`);
-        console.log('💡 よっぽどの馬鹿でも使える設計');
+        console.log('💡 誰でも簡単に使える設計');
         console.log('🚨 必須要件: MANDATORY_REQUIREMENTS.md を必ず読んでください');
     }
 
@@ -441,7 +441,7 @@ describe('Universal Template Tests', () => {
     <div class="container">
         <div class="success-banner">
             <h2>🎉 Universal Template v0.01 セットアップ完了！</h2>
-            <p>よっぽどの馬鹿でも使える状態になりました。以下の機能がすべて動作します。</p>
+            <p>誰でも簡単に使える状態になりました。以下の機能がすべて動作します。</p>
         </div>
 
         <div class="feature-list">
@@ -477,7 +477,7 @@ describe('Universal Template Tests', () => {
             📋 コピーボタンシステム起動<br>
             🧪 テストシステム準備完了<br>
             🛡️ 新人問題防止機能 有効<br>
-            ✅ よっぽどの馬鹿でも使える状態に到達<br>
+            ✅ 誰でも簡単に使える状態に到達<br>
         </div>
     </div>
 
@@ -509,7 +509,7 @@ describe('Universal Template Tests', () => {
             log('✅ Firebase接続テスト: 合格');
             log('✅ コピーボタンテスト: 合格');
             log('✅ 新人問題防止テスト: 合格');
-            log('🎉 全テスト合格 - よっぽどの馬鹿でも使えます');
+            log('🎉 全テスト合格 - 誰でも簡単に使えます');
         };
 
         // コンプライアンス確認
@@ -599,7 +599,7 @@ describe('Universal Template Tests', () => {
      */
     async autoRecovery(error) {
         console.log('🔧 エラー自動修復システム起動...');
-        console.log('   💡 よっぽどの馬鹿でも使えるよう自動修復します');
+        console.log('   💡 誰でも簡単に使えるよう自動修復します');
         
         try {
             // 基本ディレクトリ作成

@@ -76,7 +76,6 @@
                     <button type="button" class="clothing-btn" onclick="selectClothingTop('ワイシャツ')" data-clothing-top="ワイシャツ" style="background: #add8e6; color: #2f4f4f;">👔 ワイシャツ</button>
                 </div>
                 <input type="text" class="input-field" id="selectedTop" placeholder="上" readonly style="margin-top: 2px; font-size: 10px; padding: 4px; text-align: center; background: #ffffff;">
-                <span id="selectedClothingTop" style="display: none;"></span>
             </div>
             
             <!-- 下半身 -->
@@ -90,7 +89,6 @@
                     <button type="button" class="clothing-btn" onclick="selectClothingBottom('ハーフパンツ')" data-clothing-bottom="ハーフパンツ" style="background: #f0e68c; color: #8b4513;">🩳 ハーフパンツ</button>
                 </div>
                 <input type="text" class="input-field" id="selectedBottom" placeholder="下" readonly style="margin-top: 2px; font-size: 10px; padding: 4px; text-align: center; background: #ffffff;">
-                <span id="selectedClothingBottom" style="display: none;"></span>
             </div>
         </div>
         
@@ -115,9 +113,6 @@
     
     <!-- 期間選択とナビゲーション -->
     <div style="margin-top: 10px;">
-        <!-- 現在時刻表示 -->
-        <div id="currentDateTimeDisplay" style="text-align: center; margin-bottom: 10px; font-size: 14px; color: #666;"></div>
-        
         <!-- 期間選択ボタン -->
         <div style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px;">
             <button onclick="updateChartRange(1)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1日</button>
