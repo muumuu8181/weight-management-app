@@ -56,8 +56,12 @@ window.initDashboard = function() {
             enableAI: true
         });
         
-        // AI分析初期化
-        initAIAnalysis();
+        // AI分析初期化（関数が定義されている場合のみ実行）
+        if (typeof initAIAnalysis === 'function') {
+            initAIAnalysis();
+        } else if (typeof window.initAIAnalysisAsync === 'function') {
+            window.initAIAnalysisAsync();
+        }
     }
     
     // 初期ビュー設定
