@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-09-06T09:55:56.092Z",
+  "tabs": [],
+  "dynamicElements": {
+    "initDashboard": "undefined",
+    "switchDashboardView": "undefined",
+    "refreshDashboardData": "undefined",
+    "addAINavigationButton": "undefined",
+    "initAIAnalysis": "undefined",
+    "initAIAnalysisAsync": "undefined",
+    "foundElements": []
+  },
+  "navigation": {
+    "tabButtons": 0,
+    "activeTab": null
+  }
+}

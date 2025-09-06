@@ -101,7 +101,7 @@ class CodeMetricsAnalyzer {
     
     // ディレクトリ内分析
     async analyzeDirectory(dirPath) {
-        const result = { total: 0, files: {}, subdirs: {} };
+        const result = { total: 0, files: {}, subdirs: {}, fileCount: 0 };
         
         const items = fs.readdirSync(dirPath);
         
@@ -115,10 +115,12 @@ class CodeMetricsAnalyzer {
                     const lineCount = this.countLines(itemPath);
                     result.files[item] = lineCount;
                     result.total += lineCount;
+                    result.fileCount += 1;
                 }
             } else if (stat.isDirectory()) {
                 result.subdirs[item] = await this.analyzeDirectory(itemPath);
                 result.total += result.subdirs[item].total;
+                result.fileCount += result.subdirs[item].fileCount;
             }
         }
         
@@ -162,7 +164,7 @@ class CodeMetricsAnalyzer {
             
             totalTabLines += tabData.total;
             
-            report += `├─ ${tabName}: HTML(${htmlLines}) + CSS(${cssLines}) + JS(${jsLines}) = ${tabData.total}行\n`;
+            report += `├─ ${tabName}: HTML(${htmlLines}) + CSS(${cssLines}) + JS(${jsLines}) = ${tabData.total}行 (${tabData.fileCount}ファイル)\n`;
         });
         
         report += `└─ タブ合計: ${totalTabLines}行\n\n`;
@@ -173,7 +175,7 @@ class CodeMetricsAnalyzer {
         
         Object.entries(metrics.shared).forEach(([sharedDir, sharedData]) => {
             totalSharedLines += sharedData.total;
-            report += `├─ shared/${sharedDir}: ${sharedData.total}行\n`;
+            report += `├─ shared/${sharedDir}: ${sharedData.total}行 (${sharedData.fileCount}ファイル)\n`;
         });
         
         report += `└─ 共通合計: ${totalSharedLines}行\n\n`;

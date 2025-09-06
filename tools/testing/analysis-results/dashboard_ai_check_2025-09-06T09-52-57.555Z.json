@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-09-06T09:52:52.439Z",
+  "checks": [
+    {
+      "type": "script",
+      "path": "shared/components/ai-weight-analyzer.js",
+      "status": "found"
+    },
+    {
+      "type": "script",
+      "path": "tabs/tab5-dashboard/ai-dashboard-extension.js",
+      "status": "found"
+    }
+  ],
+  "aiFeatures": {
+    "buttonFound": false,
+    "navigationFound": false,
+    "dashboardTabFound": true,
+    "aiScriptsLoaded": true,
+    "dynamicButtonCheck": false
+  }
+}

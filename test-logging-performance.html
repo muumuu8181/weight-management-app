@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログシステム パフォーマンステスト</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        #logArea {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+            background: #fafafa;
+            font-size: 12px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.healthy {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 ログシステム パフォーマンステスト</h1>
+        
+        <div class="controls">
+            <button onclick="runAllTests()">全テスト実行</button>
+            <button onclick="runBaselineTest()">ベースラインのみ</button>
+            <button onclick="runCompatibilityTest()">互換性レイヤーのみ</button>
+            <button onclick="runStressTest()">高負荷テスト</button>
+            <button onclick="checkHealth()">ヘルスチェック</button>
+            <button onclick="clearResults()">結果クリア</button>
+        </div>
+        
+        <div id="status"></div>
+        
+        <h2>テスト結果</h2>
+        <div id="results">テストを実行してください...</div>
+        
+        <h2>ログ出力</h2>
+        <div id="logArea"></div>
+    </div>
+
+    <!-- 必要なスクリプトの読み込み -->
+    <script src="shared/utils/logging.js"></script>
+    <script src="shared/utils/universal-logger.js"></script>
+    <script src="shared/utils/logging-compatibility.js"></script>
+    <script src="development/tools/logging-performance-test.js"></script>
+    
+    <script>
+        let tester = null;
+        
+        function showStatus(message, type = 'healthy') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+        }
+        
+        function updateResults(text) {
+            document.getElementById('results').textContent = text;
+        }
+        
+        async function runAllTests() {
+            try {
+                showStatus('テスト実行中...', 'warning');
+                tester = new LoggingPerformanceTest();
+                await tester.runAllTests();
+                const report = tester.generateReport();
+                updateResults(report);
+                showStatus('✅ 全テスト完了', 'healthy');
+            } catch (error) {
+                showStatus(`❌ エラー: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+        
+        async function runBaselineTest() {
+            try {
+                showStatus('ベースラインテスト実行中...', 'warning');
+                tester = tester || new LoggingPerformanceTest();
+                const results = tester.runBaselineTest(5000);
+                updateResults(JSON.stringify(results, null, 2));
+                showStatus('✅ ベースラインテスト完了', 'healthy');
+            } catch (error) {
+                showStatus(`❌ エラー: ${error.message}`, 'error');
+            }
+        }
+        
+        async function runCompatibilityTest() {
+            try {
+                showStatus('互換性レイヤーテスト実行中...', 'warning');
+                tester = tester || new LoggingPerformanceTest();
+                const results = tester.runCompatibilityTest(5000);
+                updateResults(JSON.stringify(results, null, 2));
+                showStatus('✅ 互換性レイヤーテスト完了', 'healthy');
+            } catch (error) {
+                showStatus(`❌ エラー: ${error.message}`, 'error');
+            }
+        }
+        
+        async function runStressTest() {
+            try {
+                showStatus('高負荷テスト実行中（3秒間）...', 'warning');
+                tester = tester || new LoggingPerformanceTest();
+                const results = tester.runStressTest(3000);
+                updateResults(JSON.stringify(results, null, 2));
+                showStatus('✅ 高負荷テスト完了', 'healthy');
+            } catch (error) {
+                showStatus(`❌ エラー: ${error.message}`, 'error');
+            }
+        }
+        
+        function checkHealth() {
+            if (window.LoggingCompatibility) {
+                const health = window.LoggingCompatibility.checkHealth();
+                updateResults(JSON.stringify(health, null, 2));
+                
+                if (health.status === '正常') {
+                    showStatus('✅ システム正常', 'healthy');
+                } else if (health.status === '警告') {
+                    showStatus('⚠️ 警告あり', 'warning');
+                } else {
+                    showStatus('❌ 異常検出', 'error');
+                }
+            } else {
+                showStatus('互換性レイヤーが読み込まれていません', 'error');
+            }
+        }
+        
+        function clearResults() {
+            updateResults('テストを実行してください...');
+            document.getElementById('logArea').innerHTML = '';
+            showStatus('結果をクリアしました', 'healthy');
+        }
+        
+        // 初期状態チェック
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.LoggingCompatibility) {
+                showStatus(`✅ 互換性レイヤー v${window.LoggingCompatibility.version} 準備完了`, 'healthy');
+            } else {
+                showStatus('⚠️ 互換性レイヤーが見つかりません', 'warning');
+            }
+        });
+    </script>
+</body>
+</html>

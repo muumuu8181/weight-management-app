@@ -1,0 +1,249 @@
+{
+  "timestamp": "2025-09-06T09:34:46.525Z",
+  "tabs": {
+    "tab1-weight": {
+      "total": 1050,
+      "files": {
+        "tab-weight.html": 171,
+        "tab-weight.js": 879
+      },
+      "subdirs": {},
+      "fileCount": 2
+    },
+    "tab2-sleep": {
+      "total": 799,
+      "files": {
+        "sleep.css": 187,
+        "tab-sleep.html": 109,
+        "tab-sleep.js": 357,
+        "xxx2.css": 65,
+        "xxx2.html": 25,
+        "xxx2.js": 56
+      },
+      "subdirs": {},
+      "fileCount": 6
+    },
+    "tab3-room-cleaning": {
+      "total": 734,
+      "files": {
+        "room-cleaning.css": 67,
+        "tab-room-cleaning.html": 119,
+        "tab-room-cleaning.js": 548
+      },
+      "subdirs": {},
+      "fileCount": 3
+    },
+    "tab4-stretch": {
+      "total": 625,
+      "files": {
+        "tab-stretch.css": 88,
+        "tab-stretch.html": 110,
+        "tab-stretch.js": 427
+      },
+      "subdirs": {},
+      "fileCount": 3
+    },
+    "tab5-dashboard": {
+      "total": 563,
+      "files": {
+        "ai-dashboard-extension.js": 213,
+        "dashboard.css": 7,
+        "tab-dashboard.html": 11,
+        "tab-dashboard.js": 332
+      },
+      "subdirs": {},
+      "fileCount": 4
+    },
+    "tab6-job-dc": {
+      "total": 1135,
+      "files": {
+        "tab6-job-dc.css": 232,
+        "tab6-job-dc.html": 179,
+        "tab6-job-dc.js": 724
+      },
+      "subdirs": {},
+      "fileCount": 3
+    },
+    "tab7-pedometer": {
+      "total": 567,
+      "files": {
+        "tab-pedometer.css": 205,
+        "tab-pedometer.html": 95,
+        "tab-pedometer.js": 267
+      },
+      "subdirs": {},
+      "fileCount": 3
+    },
+    "tab8-memo-list": {
+      "total": 1515,
+      "files": {
+        "memo-list.css": 94,
+        "tab-memo-list.html": 105,
+        "tab-memo-list.js": 1316
+      },
+      "subdirs": {},
+      "fileCount": 3
+    }
+  },
+  "shared": {
+    "components": {
+      "total": 3846,
+      "files": {
+        "ai-weight-analyzer.js": 371,
+        "dashboard-builder.js": 439,
+        "dom-utils.js": 295,
+        "mode-control.js": 302,
+        "time-tracker.js": 338,
+        "unified-selection.js": 202,
+        "universal-chart-manager.js": 250,
+        "universal-task-manager.js": 1399,
+        "universal-ui-manager.js": 250
+      },
+      "subdirs": {},
+      "fileCount": 9
+    },
+    "configs": {
+      "total": 307,
+      "files": {
+        "constants.js": 162,
+        "firebase-config.js": 13,
+        "tab-config.js": 132
+      },
+      "subdirs": {},
+      "fileCount": 3
+    },
+    "core": {
+      "total": 1165,
+      "files": {
+        "auth-system.js": 56,
+        "auth.js": 147,
+        "firebase-init.js": 55,
+        "firebase.js": 127,
+        "tab-system.js": 216,
+        "tabs.js": 138,
+        "universal-tab-initializer.js": 231,
+        "utils.js": 195
+      },
+      "subdirs": {},
+      "fileCount": 8
+    },
+    "effects": {
+      "total": 2846,
+      "files": {
+        "celebration-demo.html": 347,
+        "celebration-effects.js": 769,
+        "simple-effects.js": 255,
+        "smart-effects-config.json": 159,
+        "smart-effects-manager.js": 315,
+        "ultimate-effects-collection.js": 744,
+        "ultimate-effects-demo.html": 257
+      },
+      "subdirs": {},
+      "fileCount": 7
+    },
+    "styles": {
+      "total": 1408,
+      "files": {
+        "ai-dashboard.css": 158,
+        "analytics-cards.css": 380,
+        "app-layout.css": 32,
+        "base.css": 168,
+        "components.css": 307,
+        "field-badges.css": 116,
+        "function-badges.css": 164,
+        "timing-clothing-buttons.css": 83
+      },
+      "subdirs": {},
+      "fileCount": 8
+    },
+    "utils": {
+      "total": 3606,
+      "files": {
+        "custom-items.js": 385,
+        "data-analytics.js": 224,
+        "data-operations.js": 395,
+        "debug.js": 248,
+        "field-validation.js": 204,
+        "firebase-crud.js": 162,
+        "firebase-multi-loader.js": 176,
+        "function-analyzer.js": 378,
+        "improvement-advisor.js": 238,
+        "logging.js": 71,
+        "ui-controls.js": 84,
+        "universal-error-handler.js": 284,
+        "universal-logger.js": 223,
+        "universal-validator.js": 302,
+        "validation.js": 232
+      },
+      "subdirs": {},
+      "fileCount": 15
+    }
+  },
+  "core": {
+    "total": 875,
+    "files": {},
+    "subdirs": {
+      ".github": {
+        "total": 0,
+        "files": {},
+        "subdirs": {
+          "workflows": {
+            "total": 0,
+            "files": {},
+            "subdirs": {},
+            "fileCount": 0
+          }
+        },
+        "fileCount": 0
+      },
+      "src": {
+        "total": 223,
+        "files": {
+          "copy-system.js": 155,
+          "firebase-config.js": 68
+        },
+        "subdirs": {},
+        "fileCount": 2
+      },
+      "universal-system": {
+        "total": 652,
+        "files": {},
+        "subdirs": {
+          "auto-detection": {
+            "total": 0,
+            "files": {},
+            "subdirs": {},
+            "fileCount": 0
+          },
+          "copy-buttons": {
+            "total": 0,
+            "files": {},
+            "subdirs": {},
+            "fileCount": 0
+          },
+          "core": {
+            "total": 652,
+            "files": {
+              "universal-template.js": 652
+            },
+            "subdirs": {},
+            "fileCount": 1
+          },
+          "firebase": {
+            "total": 0,
+            "files": {},
+            "subdirs": {},
+            "fileCount": 0
+          }
+        },
+        "fileCount": 1
+      }
+    },
+    "fileCount": 3
+  },
+  "other": {
+    "index.html": 218,
+    "package.json": 71,
+    "README.md": 209
+  }
+}

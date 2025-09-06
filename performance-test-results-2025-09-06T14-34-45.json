@@ -1,0 +1,33 @@
+{
+  "baseline": {
+    "iterations": 10000,
+    "totalTime": 78.5824,
+    "avgTime": 0.00785824,
+    "opsPerSecond": 127254.95785315795
+  },
+  "compatibility": {
+    "iterations": 10000,
+    "totalTime": 105.6512,
+    "avgTime": 0.01056512,
+    "opsPerSecond": 94651.0782650836,
+    "logsStored": 1000
+  },
+  "comparison": {
+    "overhead": {
+      "absolute": 0.00270688,
+      "percentage": 34.44639003135562
+    },
+    "performance": {
+      "baselineOps": 127254.95785315795,
+      "compatibilityOps": 94651.0782650836,
+      "degradation": 25.620911073418934
+    },
+    "acceptable": true
+  },
+  "stress": {
+    "duration": 1000,
+    "logCount": 115818,
+    "logsPerSecond": 115818,
+    "logsInMemory": 1000
+  }
+}

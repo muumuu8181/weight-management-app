@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 ブラウザダッシュボードチェッカー</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .run-btn {
+            background: #28a745;
+            color: white;
+        }
+        .run-btn:hover {
+            background: #218838;
+        }
+        .clear-btn {
+            background: #dc3545;
+            color: white;
+        }
+        .clear-btn:hover {
+            background: #c82333;
+        }
+        .export-btn {
+            background: #007bff;
+            color: white;
+        }
+        .export-btn:hover {
+            background: #0056b3;
+        }
+        .results {
+            margin-bottom: 30px;
+        }
+        .result-item {
+            background: #f8f9fa;
+            border-left: 5px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .result-item.success {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .result-item.error {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        .result-item.warning {
+            border-color: #ffc107;
+            background: #fff3cd;
+        }
+        .result-item.info {
+            border-color: #17a2b8;
+            background: #d1ecf1;
+        }
+        .result-header {
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .result-details {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            display: none;
+        }
+        .result-details.show {
+            display: block;
+        }
+        .iframe-container {
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 20px;
+            background: #f5f5f5;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+        .summary {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+            display: none;
+        }
+        .toggle-icon {
+            transition: transform 0.3s;
+        }
+        .toggle-icon.open {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 ブラウザダッシュボードチェッカー</h1>
+        <p class="subtitle">ダッシュボードのAIボタンと動的要素を実際のブラウザ環境でテスト</p>
+        
+        <div class="controls">
+            <input type="text" id="dashboardUrl" placeholder="ダッシュボードURL" value="./index.html">
+            <button class="run-btn" onclick="runTest()">🔍 Run Test</button>
+            <button class="clear-btn" onclick="clearResults()">🗑️ Clear</button>
+            <button class="export-btn" onclick="exportResults()">📥 Export</button>
+        </div>
+        
+        <div id="summary" class="summary" style="display: none;">
+            <div class="summary-item">
+                <span class="summary-number" id="totalTests">0</span>
+                <span>Total Tests</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-number" id="passedTests" style="color: #28a745;">0</span>
+                <span>Passed</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-number" id="failedTests" style="color: #dc3545;">0</span>
+                <span>Failed</span>
+            </div>
+        </div>
+        
+        <div id="loading" class="loading">
+            <h3>⏳ Testing in progress...</h3>
+            <p>Checking dashboard for AI features and dynamic content</p>
+        </div>
+        
+        <div id="results" class="results"></div>
+        
+        <div class="iframe-container">
+            <iframe id="dashboardFrame" src="about:blank"></iframe>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+        
+        function log(type, title, details = null) {
+            const result = { type, title, details, timestamp: new Date().toISOString() };
+            testResults.push(result);
+            
+            const resultsDiv = document.getElementById('results');
+            const resultItem = document.createElement('div');
+            resultItem.className = `result-item ${type}`;
+            
+            const header = document.createElement('div');
+            header.className = 'result-header';
+            header.innerHTML = `
+                <span>${getIcon(type)} ${title}</span>
+                ${details ? '<span class="toggle-icon">▶</span>' : ''}
+            `;
+            
+            if (details) {
+                header.onclick = () => {
+                    const detailsDiv = resultItem.querySelector('.result-details');
+                    const toggleIcon = header.querySelector('.toggle-icon');
+                    detailsDiv.classList.toggle('show');
+                    toggleIcon.classList.toggle('open');
+                };
+                
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = 'result-details';
+                detailsDiv.innerHTML = `<pre>${JSON.stringify(details, null, 2)}</pre>`;
+                resultItem.appendChild(detailsDiv);
+            }
+            
+            resultItem.insertBefore(header, resultItem.firstChild);
+            resultsDiv.appendChild(resultItem);
+            
+            // Console出力も
+            console.log(`${getIcon(type)} ${title}`, details || '');
+        }
+        
+        function getIcon(type) {
+            switch(type) {
+                case 'success': return '✅';
+                case 'error': return '❌';
+                case 'warning': return '⚠️';
+                case 'info': return '📋';
+                default: return '📌';
+            }
+        }
+        
+        async function runTest() {
+            const url = document.getElementById('dashboardUrl').value;
+            
+            clearResults();
+            document.getElementById('loading').style.display = 'block';
+            
+            const iframe = document.getElementById('dashboardFrame');
+            iframe.src = url;
+            
+            // iframeの読み込み待機
+            iframe.onload = async () => {
+                await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒待機
+                
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const iframeWin = iframe.contentWindow;
+                    
+                    log('info', 'ダッシュボードテスト開始', { url, timestamp: new Date().toISOString() });
+                    
+                    // 1. AIボタンチェック
+                    checkAIButton(iframeDoc);
+                    
+                    // 2. ナビゲーション要素チェック
+                    checkNavigation(iframeDoc);
+                    
+                    // 3. ダッシュボードタブチェック
+                    checkDashboardTab(iframeDoc);
+                    
+                    // 4. 動的コンテンツチェック
+                    checkDynamicContent(iframeDoc);
+                    
+                    // 5. AI関連スクリプトチェック
+                    checkAIScripts(iframeDoc);
+                    
+                    // 6. 動的要素待機（5秒）
+                    await waitForDynamicElements(iframeDoc, iframeWin);
+                    
+                    // サマリー表示
+                    showSummary();
+                    
+                } catch (error) {
+                    log('error', 'テストエラー', { message: error.message, stack: error.stack });
+                }
+                
+                document.getElementById('loading').style.display = 'none';
+            };
+        }
+        
+        function checkAIButton(doc) {
+            log('info', '🤖 AIボタンチェック開始');
+            
+            // すべてのボタンを取得
+            const buttons = Array.from(doc.querySelectorAll('button'));
+            const aiKeywords = ['AI', '人工知能', 'artificial intelligence', '分析', '🤖'];
+            
+            const aiButtons = buttons.filter(btn => {
+                const text = btn.textContent.toLowerCase();
+                return aiKeywords.some(keyword => text.includes(keyword.toLowerCase()));
+            });
+            
+            if (aiButtons.length > 0) {
+                log('success', `AIボタン発見: ${aiButtons.length}個`, {
+                    buttons: aiButtons.map(btn => ({
+                        text: btn.textContent.trim(),
+                        classes: btn.className,
+                        visible: btn.offsetWidth > 0 && btn.offsetHeight > 0,
+                        dataAttributes: Object.keys(btn.dataset)
+                    }))
+                });
+            } else {
+                log('error', 'AIボタンが見つかりません', {
+                    totalButtons: buttons.length,
+                    searchKeywords: aiKeywords
+                });
+            }
+            
+            // data-view="ai"属性のチェック
+            const aiViewButtons = doc.querySelectorAll('button[data-view="ai"]');
+            if (aiViewButtons.length > 0) {
+                log('success', `data-view="ai"ボタン発見: ${aiViewButtons.length}個`);
+            }
+        }
+        
+        function checkNavigation(doc) {
+            log('info', '🧭 ナビゲーション要素チェック開始');
+            
+            const navSelectors = [
+                '.dashboard-nav',
+                '.dashboard-tab-switcher',
+                '.nav-bar',
+                '.navigation',
+                'nav',
+                '[role="navigation"]'
+            ];
+            
+            let navFound = false;
+            navSelectors.forEach(selector => {
+                const elements = doc.querySelectorAll(selector);
+                if (elements.length > 0) {
+                    navFound = true;
+                    log('success', `ナビゲーション要素発見: ${selector}`, {
+                        count: elements.length,
+                        children: Array.from(elements[0].children).map(child => ({
+                            tag: child.tagName,
+                            text: child.textContent.trim().substring(0, 50)
+                        }))
+                    });
+                }
+            });
+            
+            if (!navFound) {
+                log('error', 'ナビゲーション要素が見つかりません', { testedSelectors: navSelectors });
+            }
+        }
+        
+        function checkDashboardTab(doc) {
+            log('info', '📊 ダッシュボードタブチェック開始');
+            
+            const tabContent5 = doc.getElementById('tabContent5');
+            if (tabContent5) {
+                const isHidden = tabContent5.classList.contains('hidden');
+                const hasContent = tabContent5.innerHTML.trim().length > 0;
+                
+                log(hasContent ? 'success' : 'warning', 'ダッシュボードタブ (tabContent5) 発見', {
+                    hidden: isHidden,
+                    hasContent: hasContent,
+                    contentLength: tabContent5.innerHTML.length,
+                    classes: tabContent5.className
+                });
+            } else {
+                log('error', 'ダッシュボードタブ (tabContent5) が見つかりません');
+            }
+            
+            // タブボタンのチェック
+            const tabButtons = doc.querySelectorAll('.tab-button');
+            if (tabButtons.length > 0) {
+                log('info', `タブボタン発見: ${tabButtons.length}個`, {
+                    tabs: Array.from(tabButtons).map((btn, i) => ({
+                        index: i,
+                        text: btn.textContent.trim(),
+                        active: btn.classList.contains('active')
+                    }))
+                });
+            }
+        }
+        
+        function checkDynamicContent(doc) {
+            log('info', '🎯 動的コンテンツチェック開始');
+            
+            // 動的コンテンツの指標
+            const dynamicIndicators = {
+                forms: doc.querySelectorAll('form').length,
+                inputs: doc.querySelectorAll('input, textarea, select').length,
+                buttons: doc.querySelectorAll('button').length,
+                dataAttributes: doc.querySelectorAll('[data-id], [data-view], [data-action]').length,
+                charts: doc.querySelectorAll('canvas, svg').length,
+                tables: doc.querySelectorAll('table').length,
+                lists: doc.querySelectorAll('ul, ol').length,
+                cards: doc.querySelectorAll('.card, .dashboard-card').length
+            };
+            
+            log('info', '動的コンテンツ統計', dynamicIndicators);
+            
+            // フレームワーク検出
+            const frameworks = {
+                react: !!doc.querySelector('[data-reactroot]') || !!window.React,
+                angular: !!doc.querySelector('[ng-app], [data-ng-app]'),
+                vue: !!doc.querySelector('[data-v-]') || !!window.Vue,
+                jquery: !!window.jQuery || !!window.$,
+                firebase: !!window.firebase
+            };
+            
+            const detectedFrameworks = Object.entries(frameworks)
+                .filter(([_, detected]) => detected)
+                .map(([name]) => name);
+            
+            if (detectedFrameworks.length > 0) {
+                log('success', `フレームワーク検出: ${detectedFrameworks.join(', ')}`);
+            }
+        }
+        
+        function checkAIScripts(doc) {
+            log('info', '📜 AI関連スクリプトチェック開始');
+            
+            const aiScripts = [
+                'ai-weight-analyzer.js',
+                'ai-dashboard-extension.js'
+            ];
+            
+            const scripts = Array.from(doc.querySelectorAll('script[src]'));
+            aiScripts.forEach(scriptName => {
+                const found = scripts.find(script => script.src.includes(scriptName));
+                if (found) {
+                    log('success', `AIスクリプト発見: ${scriptName}`, { src: found.src });
+                } else {
+                    log('error', `AIスクリプトが見つかりません: ${scriptName}`);
+                }
+            });
+        }
+        
+        async function waitForDynamicElements(doc, win) {
+            log('info', '⏳ 動的要素の待機開始（5秒間）');
+            
+            const startTime = Date.now();
+            const maxWait = 5000;
+            const checkInterval = 500;
+            
+            return new Promise((resolve) => {
+                const interval = setInterval(() => {
+                    const elapsed = Date.now() - startTime;
+                    
+                    // 再度AIボタンをチェック
+                    const dynamicAIButton = Array.from(doc.querySelectorAll('button'))
+                        .find(btn => btn.textContent.includes('AI') || btn.textContent.includes('🤖'));
+                    
+                    if (dynamicAIButton) {
+                        log('success', `動的AIボタン発見！（${(elapsed/1000).toFixed(1)}秒後）`, {
+                            text: dynamicAIButton.textContent.trim(),
+                            visible: dynamicAIButton.offsetWidth > 0 && dynamicAIButton.offsetHeight > 0
+                        });
+                        clearInterval(interval);
+                        resolve();
+                        return;
+                    }
+                    
+                    // AI関連関数のチェック
+                    const aiFunctions = ['addAINavigationButton', 'initAIAnalysis', 'initAIAnalysisAsync'];
+                    aiFunctions.forEach(funcName => {
+                        if (typeof win[funcName] === 'function' && !win[`checked_${funcName}`]) {
+                            win[`checked_${funcName}`] = true;
+                            log('success', `AI関数発見: ${funcName}()`);
+                        }
+                    });
+                    
+                    if (elapsed >= maxWait) {
+                        log('warning', '動的AIボタンは5秒以内に出現しませんでした');
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, checkInterval);
+            });
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('summary').style.display = 'none';
+            testResults = [];
+        }
+        
+        function showSummary() {
+            const summary = document.getElementById('summary');
+            const total = testResults.length;
+            const passed = testResults.filter(r => r.type === 'success').length;
+            const failed = testResults.filter(r => r.type === 'error').length;
+            
+            document.getElementById('totalTests').textContent = total;
+            document.getElementById('passedTests').textContent = passed;
+            document.getElementById('failedTests').textContent = failed;
+            
+            summary.style.display = 'flex';
+            
+            log('info', '=== テスト完了 ===', {
+                total,
+                passed,
+                failed,
+                successRate: total > 0 ? `${((passed/total)*100).toFixed(1)}%` : '0%'
+            });
+        }
+        
+        function exportResults() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                url: document.getElementById('dashboardUrl').value,
+                results: testResults,
+                summary: {
+                    total: testResults.length,
+                    passed: testResults.filter(r => r.type === 'success').length,
+                    failed: testResults.filter(r => r.type === 'error').length,
+                    warnings: testResults.filter(r => r.type === 'warning').length
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dashboard-test-${new Date().toISOString().replace(/:/g, '-')}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
