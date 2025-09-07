@@ -32,11 +32,12 @@ function calculateWeightFixed() {
 
 ## 実例
 
-### 睡眠タブのxxx2.*ファイル群
-- `tabs/tab2-sleep/xxx2.js`
-- `tabs/tab2-sleep/xxx2.html`
-- `tabs/tab2-sleep/xxx2.css`
-→ 全く別の機能が実装されており、睡眠機能と無関係なゴミファイル
+### ~~睡眠タブのxxx2.*ファイル群~~ **【解決済み】**
+- ~~`tabs/tab2-sleep/xxx2.js`~~
+- ~~`tabs/tab2-sleep/xxx2.html`~~
+- ~~`tabs/tab2-sleep/xxx2.css`~~
+→ ~~全く別の機能が実装されており、睡眠機能と無関係なゴミファイル~~
+**✅ 解決済み**: これらのファイルは既に削除されています（2025年9月時点で確認済み）
 
 ### 開発ツールの重複
 - display-checker系が5個も存在

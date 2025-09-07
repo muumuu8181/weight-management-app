@@ -106,9 +106,14 @@
 
 <!-- グラフパネル -->
 <div class="input-card" id="chartPanel">
-    <h3>📊 データ推移グラフ</h3>
+    <h3>📊 データ推移グラフ <span id="currentPeriodDisplay" style="font-size: 14px; color: #007bff; font-weight: normal;"></span></h3>
     <div style="position: relative; height: 300px;">
         <canvas id="weightChart"></canvas>
+        <!-- データなし表示 -->
+        <div id="noDataMessage" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #999;">
+            <p style="font-size: 18px; margin: 0;">📊 表示期間にデータがありません</p>
+            <p style="font-size: 14px; margin: 5px 0 0 0;" id="periodRangeMessage"></p>
+        </div>
     </div>
     
     <!-- 期間選択とナビゲーション -->

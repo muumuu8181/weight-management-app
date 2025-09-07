@@ -1,3 +1,5 @@
+# 🚨 **AI開発者は最初に必ず** → [00_AI_MUST_READ_FIRST.md](documentation/project/00_AI_MUST_READ_FIRST.md) を読んでください 🚨
+
 # 📊 体重管理アプリ
 
 ## 🚨 **絶対禁止事項** 🚨
@@ -31,7 +33,7 @@
 **📂 開発経緯の記録場所**: **`documentation/handover/`フォルダ**  
 最新の機能開発内容、コードメトリクス、技術的な変更履歴は **`documentation/handover/`フォルダ** で管理しています。
 
-**🚨 重要**: handoverと言ったら`documentation/handover/`に決まってんだろ、バカ！勝手に新しいフォルダやファイルを作るな。ちゃんと既存の文書構造を確認しろ。
+**🚨 重要**: handoverは必ず`documentation/handover/`フォルダを使用してください。新しいフォルダやファイルを作る前に、必ず既存の文書構造を確認してください。
 
 **📋 新規作成ルール**: フォルダ・ファイル作成前に必ず **`documentation/project/10_NAMING_CONVENTIONS.md`** を参照すること。
 
@@ -145,12 +147,12 @@ weight-management-app/
    - **ゴミファイル、ゴミコード、ゴミフォルダを一切残すな！**
    - ❌ 禁止例: 
      - `calculateWeight()` → `calculateWeightFixed()` を追加して古いのを残す
-     - `xxx2.js`のような不明瞭なファイルを放置
+     - ~~`xxx2.js`のような不明瞭なファイルを放置~~ **【解決済み】**
      - 使われていない古いフォルダを残す
    - ✅ 正解: 既存コードを直接修正し、不要なものは即削除
    - **ゴミを見つけたら積極的にユーザーに報告すること**
    - **作業に余裕がある時は、都度フォルダ状況を確認し、ゴミが残っていないか見回る習慣をつけること**
-   - 不要なコードを残すAIは無能。プロジェクトを清潔に保て。
+   - 不要なコードは必ず削除し、プロジェクトを清潔に保ってください。
 7. **🆕 新規作成前の必須確認ルール**
    - **何かを新しく作る前に、必ず既存・類似の確認を行うこと**
    - 詳細手順: [09_NEW_CREATION_CHECKLIST.md](documentation/project/09_NEW_CREATION_CHECKLIST.md)

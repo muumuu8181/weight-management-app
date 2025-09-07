@@ -22,7 +22,7 @@ git push origin main
 # https://muumuu8181.github.io/weight-management-app/
 ```
 
-## ❌ これをやったら即アウト
+## ❌ 避けるべき事項
 1. **core/フォルダを変更** → プロジェクト差し戻し
 2. **バージョン更新忘れ** → 動作しない
 3. **git push忘れ** → 反映されない

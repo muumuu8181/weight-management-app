@@ -57,7 +57,7 @@ class UniversalTemplate {
             console.log('\n🧪 Step 4: テストツール自動統合中...');
             await this.setupUniversalTesting(projectType);
             
-            console.log('\n✅ Step 5: バカでも使える状態に完成！');
+            console.log('\n✅ Step 5: 誰でも簡単に使える状態に完成！');
             await this.generateReadyToUseApp(projectType);
             
             console.log('\n🚨 重要: 必須要件確認');

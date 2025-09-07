@@ -163,7 +163,7 @@ tabs/tab1-weight/
 #### 4.2 レガシーファイル削除
 - `tabs/tab1-weight/weight.html` (未使用)
 - `tabs/tab1-weight/weight.js` (未使用)  
-- `tabs/tab2-sleep/xxx2.*` (実験ファイル)
+- ~~`tabs/tab2-sleep/xxx2.*` (実験ファイル)~~ **【解決済み: 既に削除】**
 
 ---
 

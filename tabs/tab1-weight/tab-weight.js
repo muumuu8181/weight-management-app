@@ -537,6 +537,13 @@ function updateChart(days = 30) {
     });
     
     log(`🔍 デバッグ: offset=${currentOffset}, days=${days}, startDate=${startDate.toDateString()}, endDate=${now.toDateString()}, データ件数=${filteredData.length}`);
+    
+    // 画面に期間表示を更新
+    const periodDisplay = document.getElementById('currentPeriodDisplay');
+    if (periodDisplay) {
+        const periodText = days === 1 ? '1日' : days === 7 ? '1週間' : days === 30 ? '1ヶ月' : days === 90 ? '3ヶ月' : days === 365 ? '1年' : days === 0 ? '全期間' : `${days}日間`;
+        periodDisplay.textContent = `(${periodText}: ${startDate.toLocaleDateString('ja-JP')}～${now.toLocaleDateString('ja-JP')})`;
+    }
 
     let chartData, datasets = [];
     let timeUnit, displayFormat, axisLabel;
@@ -654,6 +661,19 @@ function updateChart(days = 30) {
     if (datasets.length === 0 || !datasets[0].data || datasets[0].data.length === 0) {
         log(`📊 表示するデータがありません - 全データ件数:${WeightTab.allWeightData?.length || 0}, フィルタ済み:${filteredData.length}, 期間:${startDate.toDateString()}～${now.toDateString()}`);
         
+        // データなしメッセージを表示
+        const canvas = document.getElementById('weightChart');
+        const noDataMsg = document.getElementById('noDataMessage');
+        const periodRangeMsg = document.getElementById('periodRangeMessage');
+        
+        if (canvas) canvas.style.display = 'none';
+        if (noDataMsg) {
+            noDataMsg.style.display = 'block';
+            if (periodRangeMsg) {
+                periodRangeMsg.textContent = `${startDate.toLocaleDateString('ja-JP')} ～ ${now.toLocaleDateString('ja-JP')}`;
+            }
+        }
+        
         // チャートクリア
         if (WeightTab.weightChart) {
             WeightTab.weightChart.destroy();
@@ -739,6 +759,12 @@ function updateChart(days = 30) {
             }
         }
     });
+    
+    // データがある場合はcanvasを表示、メッセージを非表示
+    const canvasEl = document.getElementById('weightChart');
+    const noDataMsgEl = document.getElementById('noDataMessage');
+    if (canvasEl) canvasEl.style.display = 'block';
+    if (noDataMsgEl) noDataMsgEl.style.display = 'none';
 
     log(`📊 グラフ更新完了: ${datasets[0].data.length}件のデータ (期間: ${dateRangeText})`);
 }
@@ -1030,6 +1056,13 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
     });
     
     log(`🔍 デバッグ: offset=${offset}, days=${days}, startDate=${startDate.toDateString()}, endDate=${endDate.toDateString()}, データ件数=${filteredData.length}`);
+    
+    // 画面に期間表示を更新
+    const periodDisplay = document.getElementById('currentPeriodDisplay');
+    if (periodDisplay) {
+        const periodText = days === 1 ? '1日' : days === 7 ? '1週間' : days === 30 ? '1ヶ月' : days === 90 ? '3ヶ月' : days === 365 ? '1年' : days === 0 ? '全期間' : `${days}日間`;
+        periodDisplay.textContent = `(${periodText}: ${startDate.toLocaleDateString('ja-JP')}～${endDate.toLocaleDateString('ja-JP')})`;
+    }
 
     let chartData, datasets = [];
     let timeUnit, displayFormat, axisLabel;
@@ -1147,6 +1180,19 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
     if (datasets.length === 0 || !datasets[0].data || datasets[0].data.length === 0) {
         log(`📊 表示するデータがありません - 全データ件数:${WeightTab.allWeightData?.length || 0}, フィルタ済み:${filteredData.length}, 期間:${startDate.toDateString()}～${endDate.toDateString()}`);
         
+        // データなしメッセージを表示
+        const canvas = document.getElementById('weightChart');
+        const noDataMsg = document.getElementById('noDataMessage');
+        const periodRangeMsg = document.getElementById('periodRangeMessage');
+        
+        if (canvas) canvas.style.display = 'none';
+        if (noDataMsg) {
+            noDataMsg.style.display = 'block';
+            if (periodRangeMsg) {
+                periodRangeMsg.textContent = `${startDate.toLocaleDateString('ja-JP')} ～ ${endDate.toLocaleDateString('ja-JP')}`;
+            }
+        }
+        
         // チャートクリア
         if (WeightTab.weightChart) {
             WeightTab.weightChart.destroy();
@@ -1232,6 +1278,12 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
             }
         }
     });
+    
+    // データがある場合はcanvasを表示、メッセージを非表示
+    const canvasEl = document.getElementById('weightChart');
+    const noDataMsgEl = document.getElementById('noDataMessage');
+    if (canvasEl) canvasEl.style.display = 'block';
+    if (noDataMsgEl) noDataMsgEl.style.display = 'none';
 
     log(`📊 グラフ更新完了: ${filteredData.length}件のデータ (期間: ${dateRangeText})`);
 };
