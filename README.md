@@ -125,6 +125,21 @@ weight-management-app/
 
 **GitHub Pages**: https://muumuu8181.github.io/weight-management-app/
 
+## 🔧 開発に参加する
+
+### 他の端末から開発に参加する方法
+他のPCや開発環境から本プロジェクトに貢献したい場合は、以下のガイドを参照してください：
+
+📖 **[Pull Request作成ガイド](documentation/project/09_PULL_REQUEST_GUIDE.md)**
+- 初回セットアップ手順
+- ブランチ作成とコミット規則
+- GitHub CLIを使ったPR作成
+- コンフリクト解決方法
+
+その他の開発ドキュメント：
+- [開発者ワークフロー](documentation/project/02_DEVELOPER_WORKFLOW.md)
+- [Git Worktreeガイド](documentation/project/08_GIT_WORKTREE_GUIDE.md)
+
 ## ⚠️ 重要な注意事項
 
 ### Safari（iPhone）でのログイン問題
