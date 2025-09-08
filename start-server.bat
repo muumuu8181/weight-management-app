@@ -56,6 +56,9 @@ echo Press Ctrl+C to stop the server
 echo ========================================
 echo.
 
+:: 作業ディレクトリ移動（相対パス化）
+cd /d "%~dp0"
+
 :: サーバー起動
 python -m http.server %PORT%
 
