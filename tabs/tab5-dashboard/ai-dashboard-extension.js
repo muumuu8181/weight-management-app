@@ -115,8 +115,12 @@ window.initAIAnalysisAsync = function() {
             }
         } else if (retryCount < maxRetries) {
             retryCount++;
-            log(`⏳ 体重データ待機中... (${retryCount}/${maxRetries})`);
-            setTimeout(checkAndInitAI, 5000);
+            // Tab5以外では体重データ待機ログを抑制
+            const currentTab = window.currentTabNumber || 1;
+            if (currentTab === 5) {
+                log(`⏳ 体重データ待機中... (${retryCount}/${maxRetries})`);
+            }
+            setTimeout(checkAndInitAI, 15000); // 5秒→15秒に延長
         } else {
             log('❌ AI分析初期化タイムアウト: 体重データが見つかりません');
         }
