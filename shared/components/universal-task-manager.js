@@ -149,7 +149,7 @@ class UniversalTaskManager {
                 <h3>📋 タスク一覧</h3>
                 
                 <!-- 検索・フィルター -->
-                <div style="margin-bottom: 15px;">
+                <div class="filter-container" style="margin-bottom: 15px;">
                     <!-- キーワード検索 -->
                     <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px;">
                         <input type="text" id="${this.containerId}_taskFilter" placeholder="タスクを検索..." 
@@ -197,6 +197,8 @@ class UniversalTaskManager {
                         style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-left: 10px; display: none;">✨ 選択したタスクを統合</button>
                     <button id="${this.containerId}_cancelIntegrationBtn" onclick="${this.containerId}_cancelIntegration()" 
                         style="background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-left: 10px; display: none;">❌ キャンセル</button>
+                    <button class="copy-all-btn" onclick="${this.containerId}_copyAllTasks()" 
+                        style="background: #ffc107; color: #212529; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-left: 10px;">📋 全てコピー</button>
                 </div>
                 
                 <!-- タスクリスト表示エリア -->
@@ -255,6 +257,7 @@ class UniversalTaskManager {
         window[`${this.containerId}_toggleIntegrationMode`] = () => this.toggleIntegrationMode();
         window[`${this.containerId}_integrateTasks`] = () => this.integrateTasks();
         window[`${this.containerId}_cancelIntegration`] = () => this.cancelIntegration();
+        window[`${this.containerId}_copyAllTasks`] = () => this.copyAllTasks();
         window[`${this.containerId}_subdivideTask`] = (taskId) => this.subdivideTask(taskId);
         window[`${this.containerId}_deleteTask`] = (taskId) => this.deleteTask(taskId);
         window[`${this.containerId}_toggleTaskSelection`] = (taskId) => this.toggleTaskSelection(taskId);
@@ -472,17 +475,18 @@ class UniversalTaskManager {
     }
     
     // 階層ソート
-    sortByHierarchy() {
+    sortByHierarchy(filteredTasks = null) {
+        const tasks = filteredTasks || this.taskData;
         const result = [];
         const processed = new Set();
         
         // レベル0（親）タスクを時系列順でソート
-        const parents = this.taskData.filter(task => (task.level || 0) === 0)
+        const parents = tasks.filter(task => (task.level || 0) === 0)
             .sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
         
         // 再帰的に子タスクを追加
         const addChildren = (parentId, currentLevel) => {
-            const children = this.taskData.filter(task => 
+            const children = tasks.filter(task => 
                 task.parentId == parentId && (task.level || 0) === currentLevel
             ).sort((a, b) => new Date(a.createdAt || a.date) - new Date(b.createdAt || b.date));
             
@@ -524,12 +528,12 @@ class UniversalTaskManager {
         }
         
         // 親タスクのみを表示し、子タスクはアコーディオンで管理
-        const allParentTasks = this.taskData.filter(task => (task.level || 0) === 0);
+        const allParentTasks = tasks.filter(task => (task.level || 0) === 0);
         let html = '';
         
         allParentTasks.forEach(parentTask => {
-            // 全ての子孫タスクを取得（フィルタリング関係なし）
-            const allChildren = this.getAllDescendants(parentTask.id);
+            // フィルター結果から子孫タスクを取得
+            const allChildren = this.getFilteredDescendants(parentTask.id, tasks);
             const hasChildren = allChildren.length > 0;
             const isExpanded = !this.collapsedTasks.has(String(parentTask.id));
             
@@ -1211,6 +1215,7 @@ class UniversalTaskManager {
         
         // 重要度フィルター
         if (this.currentPriorityFilter !== 'all') {
+            console.log(`🎯 重要度フィルター適用前: ${filteredTasks.length}件`);
             if (this.currentPriorityFilter === 'S') {
                 filteredTasks = filteredTasks.filter(task => task.priority === 'S');
             } else if (this.currentPriorityFilter === 'A+') {
@@ -1218,6 +1223,7 @@ class UniversalTaskManager {
             } else if (this.currentPriorityFilter === 'B+') {
                 filteredTasks = filteredTasks.filter(task => ['S', 'A', 'B'].includes(task.priority));
             }
+            console.log(`🎯 重要度フィルター適用後: ${filteredTasks.length}件`);
         }
         
         // 締切フィルター
@@ -1281,12 +1287,13 @@ class UniversalTaskManager {
                 break;
                 
             default:
-                sortedTasks = this.sortByHierarchy();
+                sortedTasks = this.sortByHierarchy(tasks);
                 break;
         }
         
         // 階層構造を維持（デフォルト以外でも階層は保持）
         
+        console.log(`📋 最終表示タスク数: ${sortedTasks.length}件`);
         this.displayTasks(sortedTasks);
         this.updateFilterCount(sortedTasks.length, this.taskData.length);
     }
@@ -1355,6 +1362,28 @@ class UniversalTaskManager {
         return descendants;
     }
     
+    // フィルター結果から子孫タスクを取得
+    getFilteredDescendants(parentId, filteredTasks) {
+        const descendants = [];
+        
+        const findChildren = (pid, level) => {
+            const children = filteredTasks.filter(task => 
+                task.parentId == pid && (task.level || 0) === level
+            );
+            
+            children.forEach(child => {
+                descendants.push(child);
+                // さらに子がいる場合は再帰的に取得（最大4階層）
+                if (level < 3) {
+                    findChildren(child.id, level + 1);
+                }
+            });
+        };
+        
+        findChildren(parentId, 1);
+        return descendants;
+    }
+    
     // アコーディオントグル（親の開閉で全子孫を一括制御）
     toggleAccordion(taskId) {
         const taskIdStr = String(taskId);
@@ -1392,6 +1421,232 @@ class UniversalTaskManager {
         
         // 表示更新は不要（CSSアニメーションで処理）
         console.log('🎭 アコーディオンアニメーション実行完了');
+    }
+    
+    // Tab8固有機能の追加
+    
+    // 全タスクをコピー
+    copyAllTasks() {
+        if (this.taskData.length === 0) {
+            alert('コピーするタスクがありません');
+            return;
+        }
+        
+        const copyText = this.taskData.map(task => {
+            const categoryText = task.category ? `[${task.category}] ` : '';
+            const priorityText = task.priority ? `[${task.priority}] ` : '';
+            const timeframeText = task.timeframe ? `(${task.timeframe}) ` : '';
+            return `${task.date} ${task.time} ${categoryText}${priorityText}${timeframeText}${task.text}`;
+        }).join('\n\n');
+        
+        navigator.clipboard.writeText(copyText).then(() => {
+            if (typeof log === 'function') {
+                log('📋 全タスクをクリップボードにコピーしました');
+            }
+            // スマートエフェクト
+            if (window.smartEffects) {
+                const btn = document.querySelector(`#${this.containerId} .copy-all-btn`);
+                if (btn) {
+                    window.smartEffects.trigger('memo', 'copy', btn);
+                }
+            }
+        }).catch(() => {
+            if (typeof log === 'function') {
+                log('❌ コピーに失敗しました');
+            }
+        });
+    }
+    
+    // 文字フィルター機能を追加
+    enableCharacterFilter() {
+        this.characterFilter = '';
+        this.createCharacterFilterUI();
+    }
+    
+    createCharacterFilterUI() {
+        const filterContainer = document.querySelector(`#${this.containerId} .filter-container`);
+        if (!filterContainer) return;
+        
+        const charFilterDiv = document.createElement('div');
+        charFilterDiv.className = 'character-filter-section';
+        charFilterDiv.style.cssText = 'margin: 10px 0;';
+        charFilterDiv.innerHTML = `
+            <label style="font-weight: bold; margin-right: 10px;">🔤 文字フィルター:</label>
+            <div class="char-filter-buttons" style="display: inline-flex; gap: 5px; flex-wrap: wrap;">
+                <button class="char-filter-btn" data-char="" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">全て</button>
+                <button class="char-filter-btn" data-char="あ" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">あ</button>
+                <button class="char-filter-btn" data-char="か" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">か</button>
+                <button class="char-filter-btn" data-char="さ" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">さ</button>
+                <button class="char-filter-btn" data-char="た" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">た</button>
+                <button class="char-filter-btn" data-char="な" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">な</button>
+                <button class="char-filter-btn" data-char="は" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">は</button>
+                <button class="char-filter-btn" data-char="ま" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">ま</button>
+                <button class="char-filter-btn" data-char="や" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">や</button>
+                <button class="char-filter-btn" data-char="ら" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">ら</button>
+                <button class="char-filter-btn" data-char="わ" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">わ</button>
+                <button class="char-filter-btn" data-char="数" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">数</button>
+                <button class="char-filter-btn" data-char="A" style="background: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 5px 10px; border-radius: 4px; cursor: pointer;">A</button>
+            </div>
+        `;
+        
+        filterContainer.appendChild(charFilterDiv);
+        
+        // イベントリスナー設定
+        charFilterDiv.querySelectorAll('.char-filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.filterByCharacter(btn.getAttribute('data-char'));
+                // ボタンスタイル更新
+                charFilterDiv.querySelectorAll('.char-filter-btn').forEach(b => {
+                    b.style.background = '#e9ecef';
+                    b.style.color = '#495057';
+                });
+                btn.style.background = '#007bff';
+                btn.style.color = 'white';
+            });
+        });
+    }
+    
+    filterByCharacter(char) {
+        this.characterFilter = char;
+        
+        if (typeof log === 'function') {
+            log(`🔤 文字フィルター: ${char || '全て'}`);
+        }
+        
+        // フィルタリング処理
+        if (!char) {
+            // 全て表示
+            this.applyFilters();
+        } else if (char === '数') {
+            this.filteredTaskData = this.taskData.filter(task => /^[0-9]/.test(task.text));
+        } else if (char === 'A') {
+            this.filteredTaskData = this.taskData.filter(task => /^[A-Za-z]/.test(task.text));
+        } else {
+            // ひらがなフィルター
+            const charRanges = {
+                'あ': ['あ', 'お'], 'か': ['か', 'ご'], 'さ': ['さ', 'ぞ'], 
+                'た': ['た', 'ど'], 'な': ['な', 'の'], 'は': ['は', 'ぽ'],
+                'ま': ['ま', 'も'], 'や': ['や', 'よ'], 'ら': ['ら', 'ろ'], 'わ': ['わ', 'ん']
+            };
+            
+            if (charRanges[char]) {
+                const [start, end] = charRanges[char];
+                this.filteredTaskData = this.taskData.filter(task => {
+                    const firstChar = task.text.charAt(0);
+                    return firstChar >= start && firstChar <= end;
+                });
+            }
+        }
+        
+        this.displayTasks();
+    }
+    
+    // 複数キーワードフィルター機能
+    enableMultiKeywordFilter() {
+        this.multiKeywords = [''];
+        this.keywordFilterCount = 1;
+        this.createMultiKeywordFilterUI();
+    }
+    
+    createMultiKeywordFilterUI() {
+        const filterContainer = document.querySelector(`#${this.containerId} .filter-container`);
+        if (!filterContainer) return;
+        
+        const multiKeywordDiv = document.createElement('div');
+        multiKeywordDiv.className = 'multi-keyword-filter-section';
+        multiKeywordDiv.style.cssText = 'margin: 10px 0;';
+        multiKeywordDiv.innerHTML = `
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">🔍 複数キーワード検索:</label>
+            <div id="${this.containerId}_keywordFilters">
+                <div id="${this.containerId}_keywordFilter1">
+                    <input type="text" id="${this.containerId}_keywordInput1" placeholder="キーワード 1..." 
+                        style="padding: 5px 10px; border: 1px solid #ced4da; border-radius: 4px; margin-right: 5px; width: 150px;">
+                </div>
+            </div>
+            <button onclick="${this.containerId}_addKeywordFilter()" 
+                style="background: #28a745; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; margin-top: 5px;">
+                ➕ キーワード追加
+            </button>
+        `;
+        
+        filterContainer.appendChild(multiKeywordDiv);
+        
+        // グローバル関数として登録
+        window[`${this.containerId}_addKeywordFilter`] = () => this.addKeywordFilter();
+        window[`${this.containerId}_handleKeywordInput`] = (index) => this.handleKeywordInput(index);
+        window[`${this.containerId}_removeKeywordFilter`] = (index) => this.removeKeywordFilter(index);
+        
+        // 最初のキーワード入力イベント設定
+        const firstInput = document.getElementById(`${this.containerId}_keywordInput1`);
+        if (firstInput) {
+            firstInput.onkeyup = () => this.handleKeywordInput(1);
+        }
+    }
+    
+    addKeywordFilter() {
+        this.keywordFilterCount++;
+        
+        const keywordFilters = document.getElementById(`${this.containerId}_keywordFilters`);
+        
+        const filterDiv = document.createElement('div');
+        filterDiv.id = `${this.containerId}_keywordFilter${this.keywordFilterCount}`;
+        filterDiv.style.cssText = 'margin-top: 5px;';
+        
+        filterDiv.innerHTML = `
+            <input type="text" id="${this.containerId}_keywordInput${this.keywordFilterCount}" 
+                placeholder="キーワード ${this.keywordFilterCount}..." 
+                style="padding: 5px 10px; border: 1px solid #ced4da; border-radius: 4px; margin-right: 5px; width: 150px;"
+                onkeyup="${this.containerId}_handleKeywordInput(${this.keywordFilterCount})">
+            <button onclick="${this.containerId}_removeKeywordFilter(${this.keywordFilterCount})"
+                style="background: #dc3545; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer;">
+                ❌
+            </button>
+        `;
+        
+        keywordFilters.appendChild(filterDiv);
+        this.multiKeywords.push('');
+        
+        if (typeof log === 'function') {
+            log(`➕ キーワードフィルター追加: ${this.keywordFilterCount}`);
+        }
+    }
+    
+    removeKeywordFilter(index) {
+        const filterDiv = document.getElementById(`${this.containerId}_keywordFilter${index}`);
+        if (filterDiv) {
+            filterDiv.remove();
+        }
+        
+        this.multiKeywords[index - 1] = null;
+        this.applyMultiKeywordFilter();
+        
+        if (typeof log === 'function') {
+            log(`❌ キーワードフィルター削除: ${index}`);
+        }
+    }
+    
+    handleKeywordInput(index) {
+        const input = document.getElementById(`${this.containerId}_keywordInput${index}`);
+        if (input) {
+            this.multiKeywords[index - 1] = input.value.trim();
+            this.applyMultiKeywordFilter();
+        }
+    }
+    
+    applyMultiKeywordFilter() {
+        const activeKeywords = this.multiKeywords.filter(k => k && k.length > 0);
+        
+        if (activeKeywords.length === 0) {
+            this.applyFilters();
+            return;
+        }
+        
+        this.filteredTaskData = this.taskData.filter(task => {
+            const searchText = (task.text + ' ' + (task.category || '')).toLowerCase();
+            return activeKeywords.some(keyword => searchText.includes(keyword.toLowerCase()));
+        });
+        
+        this.displayTasks();
     }
 }
 
