@@ -118,6 +118,13 @@ function toggleSleepTag(tag) {
 
 // 睡眠データ保存
 async function saveSleepData() {
+    // 事前条件：認証状態の確認
+    Contract.require(currentUser, 'ユーザーがログインしている必要があります');
+    
+    // 事前条件：必須DOM要素の存在確認
+    Contract.requireElement('sleepDateInput', '睡眠日付入力フィールドが見つかりません');
+    Contract.requireElement('sleepTimeInput', '睡眠時刻入力フィールドが見つかりません');
+    
     if (!currentUser) {
         log('❌ ログインが必要です');
         return;
@@ -126,6 +133,12 @@ async function saveSleepData() {
     // 入力値取得
     const sleepDate = document.getElementById('sleepDateInput').value;
     const sleepTime = document.getElementById('sleepTimeInput').value;
+    
+    // 事前条件：入力データの検証
+    Contract.require(sleepDate && sleepDate.length > 0, '睡眠日付が入力されている必要があります');
+    Contract.require(sleepTime && sleepTime.length > 0, '睡眠時刻が入力されている必要があります');
+    Contract.requireType(sleepDate, 'string', 'sleepDate');
+    Contract.requireType(sleepTime, 'string', 'sleepTime');
     const sleepMemo = document.getElementById('sleepMemoInput').value;
 
     // 必須項目チェック
@@ -152,9 +165,17 @@ async function saveSleepData() {
     };
 
     try {
+        // 事前条件：sleepDataオブジェクトの妥当性検証
+        Contract.require(sleepData && typeof sleepData === 'object', 'sleepDataは有効なオブジェクトである必要があります');
+        Contract.require(!Array.isArray(sleepData), 'sleepDataは配列ではなくオブジェクトである必要があります');
+        Contract.require(sleepData.date && sleepData.time, 'sleepDataに日付と時刻が含まれている必要があります');
+        
         // Firebase保存 - Firebase CRUD統一クラス使用
         const sleepEntryId = `${sleepDate}_${Date.now()}`;
-        await FirebaseCRUD.setWithId('sleepData', currentUser.uid, sleepEntryId, sleepData);
+        const result = await FirebaseCRUD.setWithId('sleepData', currentUser.uid, sleepEntryId, sleepData);
+        
+        // 事後条件：保存結果の確認
+        Contract.ensure(result !== undefined, '睡眠データの保存操作が正常に完了する必要があります');
         
         log(`💾 睡眠記録保存完了: ${sleepDate} ${sleepTime}`);
         

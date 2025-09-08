@@ -72,6 +72,14 @@ window.selectExerciseType = (type) => {
 
 // 万歩計データ保存
 window.savePedometerData = async () => {
+    // 事前条件：認証状態の確認
+    Contract.require(currentUser, 'ユーザーがログインしている必要があります');
+    
+    // 事前条件：必須DOM要素の存在確認
+    Contract.requireElement('pedometerDateInput', '万歩計日付入力フィールドが見つかりません');
+    Contract.requireElement('stepsInput', '歩数入力フィールドが見つかりません');
+    Contract.requireElement('selectedExerciseType', '運動種別選択フィールドが見つかりません');
+    
     if (!currentUser) {
         log('❌ ログインが必要です');
         return;
@@ -89,6 +97,18 @@ window.savePedometerData = async () => {
             timestamp: new Date().toISOString(),
             userEmail: currentUser.email
         };
+        
+        // 事前条件：入力データの検証
+        Contract.require(pedometerData.date && pedometerData.date.length > 0, '万歩計日付が入力されている必要があります');
+        Contract.require(typeof pedometerData.steps === 'number', '歩数は数値である必要があります');
+        Contract.require(pedometerData.steps > 0, '歩数は1以上の値である必要があります');
+        Contract.require(pedometerData.exerciseType && pedometerData.exerciseType.length > 0, '運動種別が選択されている必要があります');
+        Contract.require(typeof pedometerData.distance === 'number', '距離は数値である必要があります');
+        Contract.require(typeof pedometerData.calories === 'number', 'カロリーは数値である必要があります');
+        
+        // 事前条件：pedometerDataオブジェクトの妥当性検証
+        Contract.require(pedometerData && typeof pedometerData === 'object', 'pedometerDataは有効なオブジェクトである必要があります');
+        Contract.require(!Array.isArray(pedometerData), 'pedometerDataは配列ではなくオブジェクトである必要があります');
         
         // 必須項目検証（共通関数使用）
         const pedometerFieldConfig = {
@@ -108,9 +128,11 @@ window.savePedometerData = async () => {
             return;
         }
         
-        // Firebaseに保存
-        const userRef = firebase.database().ref(`users/${currentUser.uid}/pedometerData`);
-        await userRef.push(pedometerData);
+        // Firebaseに保存 - Firebase CRUD統一クラス使用
+        const result = await FirebaseCRUD.save('pedometerData', currentUser.uid, pedometerData);
+        
+        // 事後条件：保存結果の確認
+        Contract.ensure(result && result.key, '万歩計データの保存操作が正常に完了する必要があります');
         
         log(`✅ 万歩計データ保存完了: ${pedometerData.date} - ${pedometerData.steps}歩 (${pedometerData.exerciseType})`);
         

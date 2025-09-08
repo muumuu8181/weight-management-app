@@ -5,10 +5,19 @@ class UniversalValidator {
     
     // 必須フィールド検証
     static validateRequired(fields, customMessages = {}) {
+        // 事前条件：パラメータの検証
+        Contract.requireArray(fields, 'fields', false);
+        Contract.require(typeof customMessages === 'object' && !Array.isArray(customMessages), 
+            'customMessagesはオブジェクトである必要があります');
+        
         const errors = [];
         const missing = [];
         
         fields.forEach(fieldId => {
+            // 事前条件：fieldIdの検証
+            Contract.requireType(fieldId, 'string', 'fieldId');
+            Contract.require(fieldId.length > 0, 'fieldIdは空であってはいけません');
+            
             const field = document.getElementById(fieldId);
             if (!field) {
                 errors.push(`フィールドが見つかりません: ${fieldId}`);
@@ -32,11 +41,27 @@ class UniversalValidator {
             return false;
         }
         
+        // 事後条件：すべてのフィールドが検証されたことを確認
+        Contract.ensure(fields.length === errors.length + (fields.length - missing.length - errors.length), 
+            'すべてのフィールドが処理されました');
+        
         return true;
     }
     
     // 数値範囲検証
     static validateNumber(fieldId, min = null, max = null, allowFloat = true) {
+        // 事前条件：パラメータの検証
+        Contract.requireType(fieldId, 'string', 'fieldId');
+        Contract.require(fieldId.length > 0, 'fieldIdは空であってはいけません');
+        Contract.require(min === null || typeof min === 'number', 'minはnullまたは数値である必要があります');
+        Contract.require(max === null || typeof max === 'number', 'maxはnullまたは数値である必要があります');
+        Contract.require(typeof allowFloat === 'boolean', 'allowFloatはboolean型である必要があります');
+        
+        // 事前条件：min/maxの整合性
+        if (min !== null && max !== null) {
+            Contract.require(min <= max, '最小値は最大値以下である必要があります');
+        }
+        
         const field = document.getElementById(fieldId);
         if (!field || !field.value) return true;
         
@@ -208,6 +233,12 @@ class UniversalValidator {
     
     // フィールドエラー表示
     static showFieldError(field, message) {
+        // 事前条件：パラメータの検証
+        Contract.require(field && field instanceof HTMLElement, 'fieldはHTML要素である必要があります');
+        Contract.requireType(message, 'string', 'message');
+        Contract.require(message.length > 0, 'エラーメッセージは空であってはいけません');
+        Contract.require(field.parentNode, 'フィールドには親要素が必要です');
+        
         this.clearFieldError(field);
         
         field.style.borderColor = '#dc3545';
@@ -231,6 +262,9 @@ class UniversalValidator {
     
     // フィールドエラークリア
     static clearFieldError(field) {
+        // 事前条件：パラメータの検証
+        Contract.require(field && field instanceof HTMLElement, 'fieldはHTML要素である必要があります');
+        
         field.style.borderColor = '';
         field.style.borderWidth = '';
         

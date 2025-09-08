@@ -370,7 +370,15 @@ function selectAutomationGoal(goal) {
 
 // タスク保存
 async function saveJobTask() {
+    // 事前条件：認証状態とDOM要素の確認
+    Contract.require(firebase && firebase.auth && firebase.auth().currentUser, 'ユーザーがログインしている必要があります');
+    Contract.requireElement('newTaskText', 'タスク入力フィールドが見つかりません');
+    
     const taskText = document.getElementById('newTaskText').value.trim();
+    
+    // 事前条件：入力データの検証
+    Contract.require(taskText && taskText.length > 0, 'タスク内容が入力されている必要があります');
+    Contract.requireType(taskText, 'string', 'taskText');
     
     if (!taskText) {
         alert('タスク内容を入力してください');
@@ -389,13 +397,23 @@ async function saveJobTask() {
         actualTime: 0
     };
     
+    // 事前条件：taskDataオブジェクトの妥当性検証
+    Contract.require(taskData && typeof taskData === 'object', 'taskDataは有効なオブジェクトである必要があります');
+    Contract.require(!Array.isArray(taskData), 'taskDataは配列ではなくオブジェクトである必要があります');
+    Contract.require(taskData.text && taskData.text.length > 0, 'タスクテキストが含まれている必要があります');
+    Contract.require(Array.isArray(taskData.tags), 'タグは配列である必要があります');
+    Contract.require(typeof taskData.completed === 'boolean', '完了フラグはboolean値である必要があります');
+    
     console.log('保存するタスクデータ:', taskData);
     
     try {
         // Firebase保存処理
         if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
             const user = firebase.auth().currentUser;
-            await FirebaseCRUD.save('jobTasks', user.uid, taskData);
+            const result = await FirebaseCRUD.save('jobTasks', user.uid, taskData);
+            
+            // 事後条件：保存結果の確認
+            Contract.ensure(result && result.key, 'JOB-DCタスクの保存操作が正常に完了する必要があります');
             
             console.log('タスクをFirebaseに保存しました');
             

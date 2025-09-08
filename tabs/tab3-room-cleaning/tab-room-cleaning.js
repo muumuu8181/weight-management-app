@@ -278,6 +278,13 @@ function loadCustomRooms() {
 
 // 部屋片付けデータ保存
 window.saveRoomData = async () => {
+    // 事前条件：認証状態の確認
+    Contract.require(currentUser, 'ユーザーがログインしている必要があります');
+    
+    // 事前条件：必須DOM要素の存在確認
+    Contract.requireElement('roomDateInput', '片付け日付入力フィールドが見つかりません');
+    Contract.requireElement('roomDuration', '片付け時間入力フィールドが見つかりません');
+    
     if (!currentUser) {
         log('❌ ログインが必要です');
         return;
@@ -296,8 +303,17 @@ window.saveRoomData = async () => {
         }
     }
     
-    // 🔒 計測中チェック
+    // 事前条件：入力データの検証
+    const roomDate = document.getElementById('roomDateInput').value;
     const durationValue = document.getElementById('roomDuration').value;
+    
+    Contract.require(roomDate && roomDate.length > 0, '片付け日付が入力されている必要があります');
+    Contract.requireType(roomDate, 'string', 'roomDate');
+    Contract.require(selectedRoomValue && selectedRoomValue.length > 0, '片付け場所が選択されている必要があります');
+    Contract.requireType(selectedRoomValue, 'string', 'selectedRoomValue');
+    Contract.require(durationValue !== '計測中...' && durationValue !== '', '片付け時間の計測が完了している必要があります');
+    
+    // 🔒 計測中チェック
     if (durationValue === '計測中...' || durationValue === '') {
         log('❌ 計測が完了していません。先に片付け終了ボタンを押してください');
         return;
@@ -323,8 +339,17 @@ window.saveRoomData = async () => {
             timestamp: new Date().toISOString()
         };
         
+        // 事前条件：roomDataオブジェクトの妥当性検証
+        Contract.require(roomData && typeof roomData === 'object', 'roomDataは有効なオブジェクトである必要があります');
+        Contract.require(!Array.isArray(roomData), 'roomDataは配列ではなくオブジェクトである必要があります');
+        Contract.require(roomData.date && roomData.room, 'roomDataに日付と場所が含まれている必要があります');
+        Contract.require(typeof roomData.durationSeconds === 'number', '時間（秒）は数値である必要があります');
+        
         // Firebaseに保存 - Firebase CRUD統一クラス使用
-        await FirebaseCRUD.save('roomData', currentUser.uid, roomData);
+        const result = await FirebaseCRUD.save('roomData', currentUser.uid, roomData);
+        
+        // 事後条件：保存結果の確認
+        Contract.ensure(result && result.key, '部屋片付けデータの保存操作が正常に完了する必要があります');
         
         log('✅ 部屋片付けデータ保存完了');
         
