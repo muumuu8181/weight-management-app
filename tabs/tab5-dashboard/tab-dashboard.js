@@ -28,6 +28,10 @@ try {
 
 // ダッシュボード初期化（AI分析統合版）
 window.initDashboard = function() {
+    // 事前条件：認証状態とDOM要素の確認
+    Contract.require(currentUser, 'ユーザーがログインしている必要があります');
+    Contract.requireElement('tabContent5', 'ダッシュボードコンテナ要素が見つかりません');
+    
     log('🔄 ダッシュボード初期化開始（AI分析統合版）');
     
     if (!currentUser) {
@@ -99,6 +103,10 @@ window.switchDashboardView = function(viewType) {
 
 // 全データ更新（共通ローダー使用）
 window.refreshDashboardData = async function() {
+    // 事前条件：認証状態の確認
+    Contract.require(currentUser, 'ダッシュボードデータ更新にはユーザーログインが必要です');
+    Contract.require(currentUser.uid, 'ユーザーIDが有効である必要があります');
+    
     log('🔄 ダッシュボードデータ更新開始（共通ローダー使用）');
     
     if (!currentUser) {
@@ -110,10 +118,20 @@ window.refreshDashboardData = async function() {
         // 共通ローダーを使用して並行データ取得
         const userId = currentUser.uid;
         
+        // 事前条件：データローダーの存在確認
+        Contract.require(window.FIREBASE_MULTI_LOADER, 'Firebase Multi Loaderが初期化されている必要があります');
+        Contract.require(window.DASHBOARD_BUILDER, 'Dashboard Builderが初期化されている必要があります');
+        
         dashboardData.weight = await window.FIREBASE_MULTI_LOADER.loadWeightData(userId);
         dashboardData.sleep = await window.FIREBASE_MULTI_LOADER.loadSleepData(userId);
         dashboardData.room = await window.FIREBASE_MULTI_LOADER.loadRoomData(userId);
         dashboardData.memo = await window.FIREBASE_MULTI_LOADER.loadMemoData(userId);
+        
+        // 事後条件：データ読み込み結果の検証
+        Contract.ensure(Array.isArray(dashboardData.weight), '体重データは配列である必要があります');
+        Contract.ensure(Array.isArray(dashboardData.sleep), '睡眠データは配列である必要があります');
+        Contract.ensure(Array.isArray(dashboardData.room), '部屋片付けデータは配列である必要があります');
+        Contract.ensure(Array.isArray(dashboardData.memo), 'メモデータは配列である必要があります');
         
         // 共通ダッシュボードビルダーでデータ更新
         window.DASHBOARD_BUILDER.updateDashboardData(DASHBOARD_TAB_CONFIGS, dashboardData);

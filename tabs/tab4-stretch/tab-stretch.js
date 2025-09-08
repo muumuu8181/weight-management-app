@@ -184,6 +184,13 @@ function startStretchTimer() {
 
 // ストレッチデータ保存（エフェクト付き）
 async function saveStretchData() {
+    // 事前条件：認証状態の確認
+    Contract.require(currentUser, 'ユーザーがログインしている必要があります');
+    
+    // 事前条件：必須DOM要素の存在確認
+    Contract.requireElement('stretchDateInput', 'ストレッチ日付入力フィールドが見つかりません');
+    Contract.requireElement('selectedStretchType', 'ストレッチタイプ選択フィールドが見つかりません');
+    
     const saveButton = document.querySelector('button[onclick="saveStretchData()"]');
     const originalText = saveButton.innerHTML;
     const originalStyle = saveButton.style.cssText;
@@ -204,6 +211,15 @@ async function saveStretchData() {
         const bodyParts = selectedBodyParts;
         const memo = document.getElementById('stretchMemoInput').value || null;
         
+        // 事前条件：入力データの検証
+        Contract.require(date && date.length > 0, 'ストレッチ日付が入力されている必要があります');
+        Contract.require(stretchType && stretchType.length > 0, 'ストレッチタイプが選択されている必要があります');
+        Contract.require(duration && duration !== '', 'ストレッチ時間が入力されている必要があります');
+        Contract.require(intensity && intensity.length > 0, '運動強度が選択されている必要があります');
+        Contract.requireArray(bodyParts, 'bodyParts', false);
+        Contract.requireType(date, 'string', 'date');
+        Contract.requireType(stretchType, 'string', 'stretchType');
+        
         if (!date || !stretchType || !duration || !intensity || bodyParts.length === 0) {
             throw new Error('すべての必須項目を入力してください');
         }
@@ -212,8 +228,8 @@ async function saveStretchData() {
             throw new Error('ログインが必要です');
         }
         
-        // データ保存 - Firebase CRUD統一クラス使用
-        await FirebaseCRUD.save('stretchData', currentUser.uid, {
+        // ストレッチデータオブジェクト構築
+        const stretchData = {
             date: date,
             stretchType: stretchType,
             startTime: startTime,
@@ -222,7 +238,19 @@ async function saveStretchData() {
             bodyParts: bodyParts,
             memo: memo,
             timestamp: firebase.database.ServerValue.TIMESTAMP
-        });
+        };
+        
+        // 事前条件：stretchDataオブジェクトの妥当性検証
+        Contract.require(stretchData && typeof stretchData === 'object', 'stretchDataは有効なオブジェクトである必要があります');
+        Contract.require(!Array.isArray(stretchData), 'stretchDataは配列ではなくオブジェクトである必要があります');
+        Contract.require(typeof stretchData.duration === 'number', 'ストレッチ時間は数値である必要があります');
+        Contract.require(typeof stretchData.intensity === 'number', '運動強度は数値である必要があります');
+        
+        // データ保存 - Firebase CRUD統一クラス使用
+        const result = await FirebaseCRUD.save('stretchData', currentUser.uid, stretchData);
+        
+        // 事後条件：保存結果の確認
+        Contract.ensure(result && result.key, 'ストレッチデータの保存操作が正常に完了する必要があります');
         
         // 成功エフェクト
         saveButton.innerHTML = '✅ 保存完了!';

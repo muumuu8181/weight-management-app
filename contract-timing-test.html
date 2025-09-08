@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>契約検出タイミングテスト</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .error { color: red; }
+        .success { color: green; }
+        button { padding: 10px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>契約プログラミング検出タイミングテスト</h1>
+    
+    <div class="section">
+        <h2>1. ページ読み込み時の検出</h2>
+        <p id="loadResult">テスト中...</p>
+    </div>
+    
+    <div class="section">
+        <h2>2. ボタンクリック時の検出</h2>
+        <button onclick="testClickDetection()">契約違反を実行</button>
+        <button onclick="testValidFunction()">正常な処理を実行</button>
+        <p id="clickResult"></p>
+    </div>
+    
+    <div class="section">
+        <h2>3. Firebase操作時の検出</h2>
+        <button onclick="testFirebaseError()">Firebase契約違反</button>
+        <p id="firebaseResult"></p>
+    </div>
+    
+    <div class="section">
+        <h2>4. バリデーション実行時の検出</h2>
+        <input type="text" id="testField" placeholder="テスト入力">
+        <button onclick="testValidationError()">バリデーション契約違反</button>
+        <p id="validationResult"></p>
+    </div>
+    
+    <div class="section">
+        <h2>検出ログ</h2>
+        <div id="log" style="background: #f5f5f5; padding: 10px; max-height: 200px; overflow-y: auto;"></div>
+    </div>
+
+    <!-- 契約プログラミングライブラリ -->
+    <script src="shared/utils/contract.js"></script>
+    
+    <script>
+        // ログ表示関数
+        function log(message, isError = false) {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = isError ? 'error' : 'success';
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        // 1. ページ読み込み時のテスト
+        console.log('🔍 ページ読み込み開始...');
+        
+        // このコードは今すぐ実行されるが、契約違反はない
+        try {
+            Contract.require(true, '正常な条件');
+            document.getElementById('loadResult').innerHTML = 
+                '<span class="success">✅ ページ読み込み時：正常な契約は通過</span>';
+            log('ページ読み込み時：契約チェック通過');
+        } catch (e) {
+            document.getElementById('loadResult').innerHTML = 
+                `<span class="error">❌ ページ読み込み時エラー: ${e.message}</span>`;
+            log(`ページ読み込み時エラー: ${e.message}`, true);
+        }
+        
+        // この関数は定義されるだけで、実行されない
+        function hiddenContractViolation() {
+            // この契約違反は関数が呼ばれるまで検出されない！
+            Contract.require(false, 'この関数が呼ばれると契約違反');
+            return 'この関数は契約違反を含むが、呼ばれるまでエラーにならない';
+        }
+        
+        // 2. ボタンクリック時のテスト
+        function testClickDetection() {
+            try {
+                log('ボタンクリック：契約違反テスト実行');
+                Contract.require(false, 'ボタンクリックで契約違反発生');
+                document.getElementById('clickResult').innerHTML = 
+                    '<span class="error">❌ 契約違反が検出されませんでした</span>';
+            } catch (e) {
+                document.getElementById('clickResult').innerHTML = 
+                    `<span class="success">✅ ボタンクリック時に契約違反検出: ${e.message}</span>`;
+                log(`ボタンクリック時に契約違反検出: ${e.message}`, true);
+            }
+        }
+        
+        function testValidFunction() {
+            try {
+                Contract.require(1 + 1 === 2, '正常な計算');
+                document.getElementById('clickResult').innerHTML = 
+                    '<span class="success">✅ 正常な処理が実行されました</span>';
+                log('正常な処理が実行されました');
+            } catch (e) {
+                document.getElementById('clickResult').innerHTML = 
+                    `<span class="error">❌ 予期しないエラー: ${e.message}</span>`;
+                log(`予期しないエラー: ${e.message}`, true);
+            }
+        }
+        
+        // 3. Firebase操作時のテスト（模擬）
+        function testFirebaseError() {
+            try {
+                log('Firebase操作テスト：契約違反を実行');
+                // Firebase CRUDクラスが読み込まれていない場合の模擬
+                if (typeof FirebaseCRUD === 'undefined') {
+                    // 契約チェックを模擬
+                    Contract.require(false, 'Firebase未初期化状態での操作試行');
+                } else {
+                    // 実際のFirebase契約違反
+                    FirebaseCRUD.save(null, null, null);
+                }
+                document.getElementById('firebaseResult').innerHTML = 
+                    '<span class="error">❌ Firebase契約違反が検出されませんでした</span>';
+            } catch (e) {
+                document.getElementById('firebaseResult').innerHTML = 
+                    `<span class="success">✅ Firebase操作時に契約違反検出: ${e.message}</span>`;
+                log(`Firebase操作時に契約違反検出: ${e.message}`, true);
+            }
+        }
+        
+        // 4. バリデーション実行時のテスト
+        function testValidationError() {
+            try {
+                log('バリデーション契約違反テスト実行');
+                // バリデーション関数が読み込まれていない場合の模擬
+                if (typeof UniversalValidator === 'undefined') {
+                    // 契約チェックを模擬
+                    Contract.requireArray(null, 'fields配列', false);
+                } else {
+                    // 実際のバリデーション契約違反
+                    UniversalValidator.validateRequired(null);
+                }
+                document.getElementById('validationResult').innerHTML = 
+                    '<span class="error">❌ バリデーション契約違反が検出されませんでした</span>';
+            } catch (e) {
+                document.getElementById('validationResult').innerHTML = 
+                    `<span class="success">✅ バリデーション時に契約違反検出: ${e.message}</span>`;
+                log(`バリデーション時に契約違反検出: ${e.message}`, true);
+            }
+        }
+        
+        // 5. 遅延実行での検出テスト
+        console.log('🔍 3秒後に遅延実行テストを開始...');
+        setTimeout(() => {
+            try {
+                log('遅延実行：契約違反テスト');
+                Contract.require(false, '3秒後の遅延実行で契約違反');
+            } catch (e) {
+                log(`遅延実行で契約違反検出: ${e.message}`, true);
+            }
+        }, 3000);
+        
+        // 6. 条件付き実行（この例では実行されない）
+        if (false) {
+            // このブロックは実行されないので、契約違反も検出されない
+            Contract.require(false, 'この契約違反は実行されないので検出されない');
+        }
+        
+        log('ページ初期化完了：契約ライブラリ準備OK');
+        console.log('🔍 全テスト準備完了。ボタンをクリックして各種テストを実行してください。');
+    </script>
+</body>
+</html>
