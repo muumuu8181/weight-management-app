@@ -122,8 +122,8 @@
         <div style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px;">
             <button onclick="updateChartRange(1)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1日</button>
             <button onclick="updateChartRange(7)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1週間</button>
-            <button onclick="updateChartRange(30)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1ヶ月</button>
-            <button onclick="updateChartRange(90)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">3ヶ月</button>
+            <button onclick="updateChartRange(28)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">4週</button>
+            <button onclick="updateChartRange(84)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">12週</button>
             <button onclick="updateChartRange(365)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">1年</button>
             <button onclick="updateChartRange(0)" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">全期間</button>
             <button id="previousPeriodBtn" onclick="togglePreviousPeriod()" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">前期間の記録</button>
@@ -131,9 +131,9 @@
         
         <!-- ナビゲーションボタン -->
         <div style="display: flex; gap: 5px; margin-bottom: 8px; justify-content: center;">
-            <button onclick="goToPreviousWeek()" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">← 前週</button>
-            <button onclick="goToThisWeek()" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">今週</button>
-            <button onclick="goToNextWeek()" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">次週 →</button>
+            <button onclick="goToPreviousWeek()" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">← 前の期間</button>
+            <button onclick="goToThisWeek()" style="background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">現在の期間</button>
+            <button onclick="goToNextWeek()" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">次の期間 →</button>
         </div>
         
         <!-- 前期間比較ボタン -->
