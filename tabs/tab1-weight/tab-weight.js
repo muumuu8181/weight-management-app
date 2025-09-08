@@ -11,7 +11,8 @@ window.WeightTab = {
     selectedBottomValue: '',
     weightChart: null,
     allWeightData: [],
-    editingEntryId: null
+    editingEntryId: null,
+    chartManager: null  // UniversalChartManager instance
 };
 
 // 体重管理初期化 - 共通機能最大活用版（安定化改良版）
@@ -177,6 +178,7 @@ window.saveWeightData = async () => {
                 memo: memo || '',
                 updatedAt: new Date().toISOString()
             });
+    
             
             log('✅ 体重データ更新完了');
             WeightTab.editingEntryId = null;
@@ -232,6 +234,7 @@ window.selectTiming = (timing) => {
             btn.style.transform = 'scale(1)';
             btn.classList.remove('selected');
         });
+    
         
         const selectedBtn = document.querySelector(`[data-timing="${timing}"]`);
         if (selectedBtn) {
@@ -264,6 +267,7 @@ window.selectClothingTop = (clothing) => {
             btn.style.opacity = '0.7';
             btn.style.transform = 'scale(1)';
         });
+    
         
         const selectedBtn = document.querySelector(`[data-clothing-top="${clothing}"]`);
         if (selectedBtn) {
@@ -295,6 +299,7 @@ window.selectClothingBottom = (clothing) => {
             btn.style.opacity = '0.7';
             btn.style.transform = 'scale(1)';
         });
+    
         
         const selectedBtn = document.querySelector(`[data-clothing-bottom="${clothing}"]`);
         if (selectedBtn) {
@@ -472,6 +477,7 @@ function loadUserWeightData(userId) {
                 if (entry.memo) displayText += ` - ${entry.memo}`;
                 return `<div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 0; border-bottom: 1px solid #eee;"><span>${displayText}</span><div style="display: flex; gap: 2px;"><button onclick="editWeightEntry('${entry.id}')" style="background: #007bff; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">✏️</button><button onclick="deleteWeightEntry('${entry.id}')" style="background: #dc3545; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">🗑️</button></div></div>`;
             });
+    
             
             historyDiv.innerHTML = historyHTML.join('');
             
@@ -496,6 +502,7 @@ function loadUserWeightData(userId) {
             }
         }
     });
+    
 }
 
 // 🔄 統合完了済み: Chart.js関連も共通機能に統一
@@ -505,8 +512,15 @@ function loadUserWeightData(userId) {
 // 🚀 統合完了済み: 旧ファイルの完全機能を統合完了
 // Chart.js完全実装版の統合済み
 
+// REMOVED: Individual Chart.js implementation - Migrating to UniversalChartManager
 // グラフ更新関数（統合完了済み）- オフセット対応強化版
 function updateChart(days = 30) {
+    // 事前条件
+    console.assert(typeof days === 'number', 'daysは数値である必要があります');
+    console.assert(days >= 0, 'daysは0以上である必要があります');
+    console.assert(WeightTab.allWeightData !== undefined, 'WeightTab.allWeightDataが初期化されている必要があります');
+    console.assert(typeof UniversalChartManager !== 'undefined', 'UniversalChartManagerが読み込まれている必要があります');
+    
     const ctx = document.getElementById('weightChart');
     if (!ctx) {
         log('⚠️ weightChart要素が見つかりません');
@@ -521,6 +535,7 @@ function updateChart(days = 30) {
     }
 
     const now = new Date();
+    const endDate = new Date(now); // ← 追加: endDate変数を定義
     const startDate = new Date(now);
     if (days > 0) {
         startDate.setDate(now.getDate() - days);
@@ -533,16 +548,57 @@ function updateChart(days = 30) {
     // 期間内のデータをフィルタリング
     const filteredData = (WeightTab.allWeightData || []).filter(entry => {
         const entryDate = new Date(entry.date);
-        return entryDate >= startDate && entryDate <= now; // 修正: nowを使用
+        return entryDate >= startDate && entryDate <= now;
     });
+
+    // UniversalChartManagerを使用した実装
+    log(`📊 グラフ描画開始: データ件数=${filteredData.length}, 期間=${days}日`);
+    
+    try {
+        // 既存のchartManagerがあれば破棄
+        if (WeightTab.chartManager) {
+            log('🔄 既存のchartManagerを破棄');
+            WeightTab.chartManager.destroy();
+        }
+        
+        // 既存のweightChartも念のため破棄
+        if (WeightTab.weightChart) {
+            log('🔄 既存のweightChartを破棄');
+            WeightTab.weightChart.destroy();
+            WeightTab.weightChart = null;
+        }
+        
+        // UniversalChartManagerのインスタンスを作成
+        log('🔨 UniversalChartManagerインスタンスを作成');
+        WeightTab.chartManager = new UniversalChartManager('weightChart');
+        
+        // 体重専用メソッドを使用してグラフ作成
+        log('📈 createWeightChartメソッドを呼び出し');
+        const chart = WeightTab.chartManager.createWeightChart(filteredData, days);
+        
+        if (chart) {
+            WeightTab.weightChart = chart; // 互換性のため保持
+            log('✅ UniversalChartManagerでグラフ作成成功');
+            
+            // 事後条件
+            console.assert(WeightTab.chartManager !== null, 'chartManagerが作成されている');
+            console.assert(WeightTab.weightChart !== null, 'weightChartが作成されている');
+        } else {
+            log('❌ UniversalChartManagerでグラフ作成失敗');
+        }
+    } catch (error) {
+        log(`❌ グラフ作成エラー: ${error.message}`);
+        console.error('Chart creation error:', error);
+        console.error('Stack trace:', error.stack);
+    }
     
     log(`🔍 デバッグ: offset=${currentOffset}, days=${days}, startDate=${startDate.toDateString()}, endDate=${now.toDateString()}, データ件数=${filteredData.length}`);
     
     // 画面に期間表示を更新
-    const periodDisplay = document.getElementById('currentPeriodDisplay');
-    if (periodDisplay) {
-        const periodText = days === 1 ? '1日' : days === 7 ? '1週間' : days === 30 ? '1ヶ月' : days === 90 ? '3ヶ月' : days === 365 ? '1年' : days === 0 ? '全期間' : `${days}日間`;
-        periodDisplay.textContent = `(${periodText}: ${startDate.toLocaleDateString('ja-JP')}～${now.toLocaleDateString('ja-JP')})`;
+    const periodDisplayElement = document.getElementById('currentPeriodDisplay');
+    if (periodDisplayElement) {
+        const periodText = days === 1 ? '1日' : days === 7 ? '1週間' : days === 28 ? '4週' : days === 30 ? '1ヶ月' : days === 84 ? '12週' : days === 90 ? '3ヶ月' : days === 365 ? '1年' : days === 0 ? '全期間' : `${days}日間`;
+        periodDisplayElement.textContent = `(${periodText}: ${startDate.toLocaleDateString('ja-JP')}～${now.toLocaleDateString('ja-JP')})`;
     }
 
     let chartData, datasets = [];
@@ -571,6 +627,7 @@ function updateChart(days = 30) {
             pointRadius: 4,
             pointHoverRadius: 6
         });
+    
 
         timeUnit = 'hour';
         displayFormat = 'HH:mm';
@@ -586,6 +643,7 @@ function updateChart(days = 30) {
             }
             groupedData[entry.date].push(parseFloat(entry.value || entry.weight));
         });
+    
 
         const avgData = [], maxData = [], minData = [];
         Object.keys(groupedData).sort().forEach(date => {
@@ -598,6 +656,7 @@ function updateChart(days = 30) {
             maxData.push({ x: date, y: max });
             minData.push({ x: date, y: min });
         });
+    
 
         // 複数測定日がある場合のみ全系列を表示
         const hasMultipleMeasurements = Object.values(groupedData).some(values => values.length > 1);
@@ -611,6 +670,7 @@ function updateChart(days = 30) {
                 tension: 0.1,
                 pointRadius: 4
             });
+    
 
             if (maxData.length > 0) {
                 datasets.push({
@@ -621,6 +681,7 @@ function updateChart(days = 30) {
                     tension: 0.1,
                     borderDash: [5, 5]
                 });
+    
 
                 datasets.push({
                     label: '最小値',
@@ -630,6 +691,7 @@ function updateChart(days = 30) {
                     tension: 0.1,
                     borderDash: [5, 5]
                 });
+    
             }
         } else {
             datasets.push({
@@ -640,16 +702,35 @@ function updateChart(days = 30) {
                 tension: 0.1,
                 pointRadius: 4
             });
+    
         }
         
         timeUnit = 'day';
         displayFormat = 'MM/dd';
         axisLabel = '日付';
         
+        // 改善された期間表示（window.updateChartWithOffset版）
         if (avgData.length > 0) {
-            const startStr = new Date(avgData[0].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
-            const endStr = new Date(avgData[avgData.length - 1].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
-            dateRangeText = `${startStr}～${endStr}`;
+            const dataStartStr = new Date(avgData[0].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            const dataEndStr = new Date(avgData[avgData.length - 1].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            const periodStartStr = startDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            const periodEndStr = endDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            
+            if (avgData.length === 1) {
+                // 1日分のデータのみ
+                dateRangeText = `${periodStartStr}～${periodEndStr} (データ: ${dataStartStr}のみ)`;
+            } else if (dataStartStr === periodStartStr && dataEndStr === periodEndStr) {
+                // 期間全体にデータがある
+                dateRangeText = `${dataStartStr}～${dataEndStr}`;
+            } else {
+                // 期間の一部にのみデータがある
+                dateRangeText = `${periodStartStr}～${periodEndStr} (データ: ${dataStartStr}～${dataEndStr})`;
+            }
+        } else {
+            // データなしの場合
+            const periodStartStr = startDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            const periodEndStr = endDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            dateRangeText = `${periodStartStr}～${periodEndStr} (データなし)`;
         }
     }
 
@@ -680,41 +761,38 @@ function updateChart(days = 30) {
             WeightTab.weightChart = null;
         }
         
-        // 空のチャートを作成して期間情報を表示
-        WeightTab.weightChart = new Chart(ctx, {
-            type: 'line',
-            data: { datasets: [] },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
+        // 空のチャートを作成して期間情報を表示 - UniversalChartManager使用
+        try {
+            if (WeightTab.chartManager) {
+                WeightTab.chartManager.destroy();
+            }
+            WeightTab.chartManager = new UniversalChartManager('weightChart', {
                 plugins: {
                     title: {
                         display: true,
                         text: `データなし (${startDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'})}～${now.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'})})`
                     }
                 }
-            }
-        });
+            });
+            WeightTab.weightChart = WeightTab.chartManager.createLineChart({ label: '', data: [] });
+        } catch (error) {
+            log(`❌ 空チャート作成エラー: ${error.message}`);
+        }
+    
         return;
     }
 
-    WeightTab.weightChart = new Chart(ctx, {
-        type: 'line',
-        data: { datasets: datasets },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
+    // UniversalChartManagerを使用してチャート作成（updateChart関数内）
+    try {
+        if (WeightTab.chartManager) {
+            WeightTab.chartManager.destroy();
+        }
+        
+        const chartOptions = {
             plugins: {
                 title: {
                     display: true,
                     text: dateRangeText || '期間表示'
-                },
-                legend: {
-                    position: 'top',
                 },
                 tooltip: {
                     callbacks: {
@@ -757,8 +835,19 @@ function updateChart(days = 30) {
                     }
                 }
             }
+        };
+        
+        WeightTab.chartManager = new UniversalChartManager('weightChart', chartOptions);
+        WeightTab.weightChart = WeightTab.chartManager.createLineChart(datasets);
+        
+        if (!WeightTab.weightChart) {
+            log('❌ UniversalChartManagerでのチャート作成失敗');
+        } else {
+            log('✅ UniversalChartManagerでのチャート作成成功');
         }
-    });
+    } catch (error) {
+        log(`❌ チャート作成エラー: ${error.message}`);
+    }
     
     // データがある場合はcanvasを表示、メッセージを非表示
     const canvasEl = document.getElementById('weightChart');
@@ -766,10 +855,10 @@ function updateChart(days = 30) {
     if (canvasEl) canvasEl.style.display = 'block';
     if (noDataMsgEl) noDataMsgEl.style.display = 'none';
 
-    log(`📊 グラフ更新完了: ${datasets[0].data.length}件のデータ (期間: ${dateRangeText})`);
+    log(`📊 グラフ更新完了: ${filteredData.length}件のデータ`);
 }
 
-// グラフの表示期間を変更（統合完了済み）- オフセット対応版
+// グラフの表示期間を変更（UniversalChartManager使用）
 window.updateChartRange = function(days) {
     log(`🔴 ボタン押下: updateChartRange(${days}) - ${new Date().toLocaleTimeString()}`);
     window.currentDisplayDays = days; // グローバル変数に統一
@@ -841,7 +930,97 @@ function getPreviousPeriodData(days) {
         const entryDate = new Date(entry.date);
         return entryDate >= previousStartDate && entryDate <= previousEndDate;
     });
+    
 }
+
+// updateChartWithOffset関数（簡易実装）
+function updateChartWithOffset(days, offset) {
+    // 事前条件
+    console.assert(typeof days === 'number', 'daysは数値である必要があります');
+    console.assert(typeof offset === 'number', 'offsetは数値である必要があります');
+    console.assert(days > 0, 'daysは正の数である必要があります');
+    console.assert(offset >= 0, 'offsetは0以上である必要があります');
+    
+    console.log(`📊 updateChartWithOffset: days=${days}, offset=${offset}`);
+    
+    const ctx = document.getElementById('weightChart');
+    if (!ctx) {
+        console.log('⚠️ weightChart要素が見つかりません');
+        return;
+    }
+    
+    const now = new Date();
+    console.log(`🔍 現在日時: ${now.toLocaleDateString('ja-JP')}`);
+    
+    const endDate = new Date(now);
+    endDate.setDate(now.getDate() - offset); // オフセット分過去へ
+    console.log(`🔍 終了日 (${offset}日前): ${endDate.toLocaleDateString('ja-JP')}`);
+    
+    const startDate = new Date(endDate);
+    startDate.setDate(endDate.getDate() - days); // さらに表示期間分過去へ
+    console.log(`🔍 開始日 (さらに${days}日前): ${startDate.toLocaleDateString('ja-JP')}`);
+    console.log(`🔍 期間合計: ${startDate.toLocaleDateString('ja-JP')} ～ ${endDate.toLocaleDateString('ja-JP')} (${days}日間)`);
+    
+    // 期間内のデータをフィルタリング
+    console.log(`🔍 全体データ件数: ${WeightTab.allWeightData?.length || 0}`);
+    if (WeightTab.allWeightData && WeightTab.allWeightData.length > 0) {
+        const allDates = WeightTab.allWeightData.map(entry => entry.date).sort();
+        console.log(`🔍 全データ範囲: ${allDates[0]} ～ ${allDates[allDates.length-1]}`);
+    }
+    
+    const filteredData = (WeightTab.allWeightData || []).filter(entry => {
+        const entryDate = new Date(entry.date);
+        const inRange = entryDate >= startDate && entryDate <= endDate;
+        if (inRange) {
+            console.log(`🔍 期間内データ発見: ${entry.date} (${entry.value || entry.weight}kg)`);
+        }
+        return inRange;
+    });
+    
+    console.log(`📊 オフセット期間: ${startDate.toLocaleDateString('ja-JP')}～${endDate.toLocaleDateString('ja-JP')} (${filteredData.length}件)`);
+    console.log(`🔍 全データ件数: ${WeightTab.allWeightData?.length || 0}, フィルタ後: ${filteredData.length}`);
+    if (WeightTab.allWeightData && WeightTab.allWeightData.length > 0) {
+        const firstDate = WeightTab.allWeightData[0].date;
+        const lastDate = WeightTab.allWeightData[WeightTab.allWeightData.length - 1].date;
+        console.log(`🔍 データ範囲: ${firstDate} ～ ${lastDate}`);
+    }
+    
+    // UniversalChartManagerを使用
+    try {
+        if (WeightTab.chartManager) {
+            WeightTab.chartManager.destroy();
+        }
+        if (WeightTab.weightChart) {
+            WeightTab.weightChart.destroy();
+            WeightTab.weightChart = null;
+        }
+        
+        WeightTab.chartManager = new UniversalChartManager('weightChart');
+        const chart = WeightTab.chartManager.createWeightChart(filteredData, days);
+        
+        if (chart) {
+            WeightTab.weightChart = chart;
+            log('✅ オフセット付きグラフ作成成功');
+            
+            // 事後条件
+            console.assert(filteredData.every(d => new Date(d.date) <= endDate), 'データは終了日以前のもの');
+            console.assert(filteredData.every(d => new Date(d.date) >= startDate), 'データは開始日以降のもの');
+        }
+    } catch (error) {
+        log(`❌ グラフ作成エラー: ${error.message}`);
+        console.error('Chart creation error:', error);
+    }
+    
+    // 画面に期間表示を更新
+    const periodDisplayElement = document.getElementById('currentPeriodDisplay');
+    if (periodDisplayElement) {
+        const periodText = days === 1 ? '1日' : days === 7 ? '1週間' : days === 30 ? '1ヶ月' : `${days}日間`;
+        periodDisplayElement.textContent = `(${periodText}: ${startDate.toLocaleDateString('ja-JP')}～${endDate.toLocaleDateString('ja-JP')})`;
+    }
+}
+
+// グローバルにexport
+window.updateChart = updateChart;
 
 // WeightTab名前空間終了
 }
@@ -880,7 +1059,7 @@ async function loadAndDisplayWeightData() {
         
         // データ表示更新
         displayWeightHistory(WeightTab.allWeightData);
-        updateWeightChart();
+        updateChart(30); // デフォルト30日間表示
         
     } catch (error) {
         log(`❌ データ読み込みエラー: ${error.message}`);
@@ -922,8 +1101,11 @@ function displayWeightHistory(data) {
     log(`✅ 履歴表示更新: ${recentData.length}件表示`);
 }
 
+// REMOVED: Individual Chart.js implementation - Migrating to UniversalChartManager
 // 🔥 グラフ更新機能（緊急実装）
 function updateWeightChart() {
+    log('📊 updateWeightChart呼び出し - updateChart(30)に転送');
+    updateChart(30);
     if (!WeightTab.allWeightData || WeightTab.allWeightData.length === 0) {
         log('⚠️ グラフ更新: データがありません');
         return;
@@ -955,21 +1137,13 @@ function updateWeightChart() {
         y: parseFloat(entry.value || entry.weight)
     }));
     
-    // チャート作成 - WeightTabスコープに格納
-    WeightTab.weightChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            datasets: [{
-                label: '体重 (kg)',
-                data: chartData,
-                borderColor: '#007bff',
-                backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                tension: 0.1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
+    // チャート作成 - UniversalChartManagerを使用
+    try {
+        if (WeightTab.chartManager) {
+            WeightTab.chartManager.destroy();
+        }
+        
+        const chartOptions = {
             scales: {
                 x: {
                     type: 'time',
@@ -981,11 +1155,35 @@ function updateWeightChart() {
                     }
                 },
                 y: {
-                    beginAtZero: false
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: '体重 (kg)'
+                    }
                 }
             }
+        };
+        
+        const dataset = {
+            label: '体重 (kg)',
+            data: chartData,
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            tension: 0.1
+        };
+        
+        WeightTab.chartManager = new UniversalChartManager('weightChart', chartOptions);
+        WeightTab.weightChart = WeightTab.chartManager.createLineChart(dataset);
+        
+        if (!WeightTab.weightChart) {
+            log('❌ updateWeightChart: UniversalChartManagerでのチャート作成失敗');
+        } else {
+            log('✅ updateWeightChart: UniversalChartManagerでのチャート作成成功');
         }
-    });
+    } catch (error) {
+        log(`❌ updateWeightChart: チャート作成エラー: ${error.message}`);
+    }
+    
     
     log(`✅ グラフ更新完了: ${chartData.length}件表示`);
 }
@@ -1016,6 +1214,7 @@ window.copyWeightHistory = function() {
         log('❌ コピーに失敗しました');
         alert('❌ コピーに失敗しました');
     });
+    
 };
 
 // 時刻表示は不要なため削除（該当HTML要素が存在しない）
@@ -1028,39 +1227,61 @@ if (typeof window.periodOffset === 'undefined') {
     window.periodOffset = 0;
 }
 
+// REMOVED: Individual Chart.js implementation - Migrating to UniversalChartManager
 // updateChartWithOffset関数の追加（期間オフセット対応版）- 修正済み
 window.updateChartWithOffset = function(days = 30, offset = 0) {
+    console.log(`📊 window.updateChartWithOffset: days=${days}, offset=${offset}`);
+    
     const ctx = document.getElementById('weightChart');
     if (!ctx) {
-        log('⚠️ weightChart要素が見つかりません');
+        console.log('⚠️ weightChart要素が見つかりません');
         return;
     }
 
     const now = new Date();
-    now.setDate(now.getDate() - offset); // オフセットを適用
-    const endDate = new Date(now); // 終了日をオフセット適用済みのnowに設定
+    console.log(`🔍 現在日時: ${now.toLocaleDateString('ja-JP')}`);
+    
+    const endDate = new Date(now);
+    endDate.setDate(now.getDate() - offset); // ← 修正：nowを破壊せずendDateのみ変更
+    console.log(`🔍 終了日 (${offset}日前): ${endDate.toLocaleDateString('ja-JP')}`);
+    
     const startDate = new Date(endDate);
+    console.log(`🔍 endDateから計算開始: ${endDate.toLocaleDateString('ja-JP')}`);
     
     if (days > 0) {
         startDate.setDate(endDate.getDate() - days); // 修正: endDateから期間を引く
+        console.log(`🔍 開始日 (さらに${days}日前): ${startDate.toLocaleDateString('ja-JP')}`);
     } else {
         if (WeightTab.allWeightData && WeightTab.allWeightData.length > 0) {
             startDate.setTime(new Date(WeightTab.allWeightData[0].date).getTime());
         }
     }
+    
+    console.log(`🔍 最終期間: ${startDate.toLocaleDateString('ja-JP')} ～ ${endDate.toLocaleDateString('ja-JP')} (${days}日間)`);
 
-    // 期間内のデータをフィルタリング
+    // 期間内のデータをフィルタリング - デバッグ版
+    console.log(`🔍 全体データ件数: ${WeightTab.allWeightData?.length || 0}`);
+    if (WeightTab.allWeightData && WeightTab.allWeightData.length > 0) {
+        const allDates = WeightTab.allWeightData.map(entry => entry.date).sort();
+        console.log(`🔍 全データ範囲: ${allDates[0]} ～ ${allDates[allDates.length-1]}`);
+    }
+    
     const filteredData = (WeightTab.allWeightData || []).filter(entry => {
         const entryDate = new Date(entry.date);
-        return entryDate >= startDate && entryDate <= endDate; // 修正: nowではなくendDateを使用
+        const inRange = entryDate >= startDate && entryDate <= endDate;
+        if (inRange) {
+            console.log(`🔍 期間内データ発見: ${entry.date} (${entry.value || entry.weight}kg)`);
+        }
+        return inRange;
     });
+    
     
     log(`🔍 デバッグ: offset=${offset}, days=${days}, startDate=${startDate.toDateString()}, endDate=${endDate.toDateString()}, データ件数=${filteredData.length}`);
     
     // 画面に期間表示を更新
     const periodDisplay = document.getElementById('currentPeriodDisplay');
     if (periodDisplay) {
-        const periodText = days === 1 ? '1日' : days === 7 ? '1週間' : days === 30 ? '1ヶ月' : days === 90 ? '3ヶ月' : days === 365 ? '1年' : days === 0 ? '全期間' : `${days}日間`;
+        const periodText = days === 1 ? '1日' : days === 7 ? '1週間' : days === 28 ? '4週' : days === 30 ? '1ヶ月' : days === 84 ? '12週' : days === 90 ? '3ヶ月' : days === 365 ? '1年' : days === 0 ? '全期間' : `${days}日間`;
         periodDisplay.textContent = `(${periodText}: ${startDate.toLocaleDateString('ja-JP')}～${endDate.toLocaleDateString('ja-JP')})`;
     }
 
@@ -1090,6 +1311,7 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
             pointRadius: 4,
             pointHoverRadius: 6
         });
+    
 
         timeUnit = 'hour';
         displayFormat = 'HH:mm';
@@ -1105,6 +1327,7 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
             }
             groupedData[entry.date].push(parseFloat(entry.value || entry.weight));
         });
+    
 
         const avgData = [], maxData = [], minData = [];
         Object.keys(groupedData).sort().forEach(date => {
@@ -1117,6 +1340,7 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
             maxData.push({ x: date, y: max });
             minData.push({ x: date, y: min });
         });
+    
 
         // 複数測定日がある場合のみ全系列を表示
         const hasMultipleMeasurements = Object.values(groupedData).some(values => values.length > 1);
@@ -1130,6 +1354,7 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
                 tension: 0.1,
                 pointRadius: 4
             });
+    
 
             if (maxData.length > 0) {
                 datasets.push({
@@ -1140,6 +1365,7 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
                     tension: 0.1,
                     borderDash: [5, 5]
                 });
+    
 
                 datasets.push({
                     label: '最小値',
@@ -1149,6 +1375,7 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
                     tension: 0.1,
                     borderDash: [5, 5]
                 });
+    
             }
         } else {
             datasets.push({
@@ -1159,16 +1386,35 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
                 tension: 0.1,
                 pointRadius: 4
             });
+    
         }
         
         timeUnit = 'day';
         displayFormat = 'MM/dd';
         axisLabel = '日付';
         
+        // 改善された期間表示（window.updateChartWithOffset版）
         if (avgData.length > 0) {
-            const startStr = new Date(avgData[0].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
-            const endStr = new Date(avgData[avgData.length - 1].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
-            dateRangeText = `${startStr}～${endStr}`;
+            const dataStartStr = new Date(avgData[0].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            const dataEndStr = new Date(avgData[avgData.length - 1].x).toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            const periodStartStr = startDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            const periodEndStr = endDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            
+            if (avgData.length === 1) {
+                // 1日分のデータのみ
+                dateRangeText = `${periodStartStr}～${periodEndStr} (データ: ${dataStartStr}のみ)`;
+            } else if (dataStartStr === periodStartStr && dataEndStr === periodEndStr) {
+                // 期間全体にデータがある
+                dateRangeText = `${dataStartStr}～${dataEndStr}`;
+            } else {
+                // 期間の一部にのみデータがある
+                dateRangeText = `${periodStartStr}～${periodEndStr} (データ: ${dataStartStr}～${dataEndStr})`;
+            }
+        } else {
+            // データなしの場合
+            const periodStartStr = startDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            const periodEndStr = endDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'});
+            dateRangeText = `${periodStartStr}～${periodEndStr} (データなし)`;
         }
     }
 
@@ -1199,41 +1445,38 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
             WeightTab.weightChart = null;
         }
         
-        // 空のチャートを作成して期間情報を表示
-        WeightTab.weightChart = new Chart(ctx, {
-            type: 'line',
-            data: { datasets: [] },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
+        // 空のチャートを作成して期間情報を表示 - UniversalChartManager使用
+        try {
+            if (WeightTab.chartManager) {
+                WeightTab.chartManager.destroy();
+            }
+            WeightTab.chartManager = new UniversalChartManager('weightChart', {
                 plugins: {
                     title: {
                         display: true,
                         text: `データなし (${startDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'})}～${endDate.toLocaleDateString('ja-JP', {month: 'numeric', day: 'numeric'})})`
                     }
                 }
-            }
-        });
+            });
+            WeightTab.weightChart = WeightTab.chartManager.createLineChart({ label: '', data: [] });
+        } catch (error) {
+            log(`❌ updateChartWithOffset: 空チャート作成エラー: ${error.message}`);
+        }
+    
         return;
     }
 
-    WeightTab.weightChart = new Chart(ctx, {
-        type: 'line',
-        data: { datasets: datasets },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
+    // UniversalChartManagerを使用してチャート作成（updateChartWithOffset関数内）
+    try {
+        if (WeightTab.chartManager) {
+            WeightTab.chartManager.destroy();
+        }
+        
+        const chartOptions = {
             plugins: {
                 title: {
                     display: true,
                     text: dateRangeText || '期間表示'
-                },
-                legend: {
-                    position: 'top',
                 },
                 tooltip: {
                     callbacks: {
@@ -1276,8 +1519,30 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
                     }
                 }
             }
+        };
+        
+        console.log(`🔍 datasets情報: ${datasets.length}個のdataset`);
+        if (datasets.length > 0 && datasets[0].data) {
+            console.log(`🔍 第1dataset: ${datasets[0].data.length}個のデータポイント`);
+            if (datasets[0].data.length > 0) {
+                const firstPoint = datasets[0].data[0];
+                const lastPoint = datasets[0].data[datasets[0].data.length - 1];
+                console.log(`🔍 データ範囲: ${firstPoint.x} ～ ${lastPoint.x}`);
+            }
         }
-    });
+        
+        WeightTab.chartManager = new UniversalChartManager('weightChart', chartOptions);
+        WeightTab.weightChart = WeightTab.chartManager.createLineChart(datasets);
+        
+        if (!WeightTab.weightChart) {
+            console.log('❌ updateChartWithOffset: UniversalChartManagerでのチャート作成失敗');
+        } else {
+            console.log('✅ updateChartWithOffset: UniversalChartManagerでのチャート作成成功');
+        }
+    } catch (error) {
+        log(`❌ updateChartWithOffset: チャート作成エラー: ${error.message}`);
+    }
+    
     
     // データがある場合はcanvasを表示、メッセージを非表示
     const canvasEl = document.getElementById('weightChart');
@@ -1290,25 +1555,40 @@ window.updateChartWithOffset = function(days = 30, offset = 0) {
 
 // グローバルに期間移動関数を公開
 window.goToPreviousWeek = function() {
-    log(`🔴 ボタン押下: goToPreviousWeek() - ${new Date().toLocaleTimeString()}`);
+    console.log(`🔴 ボタン押下: goToPreviousWeek() - ${new Date().toLocaleTimeString()}`);
+    
+    // 事前条件
+    console.assert(typeof window.currentDisplayDays !== 'undefined', 'currentDisplayDaysが定義されている必要があります');
+    console.assert(window.currentDisplayDays > 0, 'currentDisplayDaysは0より大きい必要があります');
     
     // currentDisplayDaysが未定義の場合は30日をデフォルト設定
     if (typeof window.currentDisplayDays === 'undefined' || window.currentDisplayDays === 0) {
         window.currentDisplayDays = 30;
-        log(`⚠️ currentDisplayDays未定義のためデフォルト設定: ${window.currentDisplayDays}日`);
+        console.log(`⚠️ currentDisplayDays未定義のためデフォルト設定: ${window.currentDisplayDays}日`);
     }
     if (typeof window.periodOffset === 'undefined') window.periodOffset = 0;
     
     const beforeOffset = window.periodOffset;
-    window.periodOffset += window.currentDisplayDays;
-    log(`📊 オフセット変更: ${beforeOffset} → ${window.periodOffset}`);
+    const displayDays = window.currentDisplayDays; // 表示期間を保持
+    
+    console.log(`🔍 デバッグ: beforeOffset=${beforeOffset}, displayDays=${displayDays}`);
+    
+    // 表示期間と同じ分だけ過去に移動（正しい期間移動）
+    window.periodOffset += displayDays;
+    console.log(`📊 オフセット変更: ${beforeOffset} → ${window.periodOffset} (${displayDays}日前へ)`);
+    
+    // 事前・事後条件のチェック（契約プログラミング）
+    console.assert(window.currentDisplayDays === displayDays, '表示期間が変更されてはいけません');
+    console.assert(window.periodOffset === beforeOffset + displayDays, 'オフセットが正しく計算されている必要があります');
+    console.assert(window.periodOffset >= 0, 'オフセットは0以上である必要があります');
     
     if (typeof window.updateChartWithOffset === 'function') {
-        window.updateChartWithOffset(window.currentDisplayDays, window.periodOffset);
+        console.log(`🔧 updateChartWithOffsetを呼び出し: days=${displayDays}, offset=${window.periodOffset}`);
+        window.updateChartWithOffset(displayDays, window.periodOffset);
     } else {
-        log(`❌ updateChartWithOffset関数が見つかりません`);
+        console.log(`❌ updateChartWithOffset関数が見つかりません`);
     }
-    log(`🔵 goToPreviousWeek完了: ${window.currentDisplayDays}日前の期間に移動 (オフセット: ${window.periodOffset})`);
+    console.log(`🔵 goToPreviousWeek完了: ${displayDays}日前の${displayDays}日間を表示 (オフセット: ${window.periodOffset})`);
 };
 
 window.goToNextWeek = function() {
@@ -1325,8 +1605,18 @@ window.goToNextWeek = function() {
     }
     
     const beforeOffset = window.periodOffset;
+    const displayDays = window.currentDisplayDays;
+    
+    // 事前条件（契約プログラミング）
+    console.assert(beforeOffset > 0, '前の期間がある状態でなければ次の期間に移動できません');
+    console.assert(displayDays > 0, '表示期間は0より大きい必要があります');
+    
     window.periodOffset = Math.max(0, window.periodOffset - window.currentDisplayDays);
     log(`📊 オフセット変更: ${beforeOffset} → ${window.periodOffset}`);
+    
+    // 事後条件（契約プログラミング）
+    console.assert(window.periodOffset >= 0, 'オフセットは0以上である必要があります');
+    console.assert(window.periodOffset <= beforeOffset, 'オフセットは減少している必要があります');
     
     if (typeof window.updateChartWithOffset === 'function') {
         window.updateChartWithOffset(window.currentDisplayDays, window.periodOffset);
@@ -1346,8 +1636,16 @@ window.goToThisWeek = function() {
     }
     
     const beforeOffset = window.periodOffset;
+    const displayDays = window.currentDisplayDays;
+    
+    // 事前条件（契約プログラミング）
+    console.assert(displayDays > 0, '表示期間は0より大きい必要があります');
+    
     window.periodOffset = 0;
     log(`📊 オフセットリセット: ${beforeOffset} → ${window.periodOffset}`);
+    
+    // 事後条件（契約プログラミング）
+    console.assert(window.periodOffset === 0, 'オフセットが0にリセットされている必要があります');
     
     // オフセット0の場合は通常のupdateChartを使用
     if (typeof window.updateChart === 'function') {
