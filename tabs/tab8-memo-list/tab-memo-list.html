@@ -1,5 +1,31 @@
-<!-- 分離されたHTMLを動的読み込み -->
-<div id="tab8ContentContainer"></div>
+<!-- UniversalTaskManagerコンテナ -->
+<div id="memoTaskManager"></div>
+
+<!-- メモ統計（UniversalTaskManagerと連携） -->
+<div class="input-card" id="memoStats">
+    <h3>📊 メモ統計</h3>
+    <div id="memoStatsArea" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+            <div id="totalMemoCount" style="font-size: 24px; font-weight: bold; color: #007bff;">0</div>
+            <div style="font-size: 12px; color: #6c757d;">総メモ数</div>
+        </div>
+        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+            <div id="todayMemoCount" style="font-size: 24px; font-weight: bold; color: #28a745;">0</div>
+            <div style="font-size: 12px; color: #6c757d;">今日のメモ</div>
+        </div>
+        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+            <div id="weekMemoCount" style="font-size: 24px; font-weight: bold; color: #ffc107;">0</div>
+            <div style="font-size: 12px; color: #6c757d;">今週のメモ</div>
+        </div>
+        <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+            <div id="priorityMemoCount" style="font-size: 24px; font-weight: bold; color: #dc3545;">0</div>
+            <div style="font-size: 12px; color: #6c757d;">重要度S・A</div>
+        </div>
+    </div>
+</div>
+
+<!-- 既存のメモ表示機能（UniversalTaskManager移行後は削除予定） -->
+<div style="display: none;">
     <!-- メモ追加エリア -->
     <div class="input-card" id="memoInput">
         <h3>📝 メモリスト</h3>
@@ -103,3 +129,4 @@
             </div>
         </div>
     </div>
+</div>
