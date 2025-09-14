@@ -130,8 +130,11 @@ class UniversalChartManager {
         }
     }
     
-    // 体重グラフ特化メソッド
+    // 体重グラフ特化メソッド（最大値・最小値対応版）
     createWeightChart(weightData, days = 30) {
+        console.log('🟢🟢🟢 UniversalChartManager.createWeightChart呼び出し!!! days=' + days);
+        console.log('🟢🟢🟢 この関数が呼ばれていたら古いバージョン!!!');
+        
         try {
             const now = new Date();
             const startDate = new Date(now);
@@ -146,18 +149,102 @@ class UniversalChartManager {
                 return days <= 0 || (entryDate >= startDate && entryDate <= now);
             });
             
-            // Chart.js用データ変換
-            const chartData = filteredData.map(entry => ({
-                x: entry.date,
-                y: parseFloat(entry.value || entry.weight)
-            }));
+            let datasets = [];
             
-            const dataset = {
-                label: '体重 (kg)',
-                data: chartData,
-                borderColor: 'rgb(75, 192, 192)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)'
-            };
+            if (days === 1) {
+                // 1日表示：時刻別データ
+                const chartData = filteredData.map(entry => {
+                    const dateTime = entry.time ? 
+                        new Date(`${entry.date}T${entry.time}:00`) : 
+                        new Date(`${entry.date}T12:00:00`);
+                    
+                    return {
+                        x: dateTime,
+                        y: parseFloat(entry.value || entry.weight)
+                    };
+                }).sort((a, b) => a.x - b.x);
+
+                datasets.push({
+                    label: '体重',
+                    data: chartData,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                });
+                
+                // 1日表示用のオプション設定
+                this.chartOptions.scales.x = {
+                    type: 'time',
+                    time: {
+                        unit: 'hour',
+                        displayFormats: {
+                            hour: 'HH:mm'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: '時間'
+                    }
+                };
+            } else {
+                // 複数日表示：日付ごとにグループ化
+                const groupedData = {};
+                filteredData.forEach(entry => {
+                    if (!groupedData[entry.date]) {
+                        groupedData[entry.date] = [];
+                    }
+                    groupedData[entry.date].push(parseFloat(entry.value || entry.weight));
+                });
+                
+                const avgData = [], maxData = [], minData = [];
+                Object.keys(groupedData).sort().forEach(date => {
+                    const values = groupedData[date];
+                    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+                    const max = Math.max(...values);
+                    const min = Math.min(...values);
+                    
+                    avgData.push({ x: date, y: avg });
+                    if (values.length > 1) {
+                        maxData.push({ x: date, y: max });
+                        minData.push({ x: date, y: min });
+                    }
+                });
+                
+                // 平均値データセット
+                datasets.push({
+                    label: '平均値',
+                    data: avgData,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    pointRadius: 4
+                });
+                
+                // 複数測定がある日が存在する場合のみ最大値・最小値を表示
+                if (maxData.length > 0) {
+                    datasets.push({
+                        label: '最大値',
+                        data: maxData,
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                        tension: 0.1,
+                        borderDash: [5, 5],
+                        pointRadius: 3
+                    });
+                    
+                    datasets.push({
+                        label: '最小値',
+                        data: minData,
+                        borderColor: 'rgb(54, 162, 235)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        tension: 0.1,
+                        borderDash: [5, 5],
+                        pointRadius: 3
+                    });
+                }
+            }
             
             // y軸設定を体重用に調整
             const weightOptions = {
@@ -175,7 +262,7 @@ class UniversalChartManager {
             
             this.chartOptions = { ...this.chartOptions, ...weightOptions };
             
-            return this.createLineChart(dataset);
+            return this.createLineChart(datasets);
             
         } catch (error) {
             UniversalErrorHandler.logError(error, '体重グラフ作成');
