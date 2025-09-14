@@ -23,6 +23,33 @@
             <input type="hidden" id="selectedStretchType" value="">
         </div>
 
+        <!-- 新機能: ストレッチメニュー選択 -->
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 8px;">📋 ストレッチメニュー:</label>
+            
+            <!-- プリセットメニュー -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+                <button type="button" class="stretch-menu-btn" data-menu="猫のポーズ" data-duration="5" data-parts="腰,全身" onclick="selectStretchMenu('猫のポーズ', 5, ['腰','全身'])" style="background: #fd7e14; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🐱 猫のポーズ</button>
+                <button type="button" class="stretch-menu-btn" data-menu="肩回し" data-duration="3" data-parts="首・肩" onclick="selectStretchMenu('肩回し', 3, ['首・肩'])" style="background: #20c997; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🤸 肩回し</button>
+                <button type="button" class="stretch-menu-btn" data-menu="脚上げ" data-duration="10" data-parts="脚,腰" onclick="selectStretchMenu('脚上げ', 10, ['脚','腰'])" style="background: #e83e8c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🦵 脚上げ</button>
+                <button type="button" class="stretch-menu-btn" data-menu="首回し" data-duration="2" data-parts="首・肩" onclick="selectStretchMenu('首回し', 2, ['首・肩'])" style="background: #6610f2; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🙆 首回し</button>
+                <button type="button" class="stretch-menu-btn" data-menu="手首回し" data-duration="2" data-parts="腕" onclick="selectStretchMenu('手首回し', 2, ['腕'])" style="background: #198754; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🤲 手首回し</button>
+                <button type="button" class="stretch-menu-btn" data-menu="深呼吸" data-duration="5" data-parts="全身" onclick="selectStretchMenu('深呼吸', 5, ['全身'])" style="background: #0dcaf0; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;">🧘 深呼吸</button>
+            </div>
+            
+            <!-- カスタムメニュー追加ボタン -->
+            <div style="margin-top: 8px;">
+                <button type="button" onclick="showAddCustomMenuModal()" style="background: #6c757d; color: white; border: 2px dashed #adb5bd; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">➕ カスタムメニューを追加</button>
+            </div>
+            
+            <!-- 選択されたメニュー表示 -->
+            <div id="selectedMenuInfo" style="margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-size: 12px; display: none;">
+                <span id="selectedMenuText"></span>
+            </div>
+            
+            <input type="hidden" id="selectedStretchMenu" value="">
+        </div>
+
         <!-- 日付・時刻表示（自動取得） -->
         <div style="margin-bottom: 10px;">
             <input type="time" class="input-field" id="stretchTimeInput" style="width: 100%;" readonly>
@@ -105,6 +132,39 @@
                 <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">--</div>
                 <div style="font-size: 12px; color: #6c757d;">継続日数</div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- カスタムメニュー追加モーダル -->
+<div id="customMenuModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+        <h4 style="margin-top: 0;">➕ カスタムストレッチメニューを追加</h4>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">メニュー名:</label>
+            <input type="text" id="customMenuName" placeholder="例: 背筋伸ばし" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">推奨時間（分）:</label>
+            <input type="number" id="customMenuDuration" min="1" max="60" value="5" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">対象部位（複数選択可）:</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="modal-body-part-btn" data-part="首・肩" onclick="toggleModalBodyPart('首・肩')" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; opacity: 0.7;">首・肩</button>
+                <button type="button" class="modal-body-part-btn" data-part="腰" onclick="toggleModalBodyPart('腰')" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; opacity: 0.7;">腰</button>
+                <button type="button" class="modal-body-part-btn" data-part="脚" onclick="toggleModalBodyPart('脚')" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; opacity: 0.7;">脚</button>
+                <button type="button" class="modal-body-part-btn" data-part="腕" onclick="toggleModalBodyPart('腕')" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; opacity: 0.7;">腕</button>
+                <button type="button" class="modal-body-part-btn" data-part="全身" onclick="toggleModalBodyPart('全身')" style="background: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; opacity: 0.7;">全身</button>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="addCustomMenu()" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-right: 10px;">✅ 追加</button>
+            <button onclick="closeCustomMenuModal()" style="background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">❌ キャンセル</button>
         </div>
     </div>
 </div>

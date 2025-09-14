@@ -8,9 +8,11 @@ let allStretchData = window.allStretchData;
 let selectedStretchType = '';
 let selectedIntensity = '';
 let selectedBodyParts = [];
+let selectedStretchMenu = '';
 let stretchStartTime = null;
 let stretchEndTime = null;
 let stretchTimerInterval = null;
+let modalSelectedBodyParts = []; // モーダル用の部位選択
 
 // ストレッチ管理初期化
 function initializeStretchManager() {
@@ -101,6 +103,201 @@ function toggleBodyPart(part) {
     
     document.getElementById('selectedBodyParts').value = selectedBodyParts.join(',');
     log(`🎯 対象部位: ${selectedBodyParts.join(', ')}`);
+}
+
+// 新機能: ストレッチメニュー選択
+function selectStretchMenu(menuName, duration, bodyParts) {
+    selectedStretchMenu = menuName;
+    document.getElementById('selectedStretchMenu').value = menuName;
+    
+    // メニューボタンの表示更新
+    document.querySelectorAll('.stretch-menu-btn').forEach(btn => {
+        btn.style.opacity = '0.7';
+        btn.style.transform = 'scale(1)';
+    });
+    
+    // 選択されたボタンを強調
+    const selectedBtn = document.querySelector(`[data-menu="${menuName}"]`);
+    if (selectedBtn) {
+        selectedBtn.style.opacity = '1';
+        selectedBtn.style.transform = 'scale(1.1)';
+    }
+    
+    // 推奨時間を自動設定
+    const durationInput = document.getElementById('stretchDuration');
+    if (durationInput) {
+        durationInput.value = duration;
+    }
+    
+    // 推奨部位を自動選択
+    selectedBodyParts = [...bodyParts];
+    document.getElementById('selectedBodyParts').value = selectedBodyParts.join(',');
+    
+    // 部位ボタンの表示更新
+    document.querySelectorAll('.body-part-btn').forEach(btn => {
+        const part = btn.getAttribute('data-part');
+        if (bodyParts.includes(part)) {
+            btn.style.opacity = '1';
+            btn.style.transform = 'scale(1.1)';
+            btn.style.background = '#007bff';
+        } else {
+            btn.style.opacity = '0.7';
+            btn.style.transform = 'scale(1)';
+            btn.style.background = '#6c757d';
+        }
+    });
+    
+    // 選択されたメニュー情報を表示
+    const infoDiv = document.getElementById('selectedMenuInfo');
+    const infoText = document.getElementById('selectedMenuText');
+    if (infoDiv && infoText) {
+        infoText.innerHTML = `📋 ${menuName} (推奨${duration}分) - 対象部位: ${bodyParts.join(', ')}`;
+        infoDiv.style.display = 'block';
+    }
+    
+    log(`📋 ストレッチメニュー選択: ${menuName} (${duration}分, ${bodyParts.join(',')})`);
+}
+
+// カスタムメニュー追加モーダル表示
+function showAddCustomMenuModal() {
+    const modal = document.getElementById('customMenuModal');
+    if (modal) {
+        modal.style.display = 'block';
+        modalSelectedBodyParts = [];
+        
+        // モーダル内の入力値をリセット
+        document.getElementById('customMenuName').value = '';
+        document.getElementById('customMenuDuration').value = '5';
+        
+        // モーダル内の部位ボタンをリセット
+        document.querySelectorAll('.modal-body-part-btn').forEach(btn => {
+            btn.style.opacity = '0.7';
+            btn.style.background = '#6c757d';
+        });
+    }
+    
+    log('📋 カスタムメニュー追加モーダルを表示');
+}
+
+// カスタムメニュー追加モーダル閉じる
+function closeCustomMenuModal() {
+    const modal = document.getElementById('customMenuModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    modalSelectedBodyParts = [];
+    log('📋 カスタムメニュー追加モーダルを閉じる');
+}
+
+// モーダル内の部位選択トグル
+function toggleModalBodyPart(part) {
+    const index = modalSelectedBodyParts.indexOf(part);
+    const btn = document.querySelector(`.modal-body-part-btn[data-part="${part}"]`);
+    
+    if (index === -1) {
+        // 追加
+        modalSelectedBodyParts.push(part);
+        btn.style.opacity = '1';
+        btn.style.background = '#007bff';
+    } else {
+        // 削除
+        modalSelectedBodyParts.splice(index, 1);
+        btn.style.opacity = '0.7';
+        btn.style.background = '#6c757d';
+    }
+    
+    log(`🎯 モーダル部位選択: ${modalSelectedBodyParts.join(', ')}`);
+}
+
+// カスタムメニューを追加
+function addCustomMenu() {
+    const menuName = document.getElementById('customMenuName').value.trim();
+    const duration = parseInt(document.getElementById('customMenuDuration').value);
+    
+    if (!menuName) {
+        log('❌ メニュー名を入力してください');
+        return;
+    }
+    
+    if (modalSelectedBodyParts.length === 0) {
+        log('❌ 対象部位を選択してください');
+        return;
+    }
+    
+    // カスタムメニューをローカルストレージに保存
+    const customMenus = JSON.parse(localStorage.getItem('customStretchMenus') || '[]');
+    const newMenu = {
+        id: Date.now(),
+        name: menuName,
+        duration: duration,
+        bodyParts: [...modalSelectedBodyParts]
+    };
+    
+    customMenus.push(newMenu);
+    localStorage.setItem('customStretchMenus', JSON.stringify(customMenus));
+    
+    // メニューボタンを追加
+    addCustomMenuButton(newMenu);
+    
+    // モーダルを閉じる
+    closeCustomMenuModal();
+    
+    log(`✅ カスタムメニュー追加: ${menuName} (${duration}分, ${modalSelectedBodyParts.join(',')})`);
+}
+
+// カスタムメニューボタンを動的追加
+function addCustomMenuButton(menu) {
+    const menuContainer = document.querySelector('div[style*="display: flex"][style*="gap: 8px"][style*="flex-wrap: wrap"][style*="margin-bottom: 8px"]');
+    if (!menuContainer) return;
+    
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'stretch-menu-btn custom-menu-btn';
+    button.setAttribute('data-menu', menu.name);
+    button.setAttribute('data-duration', menu.duration);
+    button.setAttribute('data-parts', menu.bodyParts.join(','));
+    button.onclick = () => selectStretchMenu(menu.name, menu.duration, menu.bodyParts);
+    button.style.cssText = 'background: #495057; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; opacity: 0.7;';
+    button.innerHTML = `🆕 ${menu.name}`;
+    
+    // 削除ボタンも追加
+    const deleteBtn = document.createElement('span');
+    deleteBtn.innerHTML = ' ❌';
+    deleteBtn.style.cursor = 'pointer';
+    deleteBtn.onclick = (e) => {
+        e.stopPropagation();
+        deleteCustomMenu(menu.id, button);
+    };
+    button.appendChild(deleteBtn);
+    
+    menuContainer.appendChild(button);
+}
+
+// カスタムメニューを削除
+function deleteCustomMenu(menuId, buttonElement) {
+    if (!confirm('このカスタムメニューを削除しますか？')) return;
+    
+    // ローカルストレージから削除
+    const customMenus = JSON.parse(localStorage.getItem('customStretchMenus') || '[]');
+    const filteredMenus = customMenus.filter(menu => menu.id !== menuId);
+    localStorage.setItem('customStretchMenus', JSON.stringify(filteredMenus));
+    
+    // ボタンを削除
+    buttonElement.remove();
+    
+    log(`🗑️ カスタムメニューを削除: ID ${menuId}`);
+}
+
+// カスタムメニューを読み込み
+function loadCustomMenus() {
+    const customMenus = JSON.parse(localStorage.getItem('customStretchMenus') || '[]');
+    customMenus.forEach(menu => {
+        addCustomMenuButton(menu);
+    });
+    
+    if (customMenus.length > 0) {
+        log(`📋 カスタムメニュー読み込み: ${customMenus.length}個`);
+    }
 }
 
 // ストレッチ開始
@@ -302,6 +499,7 @@ function resetStretchForm() {
     selectedStretchType = '';
     selectedIntensity = '';
     selectedBodyParts = [];
+    selectedStretchMenu = '';
     stretchStartTime = null;
     stretchEndTime = null;
     
@@ -311,7 +509,7 @@ function resetStretchForm() {
     document.getElementById('stretchMemoInput').value = '';
     
     // ボタンの状態をリセット
-    document.querySelectorAll('.stretch-type-btn, .intensity-btn').forEach(btn => {
+    document.querySelectorAll('.stretch-type-btn, .intensity-btn, .stretch-menu-btn').forEach(btn => {
         btn.style.opacity = '0.7';
         btn.style.transform = 'scale(1)';
     });
@@ -327,6 +525,12 @@ function resetStretchForm() {
     if (stretchTimerInterval) {
         clearInterval(stretchTimerInterval);
         stretchTimerInterval = null;
+    }
+    
+    // メニュー情報非表示
+    const infoDiv = document.getElementById('selectedMenuInfo');
+    if (infoDiv) {
+        infoDiv.style.display = 'none';
     }
     
     // 現在時刻を再設定
@@ -453,3 +657,8 @@ async function deleteStretchEntry(entryId) {
 if (typeof currentUser !== 'undefined' && currentUser) {
     initializeStretchManager();
 }
+
+// ページ読み込み時にカスタムメニューを読み込み
+document.addEventListener('DOMContentLoaded', () => {
+    loadCustomMenus();
+});
