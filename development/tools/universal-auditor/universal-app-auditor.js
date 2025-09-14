@@ -579,13 +579,25 @@ class UniversalAppAuditor {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         
         if (this.options.outputFormat === 'json' || this.options.outputFormat === 'both') {
-            const jsonPath = `audit-report-${timestamp}.json`;
+            // レポートディレクトリを作成
+            const reportDir = path.join(__dirname, '../../../tools/reports');
+            if (!fs.existsSync(reportDir)) {
+                fs.mkdirSync(reportDir, { recursive: true });
+            }
+            const jsonFileName = `audit-report-${timestamp}.json`;
+            const jsonPath = path.join(reportDir, jsonFileName);
             fs.writeFileSync(jsonPath, JSON.stringify(this.results, null, 2));
             console.log(`📄 JSONレポート: ${jsonPath}`);
         }
         
         if (this.options.outputFormat === 'html' || this.options.outputFormat === 'both') {
-            const htmlPath = `audit-report-${timestamp}.html`;
+            // レポートディレクトリを作成
+            const reportDir = path.join(__dirname, '../../../tools/reports');
+            if (!fs.existsSync(reportDir)) {
+                fs.mkdirSync(reportDir, { recursive: true });
+            }
+            const htmlFileName = `audit-report-${timestamp}.html`;
+            const htmlPath = path.join(reportDir, htmlFileName);
             const htmlContent = this.generateHTMLReport();
             fs.writeFileSync(htmlPath, htmlContent);
             console.log(`🌐 HTMLレポート: ${htmlPath}`);

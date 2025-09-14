@@ -676,7 +676,11 @@ class JSDOMButtonTestRunner {
 </body>
 </html>`;
 
-    const reportPath = `jsdom-test-report-${Date.now()}.html`;
+    // レポートディレクトリを作成
+    const reportDir = path.join(__dirname, '../../reports');
+    await fs.ensureDir(reportDir);
+    const reportFileName = `jsdom-test-report-${Date.now()}.html`;
+    const reportPath = path.join(reportDir, reportFileName);
     await fs.writeFile(reportPath, reportHtml);
     this.log(`HTMLレポート生成完了: ${reportPath}`, 'success');
     
