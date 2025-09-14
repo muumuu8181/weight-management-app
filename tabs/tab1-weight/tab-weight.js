@@ -506,8 +506,10 @@ function loadUserWeightData(userId) {
 }
 
 // Chart.js関連機能はUniversalChartManagerを使用
-// グラフ更新関数 - UniversalChartManager統合版
+// グラフ更新関数 - UniversalChartManager統合版（最大値・最小値対応）
 function updateChart(days = 30) {
+    console.log('🔴🔴🔴 updateChart呼び出し - 修正版実行中!!!! days=' + days);
+    
     // 事前条件
     console.assert(typeof days === 'number', 'daysは数値である必要があります');
     console.assert(days >= 0, 'daysは0以上である必要があります');
@@ -587,17 +589,141 @@ function updateChart(days = 30) {
         if (canvas) canvas.style.display = 'block';
         if (noDataMsg) noDataMsg.style.display = 'none';
         
-        // UniversalChartManagerのインスタンスを作成
-        WeightTab.chartManager = new UniversalChartManager('weightChart');
+        // データセットの準備
+        let datasets = [];
         
-        // 体重専用メソッドを使用してグラフ作成
-        const chart = WeightTab.chartManager.createWeightChart(filteredData, days);
+        console.log('🔴🔴🔴 データセット準備開始 days=' + days);
+        
+        if (days === 1) {
+            console.log('🔴🔴🔴 1日表示モード - 時刻軸を使用!!');
+            // 1日表示：時刻別データ
+            const chartData = filteredData.map(entry => {
+                const dateTime = entry.time ? 
+                    new Date(`${entry.date}T${entry.time}:00`) : 
+                    new Date(`${entry.date}T12:00:00`);
+                
+                return {
+                    x: dateTime,
+                    y: parseFloat(entry.value || entry.weight)
+                };
+            }).sort((a, b) => a.x - b.x);
+
+            datasets.push({
+                label: '体重',
+                data: chartData,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            });
+            
+            // 1日表示用のオプション設定
+            const chartOptions = {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'hour',
+                            displayFormats: {
+                                hour: 'HH:mm'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: '時間'
+                        }
+                    },
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: '体重 (kg)'
+                        }
+                    }
+                }
+            };
+            
+            WeightTab.chartManager = new UniversalChartManager('weightChart', chartOptions);
+        } else {
+            console.log('🔴🔴🔴 複数日表示モード - 最大値・最小値を計算!!');
+            // 複数日表示：日付ごとにグループ化
+            const groupedData = {};
+            filteredData.forEach(entry => {
+                if (!groupedData[entry.date]) {
+                    groupedData[entry.date] = [];
+                }
+                groupedData[entry.date].push(parseFloat(entry.value || entry.weight));
+            });
+            
+            const avgData = [], maxData = [], minData = [];
+            Object.keys(groupedData).sort().forEach(date => {
+                const values = groupedData[date];
+                const avg = values.reduce((a, b) => a + b, 0) / values.length;
+                const max = Math.max(...values);
+                const min = Math.min(...values);
+                
+                avgData.push({ x: date, y: avg });
+                if (values.length > 1) {
+                    maxData.push({ x: date, y: max });
+                    minData.push({ x: date, y: min });
+                }
+            });
+            
+            // 平均値データセット
+            datasets.push({
+                label: '平均値',
+                data: avgData,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+                pointRadius: 4
+            });
+            
+            // 複数測定がある日が存在する場合のみ最大値・最小値を表示
+            if (maxData.length > 0) {
+                console.log('🔴🔴🔴 最大値・最小値データセットを追加!! maxData=' + maxData.length + ', minData=' + minData.length);
+                datasets.push({
+                    label: '最大値',
+                    data: maxData,
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    tension: 0.1,
+                    borderDash: [5, 5],
+                    pointRadius: 3
+                });
+                
+                datasets.push({
+                    label: '最小値',
+                    data: minData,
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    tension: 0.1,
+                    borderDash: [5, 5],
+                    pointRadius: 3
+                });
+            } else {
+                console.log('🔴🔴🔴 単一測定のみ - 最大値・最小値なし');
+            }
+            
+            WeightTab.chartManager = new UniversalChartManager('weightChart');
+        }
+        
+        // グラフ作成
+        console.log('🔴🔴🔴 グラフ作成開始 datasets.length=' + datasets.length);
+        for (let i = 0; i < datasets.length; i++) {
+            console.log('🔴🔴🔴 データセット[' + i + ']: ' + datasets[i].label + ', データ数=' + datasets[i].data.length);
+        }
+        
+        const chart = WeightTab.chartManager.createLineChart(datasets);
         
         if (chart) {
             WeightTab.weightChart = chart; // 互換性のため保持
-            log('✅ UniversalChartManagerでグラフ作成成功');
+            log('✅ グラフ作成成功（最大値・最小値対応）');
+            console.log('🔴🔴🔴 グラフ作成成功!!!');
         } else {
-            log('❌ UniversalChartManagerでグラフ作成失敗');
+            log('❌ グラフ作成失敗');
+            console.log('🔴🔴🔴 グラフ作成失敗...');
         }
     } catch (error) {
         log(`❌ グラフ作成エラー: ${error.message}`);
@@ -616,7 +742,7 @@ window.updateChartRange = function(days) {
         updateChartWithOffset(days, window.periodOffset);
     } else {
         // オフセットなしの場合は従来通り
-        updateChart(days);
+        window.updateChart(days);
     }
     
     const rangeName = days === 1 ? '1日' :
