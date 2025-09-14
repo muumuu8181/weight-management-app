@@ -26,7 +26,7 @@ let allWeightData = [];
 window.editingEntryId = null;
 
 // アプリバージョン（一元管理）
-const APP_VERSION = 'v2.86'; // Updated: 契約プログラミング統合
+const APP_VERSION = 'v2.88'; // Updated: 体重グラフ最大値・最小値表示機能追加
 
 // グローバルに公開（安全な参照用）
 window.auth = auth;
